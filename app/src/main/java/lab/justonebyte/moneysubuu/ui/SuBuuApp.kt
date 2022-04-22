@@ -5,6 +5,7 @@ import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.Scaffold
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AddCircle
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
@@ -43,7 +44,10 @@ fun SuBuuApp(
             val currentRoute = navBackStackEntry?.destination?.route ?: MainDestinations.HOME_ROUTE
             Scaffold(
                 topBar = {
-                    Row(Modifier.fillMaxWidth().absolutePadding(right = 20.dp, left = 20.dp), horizontalArrangement = Arrangement.Start) {
+                    Row(
+                        Modifier
+                            .fillMaxWidth()
+                            .absolutePadding(right = 20.dp, left = 20.dp), horizontalArrangement = Arrangement.Start) {
                         IconButton(onClick = {
                             if(scaffoldState.drawerState.isOpen){
                                 coroutineScope.launch { scaffoldState.drawerState.close() }
