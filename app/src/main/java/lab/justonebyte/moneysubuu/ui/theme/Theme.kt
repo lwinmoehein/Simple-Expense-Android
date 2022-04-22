@@ -1,4 +1,4 @@
-package lab.justonebyte.moneysubuu.presentation.theme
+package lab.justonebyte.moneysubuu.ui.theme
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material.MaterialTheme

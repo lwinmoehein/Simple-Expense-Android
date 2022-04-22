@@ -1,4 +1,4 @@
-package lab.justonebyte.moneysubuu.presentation
+package lab.justonebyte.moneysubuu.ui
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -10,7 +10,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import lab.justonebyte.moneysubuu.presentation.theme.MoneySuBuuTheme
+import lab.justonebyte.moneysubuu.ui.theme.MoneySuBuuTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
