@@ -8,7 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 
 private val LightThemeColors = lightColors(
-    primary = Red700,
+    primary = Gold,
     primaryVariant = Red900,
     onPrimary = Color.White,
     secondary = Red700,
@@ -18,7 +18,7 @@ private val LightThemeColors = lightColors(
 )
 
 private val DarkThemeColors = darkColors(
-    primary = Red300,
+    primary = Gold,
     primaryVariant = Red700,
     onPrimary = Color.Black,
     secondary = Red300,

@@ -1,8 +1,6 @@
 package lab.justonebyte.moneysubuu.ui
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.Scaffold
@@ -15,6 +13,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.insets.ProvideWindowInsets
@@ -22,6 +21,7 @@ import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import kotlinx.coroutines.launch
 import lab.justonebyte.moneysubuu.ui.theme.MoneySuBuuTheme
 
+val appContentPadding = 20.dp
 @Composable
 fun SuBuuApp(
 ) {
@@ -43,7 +43,7 @@ fun SuBuuApp(
             val currentRoute = navBackStackEntry?.destination?.route ?: MainDestinations.HOME_ROUTE
             Scaffold(
                 topBar = {
-                    Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Start) {
+                    Row(Modifier.fillMaxWidth().absolutePadding(right = 20.dp, left = 20.dp), horizontalArrangement = Arrangement.Start) {
                         IconButton(onClick = {
                             if(scaffoldState.drawerState.isOpen){
                                 coroutineScope.launch { scaffoldState.drawerState.close() }

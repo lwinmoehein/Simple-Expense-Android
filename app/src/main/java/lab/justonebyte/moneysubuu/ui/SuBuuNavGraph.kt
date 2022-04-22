@@ -1,5 +1,6 @@
 package lab.justonebyte.moneysubuu.ui
 
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.material.ScaffoldState
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
@@ -37,12 +38,13 @@ fun SuBuuNavGraph(
     ) {
         composable(MainDestinations.HOME_ROUTE) {
             HomeScreen(
-                openDrawer = openDrawer
+                openDrawer = openDrawer,
             )
         }
         composable(MainDestinations.SETTINGS_ROUTE) {
             SettingsScreen(
-                openDrawer = openDrawer
+                openDrawer = openDrawer,
+
             )
         }
     }
