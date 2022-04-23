@@ -3,15 +3,15 @@ package lab.justonebyte.moneysubuu.ui
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.material.ScaffoldState
 import androidx.compose.material.rememberScaffoldState
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.*
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import kotlinx.coroutines.launch
 import lab.justonebyte.moneysubuu.ui.home.HomeScreen
+import lab.justonebyte.moneysubuu.ui.home.HomeViewModel
 import lab.justonebyte.moneysubuu.ui.settings.SettingsScreen
 
 /**
@@ -37,8 +37,12 @@ fun SuBuuNavGraph(
         startDestination = startDestination
     ) {
         composable(MainDestinations.HOME_ROUTE) {
+            val homeViewModel = hiltViewModel<HomeViewModel>()
+            val homeUiState by homeViewModel.viewModelUiState.collectAsState()
+
             HomeScreen(
                 openDrawer = openDrawer,
+                homeUiState = homeUiState
             )
         }
         composable(MainDestinations.SETTINGS_ROUTE) {

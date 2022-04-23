@@ -1,6 +1,8 @@
 package lab.justonebyte.moneysubuu.ui.home
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -13,6 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
+import lab.justonebyte.moneysubuu.model.TransactionCategory
 import lab.justonebyte.moneysubuu.ui.appContentPadding
 import lab.justonebyte.moneysubuu.ui.theme.SuBuuShapes
 
@@ -20,6 +23,7 @@ import lab.justonebyte.moneysubuu.ui.theme.SuBuuShapes
 @Composable
 fun HomeScreen(
     openDrawer:()->Unit,
+    homeUiState: HomeUiState
 ){
     val bottomSheetScaffoldState = rememberBottomSheetScaffoldState(
         bottomSheetState = BottomSheetState(BottomSheetValue.Collapsed)
@@ -41,6 +45,7 @@ fun HomeScreen(
                         Modifier.heightIn(min = 500.dp, max = 1000.dp),
             ) {
                 BottomSheetContent(
+                    categories = homeUiState.categories,
                     onCloseBottomSheet = {
                         coroutineScope.launch {
                             if (bottomSheetScaffoldState.bottomSheetState.isCollapsed) {
@@ -55,6 +60,7 @@ fun HomeScreen(
         }, sheetPeekHeight = 0.dp
     ) {
         HomeContent(
+            homeUiState = homeUiState,
             onOpenBottomSheet = {
                 coroutineScope.launch {
                     if (bottomSheetScaffoldState.bottomSheetState.isCollapsed) {
@@ -69,7 +75,7 @@ fun HomeScreen(
 }
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun HomeContent(onOpenBottomSheet:()->Unit){
+fun HomeContent(onOpenBottomSheet:()->Unit,homeUiState: HomeUiState){
     val coroutineScope = rememberCoroutineScope()
 
     Scaffold( floatingActionButton = {
@@ -85,12 +91,13 @@ fun HomeContent(onOpenBottomSheet:()->Unit){
         }
 
     },) {
-        CurrentBalance()
+        CurrentBalance(currentBalance = homeUiState.currentBalance)
     }
 }
 @Composable
 fun CurrentBalance(
-    modifier: Modifier =Modifier
+    modifier: Modifier =Modifier,
+    currentBalance: Double =0.0
 ){
    Card(
        shape = SuBuuShapes.small,
@@ -111,7 +118,7 @@ fun CurrentBalance(
                    style = MaterialTheme.typography.h6
                )
                Text(
-                   text = "10000ks",
+                   text = currentBalance.toString(),
                    style = MaterialTheme.typography.h6
 
                )
@@ -120,9 +127,11 @@ fun CurrentBalance(
    }
 }
 @Composable
-fun BottomSheetContent(onCloseBottomSheet:()->Unit){
+fun BottomSheetContent(onCloseBottomSheet:()->Unit,categories:List<TransactionCategory>){
     Column(
-        Modifier.fillMaxSize().padding(appContentPadding)
+        Modifier
+            .fillMaxSize()
+            .padding(appContentPadding)
     ) {
         Row(horizontalArrangement = Arrangement.SpaceBetween,modifier = Modifier.fillMaxWidth()) {
             Text(text = "Add transaction", style = MaterialTheme.typography.subtitle1)
@@ -130,5 +139,14 @@ fun BottomSheetContent(onCloseBottomSheet:()->Unit){
                 Icon(imageVector = Icons.Filled.Close, contentDescription = "close sheet" )
             }
         }
+        LazyColumn(){
+            items(categories){
+                CategoryItem(transactionCategory = it)
+            }
+        }
     }
+}
+@Composable
+fun CategoryItem(transactionCategory: TransactionCategory){
+    Text(text = transactionCategory.name,modifier = Modifier.fillMaxWidth())
 }
