@@ -1,6 +1,7 @@
 package lab.justonebyte.moneysubuu.ui.home
 
 import android.util.Log
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -176,10 +177,18 @@ fun BottomSheetContent(
         Row(modifier = Modifier
             .padding(20.dp)
             .fillMaxWidth()) {
-            TextButton(modifier = Modifier.weight(1f) ,onClick = { currentType.value =1 }) {
+            TextButton(
+                modifier = Modifier.weight(1f),
+                border = BorderStroke(2.dp,if(currentType.value==1) MaterialTheme.colors.primary else Color.Transparent),
+                onClick = { currentType.value =1 }
+            ) {
                 Text(text = "Income", style = MaterialTheme.typography.subtitle1, color = if(currentType.value==1) MaterialTheme.colors.primary else Color.Black)
             }
-            TextButton(modifier= Modifier.weight(1f),onClick = { currentType.value =2  }) {
+            TextButton(
+                modifier= Modifier.weight(1f),
+                border = BorderStroke(2.dp,if(currentType.value==2) MaterialTheme.colors.primary else Color.Transparent),
+                onClick = { currentType.value =2  }
+            ) {
                 Text(text = "Expense",style = MaterialTheme.typography.subtitle1,color = if(currentType.value==2) MaterialTheme.colors.primary else Color.Black)
             }
         }
@@ -199,7 +208,7 @@ fun BottomSheetContent(
                 },
                 label = {
                     Row(horizontalArrangement = Arrangement.End) {
-                        Text(text = "Kyat")
+                        Text(text = if(currentType.value==1) "Income amount in kyat" else "Expense amount in kyat" )
                     }
                 }
             )
