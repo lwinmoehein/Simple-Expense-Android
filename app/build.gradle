@@ -75,5 +75,10 @@ dependencies {
     implementation "com.google.accompanist:accompanist-systemuicontroller:$app_companist_version"
     implementation "com.google.accompanist:accompanist-insets:$app_companist_version"
 
+    // Room components
+    implementation "androidx.room:room-ktx:$room_version"
+    kapt "androidx.room:room-compiler:$room_version"
+    androidTestImplementation "androidx.room:room-testing:$room_version"
+
 
 }
