@@ -1,5 +1,6 @@
 package lab.justonebyte.moneysubuu.ui.home
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -10,7 +11,9 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import lab.justonebyte.moneysubuu.data.CategoryRepository
 import lab.justonebyte.moneysubuu.data.TransactionRepository
+import lab.justonebyte.moneysubuu.model.Transaction
 import lab.justonebyte.moneysubuu.model.TransactionCategory
+import lab.justonebyte.moneysubuu.model.TransactionType
 import javax.inject.Inject
 
 data class HomeUiState(
@@ -32,9 +35,9 @@ class HomeViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-           launch {
-               collectBalance()
-           }
+//           launch {
+//               collectBalance()
+//           }
             launch {
                 collectCategories()
             }
@@ -49,6 +52,18 @@ class HomeViewModel @Inject constructor(
     private suspend fun collectCategories(){
         categoryRepository.getCategories().collect{ categories->
             _viewModelUiState.update { it.copy(categories = categories) }
+        }
+    }
+    fun addTransaction(transactionCategory: TransactionCategory,amount:Int,type:Int){
+        viewModelScope.launch {
+            transactionRepository.insert(
+                Transaction(
+                    amount = amount.toDouble(),
+                    type = if(type==1) TransactionType.Income else TransactionType.Expense,
+                    category = transactionCategory,
+                    created_at = System.currentTimeMillis().toDouble()
+                )
+            )
         }
     }
 }

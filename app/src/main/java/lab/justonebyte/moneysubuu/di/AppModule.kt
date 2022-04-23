@@ -8,18 +8,29 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.SupervisorJob
 import lab.justonebyte.moneysubuu.data.*
 import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
 object AppModule {
+    val applicationScope = CoroutineScope(SupervisorJob())
+
     @Singleton
     @Provides
     fun provideAppDatabase(
         @ApplicationContext app: Context
-    ) = AppDatabase.getDatabase(context = app)
+    ) = AppDatabase.getDatabase(context = app, scope = applicationScope)
 
+    @Singleton
+    @Provides
+    fun provideTransactionDao(db: AppDatabase): TransactionDao = db.transactionDao()
+
+    @Singleton
+    @Provides
+    fun provideCategoryDao(db: AppDatabase): CategoryDao = db.categoryDao()
 
 
 }

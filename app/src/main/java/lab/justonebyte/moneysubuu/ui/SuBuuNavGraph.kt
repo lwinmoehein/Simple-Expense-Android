@@ -36,13 +36,10 @@ fun SuBuuNavGraph(
         navController = navController,
         startDestination = startDestination
     ) {
-        composable(MainDestinations.HOME_ROUTE) {
-            val homeViewModel = hiltViewModel<HomeViewModel>()
-            val homeUiState by homeViewModel.viewModelUiState.collectAsState()
 
+        composable(MainDestinations.HOME_ROUTE) {
             HomeScreen(
                 openDrawer = openDrawer,
-                homeUiState = homeUiState
             )
         }
         composable(MainDestinations.SETTINGS_ROUTE) {

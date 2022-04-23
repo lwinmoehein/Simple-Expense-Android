@@ -8,7 +8,7 @@ enum class TransactionType(val value:Int){
     Expense(2)
 }
 
-data class Transaction(val id:Double,val amount:Double,val type: TransactionType,val category: TransactionCategory,val created_at:Double){
+data class Transaction(val id:Int?=null,val amount:Double,val type: TransactionType,val category: TransactionCategory,val created_at:Double){
     object  Mapper {
         fun mapToDomain(transactionEntity: TransactionWithCategory):Transaction{
             return Transaction(
@@ -21,7 +21,6 @@ data class Transaction(val id:Double,val amount:Double,val type: TransactionType
         }
         fun mapToEntity(transaction:Transaction):TransactionEntity{
             return TransactionEntity(
-                id = transaction.id,
                 amount = transaction.amount,
                 type = transaction.type.value,
                 category_id=transaction.category.id,
