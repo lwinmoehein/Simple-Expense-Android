@@ -13,7 +13,7 @@ interface TransactionDao {
     fun getTransactions(): Flow<List<TransactionWithCategory>>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun insert(transactionEntity: TransactionEntity)
+    suspend fun insert(transactionEntity: TransactionEntity):Long
 
     @Query("DELETE FROM transaction_table")
     suspend fun deleteAll()

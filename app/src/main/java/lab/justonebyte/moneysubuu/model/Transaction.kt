@@ -15,8 +15,17 @@ data class Transaction(val id:Double,val amount:Double,val type: TransactionType
                 id = transactionEntity.id,
                 amount = transactionEntity.amount,
                 type = if(transactionEntity.type==1) TransactionType.Income else TransactionType.Expense,
-                category = TransactionCategory(id = transactionEntity.category_id,transactionEntity.category_name),
+                category = TransactionCategory(id = transactionEntity.category_id,transactionEntity.category_name, created_at = transactionEntity.category_created_at),
                 created_at = transactionEntity.created_at
+            )
+        }
+        fun mapToEntity(transaction:Transaction):TransactionEntity{
+            return TransactionEntity(
+                id = transaction.id,
+                amount = transaction.amount,
+                type = transaction.type.value,
+                category_id=transaction.category.id,
+                created_at = System.currentTimeMillis().toDouble()
             )
         }
     }
