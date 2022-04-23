@@ -1,9 +1,12 @@
 package lab.justonebyte.moneysubuu.ui.home
 
 import android.util.Log
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
@@ -15,8 +18,12 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import kotlinx.coroutines.launch
 import lab.justonebyte.moneysubuu.model.Transaction
@@ -141,56 +148,119 @@ fun CurrentBalance(
 fun BottomSheetContent(
     onCloseBottomSheet:()->Unit,
     categories:List<TransactionCategory>,
-    onAddTransaction:(type:Int,amount:Int,category:TransactionCategory)->Unit
+    onAddTransaction:(type:Int,amount:Long,category:TransactionCategory)->Unit
 ){
     val currentType = remember{ mutableStateOf(1)}
     val currentCategory = remember{ mutableStateOf<TransactionCategory?>(null)}
     val currentAmount = remember {
-        mutableStateOf(0)
+        mutableStateOf("")
     }
     Column(
         Modifier
             .fillMaxSize()
             .padding(appContentPadding)
     ) {
-        Row(horizontalArrangement = Arrangement.SpaceBetween,modifier = Modifier.fillMaxWidth()) {
-            Text(text = "Add transaction", style = MaterialTheme.typography.subtitle1)
+        Row(
+            horizontalArrangement = Arrangement.SpaceBetween,
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(30.dp)
+        ) {
+            Column(verticalArrangement = Arrangement.Center, modifier = Modifier.fillMaxHeight()) {
+                Text(text = "Add transaction", style = MaterialTheme.typography.subtitle1)
+            }
             IconButton(onClick = { onCloseBottomSheet() }) {
                 Icon(imageVector = Icons.Filled.Close, contentDescription = "close sheet" )
             }
         }
-        Row(horizontalArrangement = Arrangement.SpaceAround) {
-            TextButton(onClick = { currentType.value =1 }) {
+        Row(modifier = Modifier
+            .padding(20.dp)
+            .fillMaxWidth()) {
+            TextButton(modifier = Modifier.weight(1f) ,onClick = { currentType.value =1 }) {
                 Text(text = "Income", style = MaterialTheme.typography.subtitle1, color = if(currentType.value==1) MaterialTheme.colors.primary else Color.Black)
             }
-            TextButton(onClick = { currentType.value =2  }) {
+            TextButton(modifier= Modifier.weight(1f),onClick = { currentType.value =2  }) {
                 Text(text = "Expense",style = MaterialTheme.typography.subtitle1,color = if(currentType.value==2) MaterialTheme.colors.primary else Color.Black)
             }
         }
-        TextField(
-            value = currentAmount.value.toString(),
-            keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
-            onValueChange = {
-            currentAmount.value =if(it=="") 0 else  it.toInt()
-        })
-        LazyColumn(){
-            items(categories){
-                CategoryItem(currentCategory = currentCategory.value,transactionCategory = it, onCategoryClicked = {
-                    currentCategory.value = it
-                })
-            }
+        Row(horizontalArrangement = Arrangement.Center,modifier = Modifier
+            .fillMaxWidth()
+            .absolutePadding(left = 50.dp, right = 50.dp)) {
+            TextField(
+                colors = TextFieldDefaults.textFieldColors(
+
+                    backgroundColor = Color.Transparent,
+
+                ),
+                value = currentAmount.value,
+                keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
+                onValueChange = {
+                   currentAmount.value = it.filter { it.isDigit() }
+                },
+                label = {
+                    Row(horizontalArrangement = Arrangement.End) {
+                        Text(text = "Kyat")
+                    }
+                }
+            )
+           
         }
-        Row(horizontalArrangement = Arrangement.End) {
-            TextButton(onClick = {
+
+
+        LazyVerticalGrid(
+            columns = GridCells.Adaptive(128.dp),
+
+            // content padding
+            contentPadding = PaddingValues(
+                start = 12.dp,
+                top = 16.dp,
+                end = 12.dp,
+                bottom = 16.dp
+            ),
+            content = {
+                items(categories.size) { index ->
+
+                    Card(
+                        backgroundColor =  currentCategory.value?.let {
+                            if (it.id==categories[index].id) MaterialTheme.colors.primary else MaterialTheme.colors.onPrimary
+                        }?:MaterialTheme.colors.onPrimary,
+                        modifier = Modifier
+                            .padding(2.dp)
+                            .fillMaxWidth()
+                            .clickable {
+                                currentCategory.value = categories[index]
+                            },
+                        elevation = 8.dp,
+                    ) {
+                        Text(
+                            text = categories[index].name,
+                            textAlign = TextAlign.Center,
+                            modifier = Modifier.padding(10.dp)
+                        )
+                    }
+                }
+            }
+        )
+        Row(horizontalArrangement = Arrangement.Center, modifier = Modifier.fillMaxWidth()) {
+            TextButton(
+                shape = RoundedCornerShape(10.dp),
+                modifier = Modifier
+
+                    .absolutePadding(top = 20.dp, bottom = 20.dp)
+                    .background(MaterialTheme.colors.primary)
+                    .absolutePadding(left = 40.dp, right = 40.dp),
+                onClick = {
                 currentCategory.value?.let {
                     onAddTransaction(
                         currentType.value,
-                        currentAmount.value,
+                        if(currentAmount.value.isEmpty()) 0 else currentAmount.value.toLong(),
                         it
                     )
+                    onCloseBottomSheet()
                 }
+
             }) {
-                Text(text = "Add Transaction")
+                Text(text = "Add Transaction", color = Color.White)
             }
         }
     }
@@ -204,4 +274,16 @@ fun CategoryItem(currentCategory:TransactionCategory? =null,transactionCategory:
             .clickable { onCategoryClicked(transactionCategory) },
         color = if(currentCategory!=null && currentCategory.id==transactionCategory.id) MaterialTheme.colors.primary else Color.Black
     )
+}
+@Preview
+@Composable
+fun previewBottomSheet(){
+    val categories = listOf(
+        TransactionCategory(id = 1, name = "Food",100343.22),
+        TransactionCategory(id = 1, name = "Transport",100343.22),
+        TransactionCategory(id = 1, name = "Vegetable",100343.22),
+        TransactionCategory(id = 1, name = "Househould",100343.22)
+
+    )
+    BottomSheetContent(onCloseBottomSheet = { /*TODO*/ }, categories = categories , onAddTransaction ={type, amount, category ->  } )
 }

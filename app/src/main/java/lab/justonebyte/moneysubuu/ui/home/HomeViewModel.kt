@@ -56,7 +56,7 @@ class HomeViewModel @Inject constructor(
             _viewModelUiState.update { it.copy(categories = categories) }
         }
     }
-    fun addTransaction(transactionCategory: TransactionCategory,amount:Int,type:Int){
+    fun addTransaction(transactionCategory: TransactionCategory,amount:Long,type:Int){
         viewModelScope.launch {
             transactionRepository.insert(
                 Transaction(
