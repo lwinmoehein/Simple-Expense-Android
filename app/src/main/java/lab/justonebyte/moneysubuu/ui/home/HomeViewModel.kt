@@ -35,9 +35,9 @@ class HomeViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-//           launch {
-//               collectBalance()
-//           }
+           launch {
+               collectBalance()
+           }
             launch {
                 collectCategories()
             }
@@ -45,7 +45,9 @@ class HomeViewModel @Inject constructor(
     }
     private suspend fun collectBalance(){
         transactionRepository.getTransactions().collect{
-            val sum = it.sumByDouble { it.amount }
+            val income = it.filter { it.type==TransactionType.Income }.sumByDouble { it.amount }
+            val expense = it.filter { it.type==TransactionType.Expense }.sumByDouble { it.amount }
+            val sum = income-expense
             _viewModelUiState.update { it.copy(currentBalance = sum) }
         }
     }
