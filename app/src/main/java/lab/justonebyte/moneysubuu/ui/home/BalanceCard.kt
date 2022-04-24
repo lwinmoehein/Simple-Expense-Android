@@ -1,16 +1,13 @@
 package lab.justonebyte.moneysubuu.ui.home
 
-import android.widget.Space
-import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.Card
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
-import androidx.compose.material.TextButton
-import androidx.compose.runtime.Composable
+import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowDropDown
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import lab.justonebyte.moneysubuu.ui.theme.Green
 import lab.justonebyte.moneysubuu.ui.theme.Red900
@@ -24,10 +21,39 @@ fun BalanceCard(
     expenseBalance:Int
 ){
 
+       var isMonthPickerExpanded by remember { mutableStateOf(false) }
         Column(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
+            Row() {
+                TextButton(onClick = { isMonthPickerExpanded=true }) {
+                    Text(text = "This Month",style = MaterialTheme.typography.button)
+                    Icon(imageVector = Icons.Filled.ArrowDropDown, contentDescription ="select month" )
+                }
+                DropdownMenu(
+                    expanded = isMonthPickerExpanded,
+                    onDismissRequest = { isMonthPickerExpanded = false },
+
+                ) {
+
+                        DropdownMenuItem(onClick = {
+                            isMonthPickerExpanded = false
+                        }) {
+                            Text(text = "This Month",style = MaterialTheme.typography.button)
+                        }
+                        DropdownMenuItem(onClick = {
+                            isMonthPickerExpanded = false
+                        }) {
+                            Text(text = "Select Month",style = MaterialTheme.typography.button)
+                        }
+                        DropdownMenuItem(onClick = {
+                            isMonthPickerExpanded = false
+                        }) {
+                            Text(text = "Total",style = MaterialTheme.typography.button)
+                        }
+                }
+            }
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(
                     text = "Balance : ",
