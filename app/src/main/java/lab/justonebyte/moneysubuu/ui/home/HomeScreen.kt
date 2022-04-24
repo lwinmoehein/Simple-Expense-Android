@@ -125,7 +125,8 @@ fun HomeContent(
                 expenseBalance = homeUiState.expenseBalance,
                 collectBalaceOfDay = {
                     collectBalanceOfDay(it)
-                }
+                },
+                selectedDay = homeUiState.selectedDay
             )
             SectionTitle(title = "Transaction")
             TransactionsCard(transactions = homeUiState.transactions)

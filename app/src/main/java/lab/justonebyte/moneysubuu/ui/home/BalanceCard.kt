@@ -1,6 +1,7 @@
 package lab.justonebyte.moneysubuu.ui.home
 
 import android.app.DatePickerDialog
+import android.util.Log
 import android.widget.DatePicker
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -24,25 +25,26 @@ fun BalanceCard(
     currentBalance: Int ,
     incomeBalance:Int,
     expenseBalance:Int,
-    collectBalaceOfDay:(day:String)->Unit
+    collectBalaceOfDay:(day:String)->Unit,
+    selectedDay:String
 ){
 
         val mContext = LocalContext.current
-        val mYear: Int
-        val mMonth: Int
-        val mDay: Int
+
         val mCalendar = Calendar.getInstance()
-        mYear = mCalendar.get(Calendar.YEAR)
-        mMonth = mCalendar.get(Calendar.MONTH)
-        mDay = mCalendar.get(Calendar.DAY_OF_MONTH)
+        val mYear by remember(selectedDay) { mutableStateOf(selectedDay.split('-')[0].toInt())}
+        val mMonth by remember(selectedDay){ mutableStateOf(selectedDay.split('-')[1].toInt())}
+        val mDay by remember(selectedDay) { mutableStateOf(selectedDay.split('-')[2].toInt())}
+        Log.i("dmy:",mYear.toString()+":"+mMonth.toString()+":"+mDay.toString())
         mCalendar.time = Date()
+
         val mDate = remember { mutableStateOf(dateFormatter(System.currentTimeMillis())) }
         val mDatePickerDialog = DatePickerDialog(
             mContext,
             { _: DatePicker, mYear: Int, mMonth: Int, mDayOfMonth: Int ->
                 mDate.value = "$mYear-${if(mMonth+1>=10) mMonth+1 else "0"+(mMonth+1)}-$mDayOfMonth"
                 collectBalaceOfDay(mDate.value)
-            }, mYear, mMonth, mDay
+            }, mYear, mMonth-1, mDay
         )
 
 

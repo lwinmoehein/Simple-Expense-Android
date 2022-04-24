@@ -1,6 +1,7 @@
 package lab.justonebyte.moneysubuu.ui.home
 
 import android.util.Log
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -24,6 +25,7 @@ data class HomeUiState(
     val categories:List<TransactionCategory>  = emptyList(),
     val transactions:List<Transaction> = emptyList(),
     val currentSnackBar : SnackBarType? = null,
+    val selectedDay:String = dateFormatter(System.currentTimeMillis())
     )
 
 @HiltViewModel
@@ -35,6 +37,7 @@ class HomeViewModel @Inject constructor(
     private val _viewModelUiState  = MutableStateFlow(
         HomeUiState(currentBalance = 0, incomeBalance = 0, expenseBalance = 0)
     )
+
     val viewModelUiState: StateFlow<HomeUiState>
         get() =  _viewModelUiState
 
@@ -46,8 +49,11 @@ class HomeViewModel @Inject constructor(
             }
         }
     }
-     fun collectDailyBalance(dateValue:String=dateFormatter(System.currentTimeMillis())){
-         Log.i("day:",dateValue)
+     fun collectDailyBalance(dateValue:String = viewModelUiState.value.selectedDay){
+        _viewModelUiState.update {
+            it.copy(selectedDay = dateValue)
+        }
+
         viewModelScope.launch {
             transactionRepository.getDailyTransactions(dateValue).collect{ transactions->
                 bindBalanceData(transactions)
