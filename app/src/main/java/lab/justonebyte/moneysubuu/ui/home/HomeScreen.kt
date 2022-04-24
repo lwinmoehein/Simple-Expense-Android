@@ -14,7 +14,7 @@ import kotlinx.coroutines.launch
 import lab.justonebyte.moneysubuu.ui.components.SuBuuSnackBar
 import lab.justonebyte.moneysubuu.ui.components.SuBuuSnackBarHost
 
-@OptIn(ExperimentalMaterialApi::class)
+@OptIn(ExperimentalMaterialApi::class, com.google.accompanist.pager.ExperimentalPagerApi::class)
 @Composable
 fun HomeScreen(
     openDrawer:()->Unit,
@@ -67,14 +67,14 @@ fun HomeScreen(
             }
         }, sheetPeekHeight = 0.dp
     ) {
-        HomeContent(
-            onOpenBottomSheet = {
 
+        HomeTabs(
+            homeUiState = homeUiState,
+            onOpenBottomSheet = {
                 coroutineScope.launch {
                     bottomSheetScaffoldState.bottomSheetState.expand()
                 }
-            },
-            homeUiState = homeUiState
+            }
         )
         SuBuuSnackBar(
             onDismissSnackBar = { homeViewModel.clearSnackBar() },
@@ -88,24 +88,27 @@ fun HomeScreen(
 @Composable
 fun HomeContent(
     onOpenBottomSheet:()->Unit,
-    homeUiState: HomeUiState
+    homeUiState: HomeUiState,
+    tab:Int
 ){
+
     Scaffold( floatingActionButton = {
         IconButton(
-            modifier = Modifier.absolutePadding(bottom=100.dp, right = 30.dp),
+            modifier = Modifier.absolutePadding(bottom=30.dp, right = 30.dp),
             onClick = {
                 onOpenBottomSheet()
               }) {
             Icon(              modifier = Modifier
-                .width(100.dp)
-                .height(100.dp),
+                .width(50.dp)
+                .height(50.dp),
                 imageVector = Icons.Filled.AddCircle, contentDescription ="add transaction" )
         }
 
     },) {
         Column(Modifier.padding(it)) {
+            Spacer(modifier = Modifier.height(30.dp))
             BalanceCard(currentBalance = homeUiState.currentBalance, incomeBalance = homeUiState.incomeBalance, expenseBalance = homeUiState.expenseBalance)
-            SectionTitle(title = "Transactions")
+            SectionTitle(title = tab.toString())
             TransactionsCard(transactions = homeUiState.transactions)
         }
     }

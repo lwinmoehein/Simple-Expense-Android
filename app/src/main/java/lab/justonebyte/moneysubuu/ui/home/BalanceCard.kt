@@ -26,34 +26,7 @@ fun BalanceCard(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            Row() {
-                TextButton(onClick = { isMonthPickerExpanded=true }) {
-                    Text(text = "This Month",style = MaterialTheme.typography.button)
-                    Icon(imageVector = Icons.Filled.ArrowDropDown, contentDescription ="select month" )
-                }
-                DropdownMenu(
-                    expanded = isMonthPickerExpanded,
-                    onDismissRequest = { isMonthPickerExpanded = false },
 
-                ) {
-
-                        DropdownMenuItem(onClick = {
-                            isMonthPickerExpanded = false
-                        }) {
-                            Text(text = "This Month",style = MaterialTheme.typography.button)
-                        }
-                        DropdownMenuItem(onClick = {
-                            isMonthPickerExpanded = false
-                        }) {
-                            Text(text = "Select Month",style = MaterialTheme.typography.button)
-                        }
-                        DropdownMenuItem(onClick = {
-                            isMonthPickerExpanded = false
-                        }) {
-                            Text(text = "Total",style = MaterialTheme.typography.button)
-                        }
-                }
-            }
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(
                     text = "Balance : ",
