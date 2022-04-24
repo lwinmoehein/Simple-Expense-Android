@@ -28,7 +28,9 @@ fun HomeTabs(
     homeUiState:HomeUiState,
     onOpenBottomSheet:()->Unit,
     onTabChanged:(BalanceType)->Unit,
-    collectBalanceOfDay:(day:String)->Unit
+    collectBalanceOfDay:(day:String)->Unit,
+    selectedBalanceType: BalanceType,
+    onMonthChoose:()->Unit
 ) {
 
     var tabIndex by remember { mutableStateOf(0) }
@@ -83,6 +85,10 @@ fun HomeTabs(
                 homeUiState = homeUiState,
                 collectBalanceOfDay = {
                     collectBalanceOfDay(it)
+                },
+                balanceType = selectedBalanceType,
+                onMonthChoose = {
+                    onMonthChoose()
                 }
              )
         }

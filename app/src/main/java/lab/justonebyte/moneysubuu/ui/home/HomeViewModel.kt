@@ -29,8 +29,11 @@ data class HomeUiState(
     val categories:List<TransactionCategory>  = emptyList(),
     val transactions:List<Transaction> = emptyList(),
     val currentSnackBar : SnackBarType? = null,
-    val selectedDay:String = dateFormatter(System.currentTimeMillis())
-    )
+    val selectedDay:String = dateFormatter(System.currentTimeMillis()),
+    val selectedMonth:String = monthFormatter(System.currentTimeMillis()),
+    val selectedYear:String = yearFormatter(System.currentTimeMillis())
+
+)
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
@@ -71,7 +74,10 @@ class HomeViewModel @Inject constructor(
             }
         }
     }
-     fun collectMonthlyBalance(dateValue:String= monthFormatter(System.currentTimeMillis())){
+     fun collectMonthlyBalance(dateValue:String=  viewModelUiState.value.selectedMonth){
+         _viewModelUiState.update {
+             it.copy(selectedMonth = dateValue)
+         }
         viewModelScope.launch {
             transactionRepository.getMonthlyTransactions(dateValue).collect{ transactions->
                 bindBalanceData(transactions)
@@ -79,6 +85,9 @@ class HomeViewModel @Inject constructor(
         }
     }
      fun collectYearlyBalance(dateValue:String= yearFormatter(System.currentTimeMillis())){
+         _viewModelUiState.update {
+             it.copy(selectedYear = dateValue)
+         }
         viewModelScope.launch {
             transactionRepository.getYearlyTransactions(dateValue).collect{ transactions->
                 bindBalanceData(transactions)

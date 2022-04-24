@@ -9,10 +9,12 @@ import androidx.compose.material.icons.filled.AddCircle
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
 import kotlinx.coroutines.launch
 import lab.justonebyte.moneysubuu.ui.components.SuBuuSnackBar
 import lab.justonebyte.moneysubuu.ui.components.SuBuuSnackBarHost
+import java.util.*
 
 @OptIn(ExperimentalMaterialApi::class, com.google.accompanist.pager.ExperimentalPagerApi::class)
 @Composable
@@ -20,13 +22,43 @@ fun HomeScreen(
     openDrawer:()->Unit,
 
 ){
+    val calendar = Calendar.getInstance()
     val homeViewModel = hiltViewModel<HomeViewModel>()
     val homeUiState by homeViewModel.viewModelUiState.collectAsState()
     val bottomSheetScaffoldState = rememberBottomSheetScaffoldState(
         bottomSheetState = BottomSheetState(BottomSheetValue.Collapsed)
     )
     val coroutineScope = rememberCoroutineScope()
+    val balanceType = remember{ mutableStateOf(BalanceType.DAILY)}
 
+    val isMonthPickerShown = remember { mutableStateOf(false)}
+    val selectedMonthYear = remember { mutableStateOf(calendar.get(Calendar.YEAR))}
+    val selectedMonthMonth = remember { mutableStateOf(calendar.get(Calendar.MONTH))}
+
+    if(isMonthPickerShown.value){
+        Dialog(onDismissRequest = { isMonthPickerShown.value=false }) {
+                MonthPicker(
+                    selectedMonth = selectedMonthMonth.value,
+                    selectedYear =selectedMonthYear.value ,
+                    onYearSelected ={
+                      selectedMonthYear.value=it
+                    } ,
+                    onMonthSelected = {
+                        selectedMonthMonth.value=it
+
+                    },
+                    onConfirmPicker = {
+                        isMonthPickerShown.value =false
+                        if(balanceType.value==BalanceType.MONTHLY){
+                            homeViewModel.collectMonthlyBalance("${selectedMonthYear.value}-${if(selectedMonthMonth.value<10) "0"+selectedMonthMonth.value else selectedMonthMonth.value}")
+                        }else{
+                            homeViewModel.collectYearlyBalance(selectedMonthYear.value.toString())
+                        }
+                    },
+                    isMonthPicker = balanceType.value==BalanceType.MONTHLY
+            )
+        }
+    }
 
     BottomSheetScaffold(
         scaffoldState = bottomSheetScaffoldState,
@@ -55,10 +87,7 @@ fun HomeScreen(
                     },
                     onCloseBottomSheet = {
                         coroutineScope.launch {
-                            Log.i("bottomsheet:", bottomSheetScaffoldState.bottomSheetState.isExpanded.toString())
-
                             bottomSheetScaffoldState.bottomSheetState.collapse()
-                            Log.i("bottomsheet:", bottomSheetScaffoldState.bottomSheetState.isExpanded.toString())
                         }
                     },
                     showIncorrectDataSnack = {
@@ -77,6 +106,7 @@ fun HomeScreen(
                 }
             },
             onTabChanged = {
+                balanceType.value = it
                 when(it){
                     BalanceType.DAILY->homeViewModel.collectDailyBalance()
                     BalanceType.MONTHLY->homeViewModel.collectMonthlyBalance()
@@ -86,6 +116,10 @@ fun HomeScreen(
             },
             collectBalanceOfDay = {
                 homeViewModel.collectDailyBalance(it)
+            },
+            selectedBalanceType = balanceType.value,
+            onMonthChoose = {
+                isMonthPickerShown.value =true
             }
         )
         SuBuuSnackBar(
@@ -101,7 +135,9 @@ fun HomeScreen(
 fun HomeContent(
     onOpenBottomSheet:()->Unit,
     homeUiState: HomeUiState,
-    collectBalanceOfDay:(day:String)->Unit
+    collectBalanceOfDay:(day:String)->Unit,
+    balanceType: BalanceType,
+    onMonthChoose:()->Unit
 ){
 
     Scaffold( floatingActionButton = {
@@ -126,7 +162,13 @@ fun HomeContent(
                 collectBalaceOfDay = {
                     collectBalanceOfDay(it)
                 },
-                selectedDay = homeUiState.selectedDay
+                selectedDay = homeUiState.selectedDay,
+                selectedMonth = homeUiState.selectedMonth,
+                selectedYear = homeUiState.selectedYear,
+                balanceType = balanceType,
+                onMonthChoose = {
+                    onMonthChoose()
+                }
             )
             SectionTitle(title = "Transaction")
             TransactionsCard(transactions = homeUiState.transactions)

@@ -26,17 +26,17 @@ fun BalanceCard(
     incomeBalance:Int,
     expenseBalance:Int,
     collectBalaceOfDay:(day:String)->Unit,
-    selectedDay:String
+    selectedDay:String,
+    selectedMonth:String,
+    selectedYear:String,
+    balanceType: BalanceType,
+    onMonthChoose:()->Unit
 ){
 
         val mContext = LocalContext.current
-
-        val mCalendar = Calendar.getInstance()
         val mYear by remember(selectedDay) { mutableStateOf(selectedDay.split('-')[0].toInt())}
         val mMonth by remember(selectedDay){ mutableStateOf(selectedDay.split('-')[1].toInt())}
         val mDay by remember(selectedDay) { mutableStateOf(selectedDay.split('-')[2].toInt())}
-        Log.i("dmy:",mYear.toString()+":"+mMonth.toString()+":"+mDay.toString())
-        mCalendar.time = Date()
 
         val mDate = remember { mutableStateOf(dateFormatter(System.currentTimeMillis())) }
         val mDatePickerDialog = DatePickerDialog(
@@ -46,6 +46,7 @@ fun BalanceCard(
                 collectBalaceOfDay(mDate.value)
             }, mYear, mMonth-1, mDay
         )
+
 
 
     Column(
@@ -65,8 +66,19 @@ fun BalanceCard(
                 )
             }
             Row(horizontalArrangement = Arrangement.Center){
-                TextButton(onClick = { mDatePickerDialog.show() }) {
-                    Text(text = mDate.value)
+                TextButton(onClick = {
+                    when(balanceType){
+                        BalanceType.DAILY->mDatePickerDialog.show()
+                        BalanceType.MONTHLY->onMonthChoose()
+                        BalanceType.YEARLY->onMonthChoose()
+                    }
+                }) {
+                    Text(text =  when(balanceType){
+                        BalanceType.DAILY-> mDate.value
+                        BalanceType.MONTHLY->selectedMonth
+                        BalanceType.YEARLY->selectedYear
+                        else->"Total"
+                    })
                 }
             }
             Spacer(modifier = Modifier.height(20.dp))
