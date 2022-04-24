@@ -19,7 +19,7 @@ import lab.justonebyte.moneysubuu.ui.theme.SuBuuShapes
 @Composable
 fun BalanceCard(
     modifier: Modifier = Modifier,
-    currentBalance: Double =0.0,
+    currentBalance: Int ,
     incomeBalance:Int,
     expenseBalance:Int
 ){

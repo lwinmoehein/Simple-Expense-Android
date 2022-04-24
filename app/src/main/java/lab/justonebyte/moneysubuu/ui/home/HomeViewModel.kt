@@ -12,15 +12,17 @@ import lab.justonebyte.moneysubuu.data.TransactionRepository
 import lab.justonebyte.moneysubuu.model.Transaction
 import lab.justonebyte.moneysubuu.model.TransactionCategory
 import lab.justonebyte.moneysubuu.model.TransactionType
+import lab.justonebyte.moneysubuu.ui.components.SnackBarType
 import javax.inject.Inject
 
 data class HomeUiState(
-    val currentBalance:Double,
+    val currentBalance:Int,
     val incomeBalance:Int,
     val expenseBalance:Int,
     val categories:List<TransactionCategory>  = emptyList(),
-    val transactions:List<Transaction> = emptyList()
-)
+    val transactions:List<Transaction> = emptyList(),
+    val currentSnackBar : SnackBarType? = null,
+    )
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
@@ -29,7 +31,7 @@ class HomeViewModel @Inject constructor(
 ):ViewModel()
 {
     private val _viewModelUiState  = MutableStateFlow(
-        HomeUiState(currentBalance = 0.0, incomeBalance = 0, expenseBalance = 0)
+        HomeUiState(currentBalance = 0, incomeBalance = 0, expenseBalance = 0)
     )
     val viewModelUiState: StateFlow<HomeUiState>
         get() =  _viewModelUiState
@@ -63,11 +65,21 @@ class HomeViewModel @Inject constructor(
             _viewModelUiState.update { it.copy(categories = categories) }
         }
     }
-    fun addTransaction(transactionCategory: TransactionCategory,amount:Long,type:Int){
+    fun showIncorrectFormDataSnackbar(){
+        _viewModelUiState.update {
+            it.copy(currentSnackBar = SnackBarType.INCORRECT_DATA)
+        }
+    }
+    fun clearSnackBar(){
+        _viewModelUiState.update {
+            it.copy(currentSnackBar = null)
+        }
+    }
+    fun addTransaction(transactionCategory: TransactionCategory,amount:Int,type:Int){
         viewModelScope.launch {
             transactionRepository.insert(
                 Transaction(
-                    amount = amount.toDouble(),
+                    amount = amount,
                     type = if(type==1) TransactionType.Income else TransactionType.Expense,
                     category = transactionCategory,
                     created_at = System.currentTimeMillis().toDouble()

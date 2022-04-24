@@ -8,7 +8,7 @@ import androidx.room.PrimaryKey
 class TransactionEntity(
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "id") val id:Int?=null,
-    @ColumnInfo(name = "amount") val amount: Double,
+    @ColumnInfo(name = "amount") val amount: Int,
     @ColumnInfo(name = "type") val type: Int,
     @ColumnInfo(name = "category_id")val category_id:Int,
     @ColumnInfo(name = "created_at") val created_at:Double
@@ -16,7 +16,7 @@ class TransactionEntity(
 
 data class TransactionWithCategory(
    val id:Int,
-   val amount: Double,
+   val amount: Int,
    val type: Int,
    val category_id:Int,
    val category_name:String,

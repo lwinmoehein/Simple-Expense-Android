@@ -26,7 +26,8 @@ import lab.justonebyte.moneysubuu.ui.appContentPadding
 fun AddTransactionSheetContent(
     onCloseBottomSheet:()->Unit,
     categories:List<TransactionCategory>,
-    onAddTransaction:(type:Int,amount:Long,category: TransactionCategory)->Unit
+    showIncorrectDataSnack:()->Unit,
+    onAddTransaction:(type:Int,amount:Int,category: TransactionCategory)->Unit
 ){
     val currentType = remember{ mutableStateOf(1) }
     val currentCategory = remember{ mutableStateOf<TransactionCategory?>(null) }
@@ -136,13 +137,23 @@ fun AddTransactionSheetContent(
                     .background(MaterialTheme.colors.primary)
                     .absolutePadding(left = 40.dp, right = 40.dp),
                 onClick = {
-                    currentCategory.value?.let {
-                        onAddTransaction(
-                            currentType.value,
-                            if(currentAmount.value.isEmpty()) 0 else currentAmount.value.toLong(),
-                            it
-                        )
-                        onCloseBottomSheet()
+                    val amount =if(currentAmount.value.isEmpty()) 0 else currentAmount.value.toInt()
+
+                    if(currentCategory.value==null || amount<=0){
+                        showIncorrectDataSnack()
+                    }else{
+                        currentCategory.value?.let {
+                            onAddTransaction(
+                                currentType.value,
+                                amount,
+                                it
+                            )
+                            onCloseBottomSheet()
+                            currentAmount.value = ""
+                            currentCategory.value = null
+                            currentType.value=1
+
+                        }
                     }
 
                 }) {
