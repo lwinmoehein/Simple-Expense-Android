@@ -16,6 +16,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -29,6 +30,7 @@ fun AddTransactionSheetContent(
     showIncorrectDataSnack:()->Unit,
     onAddTransaction:(type:Int,amount:Int,category: TransactionCategory)->Unit
 ){
+    val localFocusManage =  LocalFocusManager.current
     val currentType = remember{ mutableStateOf(1) }
     val currentCategory = remember{ mutableStateOf<TransactionCategory?>(null) }
     val currentAmount = remember {
@@ -152,6 +154,8 @@ fun AddTransactionSheetContent(
                             currentAmount.value = ""
                             currentCategory.value = null
                             currentType.value=1
+                           localFocusManage.clearFocus()
+
 
                         }
                     }
