@@ -80,8 +80,8 @@ fun HomeScreen(
                 when(it){
                     BalanceType.DAILY->homeViewModel.collectDailyBalance()
                     BalanceType.MONTHLY->homeViewModel.collectMonthlyBalance()
-                    BalanceType.WEEKLY->homeViewModel.collectDailyBalance()
-                    else->homeViewModel.collectYearlyBalance()
+                    BalanceType.YEARLY->homeViewModel.collectYearlyBalance()
+                    else->homeViewModel.collectTotalBalance()
                 }
             },
             collectBalanceOfDay = {

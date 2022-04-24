@@ -16,12 +16,16 @@ import lab.justonebyte.moneysubuu.model.TransactionCategory
 import lab.justonebyte.moneysubuu.model.TransactionType
 import lab.justonebyte.moneysubuu.ui.components.SnackBarType
 import lab.justonebyte.moneysubuu.utils.dateFormatter
+import lab.justonebyte.moneysubuu.utils.monthFormatter
+import lab.justonebyte.moneysubuu.utils.yearFormatter
+import java.time.LocalDate
 import javax.inject.Inject
 
 data class HomeUiState(
     val currentBalance:Int,
     val incomeBalance:Int,
     val expenseBalance:Int,
+    val totalBalance:Int,
     val categories:List<TransactionCategory>  = emptyList(),
     val transactions:List<Transaction> = emptyList(),
     val currentSnackBar : SnackBarType? = null,
@@ -35,7 +39,7 @@ class HomeViewModel @Inject constructor(
 ):ViewModel()
 {
     private val _viewModelUiState  = MutableStateFlow(
-        HomeUiState(currentBalance = 0, incomeBalance = 0, expenseBalance = 0)
+        HomeUiState(currentBalance = 0, incomeBalance = 0, expenseBalance = 0, totalBalance = 0)
     )
 
     val viewModelUiState: StateFlow<HomeUiState>
@@ -46,6 +50,13 @@ class HomeViewModel @Inject constructor(
         viewModelScope.launch {
             launch {
                 collectCategories()
+            }
+        }
+    }
+    fun collectTotalBalance(){
+        viewModelScope.launch {
+            transactionRepository.getTotalTransactions().collect{ transactions->
+                bindBalanceData(transactions)
             }
         }
     }
@@ -60,16 +71,16 @@ class HomeViewModel @Inject constructor(
             }
         }
     }
-     fun collectMonthlyBalance(dateValue:String=dateFormatter(System.currentTimeMillis())){
+     fun collectMonthlyBalance(dateValue:String= monthFormatter(System.currentTimeMillis())){
         viewModelScope.launch {
-            transactionRepository.getDailyTransactions(dateValue).collect{ transactions->
+            transactionRepository.getMonthlyTransactions(dateValue).collect{ transactions->
                 bindBalanceData(transactions)
             }
         }
     }
-     fun collectYearlyBalance(dateValue:String=dateFormatter(System.currentTimeMillis())){
+     fun collectYearlyBalance(dateValue:String= yearFormatter(System.currentTimeMillis())){
         viewModelScope.launch {
-            transactionRepository.getDailyTransactions(dateValue).collect{ transactions->
+            transactionRepository.getYearlyTransactions(dateValue).collect{ transactions->
                 bindBalanceData(transactions)
             }
         }

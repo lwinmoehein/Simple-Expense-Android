@@ -9,6 +9,7 @@ interface TransactionRepository {
     fun getDailyTransactions(day:String): Flow<List<Transaction>>
     fun getMonthlyTransactions(month:String): Flow<List<Transaction>>
     fun getYearlyTransactions(year:String): Flow<List<Transaction>>
+    fun getTotalTransactions(): Flow<List<Transaction>>
 
     suspend fun insert(transaction: Transaction)
 }
@@ -25,6 +26,11 @@ class TransactionRepositoryImpl @Inject constructor(val transactionDao: Transact
 
     override fun getYearlyTransactions(year:String): Flow<List<Transaction>> {
         val transactionEntities = transactionDao.getTransactionsByYear(year)
+        return transactionEntities.map { list -> list.map { Transaction.Mapper.mapToDomain(it) } }
+    }
+
+    override fun getTotalTransactions(): Flow<List<Transaction>> {
+        val transactionEntities = transactionDao.getTotalTransactions()
         return transactionEntities.map { list -> list.map { Transaction.Mapper.mapToDomain(it) } }
     }
 

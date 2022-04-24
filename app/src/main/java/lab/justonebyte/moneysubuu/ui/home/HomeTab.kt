@@ -14,12 +14,12 @@ import kotlinx.coroutines.launch
 
 sealed class HomeTab(val index:Int,val title:String){
     object  Daily:HomeTab(0,"Daily")
-    object Weekly:HomeTab(1,"Weekly")
-    object Monthly:HomeTab(2,"monthly")
-    object Yearly:HomeTab(3,"Yearly")
+    object Monthly:HomeTab(1,"monthly")
+    object Yearly:HomeTab(2,"Yearly")
+    object Total:HomeTab(3,"Total")
 }
 val tabs = listOf(
-    HomeTab.Daily,HomeTab.Weekly,HomeTab.Monthly,HomeTab.Yearly
+    HomeTab.Daily,HomeTab.Monthly,HomeTab.Yearly,HomeTab.Total
 )
 
 @ExperimentalPagerApi
@@ -39,10 +39,10 @@ fun HomeTabs(
         // Collect from the pager state a snapshotFlow reading the currentPage
         snapshotFlow { pagerState.currentPage }.collect { page ->
             val balanceType = when(pagerState.currentPage){
-                HomeTab.Yearly.index->BalanceType.YEARLY
-                HomeTab.Weekly.index->BalanceType.WEEKLY
+                HomeTab.Daily.index->BalanceType.DAILY
                 HomeTab.Monthly.index->BalanceType.MONTHLY
-                else->BalanceType.DAILY
+                HomeTab.Yearly.index->BalanceType.YEARLY
+                else->BalanceType.TOTAL
             }
             onTabChanged(balanceType)
         }
