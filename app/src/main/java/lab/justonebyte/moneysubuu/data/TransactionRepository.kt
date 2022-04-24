@@ -6,12 +6,25 @@ import lab.justonebyte.moneysubuu.model.Transaction
 import javax.inject.Inject
 
 interface TransactionRepository {
-    fun getTransactions(): Flow<List<Transaction>>
+    fun getDailyTransactions(day:String): Flow<List<Transaction>>
+    fun getMonthlyTransactions(month:String): Flow<List<Transaction>>
+    fun getYearlyTransactions(year:String): Flow<List<Transaction>>
+
     suspend fun insert(transaction: Transaction)
 }
 class TransactionRepositoryImpl @Inject constructor(val transactionDao: TransactionDao):TransactionRepository {
-    override fun getTransactions(): Flow<List<Transaction>> {
-        val transactionEntities = transactionDao.getTransactions()
+    override fun getDailyTransactions(day:String): Flow<List<Transaction>> {
+        val transactionEntities = transactionDao.getTransactions(day)
+        return transactionEntities.map { list -> list.map { Transaction.Mapper.mapToDomain(it) } }
+    }
+
+    override fun getMonthlyTransactions(month:String): Flow<List<Transaction>> {
+        val transactionEntities = transactionDao.getTransactionsByMonth(month)
+        return transactionEntities.map { list -> list.map { Transaction.Mapper.mapToDomain(it) } }
+    }
+
+    override fun getYearlyTransactions(year:String): Flow<List<Transaction>> {
+        val transactionEntities = transactionDao.getTransactionsByYear(year)
         return transactionEntities.map { list -> list.map { Transaction.Mapper.mapToDomain(it) } }
     }
 

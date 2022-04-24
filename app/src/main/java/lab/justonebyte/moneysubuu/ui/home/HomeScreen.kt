@@ -74,6 +74,14 @@ fun HomeScreen(
                 coroutineScope.launch {
                     bottomSheetScaffoldState.bottomSheetState.expand()
                 }
+            },
+            onTabChanged = {
+                when(it){
+                    BalanceType.DAILY->homeViewModel.collectDailyBalance()
+                    BalanceType.MONTHLY->homeViewModel.collectMonthlyBalance()
+                    BalanceType.WEEKLY->homeViewModel.collectDailyBalance()
+                    else->homeViewModel.collectYearlyBalance()
+                }
             }
         )
         SuBuuSnackBar(
@@ -89,7 +97,6 @@ fun HomeScreen(
 fun HomeContent(
     onOpenBottomSheet:()->Unit,
     homeUiState: HomeUiState,
-    tab:Int
 ){
 
     Scaffold( floatingActionButton = {
@@ -108,7 +115,7 @@ fun HomeContent(
         Column(Modifier.padding(it)) {
             Spacer(modifier = Modifier.height(30.dp))
             BalanceCard(currentBalance = homeUiState.currentBalance, incomeBalance = homeUiState.incomeBalance, expenseBalance = homeUiState.expenseBalance)
-            SectionTitle(title = tab.toString())
+            SectionTitle(title = "Transaction")
             TransactionsCard(transactions = homeUiState.transactions)
         }
     }

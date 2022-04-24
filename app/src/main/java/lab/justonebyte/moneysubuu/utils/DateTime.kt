@@ -5,6 +5,15 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 @SuppressLint("SimpleDateFormat")
-fun dateFormatter(milliseconds: Double): String {
-    return SimpleDateFormat("dd/MM/yyyy").format(Date(milliseconds.toLong())).toString()
+fun dateFormatter(milliseconds: Long): String {
+    return SimpleDateFormat("yyyy-MM-dd").format(Date(milliseconds)).toString()
+}
+
+@SuppressLint("SimpleDateFormat")
+fun monthFormatter(milliseconds: Long): String {
+    return SimpleDateFormat("yyyy-MM").format(Date(milliseconds)).toString()
+}
+@SuppressLint("SimpleDateFormat")
+fun yearFormatter(milliseconds: Long): String {
+    return SimpleDateFormat("yyyy").format(Date(milliseconds)).toString()
 }

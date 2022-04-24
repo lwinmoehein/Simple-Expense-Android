@@ -26,12 +26,27 @@ val tabs = listOf(
 @Composable
 fun HomeTabs(
     homeUiState:HomeUiState,
-    onOpenBottomSheet:()->Unit
+    onOpenBottomSheet:()->Unit,
+    onTabChanged:(BalanceType)->Unit
 ) {
 
     var tabIndex by remember { mutableStateOf(0) }
     val pagerState = rememberPagerState()
     val coroutineScope = rememberCoroutineScope()
+
+    LaunchedEffect(pagerState) {
+        // Collect from the pager state a snapshotFlow reading the currentPage
+        snapshotFlow { pagerState.currentPage }.collect { page ->
+            val balanceType = when(pagerState.currentPage){
+                HomeTab.Yearly.index->BalanceType.YEARLY
+                HomeTab.Weekly.index->BalanceType.WEEKLY
+                HomeTab.Monthly.index->BalanceType.MONTHLY
+                else->BalanceType.DAILY
+            }
+            onTabChanged(balanceType)
+        }
+    }
+
     Column {
         TabRow(
             backgroundColor = Color.Transparent,
@@ -65,7 +80,6 @@ fun HomeTabs(
                                     onOpenBottomSheet()
                 },
                 homeUiState = homeUiState,
-                tab=tabIndex
              )
         }
     }

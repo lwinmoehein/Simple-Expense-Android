@@ -45,6 +45,6 @@ fun TransactionItem(transaction:Transaction,modifier: Modifier=Modifier){
             modifier = Modifier.weight(1f),
             color = if(transaction.type.value==1) Green else Red900
         )
-        Text(text = dateFormatter(transaction.created_at),modifier = Modifier.weight(1f))
+        Text(text = transaction.created_at,modifier = Modifier.weight(1f))
     }
 }

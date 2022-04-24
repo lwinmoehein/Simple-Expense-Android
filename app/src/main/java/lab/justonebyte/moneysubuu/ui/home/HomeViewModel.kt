@@ -13,6 +13,7 @@ import lab.justonebyte.moneysubuu.model.Transaction
 import lab.justonebyte.moneysubuu.model.TransactionCategory
 import lab.justonebyte.moneysubuu.model.TransactionType
 import lab.justonebyte.moneysubuu.ui.components.SnackBarType
+import lab.justonebyte.moneysubuu.utils.dateFormatter
 import javax.inject.Inject
 
 data class HomeUiState(
@@ -37,29 +38,50 @@ class HomeViewModel @Inject constructor(
         get() =  _viewModelUiState
 
     init {
+        collectDailyBalance()
         viewModelScope.launch {
-           launch {
-               collectBalance()
-           }
             launch {
                 collectCategories()
             }
         }
     }
-    private suspend fun collectBalance(){
-        transactionRepository.getTransactions().collect{ transactions->
-            val income = transactions.filter { it.type==TransactionType.Income }.sumOf{ it.amount }
-            val expense = transactions.filter { it.type==TransactionType.Expense }.sumOf { it.amount }
-            val sum = income-expense
-            _viewModelUiState.update {
-                it.copy(
-                    currentBalance = sum,
-                    incomeBalance = income.toInt(),
-                    expenseBalance = expense.toInt(),
-                    transactions = transactions
-                ) }
+     fun collectDailyBalance(dateValue:String=dateFormatter(System.currentTimeMillis())){
+        viewModelScope.launch {
+            transactionRepository.getDailyTransactions(dateValue).collect{ transactions->
+                bindBalanceData(transactions)
+            }
         }
     }
+     fun collectMonthlyBalance(dateValue:String=dateFormatter(System.currentTimeMillis())){
+        viewModelScope.launch {
+            transactionRepository.getDailyTransactions(dateValue).collect{ transactions->
+                bindBalanceData(transactions)
+            }
+        }
+    }
+     fun collectYearlyBalance(dateValue:String=dateFormatter(System.currentTimeMillis())){
+        viewModelScope.launch {
+            transactionRepository.getDailyTransactions(dateValue).collect{ transactions->
+                bindBalanceData(transactions)
+            }
+        }
+    }
+
+    private fun bindBalanceData(transactions: List<Transaction>) {
+        val income = transactions.filter { it.type==TransactionType.Income }.sumOf{ it.amount }
+        val expense = transactions.filter { it.type==TransactionType.Expense }.sumOf { it.amount }
+        val sum = income-expense
+
+        _viewModelUiState.update {
+            it.copy(
+                currentBalance = sum,
+                incomeBalance = income,
+                expenseBalance = expense,
+                transactions = transactions
+            )
+        }
+    }
+
     private suspend fun collectCategories(){
         categoryRepository.getCategories().collect{ categories->
             _viewModelUiState.update { it.copy(categories = categories) }
@@ -82,7 +104,7 @@ class HomeViewModel @Inject constructor(
                     amount = amount,
                     type = if(type==1) TransactionType.Income else TransactionType.Expense,
                     category = transactionCategory,
-                    created_at = System.currentTimeMillis().toDouble()
+                    created_at = dateFormatter( System.currentTimeMillis())
                 )
             )
         }

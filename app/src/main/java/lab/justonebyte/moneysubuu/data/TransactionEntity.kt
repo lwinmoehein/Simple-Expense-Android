@@ -11,7 +11,7 @@ class TransactionEntity(
     @ColumnInfo(name = "amount") val amount: Int,
     @ColumnInfo(name = "type") val type: Int,
     @ColumnInfo(name = "category_id")val category_id:Int,
-    @ColumnInfo(name = "created_at") val created_at:Double
+    @ColumnInfo(name = "created_at") val created_at:String
    )
 
 data class TransactionWithCategory(
@@ -20,6 +20,6 @@ data class TransactionWithCategory(
    val type: Int,
    val category_id:Int,
    val category_name:String,
-   val category_created_at:Double,
-   val created_at:Double
+   val category_created_at:String,
+   val created_at:String
 )

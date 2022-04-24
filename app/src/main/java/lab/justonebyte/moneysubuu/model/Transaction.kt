@@ -2,13 +2,14 @@ package lab.justonebyte.moneysubuu.model
 
 import lab.justonebyte.moneysubuu.data.TransactionEntity
 import lab.justonebyte.moneysubuu.data.TransactionWithCategory
+import lab.justonebyte.moneysubuu.utils.dateFormatter
 
 enum class TransactionType(val value:Int){
     Income(1),
     Expense(2)
 }
 
-data class Transaction(val id:Int?=null,val amount:Int,val type: TransactionType,val category: TransactionCategory,val created_at:Double){
+data class Transaction(val id:Int?=null,val amount:Int,val type: TransactionType,val category: TransactionCategory,val created_at:String){
     object  Mapper {
         fun mapToDomain(transactionEntity: TransactionWithCategory):Transaction{
             return Transaction(
@@ -24,7 +25,7 @@ data class Transaction(val id:Int?=null,val amount:Int,val type: TransactionType
                 amount = transaction.amount,
                 type = transaction.type.value,
                 category_id=transaction.category.id,
-                created_at = System.currentTimeMillis().toDouble()
+                created_at = dateFormatter(System.currentTimeMillis())
             )
         }
     }

@@ -9,5 +9,5 @@ class CategoryEntity(
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "id") val id:Int?=null,
     @ColumnInfo(name = "name") val name: String,
-    @ColumnInfo(name="created_at") val created_at:Double
+    @ColumnInfo(name="created_at") val created_at:String
 )
