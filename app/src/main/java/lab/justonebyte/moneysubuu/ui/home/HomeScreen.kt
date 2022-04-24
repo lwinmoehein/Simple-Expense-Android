@@ -121,8 +121,8 @@ fun HomeContent(
 @Composable
 fun SectionTitle(title:String,modifier: Modifier = Modifier){
     Row(
-        modifier = modifier.absolutePadding(top = 10.dp, bottom = 10.dp)
+        modifier = modifier.absolutePadding(top = 10.dp, bottom = 10.dp, left = 20.dp, right = 20.dp)
     ) {
-        Text(text = title, style = MaterialTheme.typography.subtitle2, color = MaterialTheme.colors.primary)
+        Text(text = title, style = MaterialTheme.typography.h6, color = MaterialTheme.colors.primary)
     }
 }

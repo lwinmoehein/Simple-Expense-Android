@@ -35,7 +35,8 @@ fun BalanceCard(
                 )
                 Text(
                     text = currentBalance.toString(),
-                    style = MaterialTheme.typography.h6
+                    style = MaterialTheme.typography.h6,
+                    color = if(currentBalance>0) Green else Red900
 
                 )
             }
