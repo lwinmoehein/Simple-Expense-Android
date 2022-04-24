@@ -25,7 +25,7 @@ data class Transaction(val id:Int?=null,val amount:Int,val type: TransactionType
                 amount = transaction.amount,
                 type = transaction.type.value,
                 category_id=transaction.category.id,
-                created_at = dateFormatter(System.currentTimeMillis())
+                created_at = transaction.created_at
             )
         }
     }

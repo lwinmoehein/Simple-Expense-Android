@@ -27,7 +27,8 @@ val tabs = listOf(
 fun HomeTabs(
     homeUiState:HomeUiState,
     onOpenBottomSheet:()->Unit,
-    onTabChanged:(BalanceType)->Unit
+    onTabChanged:(BalanceType)->Unit,
+    collectBalanceOfDay:(day:String)->Unit
 ) {
 
     var tabIndex by remember { mutableStateOf(0) }
@@ -80,6 +81,9 @@ fun HomeTabs(
                                     onOpenBottomSheet()
                 },
                 homeUiState = homeUiState,
+                collectBalanceOfDay = {
+                    collectBalanceOfDay(it)
+                }
              )
         }
     }

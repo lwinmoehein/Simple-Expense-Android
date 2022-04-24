@@ -1,5 +1,6 @@
 package lab.justonebyte.moneysubuu.ui.home
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -46,6 +47,7 @@ class HomeViewModel @Inject constructor(
         }
     }
      fun collectDailyBalance(dateValue:String=dateFormatter(System.currentTimeMillis())){
+         Log.i("day:",dateValue)
         viewModelScope.launch {
             transactionRepository.getDailyTransactions(dateValue).collect{ transactions->
                 bindBalanceData(transactions)
@@ -97,14 +99,14 @@ class HomeViewModel @Inject constructor(
             it.copy(currentSnackBar = null)
         }
     }
-    fun addTransaction(transactionCategory: TransactionCategory,amount:Int,type:Int){
+    fun addTransaction(transactionCategory: TransactionCategory,amount:Int,type:Int,date:String){
         viewModelScope.launch {
             transactionRepository.insert(
                 Transaction(
                     amount = amount,
                     type = if(type==1) TransactionType.Income else TransactionType.Expense,
                     category = transactionCategory,
-                    created_at = dateFormatter( System.currentTimeMillis())
+                    created_at = date
                 )
             )
         }

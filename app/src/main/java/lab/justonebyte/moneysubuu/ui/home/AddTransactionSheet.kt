@@ -16,26 +16,66 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import lab.justonebyte.moneysubuu.model.TransactionCategory
 import lab.justonebyte.moneysubuu.ui.appContentPadding
+import java.util.*
+import android.app.DatePickerDialog
+import android.os.Bundle
+import android.widget.DatePicker
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
+import androidx.compose.foundation.layout.*
+import androidx.compose.material.*
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
+
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import lab.justonebyte.moneysubuu.utils.dateFormatter
+import java.util.*
+
 
 @Composable
 fun AddTransactionSheetContent(
     onCloseBottomSheet:()->Unit,
     categories:List<TransactionCategory>,
     showIncorrectDataSnack:()->Unit,
-    onAddTransaction:(type:Int,amount:Int,category: TransactionCategory)->Unit
+    onAddTransaction:(type:Int,amount:Int,category: TransactionCategory,date:String)->Unit
 ){
+
+    val mContext = LocalContext.current
+    val mYear: Int
+    val mMonth: Int
+    val mDay: Int
+    val mCalendar = Calendar.getInstance()
+    mYear = mCalendar.get(Calendar.YEAR)
+    mMonth = mCalendar.get(Calendar.MONTH)
+    mDay = mCalendar.get(Calendar.DAY_OF_MONTH)
+    mCalendar.time = Date()
+    val mDate = remember { mutableStateOf(dateFormatter(System.currentTimeMillis())) }
+
     val localFocusManage =  LocalFocusManager.current
     val currentType = remember{ mutableStateOf(1) }
     val currentCategory = remember{ mutableStateOf<TransactionCategory?>(null) }
     val currentAmount = remember {
         mutableStateOf("")
     }
+
+    val mDatePickerDialog = DatePickerDialog(
+        mContext,
+        { _: DatePicker, mYear: Int, mMonth: Int, mDayOfMonth: Int ->
+            mDate.value = "$mYear-${if(mMonth+1>=10) mMonth+1 else "0"+(mMonth+1)}-$mDayOfMonth"
+        }, mYear, mMonth, mDay
+    )
+
     Column(
         Modifier
             .fillMaxSize()
@@ -130,6 +170,12 @@ fun AddTransactionSheetContent(
                 }
             }
         )
+        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.Center){
+            Text(text = "Date")
+            TextButton(onClick = { mDatePickerDialog.show() }) {
+                Text(text = mDate.value)
+            }
+        }
         Row(horizontalArrangement = Arrangement.Center, modifier = Modifier.fillMaxWidth()) {
             TextButton(
                 shape = RoundedCornerShape(10.dp),
@@ -148,7 +194,9 @@ fun AddTransactionSheetContent(
                             onAddTransaction(
                                 currentType.value,
                                 amount,
-                                it
+                                it,
+                                mDate.value.replace('/','-'),
+
                             )
                             onCloseBottomSheet()
                             currentAmount.value = ""

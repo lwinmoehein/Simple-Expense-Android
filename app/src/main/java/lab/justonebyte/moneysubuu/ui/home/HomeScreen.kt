@@ -45,11 +45,12 @@ fun HomeScreen(
             ) {
                 AddTransactionSheetContent(
                     categories =  homeUiState.categories,
-                    onAddTransaction = {type, amount, category ->
+                    onAddTransaction = {type, amount, category,date->
                         homeViewModel.addTransaction(
                             transactionCategory = category,
                             type = type,
-                            amount = amount
+                            amount = amount,
+                            date = date
                         )
                     },
                     onCloseBottomSheet = {
@@ -82,6 +83,9 @@ fun HomeScreen(
                     BalanceType.WEEKLY->homeViewModel.collectDailyBalance()
                     else->homeViewModel.collectYearlyBalance()
                 }
+            },
+            collectBalanceOfDay = {
+                homeViewModel.collectDailyBalance(it)
             }
         )
         SuBuuSnackBar(
@@ -97,6 +101,7 @@ fun HomeScreen(
 fun HomeContent(
     onOpenBottomSheet:()->Unit,
     homeUiState: HomeUiState,
+    collectBalanceOfDay:(day:String)->Unit
 ){
 
     Scaffold( floatingActionButton = {
@@ -114,7 +119,14 @@ fun HomeContent(
     },) {
         Column(Modifier.padding(it)) {
             Spacer(modifier = Modifier.height(30.dp))
-            BalanceCard(currentBalance = homeUiState.currentBalance, incomeBalance = homeUiState.incomeBalance, expenseBalance = homeUiState.expenseBalance)
+            BalanceCard(
+                currentBalance = homeUiState.currentBalance,
+                incomeBalance = homeUiState.incomeBalance,
+                expenseBalance = homeUiState.expenseBalance,
+                collectBalaceOfDay = {
+                    collectBalanceOfDay(it)
+                }
+            )
             SectionTitle(title = "Transaction")
             TransactionsCard(transactions = homeUiState.transactions)
         }
