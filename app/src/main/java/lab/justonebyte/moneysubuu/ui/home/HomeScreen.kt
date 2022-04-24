@@ -88,14 +88,16 @@ fun HomeScreen(
                     bottomSheetScaffoldState.bottomSheetState.expand()
                 }
             },
-            currentBalance = homeUiState.currentBalance
-
+            homeUiState = homeUiState
         )
     }
 }
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun HomeContent(onOpenBottomSheet:()->Unit, currentBalance:Double = 1.0 ){
+fun HomeContent(
+    onOpenBottomSheet:()->Unit,
+    homeUiState: HomeUiState
+){
     Scaffold( floatingActionButton = {
         IconButton(
             modifier = Modifier.absolutePadding(bottom=100.dp, right = 30.dp),
@@ -109,9 +111,18 @@ fun HomeContent(onOpenBottomSheet:()->Unit, currentBalance:Double = 1.0 ){
         }
 
     },) {
-       BalanceCard(currentBalance=currentBalance)
-
+        Column(Modifier.padding(it)) {
+            BalanceCard(currentBalance = homeUiState.currentBalance, incomeBalance = homeUiState.incomeBalance, expenseBalance = homeUiState.expenseBalance)
+            SectionTitle(title = "Transactions")
+            TransactionsCard(transactions = homeUiState.transactions)
+        }
     }
 }
-
-
+@Composable
+fun SectionTitle(title:String,modifier: Modifier = Modifier){
+    Row(
+        modifier = modifier.absolutePadding(top = 10.dp, bottom = 10.dp)
+    ) {
+        Text(text = title, style = MaterialTheme.typography.subtitle2, color = MaterialTheme.colors.primary)
+    }
+}

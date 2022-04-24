@@ -1,12 +1,10 @@
 package lab.justonebyte.moneysubuu.ui.home
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import lab.justonebyte.moneysubuu.data.CategoryRepository
@@ -18,7 +16,10 @@ import javax.inject.Inject
 
 data class HomeUiState(
     val currentBalance:Double,
-    val categories:List<TransactionCategory>  = emptyList()
+    val incomeBalance:Int,
+    val expenseBalance:Int,
+    val categories:List<TransactionCategory>  = emptyList(),
+    val transactions:List<Transaction> = emptyList()
 )
 
 @HiltViewModel
@@ -28,7 +29,7 @@ class HomeViewModel @Inject constructor(
 ):ViewModel()
 {
     private val _viewModelUiState  = MutableStateFlow(
-        HomeUiState(currentBalance = 0.0)
+        HomeUiState(currentBalance = 0.0, incomeBalance = 0, expenseBalance = 0)
     )
     val viewModelUiState: StateFlow<HomeUiState>
         get() =  _viewModelUiState
@@ -44,11 +45,17 @@ class HomeViewModel @Inject constructor(
         }
     }
     private suspend fun collectBalance(){
-        transactionRepository.getTransactions().collect{
-            val income = it.filter { it.type==TransactionType.Income }.sumByDouble { it.amount }
-            val expense = it.filter { it.type==TransactionType.Expense }.sumByDouble { it.amount }
+        transactionRepository.getTransactions().collect{ transactions->
+            val income = transactions.filter { it.type==TransactionType.Income }.sumOf{ it.amount }
+            val expense = transactions.filter { it.type==TransactionType.Expense }.sumOf { it.amount }
             val sum = income-expense
-            _viewModelUiState.update { it.copy(currentBalance = sum) }
+            _viewModelUiState.update {
+                it.copy(
+                    currentBalance = sum,
+                    incomeBalance = income.toInt(),
+                    expenseBalance = expense.toInt(),
+                    transactions = transactions
+                ) }
         }
     }
     private suspend fun collectCategories(){
