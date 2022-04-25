@@ -47,17 +47,17 @@ fun AddCategoriesCard(
 
                         Card(
                             backgroundColor =  currentCategory?.let {
-                                if (it.id==categories[index].id) MaterialTheme.colors.primary else MaterialTheme.colors.onPrimary
+                                if (it.id==filteredCategories[index].id) MaterialTheme.colors.primary else MaterialTheme.colors.onPrimary
                             }?: MaterialTheme.colors.onPrimary,
                             modifier = Modifier
                                 .padding(2.dp)
                                 .fillMaxWidth()
                                 .clickable {
-                                    onCategoryChosen(categories[index])
+                                    onCategoryChosen(filteredCategories[index])
                                 },
                         ) {
                             Text(
-                                text = categories[index].name,
+                                text = filteredCategories[index].name,
                                 textAlign = TextAlign.Center,
                                 modifier = Modifier.padding(10.dp)
                             )

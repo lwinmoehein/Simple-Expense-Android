@@ -112,10 +112,6 @@ fun AddTransactionSheetContent(
                         text = currentAmount.value,
                         modifier = Modifier
                             .weight(1f)
-                            .background(
-                                MaterialTheme.colors.surface,
-                                RoundedCornerShape(percent = 50)
-                            )
                             .padding(4.dp)
                             .height(50.dp),
                         placeholderText = "Amount in Kyat",
