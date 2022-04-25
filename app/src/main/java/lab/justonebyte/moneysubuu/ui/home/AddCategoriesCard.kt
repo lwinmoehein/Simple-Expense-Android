@@ -6,10 +6,9 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.Card
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
-import androidx.compose.material.TextButton
+import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 
@@ -40,7 +39,9 @@ fun AddCategoriesCard(
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center,
-                modifier =Modifier.fillMaxWidth().background(MaterialTheme.colors.onPrimary)
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(MaterialTheme.colors.onPrimary)
             ) {
                 Row(
                     horizontalArrangement = Arrangement.Center,
@@ -69,7 +70,9 @@ fun AddCategoriesCard(
 
                 }
                 Row(
-                    Modifier.fillMaxWidth().absolutePadding(top = 30.dp)
+                    Modifier
+                        .fillMaxWidth()
+                        .absolutePadding(top = 30.dp)
                 ) {
                     TextButton(
                         onClick = { isAddCategoryDialogOpen.value = false },
@@ -85,7 +88,7 @@ fun AddCategoriesCard(
                             addCategoryName.value = ""
                         }
                     ) {
-                        Text(text = "Add Category")
+                           Text(text = "Confirm",color = MaterialTheme.colors.primary)
                     }
                 }
             }
@@ -119,11 +122,17 @@ fun AddCategoriesCard(
                                     isAddCategoryDialogOpen.value = true
                                 },
                         ) {
-                            Text(
-                                text ="Add Category",
-                                textAlign = TextAlign.Center,
-                                modifier = Modifier.padding(10.dp)
-                            )
+                          Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.Center) {
+                              Text(
+                                  text ="Add",
+                                  textAlign = TextAlign.Center,
+                                  modifier = Modifier.padding(10.dp),
+                                  style = MaterialTheme.typography.button,
+                                  color = MaterialTheme.colors.primary
+                              )
+                              Icon(imageVector = Icons.Default.Add, contentDescription = "add category", tint = MaterialTheme.colors.primary)
+
+                          }
                         }
                     }
                     items(filteredCategories.size) { index ->
