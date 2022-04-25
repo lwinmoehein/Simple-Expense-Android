@@ -1,13 +1,19 @@
 package lab.justonebyte.moneysubuu.ui.home
 
 import android.util.Log
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.AddCircle
+import androidx.compose.material.icons.outlined.AddCircle
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -140,19 +146,28 @@ fun HomeContent(
     onMonthChoose:()->Unit
 ){
 
-    Scaffold( floatingActionButton = {
-        IconButton(
-            modifier = Modifier.absolutePadding(bottom=30.dp, right = 30.dp),
-            onClick = {
-                onOpenBottomSheet()
-              }) {
-            Icon(              modifier = Modifier
-                .width(50.dp)
-                .height(50.dp),
-                imageVector = Icons.Filled.AddCircle, contentDescription ="add transaction" )
-        }
+    Scaffold(
+        floatingActionButton = {
+            Box(
+                modifier = Modifier.
+                absolutePadding(bottom = 30.dp, right = 30.dp)
+                    .clip(CircleShape)
+                    .clickable {
+                    onOpenBottomSheet()
+                }) {
+                Icon(
+                    modifier = Modifier
+                        .width(60.dp)
+                        .height(60.dp)
+                        .background(MaterialTheme.colors.onPrimary)
+                    ,
+                    imageVector = Icons.Filled.AddCircle, contentDescription = "add transaction",
+                    tint = MaterialTheme.colors.primary
+                )
+            }
 
-    },) {
+        },
+    ) {
         Column(Modifier.padding(it)) {
             Spacer(modifier = Modifier.height(30.dp))
             BalanceCard(
