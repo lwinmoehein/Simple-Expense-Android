@@ -1,5 +1,6 @@
 package lab.justonebyte.moneysubuu.ui.home
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -36,22 +37,30 @@ fun AddCategoriesCard(
 
     if(isAddCategoryDialogOpen.value){
         Dialog(onDismissRequest = {isAddCategoryDialogOpen.value = false}) {
-            Column(horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center) {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center,
+                modifier =Modifier.fillMaxWidth().background(MaterialTheme.colors.onPrimary)
+            ) {
                 Row(
                     horizontalArrangement = Arrangement.Center,
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .absolutePadding(left = 10.dp, right = 10.dp)
+                        .padding(20.dp)
                 ) {
-                    Text("Category Name : ",modifier = Modifier.weight(1f),style = MaterialTheme.typography.subtitle2)
+                    Text(
+                        textAlign = TextAlign.Center,
+                        text = "Category Name : ",
+                        modifier = Modifier.weight(1f),
+                        style = MaterialTheme.typography.subtitle2
+                    )
                     CustomTextField(
                         text = addCategoryName.value,
                         modifier = Modifier
                             .weight(1f)
                             .padding(4.dp)
-                            .height(50.dp),
-                        placeholderText = "Entry category name",
+                         ,
                         onValueChange = {
                             addCategoryName.value = it
                         },
@@ -59,11 +68,23 @@ fun AddCategoriesCard(
                     )
 
                 }
-                Row() {
-                    TextButton(onClick = { isAddCategoryDialogOpen.value = false }) {
+                Row(
+                    Modifier.fillMaxWidth().absolutePadding(top = 30.dp)
+                ) {
+                    TextButton(
+                        onClick = { isAddCategoryDialogOpen.value = false },
+                        modifier = Modifier.weight(1f)
+                    ) {
                         Text(text = "Cancel")
                     }
-                    TextButton(onClick = { onAddCategory(addCategoryName.value) }) {
+                    TextButton(
+                        modifier = Modifier.weight(1f),
+                        onClick = {
+                            onAddCategory(addCategoryName.value)
+                            isAddCategoryDialogOpen.value = false
+                            addCategoryName.value = ""
+                        }
+                    ) {
                         Text(text = "Add Category")
                     }
                 }
@@ -95,7 +116,7 @@ fun AddCategoriesCard(
                                 .padding(2.dp)
                                 .fillMaxWidth()
                                 .clickable {
-                                    onAddCategory(addCategoryName.value)
+                                    isAddCategoryDialogOpen.value = true
                                 },
                         ) {
                             Text(
