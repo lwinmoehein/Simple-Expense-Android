@@ -17,3 +17,11 @@ fun monthFormatter(milliseconds: Long): String {
 fun yearFormatter(milliseconds: Long): String {
     return SimpleDateFormat("yyyy").format(Date(milliseconds)).toString()
 }
+fun getToday():String{
+    val sdf = SimpleDateFormat("yyyy-MM-dd")
+    return sdf.format(Date())
+}
+fun getCurrentMonth():String{
+    val sdf = SimpleDateFormat("yyyy-MM")
+    return sdf.format(Date())
+}

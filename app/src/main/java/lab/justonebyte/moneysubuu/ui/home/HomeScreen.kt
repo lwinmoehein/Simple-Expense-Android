@@ -33,7 +33,7 @@ fun HomeScreen(
 
     val isMonthPickerShown = remember { mutableStateOf(false)}
     val selectedMonthYear = remember { mutableStateOf(calendar.get(Calendar.YEAR))}
-    val selectedMonthMonth = remember { mutableStateOf(calendar.get(Calendar.MONTH))}
+    val selectedMonthMonth = remember { mutableStateOf(calendar.get(Calendar.MONTH)+1)}
 
     if(isMonthPickerShown.value){
         Dialog(onDismissRequest = { isMonthPickerShown.value=false }) {

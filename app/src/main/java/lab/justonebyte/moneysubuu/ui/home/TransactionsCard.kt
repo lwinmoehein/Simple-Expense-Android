@@ -23,6 +23,7 @@ fun TransactionsCard(
         shape = SuBuuShapes.small,
         modifier = modifier
             .fillMaxWidth()
+            .fillMaxHeight()
             .padding(10.dp),
         elevation = 10.dp
     ) {

@@ -17,6 +17,9 @@ import lab.justonebyte.moneysubuu.ui.theme.Green
 import lab.justonebyte.moneysubuu.ui.theme.Red900
 import lab.justonebyte.moneysubuu.ui.theme.SuBuuShapes
 import lab.justonebyte.moneysubuu.utils.dateFormatter
+import lab.justonebyte.moneysubuu.utils.getCurrentMonth
+import lab.justonebyte.moneysubuu.utils.getToday
+import java.text.SimpleDateFormat
 import java.util.*
 
 @Composable
@@ -32,7 +35,8 @@ fun BalanceCard(
     balanceType: BalanceType,
     onMonthChoose:()->Unit
 ){
-
+        val currentDay = getToday()
+        val currentMonth = getCurrentMonth()
         val mContext = LocalContext.current
         val mYear by remember(selectedDay) { mutableStateOf(selectedDay.split('-')[0].toInt())}
         val mMonth by remember(selectedDay){ mutableStateOf(selectedDay.split('-')[1].toInt())}
@@ -74,8 +78,8 @@ fun BalanceCard(
                     }
                 }) {
                     Text(text =  when(balanceType){
-                        BalanceType.DAILY-> mDate.value
-                        BalanceType.MONTHLY->selectedMonth
+                        BalanceType.DAILY-> if(mDate.value==currentDay) "Today" else mDate.value
+                        BalanceType.MONTHLY->if(selectedMonth==currentMonth) "This Month" else selectedMonth
                         BalanceType.YEARLY->selectedYear
                         else->"Total"
                     })
