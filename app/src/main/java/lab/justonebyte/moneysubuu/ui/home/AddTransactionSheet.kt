@@ -1,11 +1,10 @@
 package lab.justonebyte.moneysubuu.ui.home
 
+import android.app.DatePickerDialog
+import android.widget.DatePicker
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
@@ -14,33 +13,20 @@ import androidx.compose.material.icons.filled.Close
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
-import lab.justonebyte.moneysubuu.model.TransactionCategory
-import lab.justonebyte.moneysubuu.ui.appContentPadding
-import java.util.*
-import android.app.DatePickerDialog
-import android.os.Bundle
-import android.widget.DatePicker
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.*
-import androidx.compose.material.*
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
-
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import lab.justonebyte.moneysubuu.model.TransactionCategory
+import lab.justonebyte.moneysubuu.ui.appContentPadding
 import lab.justonebyte.moneysubuu.utils.dateFormatter
 import java.util.*
+import lab.justonebyte.moneysubuu.ui.components.*
 
 
 @Composable
@@ -94,8 +80,8 @@ fun AddTransactionSheetContent(
                 Icon(imageVector = Icons.Filled.Close, contentDescription = "close sheet" )
             }
         }
+        Spacer(modifier = Modifier.height(20.dp))
         Row(modifier = Modifier
-            .padding(20.dp)
             .fillMaxWidth()) {
             TextButton(
                 modifier = Modifier.weight(1f),
@@ -112,78 +98,62 @@ fun AddTransactionSheetContent(
                 Text(text = "Expense",style = MaterialTheme.typography.subtitle1,color = if(currentType.value==2) MaterialTheme.colors.primary else Color.Black)
             }
         }
-        Row(horizontalArrangement = Arrangement.Center,modifier = Modifier
-            .fillMaxWidth()
-            .absolutePadding(left = 50.dp, right = 50.dp)) {
-            TextField(
-                colors = TextFieldDefaults.textFieldColors(
-
-                    backgroundColor = Color.Transparent,
-
-                    ),
-                value = currentAmount.value,
-                keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
-                onValueChange = {
-                    currentAmount.value = it.filter { it.isDigit() }
-                },
-                label = {
-                    Row(horizontalArrangement = Arrangement.End) {
-                        Text(text = if(currentType.value==1) "Income amount in kyat" else "Expense amount in kyat" )
-                    }
-                }
-            )
-
-        }
-
-
-        LazyVerticalGrid(
-            columns = GridCells.Adaptive(128.dp),
-
-            // content padding
-            contentPadding = PaddingValues(
-                start = 12.dp,
-                top = 16.dp,
-                end = 12.dp,
-                bottom = 16.dp
-            ),
-            content = {
-                items(categories.size) { index ->
-
-                    Card(
-                        backgroundColor =  currentCategory.value?.let {
-                            if (it.id==categories[index].id) MaterialTheme.colors.primary else MaterialTheme.colors.onPrimary
-                        }?: MaterialTheme.colors.onPrimary,
+        Spacer(modifier = Modifier.height(20.dp))
+        Card(elevation = 8.dp) {
+            Row(
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier
+                    .fillMaxWidth().absolutePadding(left = 10.dp, right = 10.dp)
+                ) {
+                    Text("Amount in Kyat: ",modifier = Modifier.weight(1f),style = MaterialTheme.typography.subtitle2)
+                    CustomTextField(
+                        text = currentAmount.value,
                         modifier = Modifier
-                            .padding(2.dp)
-                            .fillMaxWidth()
-                            .clickable {
-                                currentCategory.value = categories[index]
-                            },
-                        elevation = 8.dp,
-                    ) {
-                        Text(
-                            text = categories[index].name,
-                            textAlign = TextAlign.Center,
-                            modifier = Modifier.padding(10.dp)
-                        )
-                    }
-                }
+                            .weight(1f)
+                            .background(
+                                MaterialTheme.colors.surface,
+                                RoundedCornerShape(percent = 50)
+                            )
+                            .padding(4.dp)
+                            .height(50.dp),
+                        placeholderText = "Amount in Kyat",
+                        onValueChange = {
+                            currentAmount.value = it.filter { it.isDigit() }
+                        },
+                        keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
+                    )
+
+            }
+        }
+        AddCategoriesCard(
+            categories = categories,
+            currentCategory = currentCategory.value,
+            onCategoryChosen = {
+                currentCategory.value = it
             }
         )
-        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.Center){
-            Text(text = "Date")
-            TextButton(onClick = { mDatePickerDialog.show() }) {
-                Text(text = mDate.value)
+        Card(
+            elevation = 8.dp
+        ) {
+            Row(modifier = Modifier.padding(12.dp),verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.Center){
+                Text(text = "Date : ", style = MaterialTheme.typography.subtitle2,modifier = Modifier.weight(1f))
+                TextButton(onClick = { mDatePickerDialog.show() },modifier = Modifier.weight(1f)) {
+                    Text(text = mDate.value)
+                }
+                Spacer(modifier = Modifier.weight(1f))
             }
         }
         Row(horizontalArrangement = Arrangement.Center, modifier = Modifier.fillMaxWidth()) {
             TextButton(
-                shape = RoundedCornerShape(10.dp),
                 modifier = Modifier
 
                     .absolutePadding(top = 20.dp, bottom = 20.dp)
                     .background(MaterialTheme.colors.primary)
-                    .absolutePadding(left = 40.dp, right = 40.dp),
+                    .absolutePadding(left = 40.dp, right = 40.dp)
+                    .clip(RoundedCornerShape(10.dp))
+
+                ,
                 onClick = {
                     val amount =if(currentAmount.value.isEmpty()) 0 else currentAmount.value.toInt()
 
