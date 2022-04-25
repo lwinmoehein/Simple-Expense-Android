@@ -137,4 +137,9 @@ class HomeViewModel @Inject constructor(
             )
         }
     }
+    fun addCategory(transactinCategory:TransactionCategory){
+        viewModelScope.launch {
+            categoryRepository.insert(transactionCategory = transactinCategory)
+        }
+    }
 }

@@ -9,7 +9,7 @@ data class TransactionCategory(
     val id:Int,
     val name:String,
     val transaction_type:TransactionType,
-    val created_at:String
+    val created_at:Long
 
 )
 {
@@ -24,7 +24,6 @@ data class TransactionCategory(
         }
         fun mapToEntity(transactionCategory: TransactionCategory): CategoryEntity {
             return CategoryEntity(
-                id = transactionCategory.id,
                 name = transactionCategory.name,
                 created_at = transactionCategory.created_at,
                 transaction_type = transactionCategory.transaction_type.value

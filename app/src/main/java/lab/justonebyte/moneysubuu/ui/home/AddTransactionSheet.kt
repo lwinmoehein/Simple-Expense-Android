@@ -22,6 +22,7 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
 import lab.justonebyte.moneysubuu.model.TransactionCategory
 import lab.justonebyte.moneysubuu.model.TransactionType
 import lab.justonebyte.moneysubuu.ui.appContentPadding
@@ -35,26 +36,24 @@ fun AddTransactionSheetContent(
     onCloseBottomSheet:()->Unit,
     categories:List<TransactionCategory>,
     showIncorrectDataSnack:()->Unit,
-    onAddTransaction:(type:Int,amount:Int,category: TransactionCategory,date:String)->Unit
+    onAddTransaction:(type:Int,amount:Int,category: TransactionCategory,date:String)->Unit,
+    onAddCategory:(categoryName:String,transactionType:TransactionType)->Unit
 ){
-
     val mContext = LocalContext.current
-    val mYear: Int
-    val mMonth: Int
-    val mDay: Int
-    val mCalendar = Calendar.getInstance()
-    mYear = mCalendar.get(Calendar.YEAR)
-    mMonth = mCalendar.get(Calendar.MONTH)
-    mDay = mCalendar.get(Calendar.DAY_OF_MONTH)
-    mCalendar.time = Date()
-    val mDate = remember { mutableStateOf(dateFormatter(System.currentTimeMillis())) }
-
     val localFocusManage =  LocalFocusManager.current
+    val mCalendar = Calendar.getInstance()
+    mCalendar.time = Date()
+    val mYear: Int = mCalendar.get(Calendar.YEAR)
+    val mMonth: Int = mCalendar.get(Calendar.MONTH)
+    val mDay: Int = mCalendar.get(Calendar.DAY_OF_MONTH)
+    val mDate = remember { mutableStateOf(dateFormatter(System.currentTimeMillis())) }
     val currentType = remember{ mutableStateOf(1) }
     val currentCategory = remember{ mutableStateOf<TransactionCategory?>(null) }
     val currentAmount = remember {
         mutableStateOf("")
     }
+
+
 
     val mDatePickerDialog = DatePickerDialog(
         mContext,
@@ -105,7 +104,8 @@ fun AddTransactionSheetContent(
                 horizontalArrangement = Arrangement.Center,
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier
-                    .fillMaxWidth().absolutePadding(left = 10.dp, right = 10.dp)
+                    .fillMaxWidth()
+                    .absolutePadding(left = 10.dp, right = 10.dp)
                 ) {
                     Text("Amount in Kyat: ",modifier = Modifier.weight(1f),style = MaterialTheme.typography.subtitle2)
                     CustomTextField(
@@ -124,6 +124,9 @@ fun AddTransactionSheetContent(
             }
         }
         AddCategoriesCard(
+            onAddCategory = {
+                 onAddCategory(it,if(currentType.value==TransactionType.Income.value) TransactionType.Income else TransactionType.Expense)
+            },
             categories = categories,
             currentCategory = currentCategory.value,
             onCategoryChosen = {
