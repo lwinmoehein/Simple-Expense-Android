@@ -132,7 +132,8 @@ class HomeViewModel @Inject constructor(
                     amount = amount,
                     type = if(type==1) TransactionType.Income else TransactionType.Expense,
                     category = transactionCategory,
-                    created_at = date
+                    created_at = date,
+                    created_timestamp = System.currentTimeMillis()
                 )
             )
         }
