@@ -23,6 +23,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import lab.justonebyte.moneysubuu.model.TransactionCategory
+import lab.justonebyte.moneysubuu.model.TransactionType
 import lab.justonebyte.moneysubuu.ui.appContentPadding
 import lab.justonebyte.moneysubuu.utils.dateFormatter
 import java.util.*
@@ -85,17 +86,17 @@ fun AddTransactionSheetContent(
             .fillMaxWidth()) {
             TextButton(
                 modifier = Modifier.weight(1f),
-                border = BorderStroke(2.dp,if(currentType.value==1) MaterialTheme.colors.primary else Color.Transparent),
-                onClick = { currentType.value =1 }
+                border = BorderStroke(2.dp,if(currentType.value==TransactionType.Income.value) MaterialTheme.colors.primary else Color.Transparent),
+                onClick = { currentType.value = TransactionType.Income.value }
             ) {
-                Text(text = "Income", style = MaterialTheme.typography.subtitle1, color = if(currentType.value==1) MaterialTheme.colors.primary else Color.Black)
+                Text(text = "Income", style = MaterialTheme.typography.subtitle1, color = if(currentType.value==TransactionType.Income.value) MaterialTheme.colors.primary else Color.Black)
             }
             TextButton(
                 modifier= Modifier.weight(1f),
-                border = BorderStroke(2.dp,if(currentType.value==2) MaterialTheme.colors.primary else Color.Transparent),
-                onClick = { currentType.value =2  }
+                border = BorderStroke(2.dp,if(currentType.value==TransactionType.Expense.value) MaterialTheme.colors.primary else Color.Transparent),
+                onClick = { currentType.value = TransactionType.Expense.value  }
             ) {
-                Text(text = "Expense",style = MaterialTheme.typography.subtitle1,color = if(currentType.value==2) MaterialTheme.colors.primary else Color.Black)
+                Text(text = "Expense",style = MaterialTheme.typography.subtitle1,color = if(currentType.value==TransactionType.Expense.value) MaterialTheme.colors.primary else Color.Black)
             }
         }
         Spacer(modifier = Modifier.height(20.dp))
@@ -131,7 +132,8 @@ fun AddTransactionSheetContent(
             currentCategory = currentCategory.value,
             onCategoryChosen = {
                 currentCategory.value = it
-            }
+            },
+            currentTransactionType = if(currentType.value==TransactionType.Income.value) TransactionType.Income else TransactionType.Expense
         )
         Card(
             elevation = 8.dp

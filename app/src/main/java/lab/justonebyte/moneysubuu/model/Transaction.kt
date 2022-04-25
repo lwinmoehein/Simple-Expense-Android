@@ -16,7 +16,12 @@ data class Transaction(val id:Int?=null,val amount:Int,val type: TransactionType
                 id = transactionEntity.id,
                 amount = transactionEntity.amount,
                 type = if(transactionEntity.type==1) TransactionType.Income else TransactionType.Expense,
-                category = TransactionCategory(id = transactionEntity.category_id,transactionEntity.category_name, created_at = transactionEntity.category_created_at),
+                category = TransactionCategory(
+                    id = transactionEntity.category_id,
+                    name = transactionEntity.category_name,
+                    transaction_type = TransactionCategory.Mapper.mapTransactionType(transactionEntity.type),
+                    created_at = transactionEntity.category_created_at
+                ),
                 created_at = transactionEntity.created_at
             )
         }

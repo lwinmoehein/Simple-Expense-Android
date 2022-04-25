@@ -8,6 +8,7 @@ import androidx.room.TypeConverters
 import androidx.sqlite.db.SupportSQLiteDatabase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import lab.justonebyte.moneysubuu.model.TransactionType
 import lab.justonebyte.moneysubuu.utils.dateFormatter
 
 
@@ -52,13 +53,13 @@ public abstract class AppDatabase : RoomDatabase() {
         private suspend fun populateCategories(categoryDao: CategoryDao) {
            val dao = this.INSTANCE?.categoryDao()
            dao?.let {
-               it.insert(CategoryEntity(name = "Food", created_at = dateFormatter( System.currentTimeMillis())))
-               it.insert(CategoryEntity(name = "Transportation", created_at =dateFormatter( System.currentTimeMillis())))
-               it.insert(CategoryEntity(name = "Family", created_at = dateFormatter( System.currentTimeMillis())))
-               it.insert(CategoryEntity(name = "Groceries", created_at = dateFormatter( System.currentTimeMillis())))
-               it.insert(CategoryEntity(name = "Education", created_at = dateFormatter( System.currentTimeMillis())))
-               it.insert(CategoryEntity(name = "Cafe", created_at =dateFormatter( System.currentTimeMillis())))
-               it.insert(CategoryEntity(name = "Gifts", created_at =dateFormatter( System.currentTimeMillis())))
+               it.insert(CategoryEntity(name = "Food", transaction_type = TransactionType.Expense.value, created_at = dateFormatter( System.currentTimeMillis())))
+               it.insert(CategoryEntity(name = "Transportation", transaction_type = TransactionType.Expense.value, created_at =dateFormatter( System.currentTimeMillis())))
+               it.insert(CategoryEntity(name = "Family", transaction_type = TransactionType.Expense.value, created_at = dateFormatter( System.currentTimeMillis())))
+               it.insert(CategoryEntity(name = "Groceries", transaction_type = TransactionType.Income.value, created_at = dateFormatter( System.currentTimeMillis())))
+               it.insert(CategoryEntity(name = "Education", transaction_type = TransactionType.Income.value, created_at = dateFormatter( System.currentTimeMillis())))
+               it.insert(CategoryEntity(name = "Cafe",  transaction_type = TransactionType.Income.value,created_at =dateFormatter( System.currentTimeMillis())))
+               it.insert(CategoryEntity(name = "Gifts", transaction_type = TransactionType.Income.value, created_at =dateFormatter( System.currentTimeMillis())))
 
            }
         }
