@@ -84,13 +84,15 @@ fun HomeScreen(
             ) {
                 AddTransactionSheetContent(
                     categories =  homeUiState.categories,
-                    onAddTransaction = {type, amount, category,date->
-                        homeViewModel.addTransaction(
-                            transactionCategory = category,
-                            type = type,
-                            amount = amount,
-                            date = date
-                        )
+                    onConfirmTransactionForm = { type, amount, category,date->
+
+                           homeViewModel.addTransaction(
+                               transactionCategory = category,
+                               type = type,
+                               amount = amount,
+                               date = date
+                           )
+
                     },
                     onCloseBottomSheet = {
                         coroutineScope.launch {

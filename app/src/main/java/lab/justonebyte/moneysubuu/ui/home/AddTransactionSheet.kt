@@ -37,38 +37,44 @@ fun AddTransactionSheetContent(
     onCloseBottomSheet:()->Unit,
     categories:List<TransactionCategory>,
     showIncorrectDataSnack:()->Unit,
-    onAddTransaction:(type:Int,amount:Int,category: TransactionCategory,date:String)->Unit,
-    onAddCategory:(categoryName:String,transactionType:TransactionType)->Unit
-){
+    onConfirmTransactionForm:(type:Int,amount:Int,category: TransactionCategory,date:String)->Unit,
+    onAddCategory:(categoryName:String,transactionType:TransactionType)->Unit,
+    initialType:TransactionType = TransactionType.Income,
+    initialAmount:String = "",
+    initialCategory:TransactionCategory? = null,
+    initialDate:String = dateFormatter(System.currentTimeMillis()),
+    isEditMode:Boolean = false
+) {
     val mContext = LocalContext.current
-    val localFocusManage =  LocalFocusManager.current
+    val localFocusManage = LocalFocusManager.current
     val mCalendar = Calendar.getInstance()
     mCalendar.time = Date()
     val mYear: Int = mCalendar.get(Calendar.YEAR)
     val mMonth: Int = mCalendar.get(Calendar.MONTH)
     val mDay: Int = mCalendar.get(Calendar.DAY_OF_MONTH)
-    val mDate = remember { mutableStateOf(dateFormatter(System.currentTimeMillis())) }
-    val currentType = remember{ mutableStateOf(1) }
-    val currentCategory = remember{ mutableStateOf<TransactionCategory?>(null) }
-    val currentAmount = remember {
-        mutableStateOf("")
-    }
+
+    //initialize form variables
+    val currentType = remember { mutableStateOf(initialType.value) }
+    val currentAmount = remember { mutableStateOf(initialAmount) }
+    val currentCategory = remember { mutableStateOf(initialCategory) }
+    val mDate = remember { mutableStateOf(initialDate) }
+
+
 
     fun clearTransactionForm() {
         currentAmount.value = ""
         currentCategory.value = null
-        currentType.value=1
+        currentType.value = 1
         mDate.value = dateFormatter(System.currentTimeMillis())
         localFocusManage.clearFocus()
     }
 
 
-
-
     val mDatePickerDialog = DatePickerDialog(
         mContext,
         { _: DatePicker, mYear: Int, mMonth: Int, mDayOfMonth: Int ->
-            mDate.value = "$mYear-${if(mMonth+1>=10) mMonth+1 else "0"+(mMonth+1)}-$mDayOfMonth"
+            mDate.value =
+                "$mYear-${if (mMonth + 1 >= 10) mMonth + 1 else "0" + (mMonth + 1)}-$mDayOfMonth"
         }, mYear, mMonth, mDay
     )
 
@@ -87,25 +93,41 @@ fun AddTransactionSheetContent(
                 Text(text = "Add transaction", style = MaterialTheme.typography.subtitle1)
             }
             IconButton(onClick = { onCloseBottomSheet() }) {
-                Icon(imageVector = Icons.Filled.Close, contentDescription = "close sheet" )
+                Icon(imageVector = Icons.Filled.Close, contentDescription = "close sheet")
             }
         }
         Spacer(modifier = Modifier.height(20.dp))
-        Row(modifier = Modifier
-            .fillMaxWidth()) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+        ) {
             TextButton(
                 modifier = Modifier.weight(1f),
-                border = BorderStroke(2.dp,if(currentType.value==TransactionType.Income.value) MaterialTheme.colors.primary else Color.Transparent),
+                border = BorderStroke(
+                    2.dp,
+                    if (currentType.value == TransactionType.Income.value) MaterialTheme.colors.primary else Color.Transparent
+                ),
                 onClick = { currentType.value = TransactionType.Income.value }
             ) {
-                Text(text = "Income", style = MaterialTheme.typography.subtitle1, color = if(currentType.value==TransactionType.Income.value) MaterialTheme.colors.primary else Color.Black)
+                Text(
+                    text = "Income",
+                    style = MaterialTheme.typography.subtitle1,
+                    color = if (currentType.value == TransactionType.Income.value) MaterialTheme.colors.primary else Color.Black
+                )
             }
             TextButton(
-                modifier= Modifier.weight(1f),
-                border = BorderStroke(2.dp,if(currentType.value==TransactionType.Expense.value) MaterialTheme.colors.primary else Color.Transparent),
-                onClick = { currentType.value = TransactionType.Expense.value  }
+                modifier = Modifier.weight(1f),
+                border = BorderStroke(
+                    2.dp,
+                    if (currentType.value == TransactionType.Expense.value) MaterialTheme.colors.primary else Color.Transparent
+                ),
+                onClick = { currentType.value = TransactionType.Expense.value }
             ) {
-                Text(text = "Expense",style = MaterialTheme.typography.subtitle1,color = if(currentType.value==TransactionType.Expense.value) MaterialTheme.colors.primary else Color.Black)
+                Text(
+                    text = "Expense",
+                    style = MaterialTheme.typography.subtitle1,
+                    color = if (currentType.value == TransactionType.Expense.value) MaterialTheme.colors.primary else Color.Black
+                )
             }
         }
         Spacer(modifier = Modifier.height(20.dp))
@@ -116,38 +138,49 @@ fun AddTransactionSheetContent(
                 modifier = Modifier
                     .fillMaxWidth()
                     .absolutePadding(left = 10.dp, right = 10.dp)
-                ) {
-                    Text("Amount in Kyat: ",modifier = Modifier.weight(1f),style = MaterialTheme.typography.subtitle2)
-                    CustomTextField(
-                        text = currentAmount.value,
-                        modifier = Modifier
-                            .weight(1f)
-                            .padding(4.dp)
-                            .height(50.dp),
-                        placeholderText = "Amount in Kyat",
-                        onValueChange = {
-                            currentAmount.value = it.filter { it.isDigit() }
-                        },
-                        keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
-                    )
+            ) {
+                Text(
+                    "Amount in Kyat: ",
+                    modifier = Modifier.weight(1f),
+                    style = MaterialTheme.typography.subtitle2
+                )
+                CustomTextField(
+                    text = currentAmount.value,
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(4.dp)
+                        .height(50.dp),
+                    placeholderText = "Amount in Kyat",
+                    onValueChange = {
+                        currentAmount.value = it.filter { it.isDigit() }
+                    },
+                    keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
+                )
 
             }
         }
         AddCategoriesCard(
             onAddCategory = {
-                 onAddCategory(it,if(currentType.value==TransactionType.Income.value) TransactionType.Income else TransactionType.Expense)
+                onAddCategory(
+                    it,
+                    if (currentType.value == TransactionType.Income.value) TransactionType.Income else TransactionType.Expense
+                )
             },
             categories = categories,
             currentCategory = currentCategory.value,
             onCategoryChosen = {
                 currentCategory.value = it
             },
-            currentTransactionType = if(currentType.value==TransactionType.Income.value) TransactionType.Income else TransactionType.Expense
+            currentTransactionType = if (currentType.value == TransactionType.Income.value) TransactionType.Income else TransactionType.Expense
         )
         Card(
             elevation = 8.dp
         ) {
-            Row(modifier = Modifier.padding(12.dp),verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.Center){
+            Row(
+                modifier = Modifier.padding(12.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Center
+            ) {
                 Text(
                     text = "Date : ",
                     style = MaterialTheme.typography.subtitle2,
@@ -169,23 +202,22 @@ fun AddTransactionSheetContent(
                     .absolutePadding(top = 20.dp, bottom = 20.dp)
                     .background(MaterialTheme.colors.primary)
                     .absolutePadding(left = 40.dp, right = 40.dp)
-                    .clip(RoundedCornerShape(10.dp))
-
-                ,
+                    .clip(RoundedCornerShape(10.dp)),
                 onClick = {
-                    val amount =if(currentAmount.value.isEmpty()) 0 else currentAmount.value.toInt()
+                    val amount =
+                        if (currentAmount.value.isEmpty()) 0 else currentAmount.value.toInt()
 
-                    if(currentCategory.value==null || amount<=0){
+                    if (currentCategory.value == null || amount <= 0) {
                         showIncorrectDataSnack()
-                    }else{
+                    } else {
                         currentCategory.value?.let {
-                            onAddTransaction(
+                            onConfirmTransactionForm(
                                 currentType.value,
                                 amount,
                                 it,
-                                mDate.value.replace('/','-'),
+                                mDate.value.replace('/', '-'),
 
-                            )
+                                )
                             onCloseBottomSheet()
                             clearTransactionForm()
                         }
@@ -197,4 +229,3 @@ fun AddTransactionSheetContent(
         }
     }
 }
-
