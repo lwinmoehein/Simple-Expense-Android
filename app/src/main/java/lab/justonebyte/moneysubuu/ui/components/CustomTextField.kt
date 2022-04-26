@@ -30,7 +30,6 @@ fun CustomTextField(
     onValueChange:(text:String)->Unit,
     keyboardOptions: KeyboardOptions
 ) {
-    var text by rememberSaveable { mutableStateOf(text) }
     BasicTextField(modifier = modifier
         .background(
             MaterialTheme.colors.surface,
@@ -39,7 +38,6 @@ fun CustomTextField(
         .fillMaxWidth(),
         value = text,
         onValueChange = {
-            text = it
             onValueChange(it)
         },
         singleLine = true,

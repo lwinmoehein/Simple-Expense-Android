@@ -38,6 +38,7 @@ fun AppDrawer(
     currentRoute: String,
     navigateToHome: () -> Unit,
     navigateToSettings: () -> Unit,
+    navigateToDetail:()->Unit,
     closeDrawer: () -> Unit
 ) {
 
@@ -54,7 +55,15 @@ fun AppDrawer(
                 closeDrawer()
             }
         )
-
+        DrawerButton(
+            icon = Icons.Filled.Settings,
+            label = "Stats",
+            isSelected = currentRoute == MainDestinations.SETTINGS_ROUTE,
+            action = {
+                navigateToDetail()
+                closeDrawer()
+            }
+        )
         DrawerButton(
             icon = Icons.Filled.Settings,
             label = "Settings",
@@ -139,22 +148,6 @@ private fun DrawerButton(
                     color = textIconColor
                 )
             }
-        }
-    }
-}
-
-@Preview("Drawer contents")
-@Preview("Drawer contents (dark)", uiMode = UI_MODE_NIGHT_YES)
-@Composable
-fun PreviewAppDrawer() {
-    MoneySuBuuTheme {
-        Surface {
-            AppDrawer(
-                currentRoute = MainDestinations.HOME_ROUTE,
-                navigateToHome = {},
-                navigateToSettings = {},
-                closeDrawer = { }
-            )
         }
     }
 }

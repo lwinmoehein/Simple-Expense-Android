@@ -12,6 +12,7 @@ interface TransactionRepository {
     fun getTotalTransactions(): Flow<List<Transaction>>
 
     suspend fun insert(transaction: Transaction)
+    suspend fun update(transaction: Transaction)
 }
 class TransactionRepositoryImpl @Inject constructor(val transactionDao: TransactionDao):TransactionRepository {
     override fun getDailyTransactions(day:String): Flow<List<Transaction>> {
@@ -37,5 +38,10 @@ class TransactionRepositoryImpl @Inject constructor(val transactionDao: Transact
     override suspend fun insert(transaction: Transaction)  {
         val transactionEntity = Transaction.Mapper.mapToEntity(transaction = transaction)
         transactionDao.insert(transactionEntity = transactionEntity)
+    }
+
+    override suspend fun update(transaction: Transaction) {
+        val transactionEntity = Transaction.Mapper.mapToEntity(transaction = transaction)
+        transactionDao.update(transactionEntity = transactionEntity)
     }
 }

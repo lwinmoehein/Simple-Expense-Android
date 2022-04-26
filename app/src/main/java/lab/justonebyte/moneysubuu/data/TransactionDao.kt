@@ -1,9 +1,6 @@
 package lab.justonebyte.moneysubuu.data
 
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
+import androidx.room.*
 import kotlinx.coroutines.flow.Flow
 import lab.justonebyte.moneysubuu.utils.dateFormatter
 import lab.justonebyte.moneysubuu.utils.monthFormatter
@@ -54,6 +51,9 @@ interface TransactionDao {
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insert(transactionEntity: TransactionEntity):Long
+
+    @Update
+    suspend fun update(transactionEntity: TransactionEntity)
 
     @Query("DELETE FROM transaction_table")
     suspend fun deleteAll()
