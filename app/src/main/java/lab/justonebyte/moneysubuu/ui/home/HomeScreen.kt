@@ -162,9 +162,7 @@ fun HomeScreen(
             }
         }, sheetPeekHeight = 0.dp
     ) {
-        currentTransaction.value?.let {
-            Text(text = it.amount.toString())
-        }
+
         HomeTabs(
             homeUiState = homeUiState,
             onTabChanged = {
