@@ -1,5 +1,6 @@
 package lab.justonebyte.moneysubuu.ui.home
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -17,7 +18,8 @@ import lab.justonebyte.moneysubuu.utils.dateFormatter
 @Composable
 fun TransactionsCard(
     modifier:Modifier = Modifier,
-    transactions:List<Transaction> = emptyList()
+    transactions:List<Transaction> = emptyList(),
+    onTransactionClick:(transaction:Transaction)->Unit
 ){
     Card(
         shape = SuBuuShapes.small,
@@ -29,16 +31,16 @@ fun TransactionsCard(
     ) {
         LazyColumn(){
             items(transactions){
-                TransactionItem(transaction = it)
+                TransactionItem(transaction = it, onTransactionClick = {onTransactionClick(it)})
             }
         }
     }
 
 }
 @Composable
-fun TransactionItem(transaction:Transaction,modifier: Modifier=Modifier){
+fun TransactionItem(transaction:Transaction,modifier: Modifier=Modifier ,onTransactionClick: (transaction: Transaction) -> Unit){
     Row(
-        modifier = modifier.padding(10.dp)
+        modifier = modifier.padding(10.dp).clickable { onTransactionClick(transaction)  }
     ) {
         Text(text = transaction.category.name,modifier = Modifier.weight(1f))
         Text(

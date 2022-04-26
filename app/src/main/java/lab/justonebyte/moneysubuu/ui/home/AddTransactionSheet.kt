@@ -195,14 +195,27 @@ fun AddTransactionSheetContent(
                 Spacer(modifier = Modifier.weight(1f))
             }
         }
-        Row(horizontalArrangement = Arrangement.Center, modifier = Modifier.fillMaxWidth()) {
+        Row(
+            horizontalArrangement = Arrangement.SpaceBetween,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            TextButton(
+                onClick = { onCloseBottomSheet() },
+                modifier = Modifier
+                    .absolutePadding(left = 10.dp, right = 10.dp)
+                    .weight(1f)
+                    .absolutePadding(top = 20.dp, bottom = 20.dp)
+                    .clip(RoundedCornerShape(10.dp))
+            ) {
+                Text(text = "Cancel", style = MaterialTheme.typography.button)
+            }
             TextButton(
                 modifier = Modifier
-
+                    .absolutePadding(left = 10.dp, right = 10.dp)
+                    .weight(1f)
                     .absolutePadding(top = 20.dp, bottom = 20.dp)
-                    .background(MaterialTheme.colors.primary)
-                    .absolutePadding(left = 40.dp, right = 40.dp)
-                    .clip(RoundedCornerShape(10.dp)),
+                    .clip(RoundedCornerShape(10.dp))
+                    .background(MaterialTheme.colors.primary),
                 onClick = {
                     val amount =
                         if (currentAmount.value.isEmpty()) 0 else currentAmount.value.toInt()
@@ -224,7 +237,7 @@ fun AddTransactionSheetContent(
                     }
 
                 }) {
-                Text(text = "Add Transaction", color = Color.White)
+                Text(text = if(isEditMode) "Confirm Edit" else "Add Transaction", color = Color.White)
             }
         }
     }

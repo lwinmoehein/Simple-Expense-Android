@@ -18,6 +18,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
 import kotlinx.coroutines.launch
+import lab.justonebyte.moneysubuu.model.Transaction
 import lab.justonebyte.moneysubuu.model.TransactionCategory
 import lab.justonebyte.moneysubuu.ui.components.SuBuuSnackBar
 import lab.justonebyte.moneysubuu.ui.components.SuBuuSnackBarHost
@@ -41,6 +42,9 @@ fun HomeScreen(
     val isMonthPickerShown = remember { mutableStateOf(false)}
     val selectedMonthYear = remember { mutableStateOf(calendar.get(Calendar.YEAR))}
     val selectedMonthMonth = remember { mutableStateOf(calendar.get(Calendar.MONTH)+1)}
+    val currentTransaction = remember {
+        mutableStateOf<Transaction?>(null)
+    }
 
     if(isMonthPickerShown.value){
         Dialog(onDismissRequest = { isMonthPickerShown.value=false }) {
@@ -83,15 +87,27 @@ fun HomeScreen(
                         Modifier.heightIn(min = 500.dp, max = 1000.dp),
             ) {
                 AddTransactionSheetContent(
+                    isEditMode = currentTransaction.value != null,
                     categories =  homeUiState.categories,
                     onConfirmTransactionForm = { type, amount, category,date->
+                           if(currentTransaction.value==null)
+                               homeViewModel.addTransaction(
+                                   transactionCategory = category,
+                                   type = type,
+                                   amount = amount,
+                                   date = date
+                               )
+                             else
+                               currentTransaction.value?.let {
+                                   homeViewModel.updateTransaction(
+                                       transactionId =  it.id,
+                                       transactionCategory = category,
+                                       type = type,
+                                       amount = amount,
+                                       date = date
+                                   )
+                               }
 
-                           homeViewModel.addTransaction(
-                               transactionCategory = category,
-                               type = type,
-                               amount = amount,
-                               date = date
-                           )
 
                     },
                     onCloseBottomSheet = {
@@ -139,6 +155,12 @@ fun HomeScreen(
             selectedBalanceType = balanceType.value,
             onMonthChoose = {
                 isMonthPickerShown.value =true
+            },
+            onTransactionClick = {
+                currentTransaction.value = it
+                coroutineScope.launch {
+                    bottomSheetScaffoldState.bottomSheetState.expand()
+                }
             }
         )
         SuBuuSnackBar(
@@ -156,18 +178,19 @@ fun HomeContent(
     homeUiState: HomeUiState,
     collectBalanceOfDay:(day:String)->Unit,
     balanceType: BalanceType,
-    onMonthChoose:()->Unit
+    onMonthChoose:()->Unit,
+    onTransactionClick:(t:Transaction)->Unit
 ){
 
     Scaffold(
         floatingActionButton = {
             Box(
-                modifier = Modifier.
-                absolutePadding(bottom = 30.dp, right = 30.dp)
+                modifier = Modifier
+                    .absolutePadding(bottom = 30.dp, right = 30.dp)
                     .clip(CircleShape)
                     .clickable {
-                    onOpenBottomSheet()
-                }) {
+                        onOpenBottomSheet()
+                    }) {
                 Icon(
                     modifier = Modifier
                         .width(60.dp)
@@ -199,7 +222,12 @@ fun HomeContent(
                 }
             )
             SectionTitle(title = "Transaction")
-            TransactionsCard(transactions = homeUiState.transactions)
+            TransactionsCard(
+                transactions = homeUiState.transactions,
+                onTransactionClick = {
+                    onTransactionClick(it)
+                }
+            )
         }
     }
 }

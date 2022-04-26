@@ -53,7 +53,7 @@ interface TransactionDao {
     suspend fun insert(transactionEntity: TransactionEntity):Long
 
     @Update
-    suspend fun update(transactionEntity: TransactionEntity):Long
+    suspend fun update(transactionEntity: TransactionEntity)
 
     @Query("DELETE FROM transaction_table")
     suspend fun deleteAll()

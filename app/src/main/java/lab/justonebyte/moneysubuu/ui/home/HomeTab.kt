@@ -10,6 +10,7 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.util.lerp
 import com.google.accompanist.pager.*
 import kotlinx.coroutines.launch
+import lab.justonebyte.moneysubuu.model.Transaction
 import kotlin.math.absoluteValue
 
 sealed class HomeTab(val index:Int,val title:String){
@@ -30,7 +31,8 @@ fun HomeTabs(
     onTabChanged:(BalanceType)->Unit,
     collectBalanceOfDay:(day:String)->Unit,
     selectedBalanceType: BalanceType,
-    onMonthChoose:()->Unit
+    onMonthChoose:()->Unit,
+    onTransactionClick:(transaction:Transaction)->Unit
 ) {
 
     var tabIndex by remember { mutableStateOf(0) }
@@ -115,6 +117,9 @@ fun HomeTabs(
                     balanceType = selectedBalanceType,
                     onMonthChoose = {
                         onMonthChoose()
+                    },
+                    onTransactionClick = {
+                        onTransactionClick(it)
                     }
                 )
             }
