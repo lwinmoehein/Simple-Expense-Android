@@ -75,6 +75,29 @@ fun HomeScreen(
     }
 
     BottomSheetScaffold(
+          floatingActionButton = {
+            Box(
+                modifier = Modifier
+                    .absolutePadding(bottom = 30.dp, right = 30.dp)
+                    .clip(CircleShape)
+                    .clickable {
+                        currentTransaction.value = null
+                        coroutineScope.launch {
+                            bottomSheetScaffoldState.bottomSheetState.expand()
+                        }
+                    }) {
+                Icon(
+                    modifier = Modifier
+                        .width(60.dp)
+                        .height(60.dp)
+                        .background(MaterialTheme.colors.onPrimary)
+                    ,
+                    imageVector = Icons.Filled.AddCircle, contentDescription = "add transaction",
+                    tint = MaterialTheme.colors.primary
+                )
+            }
+
+        },
         scaffoldState = bottomSheetScaffoldState,
         snackbarHost = { SuBuuSnackBarHost(hostState = it) },
         sheetElevation = 8.dp,
@@ -142,12 +165,6 @@ fun HomeScreen(
         }
         HomeTabs(
             homeUiState = homeUiState,
-            onOpenBottomSheet = {
-                currentTransaction.value = null
-                coroutineScope.launch {
-                    bottomSheetScaffoldState.bottomSheetState.expand()
-                }
-            },
             onTabChanged = {
                 balanceType.value = it
                 when(it){
@@ -182,7 +199,6 @@ fun HomeScreen(
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun HomeContent(
-    onOpenBottomSheet:()->Unit,
     homeUiState: HomeUiState,
     collectBalanceOfDay:(day:String)->Unit,
     balanceType: BalanceType,
@@ -191,26 +207,7 @@ fun HomeContent(
 ){
 
     Scaffold(
-        floatingActionButton = {
-            Box(
-                modifier = Modifier
-                    .absolutePadding(bottom = 30.dp, right = 30.dp)
-                    .clip(CircleShape)
-                    .clickable {
-                        onOpenBottomSheet()
-                    }) {
-                Icon(
-                    modifier = Modifier
-                        .width(60.dp)
-                        .height(60.dp)
-                        .background(MaterialTheme.colors.onPrimary)
-                    ,
-                    imageVector = Icons.Filled.AddCircle, contentDescription = "add transaction",
-                    tint = MaterialTheme.colors.primary
-                )
-            }
 
-        },
     ) {
         Column(Modifier.padding(it)) {
             Spacer(modifier = Modifier.height(30.dp))

@@ -27,7 +27,6 @@ val tabs = listOf(
 @Composable
 fun HomeTabs(
     homeUiState:HomeUiState,
-    onOpenBottomSheet:()->Unit,
     onTabChanged:(BalanceType)->Unit,
     collectBalanceOfDay:(day:String)->Unit,
     selectedBalanceType: BalanceType,
@@ -107,9 +106,7 @@ fun HomeTabs(
                     }
             ) {
                 HomeContent(
-                    onOpenBottomSheet = {
-                        onOpenBottomSheet()
-                    },
+
                     homeUiState = homeUiState,
                     collectBalanceOfDay = {
                         collectBalanceOfDay(it)
