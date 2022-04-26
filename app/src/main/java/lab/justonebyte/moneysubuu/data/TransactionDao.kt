@@ -15,36 +15,40 @@ interface TransactionDao {
     @Query("SELECT transaction_table.id as id," +
             "transaction_table.amount as amount,transaction_table.created_at as created_at," +
             "transaction_table.type as type,transaction_table.category_id as category_id," +
+            "transaction_table.created_timestamp as created_timestamp,"+
             "category_table.name as category_name,category_table.created_at as category_created_at" +
             " FROM transaction_table,category_table where category_table.id==transaction_table.category_id" +
             " and date(transaction_table.created_at)==:date" +
-            " order by date(transaction_table.created_timestamp) desc")
+            " order by created_timestamp desc")
     fun getTransactions(date:String): Flow<List<TransactionWithCategory>>
 
     @Query("SELECT transaction_table.id as id," +
             "transaction_table.amount as amount,transaction_table.created_at as created_at," +
             "transaction_table.type as type,transaction_table.category_id as category_id," +
+            "transaction_table.created_timestamp as created_timestamp,"+
             "category_table.name as category_name,category_table.created_at as category_created_at" +
             " FROM transaction_table,category_table where category_table.id==transaction_table.category_id" +
             " and  strftime('%Y-%m', transaction_table.created_at)==:month" +
-            " order by date(transaction_table.created_timestamp) desc")
+            " order by created_timestamp desc")
     fun getTransactionsByMonth(month:String = monthFormatter(System.currentTimeMillis())): Flow<List<TransactionWithCategory>>
 
     @Query("SELECT transaction_table.id as id," +
             "transaction_table.amount as amount,transaction_table.created_at as created_at," +
+            "transaction_table.created_timestamp as created_timestamp,"+
             "transaction_table.type as type,transaction_table.category_id as category_id," +
             "category_table.name as category_name,category_table.created_at as category_created_at" +
             " FROM transaction_table,category_table where category_table.id==transaction_table.category_id" +
             " and  strftime('%Y', transaction_table.created_at)==:year" +
-            " order by date(transaction_table.created_timestamp) desc")
+            " order by created_timestamp desc")
     fun getTransactionsByYear(year:String = yearFormatter(System.currentTimeMillis())): Flow<List<TransactionWithCategory>>
 
     @Query("SELECT transaction_table.id as id," +
             "transaction_table.amount as amount,transaction_table.created_at as created_at," +
+            "transaction_table.created_timestamp as created_timestamp,"+
             "transaction_table.type as type,transaction_table.category_id as category_id," +
             "category_table.name as category_name,category_table.created_at as category_created_at" +
             " FROM transaction_table,category_table where category_table.id==transaction_table.category_id" +
-            " order by date(transaction_table.created_timestamp) desc")
+            " order by created_timestamp desc")
     fun getTotalTransactions(): Flow<List<TransactionWithCategory>>
 
 
