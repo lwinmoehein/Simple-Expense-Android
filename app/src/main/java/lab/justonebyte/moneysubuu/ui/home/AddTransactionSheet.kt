@@ -171,26 +171,28 @@ fun AddTransactionSheetContent(
             },
             currentTransactionType = if (currentType.value == TransactionType.Income.value) TransactionType.Income else TransactionType.Expense
         )
-        Card(
-            elevation = 8.dp
-        ) {
-            Row(
-                modifier = Modifier.padding(12.dp),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.Center
+        if(!isEditMode){
+            Card(
+                elevation = 8.dp
             ) {
-                Text(
-                    text = "Date : ",
-                    style = MaterialTheme.typography.subtitle2,
-                    modifier = Modifier.weight(1f)
-                )
-                TextButton(
-                    onClick = { mDatePickerDialog.show() },
-                    modifier = Modifier.weight(1f)
+                Row(
+                    modifier = Modifier.padding(12.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.Center
                 ) {
-                    Text(text = mDate.value)
+                    Text(
+                        text = "Date : ",
+                        style = MaterialTheme.typography.subtitle2,
+                        modifier = Modifier.weight(1f)
+                    )
+                    TextButton(
+                        onClick = { mDatePickerDialog.show() },
+                        modifier = Modifier.weight(1f)
+                    ) {
+                        Text(text = mDate.value)
+                    }
+                    Spacer(modifier = Modifier.weight(1f))
                 }
-                Spacer(modifier = Modifier.weight(1f))
             }
         }
         Row(
