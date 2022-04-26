@@ -48,6 +48,14 @@ fun HomeScreen(
         mutableStateOf<Transaction?>(null)
     }
 
+    LaunchedEffect(bottomSheetScaffoldState.bottomSheetState) {
+        //remove current transaction on sheet close
+        if(bottomSheetScaffoldState.bottomSheetState.isCollapsed){
+            currentTransaction.value = null
+        }
+    }
+
+
     if(isMonthPickerShown.value){
         Dialog(onDismissRequest = { isMonthPickerShown.value=false }) {
                 MonthPicker(
