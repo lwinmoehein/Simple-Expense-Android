@@ -1,6 +1,7 @@
 package lab.justonebyte.moneysubuu.ui.home
 
 import android.app.DatePickerDialog
+import android.util.Log
 import android.widget.DatePicker
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
@@ -52,6 +53,15 @@ fun AddTransactionSheetContent(
     val currentAmount = remember {
         mutableStateOf("")
     }
+
+    fun clearTransactionForm() {
+        currentAmount.value = ""
+        currentCategory.value = null
+        currentType.value=1
+        mDate.value = dateFormatter(System.currentTimeMillis())
+        localFocusManage.clearFocus()
+    }
+
 
 
 
@@ -138,8 +148,15 @@ fun AddTransactionSheetContent(
             elevation = 8.dp
         ) {
             Row(modifier = Modifier.padding(12.dp),verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.Center){
-                Text(text = "Date : ", style = MaterialTheme.typography.subtitle2,modifier = Modifier.weight(1f))
-                TextButton(onClick = { mDatePickerDialog.show() },modifier = Modifier.weight(1f)) {
+                Text(
+                    text = "Date : ",
+                    style = MaterialTheme.typography.subtitle2,
+                    modifier = Modifier.weight(1f)
+                )
+                TextButton(
+                    onClick = { mDatePickerDialog.show() },
+                    modifier = Modifier.weight(1f)
+                ) {
                     Text(text = mDate.value)
                 }
                 Spacer(modifier = Modifier.weight(1f))
@@ -170,12 +187,7 @@ fun AddTransactionSheetContent(
 
                             )
                             onCloseBottomSheet()
-                            currentAmount.value = ""
-                            currentCategory.value = null
-                            currentType.value=1
-                           localFocusManage.clearFocus()
-
-
+                            clearTransactionForm()
                         }
                     }
 
@@ -185,3 +197,4 @@ fun AddTransactionSheetContent(
         }
     }
 }
+
