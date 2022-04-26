@@ -215,10 +215,12 @@ fun AddTransactionSheetContent(
                     .clip(RoundedCornerShape(10.dp))
                     .background(MaterialTheme.colors.primary),
                 onClick = {
+                    val category = currentCategory.value
+                    val isValidCategorySelected =if(category==null) false else !categories.filter { it.transaction_type.value == currentType.value && it.id== category.id  }.isEmpty()
                     val amount =
                         if (currentAmount.value.isEmpty()) 0 else currentAmount.value.toInt()
 
-                    if (currentCategory.value == null || amount <= 0) {
+                    if (!isValidCategorySelected || amount <= 0) {
                         showIncorrectDataSnack()
                     } else {
                         currentCategory.value?.let {
