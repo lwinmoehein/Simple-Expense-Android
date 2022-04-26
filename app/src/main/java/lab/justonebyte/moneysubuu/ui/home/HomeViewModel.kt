@@ -139,6 +139,7 @@ class HomeViewModel @Inject constructor(
         }
     }
     fun updateTransaction(transactionId:Int?,transactionCategory: TransactionCategory,amount:Int,type:Int,date:String){
+        Log.i("update tran",(transactionId?:1).toString()+":"+amount.toString())
         viewModelScope.launch {
             transactionRepository.update(
                 Transaction(

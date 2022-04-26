@@ -117,6 +117,7 @@ fun HomeScreen(
                           currentTransaction = currentTransaction.value,
                          categories =  homeUiState.categories,
                          onConfirmTransactionForm = { type, amount, category,date->
+                             Log.i("on confirm sheet",if(currentTransaction.value!=null) "yes" else "no")
                              if(currentTransaction.value==null)
                                  homeViewModel.addTransaction(
                                      transactionCategory = category,

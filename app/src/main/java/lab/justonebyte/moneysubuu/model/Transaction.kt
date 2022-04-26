@@ -35,6 +35,7 @@ data class Transaction(
         }
         fun mapToEntity(transaction:Transaction):TransactionEntity{
             return TransactionEntity(
+                id = transaction.id,
                 amount = transaction.amount,
                 type = transaction.type.value,
                 category_id=transaction.category.id,
