@@ -24,6 +24,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
+import lab.justonebyte.moneysubuu.model.Transaction
 import lab.justonebyte.moneysubuu.model.TransactionCategory
 import lab.justonebyte.moneysubuu.model.TransactionType
 import lab.justonebyte.moneysubuu.ui.appContentPadding
@@ -39,11 +40,7 @@ fun AddTransactionSheetContent(
     showIncorrectDataSnack:()->Unit,
     onConfirmTransactionForm:(type:Int,amount:Int,category: TransactionCategory,date:String)->Unit,
     onAddCategory:(categoryName:String,transactionType:TransactionType)->Unit,
-    initialType:TransactionType ,
-    initialAmount:String ,
-    initialCategory:TransactionCategory?,
-    initialDate:String,
-    isEditMode:Boolean
+    currentTransaction:Transaction?
 ) {
     val mContext = LocalContext.current
     val localFocusManage = LocalFocusManager.current
@@ -54,10 +51,11 @@ fun AddTransactionSheetContent(
     val mDay: Int = mCalendar.get(Calendar.DAY_OF_MONTH)
 
     //initialize form variables
-    val currentType = remember { mutableStateOf(initialType.value) }
-    val currentAmount = remember { mutableStateOf(initialAmount) }
-    val currentCategory = remember { mutableStateOf(initialCategory) }
-    val mDate = remember { mutableStateOf(initialDate) }
+    val currentType = remember { mutableStateOf(currentTransaction?.type?.value ?: 1) }
+    val currentAmount = remember { mutableStateOf(currentTransaction?.amount?.toString() ?: "") }
+    val currentCategory = remember { mutableStateOf(currentTransaction?.category ?:null) }
+    val mDate = remember { mutableStateOf(currentTransaction?.created_at ?: dateFormatter(System.currentTimeMillis())) }
+    val isEditMode = currentTransaction != null
 
 
 

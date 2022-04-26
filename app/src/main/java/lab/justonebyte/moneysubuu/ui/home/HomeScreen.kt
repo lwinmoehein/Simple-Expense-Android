@@ -89,59 +89,57 @@ fun HomeScreen(
             Card(
                         Modifier.heightIn(min = 500.dp, max = 1000.dp),
             ) {
-                  val cTransaction = currentTransaction.value
-                  AddTransactionSheetContent(
-                      isEditMode = cTransaction != null,
-                      initialType = cTransaction?.type ?: TransactionType.Expense,
-                      initialDate = cTransaction?.created_at ?: dateFormatter(System.currentTimeMillis()),
-                      initialAmount = cTransaction?.amount?.toString() ?: "",
-                      initialCategory = cTransaction?.category,
-                      categories =  homeUiState.categories,
-                      onConfirmTransactionForm = { type, amount, category,date->
-                          if(currentTransaction.value==null)
-                              homeViewModel.addTransaction(
-                                  transactionCategory = category,
-                                  type = type,
-                                  amount = amount,
-                                  date = date
-                              )
-                          else
-                              currentTransaction.value?.let {
-                                  homeViewModel.updateTransaction(
-                                      transactionId =  it.id,
-                                      transactionCategory = category,
-                                      type = type,
-                                      amount = amount,
-                                      date = date
-                                  )
-                              }
+                     AddTransactionSheetContent(
+                          currentTransaction = currentTransaction.value,
+                         categories =  homeUiState.categories,
+                         onConfirmTransactionForm = { type, amount, category,date->
+                             if(currentTransaction.value==null)
+                                 homeViewModel.addTransaction(
+                                     transactionCategory = category,
+                                     type = type,
+                                     amount = amount,
+                                     date = date
+                                 )
+                             else
+                                 currentTransaction.value?.let {
+                                     homeViewModel.updateTransaction(
+                                         transactionId =  it.id,
+                                         transactionCategory = category,
+                                         type = type,
+                                         amount = amount,
+                                         date = date
+                                     )
+                                 }
 
 
-                      },
-                      onCloseBottomSheet = {
-                          coroutineScope.launch {
-                              bottomSheetScaffoldState.bottomSheetState.collapse()
-                          }
-                      },
-                      showIncorrectDataSnack = {
-                          homeViewModel.showIncorrectFormDataSnackbar()
-                      },
-                      onAddCategory = { name,type->
-                          homeViewModel.addCategory(
-                              TransactionCategory(
-                                  id = 1,
-                                  transaction_type = type,
-                                  name = name,
-                                  created_at = System.currentTimeMillis()
-                              )
-                          )
-                      }
-                  )
+                         },
+                         onCloseBottomSheet = {
+                             coroutineScope.launch {
+                                 bottomSheetScaffoldState.bottomSheetState.collapse()
+                             }
+                         },
+                         showIncorrectDataSnack = {
+                             homeViewModel.showIncorrectFormDataSnackbar()
+                         },
+                         onAddCategory = { name,type->
+                             homeViewModel.addCategory(
+                                 TransactionCategory(
+                                     id = 1,
+                                     transaction_type = type,
+                                     name = name,
+                                     created_at = System.currentTimeMillis()
+                                 )
+                             )
+                         }
+                     )
+
 
             }
         }, sheetPeekHeight = 0.dp
     ) {
-
+        currentTransaction.value?.let {
+            Text(text = it.amount.toString())
+        }
         HomeTabs(
             homeUiState = homeUiState,
             onOpenBottomSheet = {
