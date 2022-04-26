@@ -75,28 +75,29 @@ fun HomeScreen(
     }
 
     BottomSheetScaffold(
-          floatingActionButton = {
-            Box(
-                modifier = Modifier
-                    .absolutePadding(bottom = 30.dp, right = 30.dp)
-                    .clip(CircleShape)
-                    .clickable {
-                        currentTransaction.value = null
-                        coroutineScope.launch {
-                            bottomSheetScaffoldState.bottomSheetState.expand()
-                        }
-                    }) {
-                Icon(
+        floatingActionButton = {
+            if(!bottomSheetScaffoldState.bottomSheetState.isAnimationRunning && bottomSheetScaffoldState.bottomSheetState.isCollapsed){
+                Box(
                     modifier = Modifier
-                        .width(60.dp)
-                        .height(60.dp)
-                        .background(MaterialTheme.colors.onPrimary)
-                    ,
-                    imageVector = Icons.Filled.AddCircle, contentDescription = "add transaction",
-                    tint = MaterialTheme.colors.primary
-                )
+                        .absolutePadding(bottom = 100.dp, right = 30.dp)
+                        .clip(CircleShape)
+                        .clickable {
+                            currentTransaction.value = null
+                            coroutineScope.launch {
+                                bottomSheetScaffoldState.bottomSheetState.expand()
+                            }
+                        }) {
+                    Icon(
+                        modifier = Modifier
+                            .width(60.dp)
+                            .height(60.dp)
+                            .background(MaterialTheme.colors.onPrimary)
+                        ,
+                        imageVector = Icons.Filled.AddCircle, contentDescription = "add transaction",
+                        tint = MaterialTheme.colors.primary
+                    )
+                }
             }
-
         },
         scaffoldState = bottomSheetScaffoldState,
         snackbarHost = { SuBuuSnackBarHost(hostState = it) },
