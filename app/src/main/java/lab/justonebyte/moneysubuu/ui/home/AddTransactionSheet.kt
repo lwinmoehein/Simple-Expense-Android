@@ -90,7 +90,7 @@ fun AddTransactionSheetContent(
                 .height(30.dp)
         ) {
             Column(verticalArrangement = Arrangement.Center, modifier = Modifier.fillMaxHeight()) {
-                Text(text = "Add transaction", style = MaterialTheme.typography.subtitle1)
+                Text(text = if(isEditMode) "Edit transaction" else "Add New Transaction", style = MaterialTheme.typography.subtitle1)
             }
             IconButton(onClick = { onCloseBottomSheet() }) {
                 Icon(imageVector = Icons.Filled.Close, contentDescription = "close sheet")
