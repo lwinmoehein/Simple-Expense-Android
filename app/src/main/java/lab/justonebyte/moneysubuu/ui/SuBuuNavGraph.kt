@@ -43,6 +43,9 @@ fun SuBuuNavGraph(
         composable(MainDestinations.HOME_ROUTE) {
             HomeScreen(
                 openDrawer = openDrawer,
+                goToDetails = {
+                    actions.goToDetail()
+                }
             )
         }
         composable(MainDestinations.SETTINGS_ROUTE) {

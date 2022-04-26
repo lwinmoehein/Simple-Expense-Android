@@ -30,6 +30,7 @@ import java.util.*
 @Composable
 fun HomeScreen(
     openDrawer:()->Unit,
+    goToDetails:()->Unit
 
 ){
     val calendar = Calendar.getInstance()
