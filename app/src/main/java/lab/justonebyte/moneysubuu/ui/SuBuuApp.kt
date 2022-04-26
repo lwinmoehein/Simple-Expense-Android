@@ -65,11 +65,13 @@ fun SuBuuApp(
                         currentRoute = currentRoute,
                         navigateToHome = { navController.navigate(MainDestinations.HOME_ROUTE) },
                         navigateToSettings = { navController.navigate(MainDestinations.SETTINGS_ROUTE) },
-                        closeDrawer = { coroutineScope.launch { scaffoldState.drawerState.close() } }
+                        closeDrawer = { coroutineScope.launch { scaffoldState.drawerState.close() } },
+                        navigateToDetail = {navController.navigate(MainDestinations.DETAIL_ROUTE)}
                     )
                 }
             ) {
                 SuBuuNavGraph(
+                    paddings = it,
                     navController = navController,
                     scaffoldState = scaffoldState
                 )
