@@ -143,6 +143,7 @@ fun HomeScreen(
         HomeTabs(
             homeUiState = homeUiState,
             onOpenBottomSheet = {
+                currentTransaction.value = null
                 coroutineScope.launch {
                     bottomSheetScaffoldState.bottomSheetState.expand()
                 }

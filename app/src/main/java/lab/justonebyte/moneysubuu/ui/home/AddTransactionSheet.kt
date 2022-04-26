@@ -51,10 +51,10 @@ fun AddTransactionSheetContent(
     val mDay: Int = mCalendar.get(Calendar.DAY_OF_MONTH)
 
     //initialize form variables
-    val currentType = remember { mutableStateOf(currentTransaction?.type?.value ?: 1) }
-    val currentAmount = remember { mutableStateOf(currentTransaction?.amount?.toString() ?: "") }
-    val currentCategory = remember { mutableStateOf(currentTransaction?.category ?:null) }
-    val mDate = remember { mutableStateOf(currentTransaction?.created_at ?: dateFormatter(System.currentTimeMillis())) }
+    val currentType = remember(currentTransaction) { mutableStateOf(currentTransaction?.type?.value ?: 1) }
+    val currentAmount = remember(currentTransaction) { mutableStateOf(currentTransaction?.amount?.toString() ?: "") }
+    val currentCategory = remember(currentTransaction) { mutableStateOf(currentTransaction?.category) }
+    val mDate = remember (currentTransaction){ mutableStateOf(currentTransaction?.created_at ?: dateFormatter(System.currentTimeMillis())) }
     val isEditMode = currentTransaction != null
 
 
