@@ -89,12 +89,13 @@ fun HomeScreen(
             Card(
                         Modifier.heightIn(min = 500.dp, max = 1000.dp),
             ) {
+                  val cTransaction = currentTransaction.value
                   AddTransactionSheetContent(
-                      isEditMode = currentTransaction.value?.let { true}?:false,
-                      initialType = currentTransaction.value?.let { it.type }?:TransactionType.Income,
-                      initialDate = currentTransaction.value?.let { it.created_at}?: dateFormatter(System.currentTimeMillis()),
-                      initialAmount = currentTransaction.value?.let { it.amount.toString()}?:"",
-                      initialCategory = currentTransaction.value?.let { it.category}?:null,
+                      isEditMode = cTransaction != null,
+                      initialType = cTransaction?.type ?: TransactionType.Expense,
+                      initialDate = cTransaction?.created_at ?: dateFormatter(System.currentTimeMillis()),
+                      initialAmount = cTransaction?.amount?.toString() ?: "",
+                      initialCategory = cTransaction?.category,
                       categories =  homeUiState.categories,
                       onConfirmTransactionForm = { type, amount, category,date->
                           if(currentTransaction.value==null)
@@ -165,8 +166,8 @@ fun HomeScreen(
                 isMonthPickerShown.value =true
             },
             onTransactionClick = {
-                currentTransaction.value = it
                 coroutineScope.launch {
+                    currentTransaction.value = it
                     bottomSheetScaffoldState.bottomSheetState.expand()
                 }
             }

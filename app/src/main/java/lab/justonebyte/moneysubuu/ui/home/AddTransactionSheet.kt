@@ -39,11 +39,11 @@ fun AddTransactionSheetContent(
     showIncorrectDataSnack:()->Unit,
     onConfirmTransactionForm:(type:Int,amount:Int,category: TransactionCategory,date:String)->Unit,
     onAddCategory:(categoryName:String,transactionType:TransactionType)->Unit,
-    initialType:TransactionType = TransactionType.Income,
-    initialAmount:String = "",
-    initialCategory:TransactionCategory? = null,
-    initialDate:String = dateFormatter(System.currentTimeMillis()),
-    isEditMode:Boolean = false
+    initialType:TransactionType ,
+    initialAmount:String ,
+    initialCategory:TransactionCategory?,
+    initialDate:String,
+    isEditMode:Boolean
 ) {
     val mContext = LocalContext.current
     val localFocusManage = LocalFocusManager.current
