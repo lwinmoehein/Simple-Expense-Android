@@ -48,13 +48,6 @@ fun HomeScreen(
         mutableStateOf<Transaction?>(null)
     }
 
-    LaunchedEffect(bottomSheetScaffoldState.bottomSheetState) {
-        //remove current transaction on sheet close
-        if(bottomSheetScaffoldState.bottomSheetState.isCollapsed){
-            currentTransaction.value = null
-        }
-    }
-
 
     if(isMonthPickerShown.value){
         Dialog(onDismissRequest = { isMonthPickerShown.value=false }) {
@@ -96,9 +89,12 @@ fun HomeScreen(
             Card(
                         Modifier.heightIn(min = 500.dp, max = 1000.dp),
             ) {
-              if(currentTransaction.value==null){
                   AddTransactionSheetContent(
-                      isEditMode = false,
+                      isEditMode = currentTransaction.value?.let { true}?:false,
+                      initialType = currentTransaction.value?.let { it.type }?:TransactionType.Income,
+                      initialDate = currentTransaction.value?.let { it.created_at}?: dateFormatter(System.currentTimeMillis()),
+                      initialAmount = currentTransaction.value?.let { it.amount.toString()}?:"",
+                      initialCategory = currentTransaction.value?.let { it.category}?:null,
                       categories =  homeUiState.categories,
                       onConfirmTransactionForm = { type, amount, category,date->
                           if(currentTransaction.value==null)
@@ -140,57 +136,7 @@ fun HomeScreen(
                           )
                       }
                   )
-              }else{
-                  currentTransaction.value?.let {
-                      AddTransactionSheetContent(
-                          isEditMode = true,
-                          initialType = it.type,
-                          initialDate = it.created_at,
-                          initialAmount = it.amount.toString(),
-                          initialCategory = it.category,
-                          categories =  homeUiState.categories,
-                          onConfirmTransactionForm = { type, amount, category,date->
-                              if(currentTransaction.value==null)
-                                  homeViewModel.addTransaction(
-                                      transactionCategory = category,
-                                      type = type,
-                                      amount = amount,
-                                      date = date
-                                  )
-                              else
-                                  currentTransaction.value?.let {
-                                      homeViewModel.updateTransaction(
-                                          transactionId =  it.id,
-                                          transactionCategory = category,
-                                          type = type,
-                                          amount = amount,
-                                          date = date
-                                      )
-                                  }
 
-
-                          },
-                          onCloseBottomSheet = {
-                              coroutineScope.launch {
-                                  bottomSheetScaffoldState.bottomSheetState.collapse()
-                              }
-                          },
-                          showIncorrectDataSnack = {
-                              homeViewModel.showIncorrectFormDataSnackbar()
-                          },
-                          onAddCategory = { name,type->
-                              homeViewModel.addCategory(
-                                  TransactionCategory(
-                                      id = 1,
-                                      transaction_type = type,
-                                      name = name,
-                                      created_at = System.currentTimeMillis()
-                                  )
-                              )
-                          }
-                      )
-                  }
-              }
             }
         }, sheetPeekHeight = 0.dp
     ) {
