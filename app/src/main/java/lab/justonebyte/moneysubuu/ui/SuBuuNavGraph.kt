@@ -5,22 +5,25 @@ import androidx.compose.material.ScaffoldState
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.*
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import kotlinx.coroutines.launch
 import lab.justonebyte.moneysubuu.model.TransactionType
 import lab.justonebyte.moneysubuu.ui.detail.TransactionDetailScreen
 import lab.justonebyte.moneysubuu.ui.home.HomeScreen
+import lab.justonebyte.moneysubuu.ui.home.HomeTab
 import lab.justonebyte.moneysubuu.ui.settings.SettingsScreen
+import lab.justonebyte.moneysubuu.utils.dateFormatter
 
 /**
  * Destinations used in the ([JetnewsApp]).
  */
 object MainDestinations {
     const val HOME_ROUTE = "home"
-    const val INCOME_DETAIL_ROUTE = "income_detail"
-    const val EXPENSE_DETAIL_ROUTE = "expense_detail"
+    const val DETAIL_ROUTE = "detail/{type}/{tab}/{date}"
     const val SETTINGS_ROUTE = "settings"
 }
 
@@ -31,7 +34,6 @@ fun SuBuuNavGraph(
     scaffoldState: ScaffoldState = rememberScaffoldState(),
     startDestination: String = MainDestinations.HOME_ROUTE
 ) {
-    val actions = remember(navController) { MainActions(navController) }
     val coroutineScope = rememberCoroutineScope()
     val openDrawer: () -> Unit = { coroutineScope.launch { scaffoldState.drawerState.open() } }
 
@@ -42,8 +44,8 @@ fun SuBuuNavGraph(
 
         composable(MainDestinations.HOME_ROUTE) {
             HomeScreen(
-                goToExpenseDetail = {navController.navigate(MainDestinations.EXPENSE_DETAIL_ROUTE)},
-                goToIncomeDetail =  {navController.navigate(MainDestinations.INCOME_DETAIL_ROUTE)}
+                goToExpenseDetail = {navController.navigate(MainDestinations.DETAIL_ROUTE)},
+                goToIncomeDetail =  {navController.navigate(MainDestinations.DETAIL_ROUTE)}
             )
         }
         composable(MainDestinations.SETTINGS_ROUTE) {
@@ -51,32 +53,33 @@ fun SuBuuNavGraph(
                 openDrawer = openDrawer,
             )
         }
-        composable(MainDestinations.INCOME_DETAIL_ROUTE) {
+        composable(
+            MainDestinations.DETAIL_ROUTE,
+            arguments = listOf(
+                navArgument("type") { type = NavType.IntType },
+                navArgument("tab") { type = NavType.IntType },
+                navArgument("date") { type = NavType.StringType },
+                )
+        ) {
+            val transactionType =  when(navController.currentBackStackEntry?.arguments?.getInt("type")){
+                TransactionType.Income.value->TransactionType.Income
+                else->TransactionType.Expense
+            }
+            val tabType =  when(navController.currentBackStackEntry?.arguments?.getInt("tab")){
+                HomeTab.Daily.index->HomeTab.Daily
+                HomeTab.Monthly.index->HomeTab.Monthly
+                HomeTab.Yearly.index->HomeTab.Yearly
+                else->HomeTab.Total
+            }
+            val date =  navController.currentBackStackEntry?.arguments?.getString("date")
+
             TransactionDetailScreen(
                 goBack = { navController.popBackStack() },
-                transactionType = TransactionType.Income,
-            )
-        }
-        composable(MainDestinations.EXPENSE_DETAIL_ROUTE) {
-            TransactionDetailScreen(
-                goBack = { navController.popBackStack() },
-                transactionType = TransactionType.Expense
+                transactionType = transactionType,
+                tabType = tabType,
+                dateData = date?: dateFormatter(System.currentTimeMillis())
             )
         }
     }
 }
 
-/**
- * Models the navigation actions in the app.
- */
-class MainActions(navController: NavHostController) {
-    val upPress: () -> Unit = {
-        navController.popBackStack()
-    }
-    val goToIncomeDetail:()->Unit = {
-        navController.navigate(MainDestinations.INCOME_DETAIL_ROUTE)
-    }
-    val goToExpenseDetail:()->Unit = {
-        navController.navigate(MainDestinations.EXPENSE_DETAIL_ROUTE)
-    }
-}

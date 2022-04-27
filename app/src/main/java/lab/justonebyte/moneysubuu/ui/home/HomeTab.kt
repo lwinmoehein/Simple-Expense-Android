@@ -11,7 +11,6 @@ import androidx.compose.ui.util.lerp
 import com.google.accompanist.pager.*
 import kotlinx.coroutines.launch
 import lab.justonebyte.moneysubuu.model.Transaction
-import lab.justonebyte.moneysubuu.ui.MainActions
 import kotlin.math.absoluteValue
 
 sealed class HomeTab(val index:Int,val title:String){
