@@ -22,10 +22,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import lab.justonebyte.moneysubuu.model.Transaction
 import lab.justonebyte.moneysubuu.model.TransactionType
+import lab.justonebyte.moneysubuu.ui.home.BalanceType
 import lab.justonebyte.moneysubuu.ui.home.HomeTab
+import lab.justonebyte.moneysubuu.ui.home.MonthPicker
 import lab.justonebyte.moneysubuu.utils.dateFormatter
 import lab.justonebyte.moneysubuu.utils.monthFormatter
 import lab.justonebyte.moneysubuu.utils.yearFormatter
@@ -57,16 +61,25 @@ fun TransactionDetailScreen(
         if(tabType==HomeTab.Daily) dateData.split('-')[0].toInt() else mCalendar.get(Calendar.YEAR)
     }
     val mMonth: Int = remember(dateData){
-        if(tabType==HomeTab.Daily) dateData.split('-')[1].toInt() else mCalendar.get(Calendar.MONTH)
+        (if(tabType==HomeTab.Daily) dateData.split('-')[1].toInt() else mCalendar.get(Calendar.MONTH))-1
     }
     val mDay: Int = remember(dateData){
         if(tabType==HomeTab.Daily) dateData.split('-')[2].toInt() else mCalendar.get(Calendar.DAY_OF_MONTH)
     }
     val mDate = remember(dateData) { mutableStateOf(dateData ) }
+    //month picker
+    val isMonthPickerShown = remember { mutableStateOf(false)}
+    val selectedMonthMonth = remember(dateData) { mutableStateOf(if(tabType==HomeTab.Monthly) dateData.split('-')[1].toInt() else 1)}
+    val selectedMonthYear= remember(dateData) { mutableStateOf(if(tabType==HomeTab.Yearly) dateData.split('-')[0].toInt() else 1)}
+
 
     LaunchedEffect(key1 = mDate.value, block = {
-        Log.i("mdate",mDate.value)
-            detailViewModel.bindPieChartData(HomeTab.Daily,mDate.value)
+            when(tabType){
+                HomeTab.Daily->detailViewModel.bindPieChartData(HomeTab.Daily,mDate.value)
+                HomeTab.Monthly->detailViewModel.bindPieChartData(tabType = tabType,"${selectedMonthYear.value}-${if(selectedMonthMonth.value<10) "0"+selectedMonthMonth.value else selectedMonthMonth.value}")
+                HomeTab.Yearly-> detailViewModel.bindPieChartData(tabType = tabType,"${selectedMonthYear.value}")
+                else->detailViewModel.bindPieChartData(tabType = tabType,"")
+            }
     } )
 
 
@@ -76,10 +89,35 @@ fun TransactionDetailScreen(
             mContext,
             { _: DatePicker, mYear: Int, mMonth: Int, mDayOfMonth: Int ->
                 mDate.value =
-                    "$mYear-${if (mMonth + 1 >= 10) mMonth + 1 else "0" + (mMonth + 1)}-$mDayOfMonth"
+                    "$mYear-${if (mMonth + 1 >= 10) mMonth + 1 else "0" + (mMonth+1)}-$mDayOfMonth"
 
             }, mYear, mMonth, mDay
         )
+    }
+
+    if(isMonthPickerShown.value){
+        Dialog(onDismissRequest = { isMonthPickerShown.value=false }) {
+            MonthPicker(
+                selectedMonth = selectedMonthMonth.value,
+                selectedYear =selectedMonthYear.value ,
+                onYearSelected ={
+                    selectedMonthYear.value=it
+                } ,
+                onMonthSelected = {
+                    selectedMonthMonth.value=it
+
+                },
+                onConfirmPicker = {
+                    isMonthPickerShown.value =false
+                    if(tabType == HomeTab.Monthly){
+                        detailViewModel.bindPieChartData(tabType = tabType,"${selectedMonthYear}-${selectedMonthMonth}")
+                    }else{
+                        detailViewModel.bindPieChartData(tabType = tabType,"${selectedMonthYear}")
+                    }
+                },
+                isMonthPicker = tabType == HomeTab.Monthly
+            )
+        }
     }
 
 
