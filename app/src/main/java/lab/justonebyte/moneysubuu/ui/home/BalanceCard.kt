@@ -39,7 +39,7 @@ fun BalanceCard(
     balanceType: BalanceType,
     onMonthChoose:()->Unit
 ){
-    val currentDay = getToday()
+        val currentDay = getToday()
         val currentMonth = getCurrentMonth()
         val mContext = LocalContext.current
         val mYear by remember(selectedDay) { mutableStateOf(selectedDay.split('-')[0].toInt())}
@@ -50,7 +50,7 @@ fun BalanceCard(
         val mDatePickerDialog = DatePickerDialog(
             mContext,
             { _: DatePicker, mYear: Int, mMonth: Int, mDayOfMonth: Int ->
-                mDate.value = "$mYear-${if(mMonth+1>=10) mMonth+1 else "0"+(mMonth+1)}-$mDayOfMonth"
+                mDate.value = "$mYear-${if(mMonth+1>=10) mMonth+1 else "0"+(mMonth+1)}-${if(mDayOfMonth<10) "0"+mDayOfMonth else mDayOfMonth}"
                 collectBalaceOfDay(mDate.value)
             }, mYear, mMonth-1, mDay
         )
@@ -101,13 +101,14 @@ fun BalanceCard(
                             goToPiechart(
                                 TransactionType.Income.value,
                                 balanceType.value,
-                                when(balanceType){
-                                    BalanceType.DAILY->mDate.value
-                                    BalanceType.MONTHLY->selectedMonth
-                                    BalanceType.YEARLY->selectedYear
-                                    else-> "Total"
+                                when (balanceType) {
+                                    BalanceType.DAILY -> mDate.value
+                                    BalanceType.MONTHLY -> selectedMonth
+                                    BalanceType.YEARLY -> selectedYear
+                                    else -> "Total"
                                 }
-                            ) },
+                            )
+                        },
                     elevation = 10.dp
                 ) {
                     Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.Center) {
@@ -133,11 +134,11 @@ fun BalanceCard(
                             goToPiechart(
                                 TransactionType.Expense.value,
                                 balanceType.value,
-                                when(balanceType){
-                                    BalanceType.DAILY->mDate.value
-                                    BalanceType.MONTHLY->selectedMonth
-                                    BalanceType.YEARLY->selectedYear
-                                    else-> "Total"
+                                when (balanceType) {
+                                    BalanceType.DAILY -> mDate.value
+                                    BalanceType.MONTHLY -> selectedMonth
+                                    BalanceType.YEARLY -> selectedYear
+                                    else -> "Total"
                                 }
                             )
                         },
