@@ -35,14 +35,14 @@ fun HomeTabs(
     onTransactionClick:(transaction:Transaction)->Unit
 ) {
 
-    var tabIndex by remember { mutableStateOf(0) }
+    var tabIndex by remember { mutableStateOf(1) }
     val pagerState = rememberPagerState()
     val coroutineScope = rememberCoroutineScope()
 
     LaunchedEffect(pagerState) {
         // Collect from the pager state a snapshotFlow reading the currentPage
         snapshotFlow { pagerState.currentPage }.collect { page ->
-            val balanceType = when(pagerState.currentPage){
+            val balanceType = when(pagerState.currentPage+1){
                 HomeTab.Daily.index->BalanceType.DAILY
                 HomeTab.Monthly.index->BalanceType.MONTHLY
                 HomeTab.Yearly.index->BalanceType.YEARLY
@@ -70,7 +70,6 @@ fun HomeTabs(
                     selected = tabIndex == index,
                     onClick = {
                         coroutineScope.launch { pagerState.animateScrollToPage(index) }
-                        Log.i("tab:","selected")
                     },
                     text = { Text(text = tab.title) }
                 )

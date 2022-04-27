@@ -55,7 +55,7 @@ class TransactionDetailViewModel @Inject constructor(
         }
     }
     fun getUiState(tabType:HomeTab,dateData:String):StateFlow<DetailUiState>{
-        Log.i("date data",tabType.title)
+        Log.i("date data",dateData)
         when(tabType){
             HomeTab.Daily->collectDailyBalance(dateValue = dateData)
             HomeTab.Monthly->collectMonthlyBalance(dateValue = dateData)
