@@ -54,12 +54,9 @@ class TransactionDetailViewModel @Inject constructor(
             }
         }
     }
-    fun getUiState(tabType:HomeTab,dateData:String):StateFlow<DetailUiState>{
-        bindPieChartData(tabType = tabType, dateData = dateData)
-        return viewModelUiState
-    }
 
     fun bindPieChartData(tabType:HomeTab,dateData:String){
+        Log.i("bindchart",tabType.title+":"+dateData)
         when(tabType){
             HomeTab.Daily->collectDailyBalance(dateValue = dateData)
             HomeTab.Monthly->collectMonthlyBalance(dateValue = dateData)

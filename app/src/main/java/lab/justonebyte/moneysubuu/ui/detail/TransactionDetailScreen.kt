@@ -4,6 +4,7 @@ package lab.justonebyte.moneysubuu.ui.detail
 // for a `var` variable also add
 
 import android.app.DatePickerDialog
+import android.util.Log
 import android.widget.DatePicker
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -43,7 +44,7 @@ fun TransactionDetailScreen(
     dateData:String = dateFormatter(System.currentTimeMillis())
 ){
     val detailViewModel = hiltViewModel<TransactionDetailViewModel>()
-    val detailUiState by detailViewModel.getUiState(tabType = tabType, dateData = dateData).collectAsState()
+    val detailUiState by detailViewModel.viewModelUiState.collectAsState()
 
     val transactions = detailUiState.transactions.filter { it.type== transactionType}
     val scaffoldState = rememberScaffoldState()
@@ -52,22 +53,34 @@ fun TransactionDetailScreen(
     val mContext = LocalContext.current
     val mCalendar = Calendar.getInstance()
     mCalendar.time = Date()
-    val mYear: Int = mCalendar.get(Calendar.YEAR)
-    val mMonth: Int = mCalendar.get(Calendar.MONTH)
-    val mDay: Int = mCalendar.get(Calendar.DAY_OF_MONTH)
-    val mDate = remember { mutableStateOf(dateData ) }
+    val mYear: Int = remember(dateData) {
+        if(tabType==HomeTab.Daily) dateData.split('-')[0].toInt() else mCalendar.get(Calendar.YEAR)
+    }
+    val mMonth: Int = remember(dateData){
+        if(tabType==HomeTab.Daily) dateData.split('-')[1].toInt() else mCalendar.get(Calendar.MONTH)
+    }
+    val mDay: Int = remember(dateData){
+        if(tabType==HomeTab.Daily) dateData.split('-')[2].toInt() else mCalendar.get(Calendar.DAY_OF_MONTH)
+    }
+    val mDate = remember(dateData) { mutableStateOf(dateData ) }
+
+    LaunchedEffect(key1 = mDate.value, block = {
+        Log.i("mdate",mDate.value)
+            detailViewModel.bindPieChartData(HomeTab.Daily,mDate.value)
+    } )
 
 
-    val mDatePickerDialog = DatePickerDialog(
-        mContext,
-        { _: DatePicker, mYear: Int, mMonth: Int, mDayOfMonth: Int ->
-            mDate.value =
-                "$mYear-${if (mMonth + 1 >= 10) mMonth + 1 else "0" + (mMonth + 1)}-$mDayOfMonth"
-            if(tabType==HomeTab.Daily){
-                detailViewModel.bindPieChartData(HomeTab.Daily,mDate.value)
-            }
-        }, mYear, mMonth, mDay
-    )
+    val mDatePickerDialog = remember(dateData){
+        Log.i("datepicker","initializing")
+        DatePickerDialog(
+            mContext,
+            { _: DatePicker, mYear: Int, mMonth: Int, mDayOfMonth: Int ->
+                mDate.value =
+                    "$mYear-${if (mMonth + 1 >= 10) mMonth + 1 else "0" + (mMonth + 1)}-$mDayOfMonth"
+
+            }, mYear, mMonth, mDay
+        )
+    }
 
 
 
