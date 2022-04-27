@@ -54,7 +54,7 @@ fun SuBuuNavGraph(
         composable(MainDestinations.INCOME_DETAIL_ROUTE) {
             TransactionDetailScreen(
                 goBack = { navController.popBackStack() },
-                transactionType = TransactionType.Income
+                transactionType = TransactionType.Income,
             )
         }
         composable(MainDestinations.EXPENSE_DETAIL_ROUTE) {

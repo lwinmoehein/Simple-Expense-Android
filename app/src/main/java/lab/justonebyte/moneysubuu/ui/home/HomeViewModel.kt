@@ -84,7 +84,7 @@ class HomeViewModel @Inject constructor(
             }
         }
     }
-     fun collectYearlyBalance(dateValue:String= yearFormatter(System.currentTimeMillis())){
+     fun collectYearlyBalance(dateValue:String= viewModelUiState.value.selectedYear){
          _viewModelUiState.update {
              it.copy(selectedYear = dateValue)
          }

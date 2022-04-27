@@ -21,6 +21,8 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import lab.justonebyte.moneysubuu.model.Transaction
 import lab.justonebyte.moneysubuu.model.TransactionType
+import lab.justonebyte.moneysubuu.ui.home.HomeTab
+import lab.justonebyte.moneysubuu.utils.dateFormatter
 import me.bytebeats.views.charts.pie.PieChart
 import me.bytebeats.views.charts.pie.PieChartData
 import me.bytebeats.views.charts.pie.render.SimpleSliceDrawer
@@ -31,10 +33,13 @@ import java.util.*
 fun TransactionDetailScreen(
     modifier: Modifier = Modifier,
     goBack:()->Unit,
-    transactionType:TransactionType = TransactionType.Income
+    transactionType:TransactionType = TransactionType.Income,
+    tabType:HomeTab = HomeTab.Daily,
+    dateData:String = dateFormatter(System.currentTimeMillis())
 ){
     val detailViewModel = hiltViewModel<TransactionDetailViewModel>()
-    val detailUiState by detailViewModel.viewModelUiState.collectAsState()
+
+    val detailUiState by detailViewModel.getUiState(tabType = tabType, dateData = dateData).collectAsState()
 
     val transactions = detailUiState.transactions.filter { it.type== transactionType}
     val scaffoldState = rememberScaffoldState()
