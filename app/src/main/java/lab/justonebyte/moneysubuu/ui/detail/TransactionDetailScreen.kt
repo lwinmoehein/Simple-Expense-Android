@@ -57,32 +57,44 @@ fun IncomePieChart(
     }
 
    Card(
-       modifier = modifier.padding(20.dp).wrapContentHeight()
+       modifier = modifier
+           .padding(20.dp)
+           .wrapContentHeight()
    ) {
       Column(
           modifier = modifier
               .padding(20.dp)
-              .fillMaxWidth().wrapContentHeight(),
+              .fillMaxWidth()
+              .wrapContentHeight(),
           verticalArrangement = Arrangement.Center,
           horizontalAlignment = Alignment.CenterHorizontally
       ) {
-          Row(modifier=Modifier.fillMaxWidth().height(200.dp)){
-              PieChart(
-                  modifier = Modifier
-                      .fillMaxWidth()
-                  ,
-                  pieChartData = PieChartData(
-                      slices = incomePieSlices.map{it.second}
-                  ),
-                  // Optional properties.
-                  animation = simpleChartAnimation(),
-                  sliceDrawer = SimpleSliceDrawer(100f)
-              )
+          Column(horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center) {
+              Row(modifier= Modifier
+                  .fillMaxWidth()
+                  .height(200.dp)){
+                  PieChart(
+                      modifier = Modifier
+                          .fillMaxWidth()
+                      ,
+                      pieChartData = PieChartData(
+                          slices = incomePieSlices.map{it.second}
+                      ),
+                      // Optional properties.
+                      animation = simpleChartAnimation(),
+                      sliceDrawer = SimpleSliceDrawer(100f)
+                  )
+              }
+              Row(horizontalArrangement = Arrangement.Center) {
+                  Text(text = "Total : ", style = MaterialTheme.typography.h6)
+                  Text(text = incomePieSlices.sumOf { it.second.value.toInt() }.toString()+" Kyats", style = MaterialTheme.typography.h6, color = MaterialTheme.colors.primary)
+              }
           }
           LazyColumn(
               modifier = Modifier
                   .weight(1f)
-                  .fillMaxWidth().wrapContentHeight(),
+                  .fillMaxWidth()
+                  .wrapContentHeight(),
               horizontalAlignment = Alignment.CenterHorizontally,
               content = {
                   items(incomePieSlices){
@@ -93,7 +105,9 @@ fun IncomePieChart(
                               Row(
                                   verticalAlignment = Alignment.CenterVertically,
                                   horizontalArrangement = Arrangement.Start,
-                                  modifier = Modifier.padding(10.dp).fillMaxWidth()
+                                  modifier = Modifier
+                                      .padding(10.dp)
+                                      .fillMaxWidth()
                               ){
                                   Spacer(modifier = Modifier
                                       .absolutePadding(right = 4.dp)
