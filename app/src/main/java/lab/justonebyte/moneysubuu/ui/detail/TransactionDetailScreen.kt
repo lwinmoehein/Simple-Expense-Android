@@ -11,6 +11,8 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -28,19 +30,30 @@ import java.util.*
 @Composable
 fun TransactionDetailScreen(
     modifier: Modifier = Modifier,
-    openDrawer:()->Unit,
+    goBack:()->Unit,
     transactionType:TransactionType = TransactionType.Income
 ){
     val detailViewModel = hiltViewModel<TransactionDetailViewModel>()
     val detailUiState by detailViewModel.viewModelUiState.collectAsState()
 
     val transactions = detailUiState.transactions.filter { it.type== transactionType}
-
-    Row(modifier = Modifier.padding(10.dp)){
-        CustomPieChartWithData(
-            transactions = transactions,
-            modifier = modifier.weight(1f)
-        )
+    val scaffoldState = rememberScaffoldState()
+    Scaffold(
+        scaffoldState = scaffoldState,
+        topBar = {
+                                Row(
+                                    Modifier
+                                        .fillMaxWidth()
+                                        .absolutePadding(right = 20.dp, left = 20.dp), horizontalArrangement = Arrangement.Start) {
+                        IconButton(onClick = {
+                           goBack()
+                        }) {
+                            Icon(imageVector = Icons.Filled.ArrowBack, contentDescription = "back menu")
+                        }
+                    }
+        }
+    ) {
+        CustomPieChartWithData(modifier = Modifier.padding(it),transactions = transactions)
     }
 }
 
@@ -92,7 +105,7 @@ fun CustomPieChartWithData(
           LazyColumn(
               modifier = Modifier
                   .fillMaxWidth()
-                  .absolutePadding(top=10.dp)
+                  .absolutePadding(top = 10.dp)
                   .wrapContentHeight(),
               horizontalAlignment = Alignment.CenterHorizontally,
               content = {

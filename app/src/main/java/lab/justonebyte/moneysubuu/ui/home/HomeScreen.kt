@@ -30,10 +30,8 @@ import java.util.*
 @OptIn(ExperimentalMaterialApi::class, com.google.accompanist.pager.ExperimentalPagerApi::class)
 @Composable
 fun HomeScreen(
-    actions: MainActions,
-    openDrawer:()->Unit,
-    goToDetails:()->Unit
-
+    goToIncomeDetail:()->Unit,
+    goToExpenseDetail:()->Unit
 ){
     val calendar = Calendar.getInstance()
     val homeViewModel = hiltViewModel<HomeViewModel>()
@@ -167,7 +165,8 @@ fun HomeScreen(
     ) {
 
         HomeTabs(
-            actions = actions,
+            goToExpenseDetail = {goToExpenseDetail()},
+            goToIncomeDetail = {goToIncomeDetail()},
             homeUiState = homeUiState,
             onTabChanged = {
                 balanceType.value = it
@@ -203,7 +202,8 @@ fun HomeScreen(
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun HomeContent(
-    actions: MainActions,
+    goToExpenseDetail: () -> Unit,
+    goToIncomeDetail: () -> Unit,
     homeUiState: HomeUiState,
     collectBalanceOfDay:(day:String)->Unit,
     balanceType: BalanceType,
@@ -230,8 +230,8 @@ fun HomeContent(
                 onMonthChoose = {
                     onMonthChoose()
                 },
-                goToIncome = {actions.goToIncomeDetail()},
-                goToExpense = {actions.goToExpenseDetail}
+                goToIncome = {goToIncomeDetail()},
+                goToExpense = {goToExpenseDetail()}
             )
             SectionTitle(title = "Transaction")
             TransactionsCard(

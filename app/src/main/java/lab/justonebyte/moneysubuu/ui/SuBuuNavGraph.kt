@@ -20,7 +20,7 @@ import lab.justonebyte.moneysubuu.ui.settings.SettingsScreen
 object MainDestinations {
     const val HOME_ROUTE = "home"
     const val INCOME_DETAIL_ROUTE = "income_detail"
-    const val EXPENSE_DETAIL_ROUTE = "income_detail"
+    const val EXPENSE_DETAIL_ROUTE = "expense_detail"
     const val SETTINGS_ROUTE = "settings"
 }
 
@@ -42,11 +42,8 @@ fun SuBuuNavGraph(
 
         composable(MainDestinations.HOME_ROUTE) {
             HomeScreen(
-                actions = actions,
-                openDrawer = openDrawer,
-                goToDetails = {
-                    actions.goToIncomeDetail()
-                }
+                goToExpenseDetail = {navController.navigate(MainDestinations.EXPENSE_DETAIL_ROUTE)},
+                goToIncomeDetail =  {navController.navigate(MainDestinations.INCOME_DETAIL_ROUTE)}
             )
         }
         composable(MainDestinations.SETTINGS_ROUTE) {
@@ -56,12 +53,13 @@ fun SuBuuNavGraph(
         }
         composable(MainDestinations.INCOME_DETAIL_ROUTE) {
             TransactionDetailScreen(
-                openDrawer = openDrawer
+                goBack = { navController.popBackStack() },
+                transactionType = TransactionType.Income
             )
         }
         composable(MainDestinations.EXPENSE_DETAIL_ROUTE) {
             TransactionDetailScreen(
-                openDrawer = openDrawer,
+                goBack = { navController.popBackStack() },
                 transactionType = TransactionType.Expense
             )
         }
@@ -73,18 +71,12 @@ fun SuBuuNavGraph(
  */
 class MainActions(navController: NavHostController) {
     val upPress: () -> Unit = {
-        navController.navigateUp()
+        navController.popBackStack()
     }
     val goToIncomeDetail:()->Unit = {
-        navController.navigate(MainDestinations.INCOME_DETAIL_ROUTE){
-            launchSingleTop = true
-            restoreState = true
-        }
+        navController.navigate(MainDestinations.INCOME_DETAIL_ROUTE)
     }
     val goToExpenseDetail:()->Unit = {
-        navController.navigate(MainDestinations.EXPENSE_DETAIL_ROUTE){
-            launchSingleTop = true
-            restoreState = true
-        }
+        navController.navigate(MainDestinations.EXPENSE_DETAIL_ROUTE)
     }
 }
