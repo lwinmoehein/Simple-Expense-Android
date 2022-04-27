@@ -105,7 +105,7 @@ fun BalanceCard(
                                     BalanceType.DAILY->mDate.value
                                     BalanceType.MONTHLY->selectedMonth
                                     BalanceType.TOTAL->selectedYear
-                                    else-> yearFormatter(System.currentTimeMillis())
+                                    else-> ""
                                 }
                             ) },
                     elevation = 10.dp
@@ -137,7 +137,7 @@ fun BalanceCard(
                                     BalanceType.DAILY->mDate.value
                                     BalanceType.MONTHLY->selectedMonth
                                     BalanceType.TOTAL->selectedYear
-                                    else-> yearFormatter(System.currentTimeMillis())
+                                    else-> ""
                                 }
                             )
                         },
