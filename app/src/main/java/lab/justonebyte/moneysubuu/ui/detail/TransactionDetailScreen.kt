@@ -64,7 +64,7 @@ fun TransactionDetailScreen(
                         HomeTab.Daily-> Text(text = (if(dateData== dateFormatter(System.currentTimeMillis())) "Today" else dateData)+if(transactionType==TransactionType.Income) " Income" else " Spending")
                         HomeTab.Monthly-> Text(text = (if(dateData== monthFormatter(System.currentTimeMillis())) "This Month" else dateData)+if(transactionType==TransactionType.Income) " Income" else " Spending")
                         HomeTab.Yearly-> Text(text = (if(dateData== yearFormatter(System.currentTimeMillis())) "This Year" else dateData)+if(transactionType==TransactionType.Income) " Income" else " Spending")
-                            else->Text("Total Usage")
+                            else->Text(if(transactionType==TransactionType.Income) "Total Income" else "Total Spending")
                     }
                 }
         }
