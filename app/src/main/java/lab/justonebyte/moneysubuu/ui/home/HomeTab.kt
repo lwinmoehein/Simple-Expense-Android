@@ -14,10 +14,10 @@ import lab.justonebyte.moneysubuu.model.Transaction
 import kotlin.math.absoluteValue
 
 sealed class HomeTab(val index:Int,val title:String){
-    object  Daily:HomeTab(0,"Daily")
-    object Monthly:HomeTab(1,"monthly")
-    object Yearly:HomeTab(2,"Yearly")
-    object Total:HomeTab(3,"Total")
+    object  Daily:HomeTab(1,"Daily")
+    object Monthly:HomeTab(2,"monthly")
+    object Yearly:HomeTab(3,"Yearly")
+    object Total:HomeTab(4,"Total")
 }
 val tabs = listOf(
     HomeTab.Daily,HomeTab.Monthly,HomeTab.Yearly,HomeTab.Total
