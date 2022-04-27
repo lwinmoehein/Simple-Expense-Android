@@ -26,8 +26,7 @@ val tabs = listOf(
 @ExperimentalPagerApi
 @Composable
 fun HomeTabs(
-    goToIncomeDetail:()->Unit,
-    goToExpenseDetail:()->Unit,
+    goToPieChart:(type:Int,tab:Int,date:String)->Unit,
     homeUiState:HomeUiState,
     onTabChanged:(BalanceType)->Unit,
     collectBalanceOfDay:(day:String)->Unit,
@@ -108,8 +107,9 @@ fun HomeTabs(
                     }
             ) {
                 HomeContent(
-                    goToExpenseDetail={goToExpenseDetail()},
-                    goToIncomeDetail = {goToIncomeDetail()},
+                    goToPieChart = { type, tab, date ->
+                        goToPieChart(type,tab,date)
+                    },
                     homeUiState = homeUiState,
                     collectBalanceOfDay = {
                         collectBalanceOfDay(it)

@@ -14,20 +14,20 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import lab.justonebyte.moneysubuu.ui.MainActions
+import lab.justonebyte.moneysubuu.model.TransactionType
 import lab.justonebyte.moneysubuu.ui.theme.Green
 import lab.justonebyte.moneysubuu.ui.theme.Red900
 import lab.justonebyte.moneysubuu.ui.theme.SuBuuShapes
 import lab.justonebyte.moneysubuu.utils.dateFormatter
 import lab.justonebyte.moneysubuu.utils.getCurrentMonth
 import lab.justonebyte.moneysubuu.utils.getToday
+import lab.justonebyte.moneysubuu.utils.yearFormatter
 import java.text.SimpleDateFormat
 import java.util.*
 
 @Composable
 fun BalanceCard(
-    goToIncome:()->Unit,
-    goToExpense:()->Unit,
+    goToPiechart:(type:Int,tab:Int,date:String)->Unit,
     modifier: Modifier = Modifier,
     currentBalance: Int ,
     incomeBalance:Int,
@@ -97,7 +97,17 @@ fun BalanceCard(
                         .height(100.dp)
                         .padding(10.dp)
                         .weight(1f)
-                        .clickable { goToIncome() },
+                        .clickable {
+                            goToPiechart(
+                                TransactionType.Income.value,
+                                balanceType.value,
+                                when(balanceType){
+                                    BalanceType.DAILY->mDate.value
+                                    BalanceType.MONTHLY->selectedMonth
+                                    BalanceType.TOTAL->selectedYear
+                                    else-> yearFormatter(System.currentTimeMillis())
+                                }
+                            ) },
                     elevation = 10.dp
                 ) {
                     Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.Center) {
@@ -119,7 +129,18 @@ fun BalanceCard(
                         .weight(1f)
                         .height(100.dp)
                         .padding(10.dp)
-                        .clickable { goToExpense() },
+                        .clickable {
+                            goToPiechart(
+                                TransactionType.Expense.value,
+                                balanceType.value,
+                                when(balanceType){
+                                    BalanceType.DAILY->mDate.value
+                                    BalanceType.MONTHLY->selectedMonth
+                                    BalanceType.TOTAL->selectedYear
+                                    else-> yearFormatter(System.currentTimeMillis())
+                                }
+                            )
+                        },
                     elevation = 10.dp
                 ) {
                     Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.Center) {

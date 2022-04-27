@@ -25,6 +25,9 @@ object MainDestinations {
     const val HOME_ROUTE = "home"
     const val DETAIL_ROUTE = "detail/{type}/{tab}/{date}"
     const val SETTINGS_ROUTE = "settings"
+    fun getDetailRoute(type:Int,tab:Int,date:String):String{
+        return "detail/${type}/${tab}/${date}"
+    }
 }
 
 @Composable
@@ -44,8 +47,9 @@ fun SuBuuNavGraph(
 
         composable(MainDestinations.HOME_ROUTE) {
             HomeScreen(
-                goToExpenseDetail = {navController.navigate(MainDestinations.DETAIL_ROUTE)},
-                goToIncomeDetail =  {navController.navigate(MainDestinations.DETAIL_ROUTE)}
+                goToPieChartDetail = {type, tab, date ->
+                    navController.navigate(MainDestinations.getDetailRoute(type,tab,date))
+                }
             )
         }
         composable(MainDestinations.SETTINGS_ROUTE) {
