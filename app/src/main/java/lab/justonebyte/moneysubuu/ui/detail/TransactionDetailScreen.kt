@@ -52,7 +52,8 @@ fun TransactionDetailScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .absolutePadding(right = 20.dp, left = 20.dp),
-                    horizontalArrangement = Arrangement.Start
+                    horizontalArrangement = Arrangement.Start,
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
                     IconButton(onClick = {
                        goBack()
@@ -60,9 +61,9 @@ fun TransactionDetailScreen(
                         Icon(imageVector = Icons.Filled.ArrowBack, contentDescription = "back menu")
                     }
                     when(tabType){
-                        HomeTab.Daily-> Text(text = if(dateData== dateFormatter(System.currentTimeMillis())) "Today Usage" else dateData+" Usage")
-                        HomeTab.Monthly-> Text(text = if(dateData== monthFormatter(System.currentTimeMillis())) "This Month Usage" else dateData+" Usage")
-                        HomeTab.Yearly-> Text(text = if(dateData== yearFormatter(System.currentTimeMillis())) "This Year Usage" else dateData+" Usage")
+                        HomeTab.Daily-> Text(text = (if(dateData== dateFormatter(System.currentTimeMillis())) "Today" else dateData)+if(transactionType==TransactionType.Income) " Income" else " Spending")
+                        HomeTab.Monthly-> Text(text = (if(dateData== monthFormatter(System.currentTimeMillis())) "This Month" else dateData)+if(transactionType==TransactionType.Income) " Income" else " Spending")
+                        HomeTab.Yearly-> Text(text = (if(dateData== yearFormatter(System.currentTimeMillis())) "This Year" else dateData)+if(transactionType==TransactionType.Income) " Income" else " Spending")
                             else->Text("Total Usage")
                     }
                 }
