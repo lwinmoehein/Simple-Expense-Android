@@ -51,54 +51,57 @@ fun IncomePieChart(
     modifier: Modifier=Modifier,
     incomeTransactions:List<Transaction>
 ){
-    val groupByCategoryTransactions = incomeTransactions.groupBy { it.category }
+    val groupByCategoryTransactions = incomeTransactions.groupBy { it.category }.map { it.key to it.value.sumOf { it.amount } }.sortedByDescending { it.second }
     val incomePieSlices = groupByCategoryTransactions.map { map->
-        map to PieChartData.Slice((map.value.sumOf { it.amount } *20).toFloat(), randomColor())
+        map.first to PieChartData.Slice((map.second ).toFloat(), randomColor())
     }
 
    Card(
-       modifier = modifier.padding(20.dp)
+       modifier = modifier.padding(20.dp).wrapContentHeight()
    ) {
       Column(
-          modifier = modifier.padding(20.dp).fillMaxWidth(),
+          modifier = modifier
+              .padding(20.dp)
+              .fillMaxWidth().wrapContentHeight(),
           verticalArrangement = Arrangement.Center,
           horizontalAlignment = Alignment.CenterHorizontally
       ) {
-          PieChart(
+          Row(modifier=Modifier.fillMaxWidth().height(200.dp)){
+              PieChart(
+                  modifier = Modifier
+                      .fillMaxWidth()
+                  ,
+                  pieChartData = PieChartData(
+                      slices = incomePieSlices.map{it.second}
+                  ),
+                  // Optional properties.
+                  animation = simpleChartAnimation(),
+                  sliceDrawer = SimpleSliceDrawer(100f)
+              )
+          }
+          LazyColumn(
               modifier = Modifier
                   .weight(1f)
-                  .fillMaxWidth().height(100.dp)
-               ,
-              pieChartData = PieChartData(
-                  slices = incomePieSlices.map{it.second}
-              ),
-              // Optional properties.
-              animation = simpleChartAnimation(),
-              sliceDrawer = SimpleSliceDrawer(100f)
-          )
-          LazyColumn(
-              modifier = Modifier.weight(1f).fillMaxWidth(),
+                  .fillMaxWidth().wrapContentHeight(),
               horizontalAlignment = Alignment.CenterHorizontally,
-              // content padding
-              contentPadding = PaddingValues(
-                  top = 16.dp,
-                  end = 12.dp,
-              ),
               content = {
                   items(incomePieSlices){
-                      Card(
-                          modifier = Modifier.absolutePadding(top=3.dp, bottom = 3.dp)
-                      ) {
-                          Row(
-                              verticalAlignment = Alignment.CenterVertically,
-                              horizontalArrangement = Arrangement.Start,
-                              modifier = Modifier.padding(10.dp).fillMaxWidth()
-                          ){
-                              Spacer(modifier = Modifier
-                                  .width(10.dp)
-                                  .height(10.dp)
-                                  .background(it.second.color))
-                              Text(text = it.first.key.name+" = " + it.first.value.sumOf{it.amount})
+                      Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
+                          Card(
+                              modifier = Modifier.absolutePadding(top=3.dp, bottom = 3.dp)
+                          ) {
+                              Row(
+                                  verticalAlignment = Alignment.CenterVertically,
+                                  horizontalArrangement = Arrangement.Start,
+                                  modifier = Modifier.padding(10.dp).fillMaxWidth()
+                              ){
+                                  Spacer(modifier = Modifier
+                                      .absolutePadding(right = 4.dp)
+                                      .width(10.dp)
+                                      .height(10.dp)
+                                      .background(it.second.color))
+                                  Text(text = it.first.name+" = " + it.second.value.toInt())
+                              }
                           }
                       }
                   }
