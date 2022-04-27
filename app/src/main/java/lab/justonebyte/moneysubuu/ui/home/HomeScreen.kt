@@ -150,7 +150,8 @@ fun HomeScreen(
                                      created_at = System.currentTimeMillis()
                                  )
                              )
-                         }
+                         },
+                         isBottomSheetOpened = bottomSheetScaffoldState.bottomSheetState.isExpanded
                      )
 
 

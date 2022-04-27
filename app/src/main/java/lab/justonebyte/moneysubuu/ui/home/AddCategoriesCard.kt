@@ -56,8 +56,8 @@ fun AddCategoriesCard(
                         modifier = Modifier.weight(1f),
                         style = MaterialTheme.typography.subtitle2
                     )
-                    CustomTextField(
-                        text = addCategoryName.value,
+                    TextField(
+                        value = addCategoryName.value,
                         modifier = Modifier
                             .weight(1f)
                             .padding(4.dp)
