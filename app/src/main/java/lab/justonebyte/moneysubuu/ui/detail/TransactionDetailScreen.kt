@@ -67,7 +67,7 @@ fun IncomePieChart(
           PieChart(
               modifier = Modifier
                   .weight(1f)
-                  .fillMaxWidth()
+                  .fillMaxWidth().height(100.dp)
                ,
               pieChartData = PieChartData(
                   slices = incomePieSlices.map{it.second}
@@ -78,6 +78,7 @@ fun IncomePieChart(
           )
           LazyColumn(
               modifier = Modifier.weight(1f).fillMaxWidth(),
+              horizontalAlignment = Alignment.CenterHorizontally,
               // content padding
               contentPadding = PaddingValues(
                   top = 16.dp,
@@ -85,11 +86,13 @@ fun IncomePieChart(
               ),
               content = {
                   items(incomePieSlices){
-                      Card() {
+                      Card(
+                          modifier = Modifier.absolutePadding(top=3.dp, bottom = 3.dp)
+                      ) {
                           Row(
                               verticalAlignment = Alignment.CenterVertically,
                               horizontalArrangement = Arrangement.Start,
-                              modifier = Modifier.padding(10.dp)
+                              modifier = Modifier.padding(10.dp).fillMaxWidth()
                           ){
                               Spacer(modifier = Modifier
                                   .width(10.dp)
