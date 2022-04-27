@@ -84,7 +84,6 @@ fun TransactionDetailScreen(
 
 
     val mDatePickerDialog = remember(dateData){
-        Log.i("datepicker","initializing")
         DatePickerDialog(
             mContext,
             { _: DatePicker, mYear: Int, mMonth: Int, mDayOfMonth: Int ->
@@ -139,18 +138,24 @@ fun TransactionDetailScreen(
                            Icon(imageVector = Icons.Filled.ArrowBack, contentDescription = "back menu")
                        }
                        when(tabType){
-                           HomeTab.Daily-> Text(text = (if(dateData== dateFormatter(System.currentTimeMillis())) "Today" else dateData)+if(transactionType==TransactionType.Income) " Income" else " Spending")
-                           HomeTab.Monthly-> Text(text = (if(dateData== monthFormatter(System.currentTimeMillis())) "This Month" else dateData)+if(transactionType==TransactionType.Income) " Income" else " Spending")
-                           HomeTab.Yearly-> Text(text = (if(dateData== yearFormatter(System.currentTimeMillis())) "This Year" else dateData)+if(transactionType==TransactionType.Income) " Income" else " Spending")
+                           HomeTab.Daily-> Text(text = if(transactionType==TransactionType.Income) " Income Data" else " Spending Data")
+                           HomeTab.Monthly-> Text(text =if(transactionType==TransactionType.Income) " Income Data" else " Spending Data")
+                           HomeTab.Yearly-> Text(text =if(transactionType==TransactionType.Income) " Income Data" else " Spending Data")
                            else->Text(if(transactionType==TransactionType.Income) "Total Income" else "Total Spending")
                        }
                    }
                     Row(verticalAlignment = Alignment.CenterVertically) {
-                       if(tabType==HomeTab.Daily){
-                           TextButton(onClick = {
-                               mDatePickerDialog.show()
-                           }) {
-                               Text(text = mDate.value)
+                       when(tabType){
+                          HomeTab.Daily-> TextButton(onClick = {
+                                              mDatePickerDialog.show()
+                                          }) {
+                                              Text(text = mDate.value)
+                                          }
+                           HomeTab.Monthly-> TextButton(onClick = { isMonthPickerShown.value = true}) {
+                               Text(text = "For "+dateData)
+                           }
+                           else-> TextButton(onClick = { isMonthPickerShown.value=true }) {
+                               Text(text = "For "+dateData)
                            }
                        }
                     }
