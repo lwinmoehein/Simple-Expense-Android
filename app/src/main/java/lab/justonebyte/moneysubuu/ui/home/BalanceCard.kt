@@ -46,7 +46,7 @@ fun BalanceCard(
         val mMonth by remember(selectedDay){ mutableStateOf(selectedDay.split('-')[1].toInt())}
         val mDay by remember(selectedDay) { mutableStateOf(selectedDay.split('-')[2].toInt())}
 
-        val mDate = remember { mutableStateOf(dateFormatter(System.currentTimeMillis())) }
+        val mDate = remember { mutableStateOf(selectedDay) }
         val mDatePickerDialog = DatePickerDialog(
             mContext,
             { _: DatePicker, mYear: Int, mMonth: Int, mDayOfMonth: Int ->

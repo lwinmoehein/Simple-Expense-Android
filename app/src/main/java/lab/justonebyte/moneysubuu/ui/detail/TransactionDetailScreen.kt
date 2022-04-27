@@ -70,7 +70,7 @@ fun TransactionDetailScreen(
     //month picker
     val isMonthPickerShown = remember { mutableStateOf(false)}
     val selectedMonthMonth = remember(dateData) { mutableStateOf(if(tabType==HomeTab.Monthly) dateData.split('-')[1].toInt() else 1)}
-    val selectedMonthYear= remember(dateData) { mutableStateOf(if(tabType==HomeTab.Yearly) dateData.split('-')[0].toInt() else 1)}
+    val selectedMonthYear= remember(dateData) { mutableStateOf(if(tabType==HomeTab.Yearly || tabType==HomeTab.Monthly) dateData.split('-')[0].toInt() else 1)}
 
 
     LaunchedEffect(key1 = mDate.value, block = {
@@ -109,9 +109,9 @@ fun TransactionDetailScreen(
                 onConfirmPicker = {
                     isMonthPickerShown.value =false
                     if(tabType == HomeTab.Monthly){
-                        detailViewModel.bindPieChartData(tabType = tabType,"${selectedMonthYear}-${selectedMonthMonth}")
+                        detailViewModel.bindPieChartData(tabType = tabType,"${selectedMonthYear.value}-${if(selectedMonthMonth.value<10) "0"+selectedMonthMonth.value else selectedMonthMonth.value}")
                     }else{
-                        detailViewModel.bindPieChartData(tabType = tabType,"${selectedMonthYear}")
+                        detailViewModel.bindPieChartData(tabType = tabType,"${selectedMonthYear.value}")
                     }
                 },
                 isMonthPicker = tabType == HomeTab.Monthly
@@ -152,11 +152,12 @@ fun TransactionDetailScreen(
                                               Text(text = mDate.value)
                                           }
                            HomeTab.Monthly-> TextButton(onClick = { isMonthPickerShown.value = true}) {
-                               Text(text = "For "+dateData)
+                               Text(text = "For "+selectedMonthYear.value+"-"+if(selectedMonthMonth.value<10) "0"+selectedMonthMonth.value else selectedMonthMonth.value)
                            }
-                           else-> TextButton(onClick = { isMonthPickerShown.value=true }) {
-                               Text(text = "For "+dateData)
+                           HomeTab.Yearly-> TextButton(onClick = { isMonthPickerShown.value=true }) {
+                               Text(text = "For "+selectedMonthYear.value)
                            }
+                           else-> Text(text = "")
                        }
                     }
                 }
