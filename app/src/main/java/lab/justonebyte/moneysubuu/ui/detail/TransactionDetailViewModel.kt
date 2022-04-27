@@ -1,5 +1,6 @@
 package lab.justonebyte.moneysubuu.ui.detail
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -54,6 +55,7 @@ class TransactionDetailViewModel @Inject constructor(
         }
     }
     fun getUiState(tabType:HomeTab,dateData:String):StateFlow<DetailUiState>{
+        Log.i("date data",tabType.title)
         when(tabType){
             HomeTab.Daily->collectDailyBalance(dateValue = dateData)
             HomeTab.Monthly->collectMonthlyBalance(dateValue = dateData)
