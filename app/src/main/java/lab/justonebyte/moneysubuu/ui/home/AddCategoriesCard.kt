@@ -5,6 +5,9 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -13,6 +16,8 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -40,7 +45,9 @@ fun AddCategoriesCard(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center,
                 modifier = Modifier
+
                     .fillMaxWidth()
+                    .clip(shape = RoundedCornerShape(10.dp))
                     .background(MaterialTheme.colors.onPrimary)
             ) {
                 Row(
@@ -56,14 +63,36 @@ fun AddCategoriesCard(
                         modifier = Modifier.weight(1f),
                         style = MaterialTheme.typography.subtitle2
                     )
-                    TextField(
+                    BasicTextField(
                         value = addCategoryName.value,
                         modifier = Modifier
                             .weight(1f)
                             .padding(4.dp)
+                            .height(50.dp).background(
+                                MaterialTheme.colors.surface,
+                                MaterialTheme.shapes.small,
+                            )
+                            .fillMaxWidth()
                          ,
                         onValueChange = {
                             addCategoryName.value = it
+                        },
+                        decorationBox = { innerTextField ->
+                            Row(
+                                modifier,
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Box(Modifier.weight(1f)) {
+                                     Text(
+                                        "Category Name",
+                                        style = LocalTextStyle.current.copy(
+                                            color = MaterialTheme.colors.onSurface.copy(alpha = 0.3f),
+                                            fontSize = MaterialTheme.typography.subtitle1.fontSize
+                                        )
+                                    )
+                                    innerTextField()
+                                }
+                            }
                         },
                         keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Text),
                     )
@@ -72,7 +101,7 @@ fun AddCategoriesCard(
                 Row(
                     Modifier
                         .fillMaxWidth()
-                        .absolutePadding(top = 30.dp)
+                        .absolutePadding(top = 30.dp, bottom = 20.dp, left = 10.dp, right = 10.dp)
                 ) {
                     TextButton(
                         onClick = { isAddCategoryDialogOpen.value = false },
@@ -81,14 +110,14 @@ fun AddCategoriesCard(
                         Text(text = "Cancel")
                     }
                     TextButton(
-                        modifier = Modifier.weight(1f),
+                        modifier = Modifier.weight(1f).background(MaterialTheme.colors.primary.copy(alpha = 1f)),
                         onClick = {
                             onAddCategory(addCategoryName.value)
                             isAddCategoryDialogOpen.value = false
                             addCategoryName.value = ""
                         }
                     ) {
-                           Text(text = "Confirm",color = MaterialTheme.colors.primary)
+                           Text(text = "Confirm",color = MaterialTheme.colors.onPrimary,style=MaterialTheme.typography.button)
                     }
                 }
             }

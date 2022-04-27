@@ -184,6 +184,7 @@ fun AddTransactionSheetContent(
                         currentAmount.value = it.filter { it.isDigit() }
                     },
                     keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
+
                 )
 
             }
