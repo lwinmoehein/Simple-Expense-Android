@@ -28,16 +28,20 @@ import java.util.*
 @Composable
 fun TransactionDetailScreen(
     modifier: Modifier = Modifier,
-    openDrawer:()->Unit
+    openDrawer:()->Unit,
+    transactionType:TransactionType = TransactionType.Income
 ){
     val detailViewModel = hiltViewModel<TransactionDetailViewModel>()
     val detailUiState by detailViewModel.viewModelUiState.collectAsState()
 
-    val incomeTransactions = detailUiState.transactions.filter { it.type==TransactionType.Income }
+    val transactions = detailUiState.transactions.filter { it.type== transactionType}
 
-    IncomePieChart(
-        incomeTransactions = incomeTransactions
-    )
+    Row(modifier = Modifier.padding(10.dp)){
+        CustomPieChartWithData(
+            transactions = transactions,
+            modifier = modifier.weight(1f)
+        )
+    }
 }
 
 @Composable
@@ -47,23 +51,18 @@ fun CustomLineGraph() {
 fun randomLength() = 100f
 fun randomColor() = listOf(Color.Gray,Color.Green,Color.Red).random()
 @Composable
-fun IncomePieChart(
+fun CustomPieChartWithData(
     modifier: Modifier=Modifier,
-    incomeTransactions:List<Transaction>
+    transactions:List<Transaction>,
+
 ){
-    val groupByCategoryTransactions = incomeTransactions.groupBy { it.category }.map { it.key to it.value.sumOf { it.amount } }.sortedByDescending { it.second }
+    val groupByCategoryTransactions = transactions.groupBy { it.category }.map { it.key to it.value.sumOf { it.amount } }.sortedByDescending { it.second }
     val incomePieSlices = groupByCategoryTransactions.map { map->
         map.first to PieChartData.Slice((map.second ).toFloat(), randomColor())
     }
 
-   Card(
-       modifier = modifier
-           .padding(20.dp)
-           .wrapContentHeight()
-   ) {
       Column(
           modifier = modifier
-              .padding(20.dp)
               .fillMaxWidth()
               .wrapContentHeight(),
           verticalArrangement = Arrangement.Center,
@@ -72,7 +71,7 @@ fun IncomePieChart(
           Column(horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center) {
               Row(modifier= Modifier
                   .fillMaxWidth()
-                  .height(200.dp)){
+                  .height(150.dp)){
                   PieChart(
                       modifier = Modifier
                           .fillMaxWidth()
@@ -92,8 +91,8 @@ fun IncomePieChart(
           }
           LazyColumn(
               modifier = Modifier
-                  .weight(1f)
                   .fillMaxWidth()
+                  .absolutePadding(top=10.dp)
                   .wrapContentHeight(),
               horizontalAlignment = Alignment.CenterHorizontally,
               content = {
@@ -121,6 +120,5 @@ fun IncomePieChart(
                   }
               }
           )
-      }
    }
 }
