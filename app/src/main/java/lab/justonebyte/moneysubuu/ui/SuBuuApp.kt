@@ -5,7 +5,6 @@ import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.Scaffold
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AddCircle
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
@@ -66,7 +65,7 @@ fun SuBuuApp(
                         navigateToHome = { navController.navigate(MainDestinations.HOME_ROUTE) },
                         navigateToSettings = { navController.navigate(MainDestinations.SETTINGS_ROUTE) },
                         closeDrawer = { coroutineScope.launch { scaffoldState.drawerState.close() } },
-                        navigateToDetail = {navController.navigate(MainDestinations.DETAIL_ROUTE)}
+                        navigateToDetail = {navController.navigate(MainDestinations.INCOME_DETAIL_ROUTE)}
                     )
                 }
             ) {

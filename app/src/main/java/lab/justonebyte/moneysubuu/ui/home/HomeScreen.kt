@@ -21,6 +21,7 @@ import kotlinx.coroutines.launch
 import lab.justonebyte.moneysubuu.model.Transaction
 import lab.justonebyte.moneysubuu.model.TransactionCategory
 import lab.justonebyte.moneysubuu.model.TransactionType
+import lab.justonebyte.moneysubuu.ui.MainActions
 import lab.justonebyte.moneysubuu.ui.components.SuBuuSnackBar
 import lab.justonebyte.moneysubuu.ui.components.SuBuuSnackBarHost
 import lab.justonebyte.moneysubuu.utils.dateFormatter
@@ -29,6 +30,7 @@ import java.util.*
 @OptIn(ExperimentalMaterialApi::class, com.google.accompanist.pager.ExperimentalPagerApi::class)
 @Composable
 fun HomeScreen(
+    actions: MainActions,
     openDrawer:()->Unit,
     goToDetails:()->Unit
 
@@ -165,6 +167,7 @@ fun HomeScreen(
     ) {
 
         HomeTabs(
+            actions = actions,
             homeUiState = homeUiState,
             onTabChanged = {
                 balanceType.value = it
@@ -200,6 +203,7 @@ fun HomeScreen(
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun HomeContent(
+    actions: MainActions,
     homeUiState: HomeUiState,
     collectBalanceOfDay:(day:String)->Unit,
     balanceType: BalanceType,
@@ -225,7 +229,9 @@ fun HomeContent(
                 balanceType = balanceType,
                 onMonthChoose = {
                     onMonthChoose()
-                }
+                },
+                goToIncome = {actions.goToIncomeDetail()},
+                goToExpense = {actions.goToExpenseDetail}
             )
             SectionTitle(title = "Transaction")
             TransactionsCard(

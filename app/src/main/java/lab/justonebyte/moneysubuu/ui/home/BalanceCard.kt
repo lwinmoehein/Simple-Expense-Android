@@ -4,6 +4,7 @@ import android.app.DatePickerDialog
 import android.util.Log
 import android.widget.DatePicker
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -13,6 +14,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import lab.justonebyte.moneysubuu.ui.MainActions
 import lab.justonebyte.moneysubuu.ui.theme.Green
 import lab.justonebyte.moneysubuu.ui.theme.Red900
 import lab.justonebyte.moneysubuu.ui.theme.SuBuuShapes
@@ -24,6 +26,8 @@ import java.util.*
 
 @Composable
 fun BalanceCard(
+    goToIncome:()->Unit,
+    goToExpense:()->Unit,
     modifier: Modifier = Modifier,
     currentBalance: Int ,
     incomeBalance:Int,
@@ -35,7 +39,7 @@ fun BalanceCard(
     balanceType: BalanceType,
     onMonthChoose:()->Unit
 ){
-        val currentDay = getToday()
+    val currentDay = getToday()
         val currentMonth = getCurrentMonth()
         val mContext = LocalContext.current
         val mYear by remember(selectedDay) { mutableStateOf(selectedDay.split('-')[0].toInt())}
@@ -92,7 +96,8 @@ fun BalanceCard(
                     modifier = modifier
                         .height(100.dp)
                         .padding(10.dp)
-                        .weight(1f),
+                        .weight(1f)
+                        .clickable { goToIncome() },
                     elevation = 10.dp
                 ) {
                     Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.Center) {
@@ -113,7 +118,8 @@ fun BalanceCard(
                     modifier = modifier
                         .weight(1f)
                         .height(100.dp)
-                        .padding(10.dp),
+                        .padding(10.dp)
+                        .clickable { goToExpense() },
                     elevation = 10.dp
                 ) {
                     Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.Center) {

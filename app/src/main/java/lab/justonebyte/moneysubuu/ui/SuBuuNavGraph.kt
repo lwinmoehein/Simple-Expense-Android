@@ -4,15 +4,14 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.material.ScaffoldState
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.*
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import kotlinx.coroutines.launch
+import lab.justonebyte.moneysubuu.model.TransactionType
 import lab.justonebyte.moneysubuu.ui.detail.TransactionDetailScreen
 import lab.justonebyte.moneysubuu.ui.home.HomeScreen
-import lab.justonebyte.moneysubuu.ui.home.HomeViewModel
 import lab.justonebyte.moneysubuu.ui.settings.SettingsScreen
 
 /**
@@ -20,7 +19,8 @@ import lab.justonebyte.moneysubuu.ui.settings.SettingsScreen
  */
 object MainDestinations {
     const val HOME_ROUTE = "home"
-    const val DETAIL_ROUTE = "detail"
+    const val INCOME_DETAIL_ROUTE = "income_detail"
+    const val EXPENSE_DETAIL_ROUTE = "income_detail"
     const val SETTINGS_ROUTE = "settings"
 }
 
@@ -42,9 +42,10 @@ fun SuBuuNavGraph(
 
         composable(MainDestinations.HOME_ROUTE) {
             HomeScreen(
+                actions = actions,
                 openDrawer = openDrawer,
                 goToDetails = {
-                    actions.goToDetail()
+                    actions.goToIncomeDetail()
                 }
             )
         }
@@ -53,9 +54,15 @@ fun SuBuuNavGraph(
                 openDrawer = openDrawer,
             )
         }
-        composable(MainDestinations.DETAIL_ROUTE) {
+        composable(MainDestinations.INCOME_DETAIL_ROUTE) {
             TransactionDetailScreen(
                 openDrawer = openDrawer
+            )
+        }
+        composable(MainDestinations.EXPENSE_DETAIL_ROUTE) {
+            TransactionDetailScreen(
+                openDrawer = openDrawer,
+                transactionType = TransactionType.Expense
             )
         }
     }
@@ -68,7 +75,16 @@ class MainActions(navController: NavHostController) {
     val upPress: () -> Unit = {
         navController.navigateUp()
     }
-    val goToDetail:()->Unit = {
-        navController.navigate(MainDestinations.DETAIL_ROUTE)
+    val goToIncomeDetail:()->Unit = {
+        navController.navigate(MainDestinations.INCOME_DETAIL_ROUTE){
+            launchSingleTop = true
+            restoreState = true
+        }
+    }
+    val goToExpenseDetail:()->Unit = {
+        navController.navigate(MainDestinations.EXPENSE_DETAIL_ROUTE){
+            launchSingleTop = true
+            restoreState = true
+        }
     }
 }
