@@ -138,9 +138,9 @@ fun TransactionDetailScreen(
                            Icon(imageVector = Icons.Filled.ArrowBack, contentDescription = "back menu")
                        }
                        when(tabType){
-                           HomeTab.Daily-> Text(text = if(transactionType==TransactionType.Income) " Income Data" else " Spending Data")
-                           HomeTab.Monthly-> Text(text =if(transactionType==TransactionType.Income) " Income Data" else " Spending Data")
-                           HomeTab.Yearly-> Text(text =if(transactionType==TransactionType.Income) " Income Data" else " Spending Data")
+                           HomeTab.Daily-> Text(text = if(transactionType==TransactionType.Income) "Daily Income Data" else "Daily Spending Data")
+                           HomeTab.Monthly-> Text(text =if(transactionType==TransactionType.Income) "Monthly Income Data" else "Monthly Spending Data")
+                           HomeTab.Yearly-> Text(text =if(transactionType==TransactionType.Income) "Yearly Income Data" else "Yearly Spending Data")
                            else->Text(if(transactionType==TransactionType.Income) "Total Income" else "Total Spending")
                        }
                    }
