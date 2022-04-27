@@ -3,6 +3,8 @@ package lab.justonebyte.moneysubuu.ui.detail
 
 // for a `var` variable also add
 
+import android.app.DatePickerDialog
+import android.widget.DatePicker
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -17,6 +19,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import lab.justonebyte.moneysubuu.model.Transaction
@@ -40,11 +43,34 @@ fun TransactionDetailScreen(
     dateData:String = dateFormatter(System.currentTimeMillis())
 ){
     val detailViewModel = hiltViewModel<TransactionDetailViewModel>()
-
     val detailUiState by detailViewModel.getUiState(tabType = tabType, dateData = dateData).collectAsState()
 
     val transactions = detailUiState.transactions.filter { it.type== transactionType}
     val scaffoldState = rememberScaffoldState()
+
+    //date picker dialog
+    val mContext = LocalContext.current
+    val mCalendar = Calendar.getInstance()
+    mCalendar.time = Date()
+    val mYear: Int = mCalendar.get(Calendar.YEAR)
+    val mMonth: Int = mCalendar.get(Calendar.MONTH)
+    val mDay: Int = mCalendar.get(Calendar.DAY_OF_MONTH)
+    val mDate = remember { mutableStateOf(dateData ) }
+
+
+    val mDatePickerDialog = DatePickerDialog(
+        mContext,
+        { _: DatePicker, mYear: Int, mMonth: Int, mDayOfMonth: Int ->
+            mDate.value =
+                "$mYear-${if (mMonth + 1 >= 10) mMonth + 1 else "0" + (mMonth + 1)}-$mDayOfMonth"
+            if(tabType==HomeTab.Daily){
+                detailViewModel.bindPieChartData(HomeTab.Daily,mDate.value)
+            }
+        }, mYear, mMonth, mDay
+    )
+
+
+
     Scaffold(
         scaffoldState = scaffoldState,
         topBar = {
@@ -52,19 +78,30 @@ fun TransactionDetailScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .absolutePadding(right = 20.dp, left = 20.dp),
-                    horizontalArrangement = Arrangement.Start,
+                    horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    IconButton(onClick = {
-                       goBack()
-                    }) {
-                        Icon(imageVector = Icons.Filled.ArrowBack, contentDescription = "back menu")
-                    }
-                    when(tabType){
-                        HomeTab.Daily-> Text(text = (if(dateData== dateFormatter(System.currentTimeMillis())) "Today" else dateData)+if(transactionType==TransactionType.Income) " Income" else " Spending")
-                        HomeTab.Monthly-> Text(text = (if(dateData== monthFormatter(System.currentTimeMillis())) "This Month" else dateData)+if(transactionType==TransactionType.Income) " Income" else " Spending")
-                        HomeTab.Yearly-> Text(text = (if(dateData== yearFormatter(System.currentTimeMillis())) "This Year" else dateData)+if(transactionType==TransactionType.Income) " Income" else " Spending")
-                            else->Text(if(transactionType==TransactionType.Income) "Total Income" else "Total Spending")
+                   Row(verticalAlignment = Alignment.CenterVertically) {
+                       IconButton(onClick = {
+                           goBack()
+                       }) {
+                           Icon(imageVector = Icons.Filled.ArrowBack, contentDescription = "back menu")
+                       }
+                       when(tabType){
+                           HomeTab.Daily-> Text(text = (if(dateData== dateFormatter(System.currentTimeMillis())) "Today" else dateData)+if(transactionType==TransactionType.Income) " Income" else " Spending")
+                           HomeTab.Monthly-> Text(text = (if(dateData== monthFormatter(System.currentTimeMillis())) "This Month" else dateData)+if(transactionType==TransactionType.Income) " Income" else " Spending")
+                           HomeTab.Yearly-> Text(text = (if(dateData== yearFormatter(System.currentTimeMillis())) "This Year" else dateData)+if(transactionType==TransactionType.Income) " Income" else " Spending")
+                           else->Text(if(transactionType==TransactionType.Income) "Total Income" else "Total Spending")
+                       }
+                   }
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                       if(tabType==HomeTab.Daily){
+                           TextButton(onClick = {
+                               mDatePickerDialog.show()
+                           }) {
+                               Text(text = mDate.value)
+                           }
+                       }
                     }
                 }
         }
