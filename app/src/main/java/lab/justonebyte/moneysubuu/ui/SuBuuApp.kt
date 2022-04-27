@@ -65,7 +65,6 @@ fun SuBuuApp(
                         navigateToHome = { navController.navigate(MainDestinations.HOME_ROUTE) },
                         navigateToSettings = { navController.navigate(MainDestinations.SETTINGS_ROUTE) },
                         closeDrawer = { coroutineScope.launch { scaffoldState.drawerState.close() } },
-                        navigateToDetail = {navController.navigate(MainDestinations.INCOME_DETAIL_ROUTE)}
                     )
                 }
             ) {

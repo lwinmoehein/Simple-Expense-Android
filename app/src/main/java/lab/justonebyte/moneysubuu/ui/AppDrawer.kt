@@ -38,7 +38,6 @@ fun AppDrawer(
     currentRoute: String,
     navigateToHome: () -> Unit,
     navigateToSettings: () -> Unit,
-    navigateToDetail:()->Unit,
     closeDrawer: () -> Unit
 ) {
 
@@ -60,7 +59,6 @@ fun AppDrawer(
             label = "Stats",
             isSelected = currentRoute == MainDestinations.SETTINGS_ROUTE,
             action = {
-                navigateToDetail()
                 closeDrawer()
             }
         )
