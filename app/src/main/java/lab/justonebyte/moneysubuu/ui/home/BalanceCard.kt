@@ -104,8 +104,8 @@ fun BalanceCard(
                                 when(balanceType){
                                     BalanceType.DAILY->mDate.value
                                     BalanceType.MONTHLY->selectedMonth
-                                    BalanceType.TOTAL->selectedYear
-                                    else-> ""
+                                    BalanceType.YEARLY->selectedYear
+                                    else-> "Total"
                                 }
                             ) },
                     elevation = 10.dp
@@ -136,8 +136,8 @@ fun BalanceCard(
                                 when(balanceType){
                                     BalanceType.DAILY->mDate.value
                                     BalanceType.MONTHLY->selectedMonth
-                                    BalanceType.TOTAL->selectedYear
-                                    else-> ""
+                                    BalanceType.YEARLY->selectedYear
+                                    else-> "Total"
                                 }
                             )
                         },

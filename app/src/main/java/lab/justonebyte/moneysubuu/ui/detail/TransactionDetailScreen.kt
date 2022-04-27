@@ -23,6 +23,8 @@ import lab.justonebyte.moneysubuu.model.Transaction
 import lab.justonebyte.moneysubuu.model.TransactionType
 import lab.justonebyte.moneysubuu.ui.home.HomeTab
 import lab.justonebyte.moneysubuu.utils.dateFormatter
+import lab.justonebyte.moneysubuu.utils.monthFormatter
+import lab.justonebyte.moneysubuu.utils.yearFormatter
 import me.bytebeats.views.charts.pie.PieChart
 import me.bytebeats.views.charts.pie.PieChartData
 import me.bytebeats.views.charts.pie.render.SimpleSliceDrawer
@@ -46,16 +48,24 @@ fun TransactionDetailScreen(
     Scaffold(
         scaffoldState = scaffoldState,
         topBar = {
-                                Row(
-                                    Modifier
-                                        .fillMaxWidth()
-                                        .absolutePadding(right = 20.dp, left = 20.dp), horizontalArrangement = Arrangement.Start) {
-                        IconButton(onClick = {
-                           goBack()
-                        }) {
-                            Icon(imageVector = Icons.Filled.ArrowBack, contentDescription = "back menu")
-                        }
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .absolutePadding(right = 20.dp, left = 20.dp),
+                    horizontalArrangement = Arrangement.Start
+                ) {
+                    IconButton(onClick = {
+                       goBack()
+                    }) {
+                        Icon(imageVector = Icons.Filled.ArrowBack, contentDescription = "back menu")
                     }
+                    when(tabType){
+                        HomeTab.Daily-> Text(text = if(dateData== dateFormatter(System.currentTimeMillis())) "Today Usage" else dateData+" Usage")
+                        HomeTab.Monthly-> Text(text = if(dateData== monthFormatter(System.currentTimeMillis())) "This Month Usage" else dateData+" Usage")
+                        HomeTab.Yearly-> Text(text = if(dateData== yearFormatter(System.currentTimeMillis())) "This Year Usage" else dateData+" Usage")
+                            else->Text("Total Usage")
+                    }
+                }
         }
     ) {
         CustomPieChartWithData(modifier = Modifier.padding(it),transactions = transactions)
