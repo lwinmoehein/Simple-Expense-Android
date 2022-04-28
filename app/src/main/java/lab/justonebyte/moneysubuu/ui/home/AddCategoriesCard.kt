@@ -25,6 +25,7 @@ import androidx.compose.ui.window.Dialog
 import lab.justonebyte.moneysubuu.model.TransactionCategory
 import lab.justonebyte.moneysubuu.model.TransactionType
 import lab.justonebyte.moneysubuu.ui.components.CustomTextField
+import lab.justonebyte.moneysubuu.ui.components.SnackBarType
 
 @Composable
 fun AddCategoriesCard(
@@ -33,7 +34,8 @@ fun AddCategoriesCard(
     onCategoryChosen:(categor:TransactionCategory)->Unit,
     modifier: Modifier = Modifier,
     currentTransactionType:TransactionType = TransactionType.Income,
-    onAddCategory:(name:String)->Unit
+    onAddCategory:(name:String)->Unit,
+    showSnackBar:(type:SnackBarType)->Unit
 ){
     val filteredCategories = categories.filter { it.transaction_type==currentTransactionType }
     val isAddCategoryDialogOpen = remember { mutableStateOf(false)}
@@ -113,7 +115,7 @@ fun AddCategoriesCard(
                         modifier = Modifier.weight(1f).background(MaterialTheme.colors.primary.copy(alpha = 1f)),
                         onClick = {
                             if(addCategoryName.value.isEmpty()){
-
+                                showSnackBar(SnackBarType.INCORRECT_CATEGORY_DATA)
                             }else{
                                 onAddCategory(addCategoryName.value)
                                 isAddCategoryDialogOpen.value = false

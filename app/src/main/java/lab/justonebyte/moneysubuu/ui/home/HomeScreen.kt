@@ -139,8 +139,8 @@ fun HomeScreen(
                                  bottomSheetScaffoldState.bottomSheetState.collapse()
                              }
                          },
-                         showIncorrectDataSnack = {
-                             homeViewModel.showSnackBar(SnackBarType.INCORRECT_DATA)
+                         showSnackBar = {
+                             homeViewModel.showSnackBar(it)
                          },
                          onAddCategory = { name,type->
                              homeViewModel.addCategory(
