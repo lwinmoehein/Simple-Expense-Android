@@ -33,6 +33,7 @@ fun HomeScreen(
     val calendar = Calendar.getInstance()
     val homeViewModel = hiltViewModel<HomeViewModel>()
     val homeUiState by homeViewModel.viewModelUiState.collectAsState()
+    val transactions  = homeUiState.transactions
     val bottomSheetScaffoldState = rememberBottomSheetScaffoldState(
         bottomSheetState = BottomSheetState(BottomSheetValue.Collapsed)
     )
@@ -215,7 +216,7 @@ fun HomeScreen(
                     )
                     SectionTitle(title = "Transaction")
                     TransactionsCard(
-                        transactions = homeUiState.transactions,
+                        transactions = transactions,
                         onTransactionClick = {
                             currentTransaction.value = it
                             coroutineScope.launch {
@@ -233,50 +234,6 @@ fun HomeScreen(
         )
     }
 
-}
-@OptIn(ExperimentalMaterialApi::class)
-@Composable
-fun HomeContent(
-    goToPieChart:(type:Int, tab:Int, date:String)->Unit,
-    homeUiState: HomeUiState,
-    collectBalanceOfDay:(day:String)->Unit,
-    balanceType: BalanceType,
-    onMonthChoose:()->Unit,
-    onTransactionClick:(t:Transaction)->Unit
-){
-
-    Scaffold(
-
-    ) {
-        Column(Modifier.padding(it)) {
-            Spacer(modifier = Modifier.height(30.dp))
-//            BalanceCard(
-//                currentBalance = homeUiState.currentBalance,
-//                incomeBalance = homeUiState.incomeBalance,
-//                expenseBalance = homeUiState.expenseBalance,
-//                collectBalaceOfDay = {
-//                    collectBalanceOfDay(it)
-//                },
-//                selectedDay = homeUiState.selectedDay,
-//                selectedMonth = homeUiState.selectedMonth,
-//                selectedYear = homeUiState.selectedYear,
-//                balanceType = balanceType,
-//                onMonthChoose = {
-//                    onMonthChoose()
-//                },
-//                goToPiechart ={ type, tab, date ->
-//                    goToPieChart(type,tab,date)
-//                }
-//            )
-            SectionTitle(title = "Transaction")
-            TransactionsCard(
-                transactions = homeUiState.transactions,
-                onTransactionClick = {
-                    onTransactionClick(it)
-                }
-            )
-        }
-    }
 }
 @Composable
 fun SectionTitle(title:String,modifier: Modifier = Modifier){
