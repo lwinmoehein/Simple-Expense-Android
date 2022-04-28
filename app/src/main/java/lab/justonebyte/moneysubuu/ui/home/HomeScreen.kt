@@ -161,10 +161,6 @@ fun HomeScreen(
     ) {
 
         HomeTabs(
-            goToPieChart = {type, tab, date ->
-                goToPieChartDetail(type,tab,date)
-            },
-            homeUiState = homeUiState,
             onTabChanged = {
                 balanceType.value = it
                 when(it){
@@ -174,18 +170,22 @@ fun HomeScreen(
                     else->homeViewModel.collectTotalBalance()
                 }
             },
-            collectBalanceOfDay = {
-                homeViewModel.collectDailyBalance(it)
-            },
-            selectedBalanceType = balanceType.value,
-            onMonthChoose = {
-                isMonthPickerShown.value =true
-            },
-            onTransactionClick = {
-                coroutineScope.launch {
-                    currentTransaction.value = it
-                    bottomSheetScaffoldState.bottomSheetState.expand()
-                }
+            content = {
+               HomeContent(
+                   goToPieChart = { type, tab, date ->
+                       goToPieChartDetail(type,tab,date)
+                   },
+                   homeUiState = homeUiState,
+                   collectBalanceOfDay = { homeViewModel.collectDailyBalance(it) }  ,
+                   balanceType = balanceType.value,
+                   onMonthChoose = {  isMonthPickerShown.value =true },
+                   onTransactionClick = {
+                       coroutineScope.launch {
+                           currentTransaction.value = it
+                           bottomSheetScaffoldState.bottomSheetState.expand()
+                       }
+                   }
+               )
             }
         )
         SuBuuSnackBar(

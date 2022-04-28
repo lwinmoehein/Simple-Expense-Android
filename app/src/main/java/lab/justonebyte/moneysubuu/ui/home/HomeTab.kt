@@ -26,13 +26,8 @@ val tabs = listOf(
 @ExperimentalPagerApi
 @Composable
 fun HomeTabs(
-    goToPieChart:(type:Int,tab:Int,date:String)->Unit,
-    homeUiState:HomeUiState,
     onTabChanged:(BalanceType)->Unit,
-    collectBalanceOfDay:(day:String)->Unit,
-    selectedBalanceType: BalanceType,
-    onMonthChoose:()->Unit,
-    onTransactionClick:(transaction:Transaction)->Unit
+    content:@Composable ()->Unit
 ) {
 
     var tabIndex by remember { mutableStateOf(1) }
@@ -105,22 +100,7 @@ fun HomeTabs(
                         )
                     }
             ) {
-                HomeContent(
-                    goToPieChart = { type, tab, date ->
-                        goToPieChart(type,tab,date)
-                    },
-                    homeUiState = homeUiState,
-                    collectBalanceOfDay = {
-                        collectBalanceOfDay(it)
-                    },
-                    balanceType = selectedBalanceType,
-                    onMonthChoose = {
-                        onMonthChoose()
-                    },
-                    onTransactionClick = {
-                        onTransactionClick(it)
-                    }
-                )
+                content()
             }
 
         }
