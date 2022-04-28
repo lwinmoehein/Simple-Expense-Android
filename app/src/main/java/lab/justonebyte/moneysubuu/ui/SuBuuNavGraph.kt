@@ -23,10 +23,10 @@ import lab.justonebyte.moneysubuu.utils.dateFormatter
  */
 object MainDestinations {
     const val HOME_ROUTE = "home"
-    const val DETAIL_ROUTE = "detail/{type}/{tab}/{date}"
+    const val DETAIL_ROUTE = "detail/{tType}/{bType}/{date}"
     const val SETTINGS_ROUTE = "settings"
-    fun getDetailRoute(type:Int,tab:Int,date:String):String{
-        return "detail/${type}/${tab}/${date}"
+    fun getDetailRoute(tType:Int,bType:Int,date:String):String{
+        return "detail/${tType}/${bType}/${date}"
     }
 }
 
@@ -47,8 +47,8 @@ fun SuBuuNavGraph(
 
         composable(MainDestinations.HOME_ROUTE) {
             HomeScreen(
-                goToPieChartDetail = {type, tab, date ->
-                    navController.navigate(MainDestinations.getDetailRoute(type,tab,date))
+                goToPieChartDetail = {transactionType,balanceType, date ->
+                    navController.navigate(MainDestinations.getDetailRoute(transactionType.value,balanceType.value,date))
                 }
             )
         }
@@ -60,16 +60,16 @@ fun SuBuuNavGraph(
         composable(
             MainDestinations.DETAIL_ROUTE,
             arguments = listOf(
-                navArgument("type") { type = NavType.IntType },
-                navArgument("tab") { type = NavType.IntType },
+                navArgument("tType") { type = NavType.IntType },
+                navArgument("bType") { type = NavType.IntType },
                 navArgument("date") { type = NavType.StringType },
                 )
         ) {
-            val transactionType =  when(navController.currentBackStackEntry?.arguments?.getInt("type")){
+            val transactionType =  when(navController.currentBackStackEntry?.arguments?.getInt("tType")){
                 TransactionType.Income.value->TransactionType.Income
                 else->TransactionType.Expense
             }
-            val tabType =  when(navController.currentBackStackEntry?.arguments?.getInt("tab")){
+            val tabType =  when(navController.currentBackStackEntry?.arguments?.getInt("bType")){
                 HomeTab.Daily.index->HomeTab.Daily
                 HomeTab.Monthly.index->HomeTab.Monthly
                 HomeTab.Yearly.index->HomeTab.Yearly

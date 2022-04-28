@@ -27,35 +27,13 @@ import java.util.*
 
 @Composable
 fun BalanceCard(
-    goToPiechart:(type:Int,tab:Int,date:String)->Unit,
+    homeUiState: HomeUiState,
+    goToPiechart:(transactionType:TransactionType)->Unit,
     modifier: Modifier = Modifier,
-    currentBalance: Int ,
-    incomeBalance:Int,
-    expenseBalance:Int,
-    collectBalaceOfDay:(day:String)->Unit,
-    selectedDay:String,
-    selectedMonth:String,
-    selectedYear:String,
     balanceType: BalanceType,
-    onMonthChoose:()->Unit
+    dateText:String,
+    onDateTextClicked:()->Unit,
 ){
-        val currentDay = getToday()
-        val currentMonth = getCurrentMonth()
-        val mContext = LocalContext.current
-        val mYear by remember(selectedDay) { mutableStateOf(selectedDay.split('-')[0].toInt())}
-        val mMonth by remember(selectedDay){ mutableStateOf(selectedDay.split('-')[1].toInt())}
-        val mDay by remember(selectedDay) { mutableStateOf(selectedDay.split('-')[2].toInt())}
-
-        val mDate = remember { mutableStateOf(selectedDay) }
-        val mDatePickerDialog = DatePickerDialog(
-            mContext,
-            { _: DatePicker, mYear: Int, mMonth: Int, mDayOfMonth: Int ->
-                mDate.value = "$mYear-${if(mMonth+1>=10) mMonth+1 else "0"+(mMonth+1)}-${if(mDayOfMonth<10) "0"+mDayOfMonth else mDayOfMonth}"
-                collectBalaceOfDay(mDate.value)
-            }, mYear, mMonth-1, mDay
-        )
-
-
 
     Column(
             verticalArrangement = Arrangement.Center,
@@ -68,25 +46,16 @@ fun BalanceCard(
                     style = MaterialTheme.typography.h5
                 )
                 Text(
-                    text = currentBalance.toString(),
+                    text = homeUiState.currentBalance.toString(),
                     style = MaterialTheme.typography.h6,
-                    color = if(currentBalance>0) Green else Red900
+                    color = if(homeUiState.currentBalance>0) Green else Red900
                 )
             }
             Row(horizontalArrangement = Arrangement.Center){
                 TextButton(onClick = {
-                    when(balanceType){
-                        BalanceType.DAILY->mDatePickerDialog.show()
-                        BalanceType.MONTHLY->onMonthChoose()
-                        BalanceType.YEARLY->onMonthChoose()
-                    }
+                    onDateTextClicked()
                 }) {
-                    Text(text =  when(balanceType){
-                        BalanceType.DAILY-> if(mDate.value==currentDay) "Today" else mDate.value
-                        BalanceType.MONTHLY->if(selectedMonth==currentMonth) "This Month" else selectedMonth
-                        BalanceType.YEARLY->selectedYear
-                        else->"Total"
-                    })
+                    Text(text =dateText)
                 }
             }
             Spacer(modifier = Modifier.height(20.dp))
@@ -99,14 +68,7 @@ fun BalanceCard(
                         .weight(1f)
                         .clickable {
                             goToPiechart(
-                                TransactionType.Income.value,
-                                balanceType.value,
-                                when (balanceType) {
-                                    BalanceType.DAILY -> mDate.value
-                                    BalanceType.MONTHLY -> selectedMonth
-                                    BalanceType.YEARLY -> selectedYear
-                                    else -> "Total"
-                                }
+                               TransactionType.Income
                             )
                         },
                     elevation = 10.dp
@@ -118,7 +80,7 @@ fun BalanceCard(
                         )
                         Text(
                             color = Green,
-                            text = incomeBalance.toString(),
+                            text = homeUiState.incomeBalance.toString(),
                             style = MaterialTheme.typography.h6
 
                         )
@@ -132,14 +94,7 @@ fun BalanceCard(
                         .padding(10.dp)
                         .clickable {
                             goToPiechart(
-                                TransactionType.Expense.value,
-                                balanceType.value,
-                                when (balanceType) {
-                                    BalanceType.DAILY -> mDate.value
-                                    BalanceType.MONTHLY -> selectedMonth
-                                    BalanceType.YEARLY -> selectedYear
-                                    else -> "Total"
-                                }
+                                TransactionType.Expense,
                             )
                         },
                     elevation = 10.dp
@@ -151,7 +106,7 @@ fun BalanceCard(
                         )
                         Text(
                             color = Red900,
-                            text = expenseBalance.toString(),
+                            text = homeUiState.expenseBalance.toString(),
                             style = MaterialTheme.typography.h6
 
                         )

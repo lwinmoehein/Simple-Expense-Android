@@ -18,6 +18,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import kotlinx.coroutines.launch
 import lab.justonebyte.moneysubuu.model.Transaction
 import lab.justonebyte.moneysubuu.model.TransactionCategory
+import lab.justonebyte.moneysubuu.model.TransactionType
+import lab.justonebyte.moneysubuu.ui.components.DatePicker
 import lab.justonebyte.moneysubuu.ui.components.SnackBarType
 import lab.justonebyte.moneysubuu.ui.components.SuBuuSnackBar
 import lab.justonebyte.moneysubuu.ui.components.SuBuuSnackBarHost
@@ -26,7 +28,7 @@ import java.util.*
 @OptIn(ExperimentalMaterialApi::class, com.google.accompanist.pager.ExperimentalPagerApi::class)
 @Composable
 fun HomeScreen(
-    goToPieChartDetail:(type:Int,tab:Int,date:String)->Unit,
+    goToPieChartDetail:(transactionType:TransactionType,balanceType:BalanceType,date:String)->Unit,
 ){
     val calendar = Calendar.getInstance()
     val homeViewModel = hiltViewModel<HomeViewModel>()
@@ -38,13 +40,36 @@ fun HomeScreen(
     val balanceType = remember{ mutableStateOf(BalanceType.DAILY)}
 
     val isMonthPickerShown = remember { mutableStateOf(false)}
+    val showDatePicker = remember { mutableStateOf(false)}
+
+    val selectedDate = remember { mutableStateOf(homeUiState.selectedDay)}
     val selectedMonthYear = remember { mutableStateOf(calendar.get(Calendar.YEAR))}
     val selectedMonthMonth = remember { mutableStateOf(calendar.get(Calendar.MONTH)+1)}
+
+    val tabCalculatedDate = remember(balanceType.value){ mutableStateOf(
+        when(balanceType.value){
+            BalanceType.DAILY->selectedDate.value
+            BalanceType.MONTHLY->selectedMonthYear.value.toString()+"-"+selectedMonthMonth.value.toString()
+            else->selectedMonthYear.value.toString()
+        }
+    )}
+
     val currentTransaction = remember {
         mutableStateOf<Transaction?>(null)
     }
 
-
+    if(showDatePicker.value){
+        DatePicker(
+            onDateChosen = {
+                showDatePicker.value = false
+                selectedDate.value = it
+            },
+            onDismiss = {
+                showDatePicker.value = false
+            },
+            date = selectedDate.value,
+        )
+    }
     if(isMonthPickerShown.value){
         Dialog(onDismissRequest = { isMonthPickerShown.value=false }) {
                 MonthPicker(
@@ -171,21 +196,34 @@ fun HomeScreen(
                 }
             },
             content = {
-               HomeContent(
-                   goToPieChart = { type, tab, date ->
-                       goToPieChartDetail(type,tab,date)
-                   },
-                   homeUiState = homeUiState,
-                   collectBalanceOfDay = { homeViewModel.collectDailyBalance(it) }  ,
-                   balanceType = balanceType.value,
-                   onMonthChoose = {  isMonthPickerShown.value =true },
-                   onTransactionClick = {
-                       coroutineScope.launch {
-                           currentTransaction.value = it
-                           bottomSheetScaffoldState.bottomSheetState.expand()
-                       }
-                   }
-               )
+                Column(Modifier.padding(it)) {
+                    Spacer(modifier = Modifier.height(30.dp))
+                    BalanceCard(
+                        balanceType = balanceType.value,
+                        homeUiState = homeUiState,
+                        dateText = tabCalculatedDate.value,
+                        onDateTextClicked = {
+                            when(balanceType.value){
+                                BalanceType.DAILY->showDatePicker.value = true
+                                BalanceType.MONTHLY->isMonthPickerShown.value = true
+                                BalanceType.YEARLY->isMonthPickerShown.value = true
+                            }
+                        },
+                        goToPiechart = { tType->
+                            goToPieChartDetail(tType,balanceType.value,tabCalculatedDate.value)
+                        }
+                    )
+                    SectionTitle(title = "Transaction")
+                    TransactionsCard(
+                        transactions = homeUiState.transactions,
+                        onTransactionClick = {
+                            currentTransaction.value = it
+                            coroutineScope.launch {
+                                bottomSheetScaffoldState.bottomSheetState.expand()
+                            }
+                        }
+                    )
+                }
             }
         )
         SuBuuSnackBar(
@@ -212,24 +250,24 @@ fun HomeContent(
     ) {
         Column(Modifier.padding(it)) {
             Spacer(modifier = Modifier.height(30.dp))
-            BalanceCard(
-                currentBalance = homeUiState.currentBalance,
-                incomeBalance = homeUiState.incomeBalance,
-                expenseBalance = homeUiState.expenseBalance,
-                collectBalaceOfDay = {
-                    collectBalanceOfDay(it)
-                },
-                selectedDay = homeUiState.selectedDay,
-                selectedMonth = homeUiState.selectedMonth,
-                selectedYear = homeUiState.selectedYear,
-                balanceType = balanceType,
-                onMonthChoose = {
-                    onMonthChoose()
-                },
-                goToPiechart ={ type, tab, date ->
-                    goToPieChart(type,tab,date)
-                }
-            )
+//            BalanceCard(
+//                currentBalance = homeUiState.currentBalance,
+//                incomeBalance = homeUiState.incomeBalance,
+//                expenseBalance = homeUiState.expenseBalance,
+//                collectBalaceOfDay = {
+//                    collectBalanceOfDay(it)
+//                },
+//                selectedDay = homeUiState.selectedDay,
+//                selectedMonth = homeUiState.selectedMonth,
+//                selectedYear = homeUiState.selectedYear,
+//                balanceType = balanceType,
+//                onMonthChoose = {
+//                    onMonthChoose()
+//                },
+//                goToPiechart ={ type, tab, date ->
+//                    goToPieChart(type,tab,date)
+//                }
+//            )
             SectionTitle(title = "Transaction")
             TransactionsCard(
                 transactions = homeUiState.transactions,
