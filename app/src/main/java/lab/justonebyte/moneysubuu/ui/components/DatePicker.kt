@@ -27,7 +27,7 @@ import java.util.*
 fun DatePicker(
     date:String= dateFormatter(System.currentTimeMillis()),
     onDateChosen:(date:String)->Unit,
-    isShown:Boolean =false
+    onDismiss:()->Unit
 ){
 
 
@@ -42,44 +42,38 @@ fun DatePicker(
     // for year, month and day
     val mYear = remember {
         val splitedDate = date.split('-')
-        if(splitedDate.size>2){
-            mutableStateOf(splitedDate[0].toInt())
-        }else{
-            mutableStateOf(mCalendar.get(Calendar.YEAR))
-        }
+        mutableStateOf(splitedDate[0].toInt())
+
     }
     val mMonth = remember {
         val splitedDate = date.split('-')
-        if(splitedDate.size>2){
-            mutableStateOf(splitedDate[1].toInt())
-        }else{
-            mutableStateOf(mCalendar.get(Calendar.MONTH))
-        }
+        mutableStateOf(splitedDate[1].toInt())
+
     }
     val mDay = remember {
         val splitedDate = date.split('-')
-        if(splitedDate.size>2){
-            mutableStateOf(splitedDate[2].toInt())
-        }else{
-            mutableStateOf(mCalendar.get(Calendar.DAY_OF_MONTH))
-        }
+         mutableStateOf(splitedDate[2].toInt())
+
     }
 
     val chosenDate = remember { mutableStateOf(date) }
 
     // Declaring DatePickerDialog and setting
     // initial values as current values (present year, month and day)
-    val mDatePickerDialog = DatePickerDialog(
-        mContext,
-        { _: DatePicker, mYear: Int, mMonth: Int, mDayOfMonth: Int ->
-            chosenDate.value =
-                "$mYear-${if (mMonth + 1 >= 10) mMonth + 1 else "0" + (mMonth + 1)+"-"+ if(mDayOfMonth<10) "0"+mDayOfMonth else mDayOfMonth}"
-                onDateChosen(chosenDate.value)
-        }, mYear.value, mMonth.value, mDay.value
-    )
-    LaunchedEffect(isShown){
-       if(isShown){
-           mDatePickerDialog.show()
-       }
-    }
+
+
+   val mDatePickerDialog = DatePickerDialog(
+       mContext,
+       { _: DatePicker, mYear: Int, mMonth: Int, mDayOfMonth: Int ->
+           chosenDate.value =
+               "$mYear-${if (mMonth + 1 >= 10) mMonth + 1 else "0" + (mMonth)+"-"+ if(mDayOfMonth<10) "0"+mDayOfMonth else mDayOfMonth}"
+           onDateChosen(chosenDate.value)
+       }, mYear.value, mMonth.value, mDay.value
+   )
+    mDatePickerDialog.setOnDismissListener({
+        onDismiss()
+    })
+   mDatePickerDialog.show()
+
+
 }

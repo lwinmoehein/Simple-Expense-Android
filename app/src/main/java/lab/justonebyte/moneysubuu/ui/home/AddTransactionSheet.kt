@@ -87,13 +87,18 @@ fun AddTransactionSheetContent(
         localFocusManage.clearFocus()
     }
 
-    DatePicker(
-        onDateChosen = {
-            mDate.value = it
-        },
-        date = mDate.value,
-        isShown = showDatePicker.value
-    )
+    if(showDatePicker.value){
+        DatePicker(
+            onDateChosen = {
+                showDatePicker.value = false
+                mDate.value = it
+            },
+            onDismiss = {
+              showDatePicker.value = false
+            },
+            date = mDate.value,
+        )
+    }
 
 
 

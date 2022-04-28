@@ -71,6 +71,7 @@ fun HomeScreen(
     }
 
     BottomSheetScaffold(
+        sheetGesturesEnabled =  false,
         floatingActionButton = {
             if(!bottomSheetScaffoldState.bottomSheetState.isAnimationRunning && bottomSheetScaffoldState.bottomSheetState.isCollapsed){
                 Box(
@@ -107,10 +108,9 @@ fun HomeScreen(
 
         sheetContent = {
             Card(
-                        Modifier.heightIn(min = 500.dp, max = 1000.dp),
             ) {
                      AddTransactionSheetContent(
-                          currentTransaction = currentTransaction.value,
+                         currentTransaction = currentTransaction.value,
                          categories =  homeUiState.categories,
                          onConfirmTransactionForm = { type, amount, category,date->
                              Log.i("on confirm sheet",if(currentTransaction.value!=null) "yes" else "no")

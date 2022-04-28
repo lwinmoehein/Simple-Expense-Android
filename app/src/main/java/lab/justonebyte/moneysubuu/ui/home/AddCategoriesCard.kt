@@ -43,7 +43,7 @@ fun AddCategoriesCard(
         }
     )
     Card(
-        modifier = modifier.absolutePadding(top=30.dp, bottom = 20.dp),
+        modifier = modifier.absolutePadding(top=30.dp, bottom = 20.dp).heightIn(50.dp,200.dp),
         elevation = 5.dp
     ) {
         Column(
@@ -52,7 +52,9 @@ fun AddCategoriesCard(
             Row() {
                 Text(text = "Choose Category:", style = MaterialTheme.typography.subtitle2)
             }
+            Spacer(Modifier.height(20.dp))
             LazyVerticalGrid(
+                userScrollEnabled =true,
                 columns = GridCells.Adaptive(128.dp),
                 // content padding
                 contentPadding = PaddingValues(
