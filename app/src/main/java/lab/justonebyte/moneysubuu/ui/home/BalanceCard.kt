@@ -4,6 +4,7 @@ import android.app.DatePickerDialog
 import android.util.Log
 import android.widget.DatePicker
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -13,17 +14,20 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import lab.justonebyte.moneysubuu.model.TransactionType
 import lab.justonebyte.moneysubuu.ui.theme.Green
 import lab.justonebyte.moneysubuu.ui.theme.Red900
 import lab.justonebyte.moneysubuu.ui.theme.SuBuuShapes
 import lab.justonebyte.moneysubuu.utils.dateFormatter
 import lab.justonebyte.moneysubuu.utils.getCurrentMonth
 import lab.justonebyte.moneysubuu.utils.getToday
+import lab.justonebyte.moneysubuu.utils.yearFormatter
 import java.text.SimpleDateFormat
 import java.util.*
 
 @Composable
 fun BalanceCard(
+    goToPiechart:(type:Int,tab:Int,date:String)->Unit,
     modifier: Modifier = Modifier,
     currentBalance: Int ,
     incomeBalance:Int,
@@ -42,11 +46,11 @@ fun BalanceCard(
         val mMonth by remember(selectedDay){ mutableStateOf(selectedDay.split('-')[1].toInt())}
         val mDay by remember(selectedDay) { mutableStateOf(selectedDay.split('-')[2].toInt())}
 
-        val mDate = remember { mutableStateOf(dateFormatter(System.currentTimeMillis())) }
+        val mDate = remember { mutableStateOf(selectedDay) }
         val mDatePickerDialog = DatePickerDialog(
             mContext,
             { _: DatePicker, mYear: Int, mMonth: Int, mDayOfMonth: Int ->
-                mDate.value = "$mYear-${if(mMonth+1>=10) mMonth+1 else "0"+(mMonth+1)}-$mDayOfMonth"
+                mDate.value = "$mYear-${if(mMonth+1>=10) mMonth+1 else "0"+(mMonth+1)}-${if(mDayOfMonth<10) "0"+mDayOfMonth else mDayOfMonth}"
                 collectBalaceOfDay(mDate.value)
             }, mYear, mMonth-1, mDay
         )
@@ -92,7 +96,19 @@ fun BalanceCard(
                     modifier = modifier
                         .height(100.dp)
                         .padding(10.dp)
-                        .weight(1f),
+                        .weight(1f)
+                        .clickable {
+                            goToPiechart(
+                                TransactionType.Income.value,
+                                balanceType.value,
+                                when (balanceType) {
+                                    BalanceType.DAILY -> mDate.value
+                                    BalanceType.MONTHLY -> selectedMonth
+                                    BalanceType.YEARLY -> selectedYear
+                                    else -> "Total"
+                                }
+                            )
+                        },
                     elevation = 10.dp
                 ) {
                     Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.Center) {
@@ -113,7 +129,19 @@ fun BalanceCard(
                     modifier = modifier
                         .weight(1f)
                         .height(100.dp)
-                        .padding(10.dp),
+                        .padding(10.dp)
+                        .clickable {
+                            goToPiechart(
+                                TransactionType.Expense.value,
+                                balanceType.value,
+                                when (balanceType) {
+                                    BalanceType.DAILY -> mDate.value
+                                    BalanceType.MONTHLY -> selectedMonth
+                                    BalanceType.YEARLY -> selectedYear
+                                    else -> "Total"
+                                }
+                            )
+                        },
                     elevation = 10.dp
                 ) {
                     Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.Center) {

@@ -11,7 +11,8 @@ import androidx.compose.ui.res.stringResource
 import lab.justonebyte.moneysubuu.R
 
 enum class SnackBarType{
-    INCORRECT_DATA
+    INCORRECT_DATA,
+    INCORRECT_CATEGORY_DATA
 }
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
@@ -24,6 +25,7 @@ fun SuBuuSnackBar(
 
         var snackMessage: String = when (snackBarType) {
             SnackBarType.INCORRECT_DATA ->stringResource(id = R.string.incorrect_data)
+            SnackBarType.INCORRECT_CATEGORY_DATA-> stringResource(id = R.string.incorrect_category_data)
             else -> stringResource(id = R.string.incorrect_data)
         }
 

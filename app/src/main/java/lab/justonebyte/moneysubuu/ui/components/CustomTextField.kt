@@ -16,6 +16,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.FocusState
+import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.unit.TextUnit
 
@@ -28,14 +32,19 @@ fun CustomTextField(
     fontSize: TextUnit = MaterialTheme.typography.subtitle1.fontSize,
     text:String,
     onValueChange:(text:String)->Unit,
-    keyboardOptions: KeyboardOptions
-) {
+    keyboardOptions: KeyboardOptions,
+    focusRequester: FocusRequester,
+    onFocusChanged:(focusState: FocusState)->Unit,
+
+    ) {
     BasicTextField(modifier = modifier
         .background(
             MaterialTheme.colors.surface,
             MaterialTheme.shapes.small,
         )
-        .fillMaxWidth(),
+        .fillMaxWidth().onFocusChanged {
+            onFocusChanged(it)
+        }.focusRequester(focusRequester),
         value = text,
         onValueChange = {
             onValueChange(it)

@@ -5,7 +5,6 @@ import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.Scaffold
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AddCircle
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
@@ -44,20 +43,20 @@ fun SuBuuApp(
             val currentRoute = navBackStackEntry?.destination?.route ?: MainDestinations.HOME_ROUTE
             Scaffold(
                 topBar = {
-                    Row(
-                        Modifier
-                            .fillMaxWidth()
-                            .absolutePadding(right = 20.dp, left = 20.dp), horizontalArrangement = Arrangement.Start) {
-                        IconButton(onClick = {
-                            if(scaffoldState.drawerState.isOpen){
-                                coroutineScope.launch { scaffoldState.drawerState.close() }
-                            }else{
-                                coroutineScope.launch { scaffoldState.drawerState.open() }
-                            }
-                        }) {
-                            Icon(imageVector = Icons.Filled.Menu, contentDescription = "open menu")
-                        }
-                    }
+//                    Row(
+//                        Modifier
+//                            .fillMaxWidth()
+//                            .absolutePadding(right = 20.dp, left = 20.dp), horizontalArrangement = Arrangement.Start) {
+//                        IconButton(onClick = {
+//                            if(scaffoldState.drawerState.isOpen){
+//                                coroutineScope.launch { scaffoldState.drawerState.close() }
+//                            }else{
+//                                coroutineScope.launch { scaffoldState.drawerState.open() }
+//                            }
+//                        }) {
+//                            Icon(imageVector = Icons.Filled.Menu, contentDescription = "open menu")
+//                        }
+//                    }
                 },
                 scaffoldState = scaffoldState,
                 drawerContent = {
@@ -66,7 +65,6 @@ fun SuBuuApp(
                         navigateToHome = { navController.navigate(MainDestinations.HOME_ROUTE) },
                         navigateToSettings = { navController.navigate(MainDestinations.SETTINGS_ROUTE) },
                         closeDrawer = { coroutineScope.launch { scaffoldState.drawerState.close() } },
-                        navigateToDetail = {navController.navigate(MainDestinations.DETAIL_ROUTE)}
                     )
                 }
             ) {

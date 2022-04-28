@@ -14,10 +14,10 @@ import lab.justonebyte.moneysubuu.model.Transaction
 import kotlin.math.absoluteValue
 
 sealed class HomeTab(val index:Int,val title:String){
-    object  Daily:HomeTab(0,"Daily")
-    object Monthly:HomeTab(1,"monthly")
-    object Yearly:HomeTab(2,"Yearly")
-    object Total:HomeTab(3,"Total")
+    object  Daily:HomeTab(1,"Daily")
+    object Monthly:HomeTab(2,"monthly")
+    object Yearly:HomeTab(3,"Yearly")
+    object Total:HomeTab(4,"Total")
 }
 val tabs = listOf(
     HomeTab.Daily,HomeTab.Monthly,HomeTab.Yearly,HomeTab.Total
@@ -26,6 +26,7 @@ val tabs = listOf(
 @ExperimentalPagerApi
 @Composable
 fun HomeTabs(
+    goToPieChart:(type:Int,tab:Int,date:String)->Unit,
     homeUiState:HomeUiState,
     onTabChanged:(BalanceType)->Unit,
     collectBalanceOfDay:(day:String)->Unit,
@@ -34,14 +35,14 @@ fun HomeTabs(
     onTransactionClick:(transaction:Transaction)->Unit
 ) {
 
-    var tabIndex by remember { mutableStateOf(0) }
+    var tabIndex by remember { mutableStateOf(1) }
     val pagerState = rememberPagerState()
     val coroutineScope = rememberCoroutineScope()
 
     LaunchedEffect(pagerState) {
         // Collect from the pager state a snapshotFlow reading the currentPage
         snapshotFlow { pagerState.currentPage }.collect { page ->
-            val balanceType = when(pagerState.currentPage){
+            val balanceType = when(pagerState.currentPage+1){
                 HomeTab.Daily.index->BalanceType.DAILY
                 HomeTab.Monthly.index->BalanceType.MONTHLY
                 HomeTab.Yearly.index->BalanceType.YEARLY
@@ -69,7 +70,6 @@ fun HomeTabs(
                     selected = tabIndex == index,
                     onClick = {
                         coroutineScope.launch { pagerState.animateScrollToPage(index) }
-                        Log.i("tab:","selected")
                     },
                     text = { Text(text = tab.title) }
                 )
@@ -106,7 +106,9 @@ fun HomeTabs(
                     }
             ) {
                 HomeContent(
-
+                    goToPieChart = { type, tab, date ->
+                        goToPieChart(type,tab,date)
+                    },
                     homeUiState = homeUiState,
                     collectBalanceOfDay = {
                         collectBalanceOfDay(it)

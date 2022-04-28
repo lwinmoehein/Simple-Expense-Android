@@ -8,9 +8,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.AddCircle
-import androidx.compose.material.icons.outlined.AddCircle
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -20,18 +18,15 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import kotlinx.coroutines.launch
 import lab.justonebyte.moneysubuu.model.Transaction
 import lab.justonebyte.moneysubuu.model.TransactionCategory
-import lab.justonebyte.moneysubuu.model.TransactionType
+import lab.justonebyte.moneysubuu.ui.components.SnackBarType
 import lab.justonebyte.moneysubuu.ui.components.SuBuuSnackBar
 import lab.justonebyte.moneysubuu.ui.components.SuBuuSnackBarHost
-import lab.justonebyte.moneysubuu.utils.dateFormatter
 import java.util.*
 
 @OptIn(ExperimentalMaterialApi::class, com.google.accompanist.pager.ExperimentalPagerApi::class)
 @Composable
 fun HomeScreen(
-    openDrawer:()->Unit,
-    goToDetails:()->Unit
-
+    goToPieChartDetail:(type:Int,tab:Int,date:String)->Unit,
 ){
     val calendar = Calendar.getInstance()
     val homeViewModel = hiltViewModel<HomeViewModel>()
@@ -145,7 +140,7 @@ fun HomeScreen(
                              }
                          },
                          showIncorrectDataSnack = {
-                             homeViewModel.showIncorrectFormDataSnackbar()
+                             homeViewModel.showSnackBar(SnackBarType.INCORRECT_DATA)
                          },
                          onAddCategory = { name,type->
                              homeViewModel.addCategory(
@@ -156,7 +151,8 @@ fun HomeScreen(
                                      created_at = System.currentTimeMillis()
                                  )
                              )
-                         }
+                         },
+                         isBottomSheetOpened = bottomSheetScaffoldState.bottomSheetState.isExpanded
                      )
 
 
@@ -165,6 +161,9 @@ fun HomeScreen(
     ) {
 
         HomeTabs(
+            goToPieChart = {type, tab, date ->
+                goToPieChartDetail(type,tab,date)
+            },
             homeUiState = homeUiState,
             onTabChanged = {
                 balanceType.value = it
@@ -200,6 +199,7 @@ fun HomeScreen(
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun HomeContent(
+    goToPieChart:(type:Int, tab:Int, date:String)->Unit,
     homeUiState: HomeUiState,
     collectBalanceOfDay:(day:String)->Unit,
     balanceType: BalanceType,
@@ -225,6 +225,9 @@ fun HomeContent(
                 balanceType = balanceType,
                 onMonthChoose = {
                     onMonthChoose()
+                },
+                goToPiechart ={ type, tab, date ->
+                    goToPieChart(type,tab,date)
                 }
             )
             SectionTitle(title = "Transaction")
