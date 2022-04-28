@@ -1,5 +1,5 @@
 <resources>
     <string name="app_name">Money Su Buu</string>
     <string name="incorrect_data">Please insert data correctly.</string>
-
+    <string name="incorrect_category_data">Please insert category name correctly.</string>
 </resources>

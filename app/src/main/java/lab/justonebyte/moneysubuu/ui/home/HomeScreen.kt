@@ -18,6 +18,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import kotlinx.coroutines.launch
 import lab.justonebyte.moneysubuu.model.Transaction
 import lab.justonebyte.moneysubuu.model.TransactionCategory
+import lab.justonebyte.moneysubuu.ui.components.SnackBarType
 import lab.justonebyte.moneysubuu.ui.components.SuBuuSnackBar
 import lab.justonebyte.moneysubuu.ui.components.SuBuuSnackBarHost
 import java.util.*
@@ -139,7 +140,7 @@ fun HomeScreen(
                              }
                          },
                          showIncorrectDataSnack = {
-                             homeViewModel.showIncorrectFormDataSnackbar()
+                             homeViewModel.showSnackBar(SnackBarType.INCORRECT_DATA)
                          },
                          onAddCategory = { name,type->
                              homeViewModel.addCategory(

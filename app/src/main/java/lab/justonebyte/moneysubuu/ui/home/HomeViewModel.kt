@@ -115,9 +115,9 @@ class HomeViewModel @Inject constructor(
             _viewModelUiState.update { it.copy(categories = categories) }
         }
     }
-    fun showIncorrectFormDataSnackbar(){
+    fun showSnackBar(type:SnackBarType){
         _viewModelUiState.update {
-            it.copy(currentSnackBar = SnackBarType.INCORRECT_DATA)
+            it.copy(currentSnackBar = type)
         }
     }
     fun clearSnackBar(){

@@ -112,9 +112,13 @@ fun AddCategoriesCard(
                     TextButton(
                         modifier = Modifier.weight(1f).background(MaterialTheme.colors.primary.copy(alpha = 1f)),
                         onClick = {
-                            onAddCategory(addCategoryName.value)
-                            isAddCategoryDialogOpen.value = false
-                            addCategoryName.value = ""
+                            if(addCategoryName.value.isEmpty()){
+
+                            }else{
+                                onAddCategory(addCategoryName.value)
+                                isAddCategoryDialogOpen.value = false
+                                addCategoryName.value = ""
+                            }
                         }
                     ) {
                            Text(text = "Confirm",color = MaterialTheme.colors.onPrimary,style=MaterialTheme.typography.button)
