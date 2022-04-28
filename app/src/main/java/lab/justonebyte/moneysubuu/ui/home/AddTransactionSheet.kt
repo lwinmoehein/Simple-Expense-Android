@@ -197,9 +197,6 @@ fun AddTransactionSheetContent(
             onCategoryChosen = {
                 currentCategory.value = it
             },
-            showSnackBar = {
-                           showSnackBar(it)
-            },
             currentTransactionType = if (currentType.value == TransactionType.Income.value) TransactionType.Income else TransactionType.Expense
         )
         if(!isEditMode){

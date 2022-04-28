@@ -17,7 +17,11 @@ import androidx.compose.ui.Alignment
 
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.geometry.CornerRadius
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -26,6 +30,8 @@ import lab.justonebyte.moneysubuu.model.TransactionCategory
 import lab.justonebyte.moneysubuu.model.TransactionType
 import lab.justonebyte.moneysubuu.ui.components.CustomTextField
 import lab.justonebyte.moneysubuu.ui.components.SnackBarType
+import lab.justonebyte.moneysubuu.ui.theme.Red200
+import lab.justonebyte.moneysubuu.ui.theme.Red900
 
 @Composable
 fun AddCategoriesCard(
@@ -35,11 +41,11 @@ fun AddCategoriesCard(
     modifier: Modifier = Modifier,
     currentTransactionType:TransactionType = TransactionType.Income,
     onAddCategory:(name:String)->Unit,
-    showSnackBar:(type:SnackBarType)->Unit
 ){
     val filteredCategories = categories.filter { it.transaction_type==currentTransactionType }
     val isAddCategoryDialogOpen = remember { mutableStateOf(false)}
     val addCategoryName = remember { mutableStateOf("")}
+    val isCategoryNameErrorShown = remember(addCategoryName.value,isAddCategoryDialogOpen.value) { mutableStateOf(false) }
 
     if(isAddCategoryDialogOpen.value){
         Dialog(onDismissRequest = {isAddCategoryDialogOpen.value = false}) {
@@ -47,17 +53,19 @@ fun AddCategoriesCard(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center,
                 modifier = Modifier
-
+                    .height(200.dp)
                     .fillMaxWidth()
-                    .clip(shape = RoundedCornerShape(10.dp))
+                    .clip(shape = RoundedCornerShape(5.dp))
                     .background(MaterialTheme.colors.onPrimary)
+                    .absolutePadding(top = 5.dp, bottom = 5.dp, right = 10.dp, left = 10.dp)
+
             ) {
                 Row(
                     horizontalArrangement = Arrangement.Center,
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier
+                        .weight(4f)
                         .fillMaxWidth()
-                        .padding(20.dp)
                 ) {
                     Text(
                         textAlign = TextAlign.Center,
@@ -65,65 +73,74 @@ fun AddCategoriesCard(
                         modifier = Modifier.weight(1f),
                         style = MaterialTheme.typography.subtitle2
                     )
-                    BasicTextField(
+                    BasicTextField(modifier = modifier
+                        .weight(1f)
+                        .background(
+                            MaterialTheme.colors.surface,
+                            MaterialTheme.shapes.small,
+                        )
+                        .fillMaxWidth(),
                         value = addCategoryName.value,
-                        modifier = Modifier
-                            .weight(1f)
-                            .padding(4.dp)
-                            .height(50.dp).background(
-                                MaterialTheme.colors.surface,
-                                MaterialTheme.shapes.small,
-                            )
-                            .fillMaxWidth()
-                         ,
                         onValueChange = {
                             addCategoryName.value = it
                         },
+                        singleLine = true,
+                        cursorBrush = SolidColor(MaterialTheme.colors.primary),
+                        textStyle = LocalTextStyle.current.copy(
+                            color = MaterialTheme.colors.onSurface,
+                            fontSize = MaterialTheme.typography.subtitle1.fontSize
+                        ),
                         decorationBox = { innerTextField ->
                             Row(
                                 modifier,
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
+
                                 Box(Modifier.weight(1f)) {
-                                     Text(
-                                        "Category Name",
+                                    if (addCategoryName.value.isEmpty())
+                                        Text(
+                                        text = if(isCategoryNameErrorShown.value) "Invalid name" else "Enter name",
                                         style = LocalTextStyle.current.copy(
-                                            color = MaterialTheme.colors.onSurface.copy(alpha = 0.3f),
-                                            fontSize = MaterialTheme.typography.subtitle1.fontSize
+                                            color = if(isCategoryNameErrorShown.value) Red900 else  MaterialTheme.colors.onSurface.copy(alpha = 0.3f),
+                                            fontSize =  MaterialTheme.typography.subtitle1.fontSize
                                         )
                                     )
                                     innerTextField()
                                 }
                             }
-                        },
-                        keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Text),
+                        }
                     )
-
                 }
                 Row(
                     Modifier
+                        .weight(2f)
                         .fillMaxWidth()
-                        .absolutePadding(top = 30.dp, bottom = 20.dp, left = 10.dp, right = 10.dp)
                 ) {
-                    TextButton(
-                        onClick = { isAddCategoryDialogOpen.value = false },
-                        modifier = Modifier.weight(1f)
-                    ) {
-                        Text(text = "Cancel")
-                    }
-                    TextButton(
-                        modifier = Modifier.weight(1f).background(MaterialTheme.colors.primary.copy(alpha = 1f)),
-                        onClick = {
-                            if(addCategoryName.value.isEmpty()){
-                                showSnackBar(SnackBarType.INCORRECT_CATEGORY_DATA)
-                            }else{
-                                onAddCategory(addCategoryName.value)
-                                isAddCategoryDialogOpen.value = false
-                                addCategoryName.value = ""
-                            }
+                    Row(modifier = Modifier.wrapContentHeight()) {
+                        TextButton(
+                            onClick = { isAddCategoryDialogOpen.value = false },
+                            modifier = Modifier.weight(1f).absolutePadding(right = 10.dp)
+                        ) {
+                            Text(text = "Cancel")
                         }
-                    ) {
-                           Text(text = "Confirm",color = MaterialTheme.colors.onPrimary,style=MaterialTheme.typography.button)
+                        TextButton(
+                            modifier = Modifier
+                                .weight(1f)
+                                .absolutePadding(left = 20.dp)
+                                .clip(RoundedCornerShape(5.dp))
+                                .background(MaterialTheme.colors.primary.copy(alpha = 1f)),
+                            onClick = {
+                                if(addCategoryName.value.isEmpty()){
+                                    isCategoryNameErrorShown.value = true
+                                }else{
+                                    onAddCategory(addCategoryName.value)
+                                    isAddCategoryDialogOpen.value = false
+                                    addCategoryName.value = ""
+                                }
+                            }
+                        ) {
+                            Text(text = "Confirm",color = MaterialTheme.colors.onPrimary,style=MaterialTheme.typography.button)
+                        }
                     }
                 }
             }
