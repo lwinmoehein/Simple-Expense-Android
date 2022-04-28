@@ -23,16 +23,16 @@ import lab.justonebyte.moneysubuu.ui.theme.Red900
 @Composable
 fun AddCategoryNameDialog(
     modifier:Modifier = Modifier,
-    isShown:Boolean = false,
+    isDialogShown:Boolean = false,
     name:String = "",
-    onConfirm:(name:String)->Unit
+    onConfirm:(name:String)->Unit,
+    onCloseDialog:()->Unit
 ){
-    val isDialogShown = remember { mutableStateOf(isShown)}
     val addCategoryName = remember { mutableStateOf(name)}
-    val isCategoryNameErrorShown = remember(addCategoryName.value,isDialogShown.value) { mutableStateOf(false) }
+    val isCategoryNameErrorShown = remember(addCategoryName.value,isDialogShown) { mutableStateOf(false) }
 
-    if(isDialogShown.value){
-        Dialog(onDismissRequest = {isDialogShown.value = false}) {
+    if(isDialogShown){
+        Dialog(onDismissRequest = {onCloseDialog()}) {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center,
@@ -102,7 +102,7 @@ fun AddCategoryNameDialog(
                 ) {
                     Row(modifier = Modifier.wrapContentHeight()) {
                         TextButton(
-                            onClick = { isDialogShown.value = false },
+                            onClick = { onCloseDialog() },
                             modifier = Modifier.weight(1f).absolutePadding(right = 10.dp)
                         ) {
                             Text(text = "Cancel")
@@ -118,7 +118,6 @@ fun AddCategoryNameDialog(
                                     isCategoryNameErrorShown.value = true
                                 }else{
                                     onConfirm(addCategoryName.value)
-                                    isDialogShown.value = false
                                     addCategoryName.value = ""
                                     isCategoryNameErrorShown.value = false
                                 }

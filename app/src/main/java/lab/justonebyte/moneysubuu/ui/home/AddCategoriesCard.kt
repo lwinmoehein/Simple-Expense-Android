@@ -37,9 +37,13 @@ fun AddCategoriesCard(
     val isAddCategoryDialogOpen = remember { mutableStateOf(false)}
 
     AddCategoryNameDialog(
-        isShown = isAddCategoryDialogOpen.value,
+        isDialogShown = isAddCategoryDialogOpen.value,
         onConfirm = {
+            isAddCategoryDialogOpen.value =false
             onAddCategory(it)
+        },
+        onCloseDialog = {
+            isAddCategoryDialogOpen.value=false
         }
     )
     Card(
