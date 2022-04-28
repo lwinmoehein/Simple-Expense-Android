@@ -40,17 +40,17 @@ fun DatePicker(
 
     // Declaring integer values
     // for year, month and day
-    val mYear = remember {
+    val mYear = remember(date) {
         val splitedDate = date.split('-')
         mutableStateOf(splitedDate[0].toInt())
 
     }
-    val mMonth = remember {
+    val mMonth = remember(date) {
         val splitedDate = date.split('-')
-        mutableStateOf(splitedDate[1].toInt())
+        mutableStateOf(splitedDate[1].toInt()-1)
 
     }
-    val mDay = remember {
+    val mDay = remember(date) {
         val splitedDate = date.split('-')
          mutableStateOf(splitedDate[2].toInt())
 
@@ -66,14 +66,14 @@ fun DatePicker(
        mContext,
        { _: DatePicker, mYear: Int, mMonth: Int, mDayOfMonth: Int ->
            chosenDate.value =
-               "$mYear-${if (mMonth + 1 >= 10) mMonth + 1 else "0" + (mMonth)+"-"+ if(mDayOfMonth<10) "0"+mDayOfMonth else mDayOfMonth}"
+               "$mYear-${if (mMonth + 1 >= 10) mMonth + 1 else "0" + (mMonth+1)+"-"+ if(mDayOfMonth<10) "0"+mDayOfMonth else mDayOfMonth}"
            onDateChosen(chosenDate.value)
        }, mYear.value, mMonth.value, mDay.value
    )
-    mDatePickerDialog.setOnDismissListener({
+    mDatePickerDialog.setOnDismissListener {
         onDismiss()
-    })
-   mDatePickerDialog.show()
+    }
+    mDatePickerDialog.show()
 
 
 }
