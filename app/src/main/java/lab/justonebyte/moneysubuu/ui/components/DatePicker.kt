@@ -9,6 +9,7 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -19,57 +20,64 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import lab.justonebyte.moneysubuu.utils.dateFormatter
 import java.util.*
 
 @Composable
-fun DatePicker(){
+fun DatePicker(
+    date:String= dateFormatter(System.currentTimeMillis()),
+    onDateChosen:(date:String)->Unit,
+    isShown:Boolean =false
+){
+
 
     // Fetching the Local Context
     val mContext = LocalContext.current
 
-    // Declaring integer values
-    // for year, month and day
-    val mYear: Int
-    val mMonth: Int
-    val mDay: Int
-
     // Initializing a Calendar
     val mCalendar = Calendar.getInstance()
-
-    // Fetching current year, month and day
-    mYear = mCalendar.get(Calendar.YEAR)
-    mMonth = mCalendar.get(Calendar.MONTH)
-    mDay = mCalendar.get(Calendar.DAY_OF_MONTH)
-
     mCalendar.time = Date()
 
-    // Declaring a string value to
-    // store date in string format
-    val mDate = remember { mutableStateOf("") }
+    // Declaring integer values
+    // for year, month and day
+    val mYear = remember {
+        val splitedDate = date.split('-')
+        if(splitedDate.size>2){
+            mutableStateOf(splitedDate[0].toInt())
+        }else{
+            mutableStateOf(mCalendar.get(Calendar.YEAR))
+        }
+    }
+    val mMonth = remember {
+        val splitedDate = date.split('-')
+        if(splitedDate.size>2){
+            mutableStateOf(splitedDate[1].toInt())
+        }else{
+            mutableStateOf(mCalendar.get(Calendar.MONTH))
+        }
+    }
+    val mDay = remember {
+        val splitedDate = date.split('-')
+        if(splitedDate.size>2){
+            mutableStateOf(splitedDate[2].toInt())
+        }else{
+            mutableStateOf(mCalendar.get(Calendar.DAY_OF_MONTH))
+        }
+    }
+
+    val chosenDate = remember { mutableStateOf(date) }
 
     // Declaring DatePickerDialog and setting
     // initial values as current values (present year, month and day)
     val mDatePickerDialog = DatePickerDialog(
         mContext,
         { _: DatePicker, mYear: Int, mMonth: Int, mDayOfMonth: Int ->
-            mDate.value = "$mDayOfMonth/${mMonth+1}/$mYear"
-        }, mYear, mMonth, mDay
+            chosenDate.value =
+                "$mYear-${if (mMonth + 1 >= 10) mMonth + 1 else "0" + (mMonth + 1)+"-"+ if(mDayOfMonth<10) "0"+mDayOfMonth else mDayOfMonth}"
+                onDateChosen(chosenDate.value)
+        }, mYear.value, mMonth.value, mDay.value
     )
-
-    Column(modifier = Modifier.fillMaxSize(), verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally) {
-
-        // Creating a button that on
-        // click displays/shows the DatePickerDialog
-        Button(onClick = {
-            mDatePickerDialog.show()
-        }, colors = ButtonDefaults.buttonColors(backgroundColor = Color(0XFF0F9D58)) ) {
-            Text(text = "Open Date Picker", color = Color.White)
-        }
-
-        // Adding a space of 100dp height
-        Spacer(modifier = Modifier.size(100.dp))
-
-        // Displaying the mDate value in the Text
-        Text(text = "Selected Date: ${mDate.value}", fontSize = 30.sp, textAlign = TextAlign.Center)
+    LaunchedEffect(isShown){
+        mDatePickerDialog.show()
     }
 }

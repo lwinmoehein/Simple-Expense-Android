@@ -67,11 +67,7 @@ fun AddTransactionSheetContent(
 
     }
 
-    val mCalendar = Calendar.getInstance()
-    mCalendar.time = Date()
-    val mYear: Int = mCalendar.get(Calendar.YEAR)
-    val mMonth: Int = mCalendar.get(Calendar.MONTH)
-    val mDay: Int = mCalendar.get(Calendar.DAY_OF_MONTH)
+
 
     //initialize form variables
     val currentType = remember(currentTransaction) { mutableStateOf(currentTransaction?.type?.value ?: 1) }
@@ -79,6 +75,7 @@ fun AddTransactionSheetContent(
     val currentCategory = remember(currentTransaction) { mutableStateOf(currentTransaction?.category) }
     val mDate = remember (currentTransaction){ mutableStateOf(currentTransaction?.created_at ?: dateFormatter(System.currentTimeMillis())) }
     val isEditMode = currentTransaction != null
+    val showDatePicker = remember { mutableStateOf(false)}
 
 
 
@@ -90,14 +87,15 @@ fun AddTransactionSheetContent(
         localFocusManage.clearFocus()
     }
 
-
-    val mDatePickerDialog = DatePickerDialog(
-        mContext,
-        { _: DatePicker, mYear: Int, mMonth: Int, mDayOfMonth: Int ->
-            mDate.value =
-                "$mYear-${if (mMonth + 1 >= 10) mMonth + 1 else "0" + (mMonth + 1)+"-"+ if(mDayOfMonth<10) "0"+mDayOfMonth else mDayOfMonth}"
-        }, mYear, mMonth, mDay
+    DatePicker(
+        onDateChosen = {
+            mDate.value = it
+        },
+        date = mDate.value,
+        isShown = showDatePicker.value
     )
+
+
 
     Column(
         Modifier
@@ -214,7 +212,7 @@ fun AddTransactionSheetContent(
                         modifier = Modifier.weight(1f)
                     )
                     TextButton(
-                        onClick = { mDatePickerDialog.show() },
+                        onClick = { showDatePicker.value = true },
                         modifier = Modifier.weight(1f)
                     ) {
                         Text(text = mDate.value)
