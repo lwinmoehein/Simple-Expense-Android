@@ -78,6 +78,8 @@ fun DatePicker(
         }, mYear.value, mMonth.value, mDay.value
     )
     LaunchedEffect(isShown){
-        mDatePickerDialog.show()
+       if(isShown){
+           mDatePickerDialog.show()
+       }
     }
 }
