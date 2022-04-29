@@ -1,7 +1,10 @@
 package lab.justonebyte.moneysubuu.ui.home
 
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Card
@@ -13,7 +16,6 @@ import lab.justonebyte.moneysubuu.model.Transaction
 import lab.justonebyte.moneysubuu.ui.theme.Green
 import lab.justonebyte.moneysubuu.ui.theme.Red900
 import lab.justonebyte.moneysubuu.ui.theme.SuBuuShapes
-import lab.justonebyte.moneysubuu.utils.dateFormatter
 
 @Composable
 fun TransactionsCard(

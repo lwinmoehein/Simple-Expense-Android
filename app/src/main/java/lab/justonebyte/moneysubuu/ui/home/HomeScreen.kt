@@ -19,10 +19,7 @@ import kotlinx.coroutines.launch
 import lab.justonebyte.moneysubuu.model.Transaction
 import lab.justonebyte.moneysubuu.model.TransactionCategory
 import lab.justonebyte.moneysubuu.model.TransactionType
-import lab.justonebyte.moneysubuu.ui.components.DatePicker
-import lab.justonebyte.moneysubuu.ui.components.SnackBarType
-import lab.justonebyte.moneysubuu.ui.components.SuBuuSnackBar
-import lab.justonebyte.moneysubuu.ui.components.SuBuuSnackBarHost
+import lab.justonebyte.moneysubuu.ui.components.*
 import java.util.*
 
 @OptIn(ExperimentalMaterialApi::class, com.google.accompanist.pager.ExperimentalPagerApi::class)
@@ -47,7 +44,7 @@ fun HomeScreen(
     val selectedMonthYear = remember { mutableStateOf(calendar.get(Calendar.YEAR))}
     val selectedMonthMonth = remember { mutableStateOf(calendar.get(Calendar.MONTH)+1)}
 
-    val tabCalculatedDate = remember(balanceType.value){ mutableStateOf(
+    val tabCalculatedDate = remember(balanceType.value,selectedDate.value,selectedMonthMonth.value,selectedMonthMonth){ mutableStateOf(
         when(balanceType.value){
             BalanceType.DAILY->selectedDate.value
             BalanceType.MONTHLY->selectedMonthYear.value.toString()+"-"+selectedMonthMonth.value.toString()
@@ -64,6 +61,7 @@ fun HomeScreen(
             onDateChosen = {
                 showDatePicker.value = false
                 selectedDate.value = it
+                homeViewModel.collectDailyBalance(dateValue =selectedDate.value)
             },
             onDismiss = {
                 showDatePicker.value = false
@@ -234,12 +232,4 @@ fun HomeScreen(
         )
     }
 
-}
-@Composable
-fun SectionTitle(title:String,modifier: Modifier = Modifier){
-    Row(
-        modifier = modifier.absolutePadding(top = 10.dp, bottom = 10.dp, left = 20.dp, right = 20.dp)
-    ) {
-        Text(text = title, style = MaterialTheme.typography.h6, color = MaterialTheme.colors.primary)
-    }
 }
