@@ -79,7 +79,6 @@ fun HomeScreen(
                     } ,
                     onMonthSelected = {
                         selectedMonthMonth.value=it
-
                     },
                     onConfirmPicker = {
                         isMonthPickerShown.value =false
@@ -90,7 +89,7 @@ fun HomeScreen(
                         }
                     },
                     isMonthPicker = balanceType.value==BalanceType.MONTHLY
-            )
+                )
         }
     }
 

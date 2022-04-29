@@ -1,17 +1,8 @@
 package lab.justonebyte.moneysubuu.ui.detail
 
-
-// for a `var` variable also add
-
-import android.app.DatePickerDialog
-import android.util.Log
-import android.widget.DatePicker
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -20,20 +11,15 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
 import lab.justonebyte.moneysubuu.model.Transaction
 import lab.justonebyte.moneysubuu.model.TransactionType
 import lab.justonebyte.moneysubuu.ui.components.DatePicker
 import lab.justonebyte.moneysubuu.ui.home.BalanceType
-import lab.justonebyte.moneysubuu.ui.home.HomeTab
 import lab.justonebyte.moneysubuu.ui.home.MonthPicker
 import lab.justonebyte.moneysubuu.utils.dateFormatter
-import lab.justonebyte.moneysubuu.utils.monthFormatter
-import lab.justonebyte.moneysubuu.utils.yearFormatter
 import me.bytebeats.views.charts.pie.PieChart
 import me.bytebeats.views.charts.pie.PieChartData
 import me.bytebeats.views.charts.pie.render.SimpleSliceDrawer
@@ -76,7 +62,7 @@ fun TransactionDetailScreen(
         }
     }
 
-    val calculatedDate = remember(balanceType,selectedDate.value,selectedMonthMonth.value,selectedMonthYear){ mutableStateOf(
+    val calculatedDate = remember(balanceType,selectedDate.value,selectedMonthMonth.value,selectedMonthYear.value){ mutableStateOf(
         when(balanceType){
             BalanceType.DAILY->selectedDate.value
             BalanceType.MONTHLY->selectedMonthYear.value.toString()+"-"+if(selectedMonthMonth.value<10) "0"+selectedMonthMonth.value.toString() else selectedMonthMonth.value.toString()
