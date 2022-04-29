@@ -14,6 +14,7 @@ import lab.justonebyte.moneysubuu.model.Transaction
 import lab.justonebyte.moneysubuu.model.TransactionCategory
 import lab.justonebyte.moneysubuu.model.TransactionType
 import lab.justonebyte.moneysubuu.ui.components.SnackBarType
+import lab.justonebyte.moneysubuu.ui.home.BalanceType
 import lab.justonebyte.moneysubuu.ui.home.HomeTab
 import lab.justonebyte.moneysubuu.ui.home.HomeUiState
 import lab.justonebyte.moneysubuu.utils.dateFormatter
@@ -55,12 +56,11 @@ class TransactionDetailViewModel @Inject constructor(
         }
     }
 
-    fun bindPieChartData(tabType:HomeTab,dateData:String){
-        Log.i("bindchart",tabType.title+":"+dateData)
-        when(tabType){
-            HomeTab.Daily->collectDailyBalance(dateValue = dateData)
-            HomeTab.Monthly->collectMonthlyBalance(dateValue = dateData)
-            HomeTab.Yearly->collectYearlyBalance(dateValue = dateData)
+    fun bindPieChartData(balanceType: BalanceType,dateData:String){
+        when(balanceType){
+            BalanceType.DAILY->collectDailyBalance(dateValue = dateData)
+            BalanceType.MONTHLY->collectMonthlyBalance(dateValue = dateData)
+            BalanceType.YEARLY->collectYearlyBalance(dateValue = dateData)
             else->collectTotalBalance()
         }
     }

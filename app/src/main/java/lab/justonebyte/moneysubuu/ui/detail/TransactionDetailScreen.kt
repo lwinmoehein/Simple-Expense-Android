@@ -27,6 +27,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import lab.justonebyte.moneysubuu.model.Transaction
 import lab.justonebyte.moneysubuu.model.TransactionType
+import lab.justonebyte.moneysubuu.ui.components.DatePicker
 import lab.justonebyte.moneysubuu.ui.home.BalanceType
 import lab.justonebyte.moneysubuu.ui.home.HomeTab
 import lab.justonebyte.moneysubuu.ui.home.MonthPicker
@@ -44,53 +45,56 @@ fun TransactionDetailScreen(
     modifier: Modifier = Modifier,
     goBack:()->Unit,
     transactionType:TransactionType = TransactionType.Income,
-    tabType:HomeTab = HomeTab.Daily,
+    balanceType:BalanceType = BalanceType.DAILY,
     dateData:String = dateFormatter(System.currentTimeMillis())
 ){
+    val calendar = Calendar.getInstance()
     val detailViewModel = hiltViewModel<TransactionDetailViewModel>()
     val detailUiState by detailViewModel.viewModelUiState.collectAsState()
 
     val transactions = detailUiState.transactions.filter { it.type== transactionType}
     val scaffoldState = rememberScaffoldState()
 
-    //date picker dialog
-    val mContext = LocalContext.current
-    val mCalendar = Calendar.getInstance()
-    mCalendar.time = Date()
-    val mYear: Int = remember(dateData) {
-        if(tabType==HomeTab.Daily) dateData.split('-')[0].toInt() else mCalendar.get(Calendar.YEAR)
-    }
-    val mMonth: Int = remember(dateData){
-        (if(tabType==HomeTab.Daily) dateData.split('-')[1].toInt() else mCalendar.get(Calendar.MONTH))-1
-    }
-    val mDay: Int = remember(dateData){
-        if(tabType==HomeTab.Daily) dateData.split('-')[2].toInt() else mCalendar.get(Calendar.DAY_OF_MONTH)
-    }
     val mDate = remember(dateData) { mutableStateOf(dateData ) }
     //month picker
     val isMonthPickerShown = remember { mutableStateOf(false)}
-    val selectedMonthMonth = remember(dateData) { mutableStateOf(if(tabType==HomeTab.Monthly) dateData.split('-')[1].toInt() else 1)}
-    val selectedMonthYear= remember(dateData) { mutableStateOf(if(tabType==HomeTab.Yearly || tabType==HomeTab.Monthly) dateData.split('-')[0].toInt() else 1)}
+    val isDatePickerShown = remember { mutableStateOf(false)}
+
+    val selectedDate = remember { mutableStateOf(detailUiState.selectedDay)}
+    val selectedMonthYear = remember { mutableStateOf(calendar.get(Calendar.YEAR))}
+    val selectedMonthMonth = remember { mutableStateOf(calendar.get(Calendar.MONTH)+1)}
+
+    val calculatedDate = remember(balanceType,selectedDate.value,selectedMonthMonth.value,selectedMonthMonth){ mutableStateOf(
+        when(balanceType){
+            BalanceType.DAILY->selectedDate.value
+            BalanceType.MONTHLY->selectedMonthYear.value.toString()+"-"+selectedMonthMonth.value.toString()
+            BalanceType.YEARLY->selectedMonthYear.value.toString()
+            else->"Total"
+        }
+    )}
 
 
     LaunchedEffect(key1 = mDate.value, block = {
-            when(tabType){
-                HomeTab.Daily->detailViewModel.bindPieChartData(HomeTab.Daily,mDate.value)
-                HomeTab.Monthly->detailViewModel.bindPieChartData(tabType = tabType,"${selectedMonthYear.value}-${if(selectedMonthMonth.value<10) "0"+selectedMonthMonth.value else selectedMonthMonth.value}")
-                HomeTab.Yearly-> detailViewModel.bindPieChartData(tabType = tabType,"${selectedMonthYear.value}")
-                else->detailViewModel.bindPieChartData(tabType = tabType,"")
+            when(balanceType){
+                BalanceType.DAILY->detailViewModel.bindPieChartData(balanceType = balanceType,calculatedDate.value)
+                BalanceType.MONTHLY->detailViewModel.bindPieChartData(balanceType = balanceType,calculatedDate.value)
+                BalanceType.YEARLY-> detailViewModel.bindPieChartData(balanceType = balanceType,calculatedDate.value)
+                else->detailViewModel.bindPieChartData(balanceType = balanceType, dateData = "")
             }
     } )
 
 
-    val mDatePickerDialog = remember(dateData){
-        DatePickerDialog(
-            mContext,
-            { _: DatePicker, mYear: Int, mMonth: Int, mDayOfMonth: Int ->
-                mDate.value =
-                    "$mYear-${if (mMonth + 1 >= 10) mMonth + 1 else "0" + (mMonth+1)}-${if(mDayOfMonth<10) "0"+mDayOfMonth else mDayOfMonth}"
-
-            }, mYear, mMonth, mDay
+    if(isDatePickerShown.value){
+        DatePicker(
+            onDateChosen = {
+                isDatePickerShown.value = false
+                selectedDate.value = it
+                detailViewModel.bindPieChartData(balanceType = balanceType, dateData = calculatedDate.value)
+            },
+            onDismiss = {
+                isDatePickerShown.value = false
+            },
+            date = selectedDate.value,
         )
     }
 
@@ -108,13 +112,13 @@ fun TransactionDetailScreen(
                 },
                 onConfirmPicker = {
                     isMonthPickerShown.value =false
-                    if(tabType == HomeTab.Monthly){
-                        detailViewModel.bindPieChartData(tabType = tabType,"${selectedMonthYear.value}-${if(selectedMonthMonth.value<10) "0"+selectedMonthMonth.value else selectedMonthMonth.value}")
+                    if(balanceType==BalanceType.MONTHLY){
+                        detailViewModel.bindPieChartData(balanceType = balanceType,calculatedDate.value)
                     }else{
-                        detailViewModel.bindPieChartData(tabType = tabType,"${selectedMonthYear.value}")
+                        detailViewModel.bindPieChartData(balanceType = balanceType,calculatedDate.value)
                     }
                 },
-                isMonthPicker = tabType == HomeTab.Monthly
+                isMonthPicker = balanceType==BalanceType.MONTHLY
             )
         }
     }
@@ -137,25 +141,20 @@ fun TransactionDetailScreen(
                        }) {
                            Icon(imageVector = Icons.Filled.ArrowBack, contentDescription = "back menu")
                        }
-                       when(tabType){
-                           HomeTab.Daily-> Text(text = if(transactionType==TransactionType.Income) "Daily Income Data" else "Daily Spending Data")
-                           HomeTab.Monthly-> Text(text =if(transactionType==TransactionType.Income) "Monthly Income Data" else "Monthly Spending Data")
-                           HomeTab.Yearly-> Text(text =if(transactionType==TransactionType.Income) "Yearly Income Data" else "Yearly Spending Data")
-                           else->Text(if(transactionType==TransactionType.Income) "Total Income" else "Total Spending")
-                       }
+                       Text(calculatedDate.value)
                    }
                     Row(verticalAlignment = Alignment.CenterVertically) {
-                       when(tabType){
-                          HomeTab.Daily-> TextButton(onClick = {
-                                              mDatePickerDialog.show()
+                       when(balanceType){
+                          BalanceType.DAILY-> TextButton(onClick = {
+                                              isDatePickerShown.value = true
                                           }) {
-                                              Text(text = mDate.value)
+                                              Text(text = calculatedDate.value)
                                           }
-                           HomeTab.Monthly-> TextButton(onClick = { isMonthPickerShown.value = true}) {
-                               Text(text = "For "+selectedMonthYear.value+"-"+if(selectedMonthMonth.value<10) "0"+selectedMonthMonth.value else selectedMonthMonth.value)
+                           BalanceType.MONTHLY-> TextButton(onClick = { isMonthPickerShown.value = true}) {
+                               Text(text = "For "+calculatedDate.value)
                            }
-                           HomeTab.Yearly-> TextButton(onClick = { isMonthPickerShown.value=true }) {
-                               Text(text = "For "+selectedMonthYear.value)
+                           BalanceType.YEARLY-> TextButton(onClick = { isMonthPickerShown.value=true }) {
+                               Text(text = "For "+calculatedDate.value)
                            }
                            else-> Text(text = "")
                        }

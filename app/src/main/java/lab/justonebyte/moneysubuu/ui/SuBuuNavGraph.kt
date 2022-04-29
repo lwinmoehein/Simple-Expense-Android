@@ -13,6 +13,7 @@ import androidx.navigation.navArgument
 import kotlinx.coroutines.launch
 import lab.justonebyte.moneysubuu.model.TransactionType
 import lab.justonebyte.moneysubuu.ui.detail.TransactionDetailScreen
+import lab.justonebyte.moneysubuu.ui.home.BalanceType
 import lab.justonebyte.moneysubuu.ui.home.HomeScreen
 import lab.justonebyte.moneysubuu.ui.home.HomeTab
 import lab.justonebyte.moneysubuu.ui.settings.SettingsScreen
@@ -69,18 +70,18 @@ fun SuBuuNavGraph(
                 TransactionType.Income.value->TransactionType.Income
                 else->TransactionType.Expense
             }
-            val tabType =  when(navController.currentBackStackEntry?.arguments?.getInt("bType")){
-                HomeTab.Daily.index->HomeTab.Daily
-                HomeTab.Monthly.index->HomeTab.Monthly
-                HomeTab.Yearly.index->HomeTab.Yearly
-                else->HomeTab.Total
+            val balanceType =  when(navController.currentBackStackEntry?.arguments?.getInt("bType")){
+                BalanceType.DAILY.value->BalanceType.DAILY
+                BalanceType.MONTHLY.value->BalanceType.MONTHLY
+                BalanceType.YEARLY.value->BalanceType.YEARLY
+                else->BalanceType.TOTAL
             }
             val date =  navController.currentBackStackEntry?.arguments?.getString("date")
 
             TransactionDetailScreen(
                 goBack = { navController.popBackStack() },
                 transactionType = transactionType,
-                tabType = tabType,
+                balanceType =balanceType ,
                 dateData = date?: dateFormatter(System.currentTimeMillis())
             )
         }
