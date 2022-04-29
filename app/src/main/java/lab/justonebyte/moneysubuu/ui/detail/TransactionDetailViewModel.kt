@@ -57,6 +57,7 @@ class TransactionDetailViewModel @Inject constructor(
     }
 
     fun bindPieChartData(balanceType: BalanceType,dateData:String){
+        Log.i("bind date",dateData)
         when(balanceType){
             BalanceType.DAILY->collectDailyBalance(dateValue = dateData)
             BalanceType.MONTHLY->collectMonthlyBalance(dateValue = dateData)

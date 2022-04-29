@@ -60,14 +60,26 @@ fun TransactionDetailScreen(
     val isMonthPickerShown = remember { mutableStateOf(false)}
     val isDatePickerShown = remember { mutableStateOf(false)}
 
-    val selectedDate = remember { mutableStateOf(detailUiState.selectedDay)}
-    val selectedMonthYear = remember { mutableStateOf(calendar.get(Calendar.YEAR))}
-    val selectedMonthMonth = remember { mutableStateOf(calendar.get(Calendar.MONTH)+1)}
+    val selectedDate = remember { mutableStateOf(dateData)}
+    val selectedMonthYear = remember {
+        if(balanceType==BalanceType.MONTHLY || balanceType==BalanceType.YEARLY){
+            mutableStateOf(dateData.split("-")[0].toInt())
+        }else{
+            mutableStateOf(1)
+        }
+    }
+    val selectedMonthMonth = remember {
+        if(balanceType==BalanceType.MONTHLY){
+            mutableStateOf(dateData.split("-")[1].toInt())
+        }else{
+            mutableStateOf(1)
+        }
+    }
 
-    val calculatedDate = remember(balanceType,selectedDate.value,selectedMonthMonth.value,selectedMonthMonth){ mutableStateOf(
+    val calculatedDate = remember(balanceType,selectedDate.value,selectedMonthMonth.value,selectedMonthYear){ mutableStateOf(
         when(balanceType){
             BalanceType.DAILY->selectedDate.value
-            BalanceType.MONTHLY->selectedMonthYear.value.toString()+"-"+selectedMonthMonth.value.toString()
+            BalanceType.MONTHLY->selectedMonthYear.value.toString()+"-"+if(selectedMonthMonth.value<10) "0"+selectedMonthMonth.value.toString() else selectedMonthMonth.value.toString()
             BalanceType.YEARLY->selectedMonthYear.value.toString()
             else->"Total"
         }
@@ -89,12 +101,12 @@ fun TransactionDetailScreen(
             onDateChosen = {
                 isDatePickerShown.value = false
                 selectedDate.value = it
-                detailViewModel.bindPieChartData(balanceType = balanceType, dateData = calculatedDate.value)
+                detailViewModel.bindPieChartData(balanceType = balanceType, dateData = it)
             },
             onDismiss = {
                 isDatePickerShown.value = false
             },
-            date = selectedDate.value,
+            date = calculatedDate.value,
         )
     }
 

@@ -19,9 +19,7 @@ import lab.justonebyte.moneysubuu.ui.home.HomeTab
 import lab.justonebyte.moneysubuu.ui.settings.SettingsScreen
 import lab.justonebyte.moneysubuu.utils.dateFormatter
 
-/**
- * Destinations used in the ([JetnewsApp]).
- */
+
 object MainDestinations {
     const val HOME_ROUTE = "home"
     const val DETAIL_ROUTE = "detail/{tType}/{bType}/{date}"
