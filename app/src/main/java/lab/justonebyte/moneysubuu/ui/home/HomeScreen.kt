@@ -28,12 +28,12 @@ fun HomeScreen(
     goToPieChartDetail:(transactionType:TransactionType,balanceType:BalanceType,date:String)->Unit,
 ){
     val calendar = Calendar.getInstance()
-    val homeViewModel = hiltViewModel<HomeViewModel>()
-    val homeUiState by homeViewModel.viewModelUiState.collectAsState()
-    val transactions  = homeUiState.transactions
     val bottomSheetScaffoldState = rememberBottomSheetScaffoldState(
         bottomSheetState = BottomSheetState(BottomSheetValue.Collapsed)
     )
+    val homeViewModel = hiltViewModel<HomeViewModel>()
+    val homeUiState by homeViewModel.viewModelUiState.collectAsState()
+    val transactions  = homeUiState.transactions
     val coroutineScope = rememberCoroutineScope()
     val balanceType = remember{ mutableStateOf(BalanceType.DAILY)}
 
@@ -55,6 +55,7 @@ fun HomeScreen(
     val currentTransaction = remember {
         mutableStateOf<Transaction?>(null)
     }
+
 
     if(showDatePicker.value){
         DatePicker(
