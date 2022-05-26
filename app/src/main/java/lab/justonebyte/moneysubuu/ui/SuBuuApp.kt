@@ -1,16 +1,14 @@
 package lab.justonebyte.moneysubuu.ui
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.Scaffold
+import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
@@ -29,7 +27,7 @@ fun SuBuuApp(
         ProvideWindowInsets {
             val systemUiController = rememberSystemUiController()
             SideEffect {
-                systemUiController.setSystemBarsColor(Color.Transparent, darkIcons = false)
+//                systemUiController.setSystemBarsColor(Color.Transparent, darkIcons = false)
             }
 
             val navController = rememberNavController()
@@ -43,20 +41,24 @@ fun SuBuuApp(
             val currentRoute = navBackStackEntry?.destination?.route ?: MainDestinations.HOME_ROUTE
             Scaffold(
                 topBar = {
-//                    Row(
-//                        Modifier
-//                            .fillMaxWidth()
-//                            .absolutePadding(right = 20.dp, left = 20.dp), horizontalArrangement = Arrangement.Start) {
-//                        IconButton(onClick = {
-//                            if(scaffoldState.drawerState.isOpen){
-//                                coroutineScope.launch { scaffoldState.drawerState.close() }
-//                            }else{
-//                                coroutineScope.launch { scaffoldState.drawerState.open() }
-//                            }
-//                        }) {
-//                            Icon(imageVector = Icons.Filled.Menu, contentDescription = "open menu")
-//                        }
-//                    }
+                    Row(
+                        Modifier
+                            .fillMaxWidth()
+                            .absolutePadding(right = 10.dp, left = 10.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                        , horizontalArrangement = Arrangement.Start
+                    ) {
+                        IconButton(onClick = {
+                            if(scaffoldState.drawerState.isOpen){
+                                coroutineScope.launch { scaffoldState.drawerState.close() }
+                            }else{
+                                coroutineScope.launch { scaffoldState.drawerState.open() }
+                            }
+                        }) {
+                            Icon(imageVector = Icons.Filled.Menu, contentDescription = "open menu")
+                        }
+                        Text(text = "Money Track - Money Manager", style = MaterialTheme.typography.subtitle1)
+                    }
                 },
                 scaffoldState = scaffoldState,
                 drawerContent = {

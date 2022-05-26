@@ -65,3 +65,5 @@ val BlueGray300 = Color(0xFF90A4AE)
 val BlueGray700 = Color(0xFF455A64)
 val BlueGray800 = Color(0xFF37474F)
 val BlueGray900 = Color(0xFF263238)
+
+val GrayCardBg = Color(0xFF5F6368)

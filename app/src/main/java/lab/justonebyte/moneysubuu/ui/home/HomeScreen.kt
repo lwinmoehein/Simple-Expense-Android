@@ -4,11 +4,13 @@ import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AddCircle
+import androidx.compose.material.icons.filled.Menu
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -183,48 +185,77 @@ fun HomeScreen(
             }
         }, sheetPeekHeight = 0.dp
     ) {
+        Column(){
+                BalanceCard(
+                    balanceType = balanceType.value,
+                    homeUiState = homeUiState,
+                    dateText = tabCalculatedDate.value,
+                    onDateTextClicked = {
+                        when(balanceType.value){
+                            BalanceType.DAILY->showDatePicker.value = true
+                            BalanceType.MONTHLY->isMonthPickerShown.value = true
+                            BalanceType.YEARLY->isMonthPickerShown.value = true
+                        }
+                    },
+                    goToPiechart = { tType->
+                        goToPieChartDetail(tType,balanceType.value,tabCalculatedDate.value)
+                    }
+                )
+                   Column() {
+                       TransactionsCard(
+                           transactions = transactions,
+                           onTransactionClick = {
+                               currentTransaction.value = it
+                               coroutineScope.launch {
+                                   bottomSheetScaffoldState.bottomSheetState.expand()
+                               }
+                           }
+                       )
+                   }
 
-        HomeTabs(
-            onTabChanged = {
-                balanceType.value = it
-                when(it){
-                    BalanceType.DAILY->homeViewModel.collectDailyBalance()
-                    BalanceType.MONTHLY->homeViewModel.collectMonthlyBalance()
-                    BalanceType.YEARLY->homeViewModel.collectYearlyBalance()
-                    else->homeViewModel.collectTotalBalance()
-                }
-            },
-            content = {
-                Column(Modifier.padding(it)) {
-                    Spacer(modifier = Modifier.height(30.dp))
-                    BalanceCard(
-                        balanceType = balanceType.value,
-                        homeUiState = homeUiState,
-                        dateText = tabCalculatedDate.value,
-                        onDateTextClicked = {
-                            when(balanceType.value){
-                                BalanceType.DAILY->showDatePicker.value = true
-                                BalanceType.MONTHLY->isMonthPickerShown.value = true
-                                BalanceType.YEARLY->isMonthPickerShown.value = true
-                            }
-                        },
-                        goToPiechart = { tType->
-                            goToPieChartDetail(tType,balanceType.value,tabCalculatedDate.value)
-                        }
-                    )
-                    SectionTitle(title = "Transaction")
-                    TransactionsCard(
-                        transactions = transactions,
-                        onTransactionClick = {
-                            currentTransaction.value = it
-                            coroutineScope.launch {
-                                bottomSheetScaffoldState.bottomSheetState.expand()
-                            }
-                        }
-                    )
-                }
-            }
-        )
+        }
+
+//        HomeTabs(
+//            onTabChanged = {
+//                balanceType.value = it
+//                when(it){
+//                    BalanceType.DAILY->homeViewModel.collectDailyBalance()
+//                    BalanceType.MONTHLY->homeViewModel.collectMonthlyBalance()
+//                    BalanceType.YEARLY->homeViewModel.collectYearlyBalance()
+//                    else->homeViewModel.collectTotalBalance()
+//                }
+//            },
+//            content = {
+//                Column(Modifier.padding(it)) {
+//                    Spacer(modifier = Modifier.height(30.dp))
+//                    BalanceCard(
+//                        balanceType = balanceType.value,
+//                        homeUiState = homeUiState,
+//                        dateText = tabCalculatedDate.value,
+//                        onDateTextClicked = {
+//                            when(balanceType.value){
+//                                BalanceType.DAILY->showDatePicker.value = true
+//                                BalanceType.MONTHLY->isMonthPickerShown.value = true
+//                                BalanceType.YEARLY->isMonthPickerShown.value = true
+//                            }
+//                        },
+//                        goToPiechart = { tType->
+//                            goToPieChartDetail(tType,balanceType.value,tabCalculatedDate.value)
+//                        }
+//                    )
+//                    SectionTitle(title = "Transaction")
+//                    TransactionsCard(
+//                        transactions = transactions,
+//                        onTransactionClick = {
+//                            currentTransaction.value = it
+//                            coroutineScope.launch {
+//                                bottomSheetScaffoldState.bottomSheetState.expand()
+//                            }
+//                        }
+//                    )
+//                }
+//            }
+//        )
         SuBuuSnackBar(
             onDismissSnackBar = { homeViewModel.clearSnackBar() },
             scaffoldState = bottomSheetScaffoldState,
