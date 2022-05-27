@@ -1,6 +1,7 @@
 package lab.justonebyte.moneysubuu.ui.home
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
@@ -14,10 +15,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
+import lab.justonebyte.moneysubuu.ui.theme.GrayCardBg
 import lab.justonebyte.moneysubuu.ui.theme.Red900
 
 @Composable
@@ -37,19 +40,23 @@ fun AddCategoryNameDialog(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center,
                 modifier = Modifier
-                    .height(200.dp)
-                    .fillMaxWidth()
+                    .wrapContentSize()
                     .clip(shape = RoundedCornerShape(5.dp))
                     .background(MaterialTheme.colors.onPrimary)
-                    .absolutePadding(top = 5.dp, bottom = 5.dp, right = 10.dp, left = 10.dp)
+                    .absolutePadding(top = 10.dp, bottom = 10.dp, right = 10.dp, left = 10.dp)
 
             ) {
+                Row(horizontalArrangement = Arrangement.Start, modifier = Modifier.wrapContentWidth()) {
+                    Text(text = "Add New Category",style = MaterialTheme.typography.subtitle1, textAlign = TextAlign.Left)
+                }
+                Spacer(modifier = Modifier.height(10.dp))
+                Spacer(modifier = Modifier.fillMaxWidth().height(2.dp).background(MaterialTheme.colors.primary))
+                Spacer(modifier = Modifier.height(20.dp))
+
                 Row(
                     horizontalArrangement = Arrangement.Center,
                     verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier
-                        .weight(4f)
-                        .fillMaxWidth()
+
                 ) {
                     Text(
                         textAlign = TextAlign.Center,
@@ -57,13 +64,17 @@ fun AddCategoryNameDialog(
                         modifier = Modifier.weight(1f),
                         style = MaterialTheme.typography.subtitle2
                     )
-                    BasicTextField(modifier = modifier
-                        .weight(1f)
-                        .background(
-                            MaterialTheme.colors.surface,
-                            MaterialTheme.shapes.small,
-                        )
-                        .fillMaxWidth(),
+                    BasicTextField(
+                        modifier = modifier
+                            .weight(1f)
+                            .background(
+                                MaterialTheme.colors.surface,
+                                MaterialTheme.shapes.small,
+                            )
+                            .fillMaxWidth()
+                            .clip(RoundedCornerShape(8.dp))
+                            .border(1.dp, MaterialTheme.colors.primary)
+                            .padding(10.dp),
                         value = addCategoryName.value,
                         onValueChange = {
                             addCategoryName.value = it
@@ -95,24 +106,23 @@ fun AddCategoryNameDialog(
                         }
                     )
                 }
+                Spacer(modifier = Modifier.height(20.dp))
                 Row(
-                    Modifier
-                        .weight(2f)
-                        .fillMaxWidth()
+                    horizontalArrangement = Arrangement.SpaceEvenly
                 ) {
-                    Row(modifier = Modifier.wrapContentHeight()) {
                         TextButton(
                             onClick = { onCloseDialog() },
-                            modifier = Modifier.weight(1f).absolutePadding(right = 10.dp)
+                            modifier = Modifier
+                                .weight(1f)
+                                .clip(RoundedCornerShape(5.dp))
                         ) {
-                            Text(text = "Cancel")
+                            Text(text = "Cancel",color = GrayCardBg)
                         }
                         TextButton(
                             modifier = Modifier
                                 .weight(1f)
-                                .absolutePadding(left = 20.dp)
                                 .clip(RoundedCornerShape(5.dp))
-                                .background(MaterialTheme.colors.primary.copy(alpha = 1f)),
+                            ,
                             onClick = {
                                 if(addCategoryName.value.isEmpty()){
                                     isCategoryNameErrorShown.value = true
@@ -123,9 +133,8 @@ fun AddCategoryNameDialog(
                                 }
                             }
                         ) {
-                            Text(text = "Confirm",color = MaterialTheme.colors.onPrimary,style= MaterialTheme.typography.button)
+                            Text(text = "Confirm",style= MaterialTheme.typography.button)
                         }
-                    }
                 }
             }
         }

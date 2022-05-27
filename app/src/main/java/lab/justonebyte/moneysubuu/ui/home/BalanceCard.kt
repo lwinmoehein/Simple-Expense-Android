@@ -38,86 +38,12 @@ fun BalanceCard(
     onDateTextClicked:()->Unit,
 
 ){
-
+    val isBalanceTypeExpanded = remember { mutableStateOf(false)}
     Column(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
 
-//            Row(verticalAlignment = Alignment.CenterVertically) {
-//                Text(
-//                    text = "Balance : ",
-//                    style = MaterialTheme.typography.h5
-//                )
-//                Text(
-//                    text = homeUiState.currentBalance.toString(),
-//                    style = MaterialTheme.typography.h6,
-//                    color = if(homeUiState.currentBalance>0) Green else Red900
-//                )
-//            }
-//            Row(horizontalArrangement = Arrangement.Center){
-//                TextButton(onClick = {
-//                    onDateTextClicked()
-//                }) {
-//                    Text(text =dateText)
-//                }
-//            }
-//            Spacer(modifier = Modifier.height(20.dp))
-//            Row() {
-//                Card(
-//                    shape = SuBuuShapes.small,
-//                    modifier = modifier
-//                        .height(100.dp)
-//                        .padding(10.dp)
-//                        .weight(1f)
-//                        .clickable {
-//                            goToPiechart(
-//                               TransactionType.Income
-//                            )
-//                        },
-//                    elevation = 10.dp
-//                ) {
-//                    Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.Center) {
-//                        Text(
-//                            text = "Income : ",
-//                            style = MaterialTheme.typography.subtitle2
-//                        )
-//                        Text(
-//                            color = Green,
-//                            text = homeUiState.incomeBalance.toString(),
-//                            style = MaterialTheme.typography.h6
-//
-//                        )
-//                    }
-//                }
-//                Card(
-//                    shape = SuBuuShapes.small,
-//                    modifier = modifier
-//                        .weight(1f)
-//                        .height(100.dp)
-//                        .padding(10.dp)
-//                        .clickable {
-//                            goToPiechart(
-//                                TransactionType.Expense,
-//                            )
-//                        },
-//                    elevation = 10.dp
-//                ) {
-//                    Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.Center) {
-//                        Text(
-//                            text = "Expense : ",
-//                            style = MaterialTheme.typography.subtitle2
-//                        )
-//                        Text(
-//                            color = Red900,
-//                            text = homeUiState.expenseBalance.toString(),
-//                            style = MaterialTheme.typography.h6
-//
-//                        )
-//                    }
-//                }
-//
-//            }
         Card(
             modifier = modifier
                 .padding(10.dp)
@@ -137,17 +63,41 @@ fun BalanceCard(
                 ) {
                     Text(text = "Balance Overview",style = MaterialTheme.typography.subtitle1,
                         color = MaterialTheme.colors.onPrimary)
-                    Button(onClick = { /*TODO*/ },modifier = Modifier.background(Color.Transparent)) {
-                        Text(text = "Today")
-                        Icon(imageVector = Icons.Default.DateRange, contentDescription ="calendar" )
+                    TextButton(onClick = { isBalanceTypeExpanded.value = true }) {
+                        Text(text = "Type:")
+                    }
+
+                    TextButton(onClick = { onDateTextClicked() },modifier = Modifier.background(Color.Transparent)) {
+                        Text(text = dateText)
+                    }
+                    DropdownMenu(
+                        expanded = isBalanceTypeExpanded.value,
+                        onDismissRequest = { isBalanceTypeExpanded.value =false
+                        }
+
+                    ) {
+                        DropdownMenuItem(onClick = { /*TODO*/ }) {
+                            Text(text = "Daily")
+                        }
+                        DropdownMenuItem(onClick = { /*TODO*/ }) {
+                            Text(text = "Monthly")
+                        }
+                        DropdownMenuItem(onClick = { /*TODO*/ }) {
+                            Text(text = "Yearly")
+                        }
+                        DropdownMenuItem(onClick = { /*TODO*/ }) {
+                            Text(text = "Total")
+                        }
                     }
                 }
+
                 Spacer(modifier = Modifier.height(15.dp))
                 Row() {
                     Column(
                         Modifier.weight(1f)
                     ) {
                         Column(
+
                         ) {
                             Text(
                                 text = "Balance ",
@@ -163,19 +113,7 @@ fun BalanceCard(
                     Column(
                         Modifier.weight(1f)
                     ) {
-//                        Column(
-//                        ) {
-//                            Text(
-//                                text = "Income",
-//                                style = MaterialTheme.typography.subtitle2,
-//                                color = MaterialTheme.colors.onPrimary
-//                            )
-//                            Text(
-//                                text = homeUiState.incomeBalance.toString(),
-//                                color = MaterialTheme.colors.onPrimary
-//
-//                            )
-//                        }
+
                     }
                 }
                 Spacer(modifier = Modifier.height(15.dp))
@@ -184,6 +122,9 @@ fun BalanceCard(
                         Modifier.weight(1f)
                     ) {
                         Column(
+                            Modifier.clickable {
+                                goToPiechart(TransactionType.Income)
+                            }
                         ) {
                             Text(
                                 text = "Income ",
@@ -201,6 +142,9 @@ fun BalanceCard(
                         Modifier.weight(1f)
                     ) {
                         Column(
+                            Modifier.clickable {
+                                goToPiechart(TransactionType.Expense)
+                            }
                         ) {
                             Text(
                                 text = "Expense",

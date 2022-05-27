@@ -42,19 +42,19 @@ fun TransactionsCard(
                Text(
                    text = "Category",style = MaterialTheme.typography.subtitle1,
                    color = MaterialTheme.colors.primary,
-                   modifier = Modifier.padding(10.dp).weight(1f)
+                   modifier = Modifier.weight(1f).padding(10.dp),
                )
                Text(
                    text = "Amount",style = MaterialTheme.typography.subtitle1,
                    color = MaterialTheme.colors.primary,
-                   modifier = Modifier.padding(10.dp).weight(1f)
+                   modifier = Modifier.weight(1f).padding(10.dp),
                )
                Text(
                    text = "Date",style = MaterialTheme.typography.subtitle1,
                    color = MaterialTheme.colors.primary,
-                   modifier = Modifier.padding(10.dp).weight(1f)
+                   modifier = Modifier.weight(1f).padding(10.dp).weight(1f),
                )
-               Text(text = "",modifier = Modifier.weight(1f))
+               Text(text = "",modifier = Modifier.weight(0.5f))
            }
            LazyColumn(Modifier.padding(10.dp)){
                items(transactions){
@@ -74,19 +74,19 @@ fun TransactionItem(transaction:Transaction,modifier: Modifier=Modifier ,onTrans
                modifier = modifier
                    .fillMaxWidth()
                    .absolutePadding(left = 10.dp, right = 10.dp),
-               horizontalArrangement = Arrangement.SpaceEvenly,
                verticalAlignment = Alignment.CenterVertically
            ) {
-               Text(text = transaction.category.name,modifier = Modifier.weight(1f), color = GrayCardBg)
+               Text(text = transaction.category.name, color = GrayCardBg,modifier=Modifier.weight(1f))
                Text(
                    text =if (transaction.type.value==1) transaction.amount.toString() else "-"+transaction.amount.toString(),
-                   modifier = Modifier.weight(1f),
                    color = GrayCardBg,
+                   modifier=Modifier.weight(1f)
                )
-               Text(text = transaction.created_at,modifier = Modifier.weight(1f), color = GrayCardBg)
+               Text(text = transaction.created_at, color = GrayCardBg,
+                   modifier=Modifier.weight(1f))
                TextButton(
                    onClick = { onTransactionClick(transaction) },
-
+                   modifier=Modifier.weight(0.5f)
                ) {
                    Text(text = "Edit")
                }
