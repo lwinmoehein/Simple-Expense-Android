@@ -9,9 +9,11 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
+import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import lab.justonebyte.moneysubuu.model.TransactionType
@@ -125,11 +127,20 @@ fun BalanceCard(
 
         ) {
             Column(
-                Modifier.padding(10.dp)
+                Modifier.padding(10.dp),
+
             ) {
-                Row() {
+                Row(
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
                     Text(text = "Balance Overview",style = MaterialTheme.typography.subtitle1,
                         color = MaterialTheme.colors.onPrimary)
+                    Button(onClick = { /*TODO*/ },modifier = Modifier.background(Color.Transparent)) {
+                        Text(text = "Today")
+                        Icon(imageVector = Icons.Default.DateRange, contentDescription ="calendar" )
+                    }
                 }
                 Spacer(modifier = Modifier.height(15.dp))
                 Row() {
