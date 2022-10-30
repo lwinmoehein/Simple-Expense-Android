@@ -2,7 +2,6 @@ package lab.justonebyte.moneysubuu.ui.home
 
 import android.app.Activity
 import android.app.DatePickerDialog
-import android.util.Log
 import android.widget.DatePicker
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.BorderStroke
@@ -14,7 +13,6 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -26,15 +24,13 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import androidx.compose.ui.window.Dialog
 import lab.justonebyte.moneysubuu.model.Transaction
 import lab.justonebyte.moneysubuu.model.TransactionCategory
 import lab.justonebyte.moneysubuu.model.TransactionType
 import lab.justonebyte.moneysubuu.ui.appContentPadding
+import lab.justonebyte.moneysubuu.ui.components.*
 import lab.justonebyte.moneysubuu.utils.dateFormatter
 import java.util.*
-import lab.justonebyte.moneysubuu.ui.components.*
 
 
 @Composable
@@ -102,6 +98,7 @@ fun AddTransactionSheetContent(
             mDate.value = selectedDate
         }, mYear, mMonth, mDay
     )
+    mDatePickerDialog.datePicker.maxDate = Date().time
 
     Column(
         Modifier
