@@ -43,26 +43,27 @@ fun SuBuuApp(
             val currentRoute = navBackStackEntry?.destination?.route ?: MainDestinations.HOME_ROUTE
             Scaffold(
                 topBar = {
-//                    Row(
-//                        Modifier
-//                            .fillMaxWidth()
-//                            .absolutePadding(right = 20.dp, left = 20.dp), horizontalArrangement = Arrangement.Start) {
-//                        IconButton(onClick = {
-//                            if(scaffoldState.drawerState.isOpen){
-//                                coroutineScope.launch { scaffoldState.drawerState.close() }
-//                            }else{
-//                                coroutineScope.launch { scaffoldState.drawerState.open() }
-//                            }
-//                        }) {
-//                            Icon(imageVector = Icons.Filled.Menu, contentDescription = "open menu")
-//                        }
-//                    }
+                    Row(
+                        Modifier
+                            .fillMaxWidth()
+                            .absolutePadding(right = 20.dp, left = 20.dp), horizontalArrangement = Arrangement.Start) {
+                        IconButton(onClick = {
+                            if(scaffoldState.drawerState.isOpen){
+                                coroutineScope.launch { scaffoldState.drawerState.close() }
+                            }else{
+                                coroutineScope.launch { scaffoldState.drawerState.open() }
+                            }
+                        }) {
+                            Icon(imageVector = Icons.Filled.Menu, contentDescription = "open menu")
+                        }
+                    }
                 },
                 scaffoldState = scaffoldState,
                 drawerContent = {
                     AppDrawer(
                         currentRoute = currentRoute,
                         navigateToHome = { navController.navigate(MainDestinations.HOME_ROUTE) },
+                        navigateToStats = { navController.navigate(MainDestinations.STATS_ROUTE) },
                         navigateToSettings = { navController.navigate(MainDestinations.SETTINGS_ROUTE) },
                         closeDrawer = { coroutineScope.launch { scaffoldState.drawerState.close() } },
                     )

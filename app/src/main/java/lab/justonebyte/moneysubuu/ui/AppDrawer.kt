@@ -18,6 +18,7 @@ import androidx.compose.material.Text
 import androidx.compose.material.TextButton
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -38,6 +39,7 @@ fun AppDrawer(
     currentRoute: String,
     navigateToHome: () -> Unit,
     navigateToSettings: () -> Unit,
+    navigateToStats:()->Unit,
     closeDrawer: () -> Unit
 ) {
 
@@ -55,10 +57,11 @@ fun AppDrawer(
             }
         )
         DrawerButton(
-            icon = Icons.Filled.Settings,
+            icon = Icons.Filled.Info,
             label = "Stats",
-            isSelected = currentRoute == MainDestinations.SETTINGS_ROUTE,
+            isSelected = currentRoute == MainDestinations.STATS_ROUTE,
             action = {
+                navigateToStats()
                 closeDrawer()
             }
         )
@@ -71,6 +74,7 @@ fun AppDrawer(
                 closeDrawer()
             }
         )
+
     }
 }
 

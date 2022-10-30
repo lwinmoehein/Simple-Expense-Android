@@ -1,5 +1,6 @@
 package lab.justonebyte.moneysubuu.ui
 
+import StatsScreen
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.material.ScaffoldState
 import androidx.compose.material.rememberScaffoldState
@@ -23,6 +24,7 @@ import lab.justonebyte.moneysubuu.utils.dateFormatter
  */
 object MainDestinations {
     const val HOME_ROUTE = "home"
+    const val STATS_ROUTE = "stats"
     const val DETAIL_ROUTE = "detail/{type}/{tab}/{date}"
     const val SETTINGS_ROUTE = "settings"
     fun getDetailRoute(type:Int,tab:Int,date:String):String{
@@ -52,10 +54,14 @@ fun SuBuuNavGraph(
                 }
             )
         }
+
         composable(MainDestinations.SETTINGS_ROUTE) {
             SettingsScreen(
                 openDrawer = openDrawer,
             )
+        }
+        composable(MainDestinations.STATS_ROUTE) {
+            StatsScreen()
         }
         composable(
             MainDestinations.DETAIL_ROUTE,
