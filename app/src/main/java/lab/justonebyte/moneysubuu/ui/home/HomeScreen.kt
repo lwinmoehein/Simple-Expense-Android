@@ -230,7 +230,7 @@ fun HomeContent(
                     goToPieChart(type,tab,date)
                 }
             )
-            SectionTitle(title = "Transaction")
+            SectionTitle(title = "History")
             TransactionsCard(
                 transactions = homeUiState.transactions,
                 onTransactionClick = {

@@ -98,8 +98,8 @@ fun AddTransactionSheetContent(
     val mDatePickerDialog = DatePickerDialog(
         mContext,
         { _: DatePicker, mYear: Int, mMonth: Int, mDayOfMonth: Int ->
-            mDate.value =
-                "$mYear-${if (mMonth + 1 >= 10) mMonth + 1 else "0" + (mMonth + 1)+"-"+ if(mDayOfMonth<10) "0"+mDayOfMonth else mDayOfMonth}"
+            var selectedDate = "$mYear-${if (mMonth + 1 >= 10) (mMonth + 1) else ("0" +(mMonth + 1))}-${if (mDayOfMonth + 1 >= 10) mDayOfMonth else ("0$mDayOfMonth")}"
+            mDate.value = selectedDate
         }, mYear, mMonth, mDay
     )
 
