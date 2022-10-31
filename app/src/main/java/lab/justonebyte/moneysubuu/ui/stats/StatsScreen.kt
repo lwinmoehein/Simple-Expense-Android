@@ -1,11 +1,28 @@
+import android.util.Log
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.Divider
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import lab.justonebyte.moneysubuu.model.Transaction
+import lab.justonebyte.moneysubuu.model.TransactionType
+import lab.justonebyte.moneysubuu.ui.detail.CustomPieChartWithData
+import lab.justonebyte.moneysubuu.ui.detail.TransactionDetailViewModel
 import lab.justonebyte.moneysubuu.ui.detail.randomColor
+import lab.justonebyte.moneysubuu.ui.home.HomeTab
+import lab.justonebyte.moneysubuu.ui.stats.StatsUiState
+import lab.justonebyte.moneysubuu.ui.stats.StatsViewModel
+import me.bytebeats.views.charts.AxisLabelFormatter
+import me.bytebeats.views.charts.LabelFormatter
 import me.bytebeats.views.charts.bar.BarChart
 import me.bytebeats.views.charts.bar.BarChartData
 import me.bytebeats.views.charts.bar.render.bar.SimpleBarDrawer
@@ -16,72 +33,91 @@ import me.bytebeats.views.charts.simpleChartAnimation
 
 
 @Composable
-fun StatsScreen() {
-  Column(
-       verticalArrangement = Arrangement.spacedBy(30.dp),
-      modifier = Modifier.padding(10.dp)
-  ) {
-      Column(Modifier.weight(1f)) {
-          Text(
-              text = "What gets you more money?",
-              color = MaterialTheme.colors.primary,
-              style = MaterialTheme.typography.subtitle1,
-              modifier = Modifier.absolutePadding(bottom = 5.dp)
-          )
-          Divider(modifier = Modifier.absolutePadding(bottom = 30.dp))
-          CustomBarChart()
-      }
-      Column(Modifier.weight(1f)) {
-          Text(
-              text = "What costs you most?",
-              color = MaterialTheme.colors.primary,
-              style = MaterialTheme.typography.subtitle1,
-              modifier = Modifier.absolutePadding(bottom = 5.dp)
-          )
-          Divider(modifier = Modifier.absolutePadding(bottom = 30.dp))
-          CustomBarChart()
-      }
-  }
+fun StatsScreen(goBack:()->Unit) {
+    val statsViewModel = hiltViewModel<StatsViewModel>()
+    val statsUiState by statsViewModel.viewModelUiState.collectAsState()
+
+    val transactions = statsUiState.transactions
+    val scaffoldState = rememberScaffoldState()
+
+    Scaffold(
+        scaffoldState = scaffoldState,
+        topBar = {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .absolutePadding(right = 20.dp, left = 20.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+
+            }
+        }
+    ) {
+        Column(modifier = Modifier.padding(10.dp).padding(it)) {
+            Column(Modifier.weight(1f)) {
+                Text(
+                    text = "What gets you money most?",
+                    color = MaterialTheme.colors.primary,
+                    style = MaterialTheme.typography.subtitle1,
+                    modifier = Modifier.absolutePadding(bottom = 5.dp)
+                )
+                Divider(modifier = Modifier.absolutePadding(bottom = 10.dp))
+                CustomBarChart(transactions.filter { it.type==TransactionType.Income })
+            }
+            Column(Modifier.weight(1f)) {
+                Text(
+                    text = "What costs you most?",
+                    color = MaterialTheme.colors.primary,
+                    style = MaterialTheme.typography.subtitle1,
+                    modifier = Modifier.absolutePadding(bottom = 5.dp)
+                )
+                Divider(modifier = Modifier.absolutePadding(bottom = 10.dp))
+                CustomBarChart(transactions.filter { it.type==TransactionType.Expense })
+            }
+        }
+    }
 }
 @Composable
-fun CustomBarChart(){
-    BarChart(
-        barChartData = BarChartData(
-            bars = listOf(
-                BarChartData.Bar(
-                    label = "Bar 1",
-                    value = 1f,
-                    color = randomColor()
-                ),
-                BarChartData.Bar(
-                    label = "Bar 2",
-                    value = 3f,
-                    color = randomColor()
-                ),
-                BarChartData.Bar(
-                    label = "Bar 3",
-                    value = 100f,
-                    color = randomColor()
-                ),
+fun CustomBarChart(transactions:List<Transaction>){
 
-                BarChartData.Bar(
-                    label = "Bar 33",
-                    value = 101f,
-                    color = randomColor()
-                ),
-                BarChartData.Bar(
-                    label = "Bar 4",
-                    value = 5f,
-                    color = randomColor()
-                ),
+    val bars = transactions
+            .groupBy { it.category }
+            .map{it.key to it.value
+            .sumOf { it.amount }}
+            .sortedByDescending { it.second }
+            .map { BarChartData.Bar(
+            label = it.first.name,
+            value = it.second.toFloat(),
+            color = randomColor()
+    ) }
+
+    if(bars.size>0){
+        BarChart(
+            barChartData = BarChartData(
+                bars = bars
+            ),
+            // Optional properties.
+            modifier = Modifier.fillMaxSize().padding(20.dp),
+            animation = simpleChartAnimation(),
+            barDrawer = SimpleBarDrawer(),
+            xAxisDrawer = SimpleXAxisDrawer(
+                axisLineThickness = 3.dp,
+                axisLineColor = MaterialTheme.colors.primary
+            ),
+            yAxisDrawer = SimpleYAxisDrawer(
+                axisLineThickness = 3.dp,
+                axisLineColor = MaterialTheme.colors.primary,
+                drawLabelEvery = 500,
+                labelValueFormatter = {
+                    val yLabel = (it.toInt()/100)*100
+                 return@SimpleYAxisDrawer yLabel.toString()
+                }
+            ),
+            labelDrawer = SimpleLabelDrawer(
+               labelTextColor = MaterialTheme.colors.primary,
+                drawLocation = SimpleLabelDrawer.DrawLocation.Outside
             )
-        ),
-        // Optional properties.
-        modifier = Modifier.fillMaxSize(),
-        animation = simpleChartAnimation(),
-        barDrawer = SimpleBarDrawer(),
-        xAxisDrawer = SimpleXAxisDrawer(),
-        yAxisDrawer = SimpleYAxisDrawer(),
-        labelDrawer = SimpleLabelDrawer()
-    )
+        )
+    }
 }

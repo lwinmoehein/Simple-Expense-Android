@@ -1,6 +1,5 @@
 package lab.justonebyte.moneysubuu.ui.stats
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -13,14 +12,13 @@ import lab.justonebyte.moneysubuu.data.TransactionRepository
 import lab.justonebyte.moneysubuu.model.Transaction
 import lab.justonebyte.moneysubuu.model.TransactionCategory
 import lab.justonebyte.moneysubuu.ui.components.SnackBarType
-import lab.justonebyte.moneysubuu.ui.home.HomeTab
 import lab.justonebyte.moneysubuu.utils.dateFormatter
 import lab.justonebyte.moneysubuu.utils.monthFormatter
 import lab.justonebyte.moneysubuu.utils.yearFormatter
 import javax.inject.Inject
 
 
-data class DetailUiState(
+data class StatsUiState(
     val categories:List<TransactionCategory>  = emptyList(),
     val transactions:List<Transaction> = emptyList(),
     val currentSnackBar : SnackBarType? = null,
@@ -35,23 +33,24 @@ class StatsViewModel @Inject constructor(
     private val categoryRepository: CategoryRepository
 ): ViewModel() {
     private val _viewModelUiState = MutableStateFlow(
-        DetailUiState()
+        StatsUiState()
     )
-    val viewModelUiState: StateFlow<DetailUiState>
+    val viewModelUiState: StateFlow<StatsUiState>
         get() = _viewModelUiState
 
 
     init {
         viewModelScope.launch {
             launch {
-            }
-            launch {
+                collectTransactions()
             }
         }
     }
 
-    fun bindPieChartData(tabType: HomeTab, dateData: String) {
-
+    private suspend fun collectTransactions() {
+        transactionRepository.getTotalTransactions().collect { transactions->
+            _viewModelUiState.update { it.copy(transactions = transactions) }
+        }
     }
 
 }

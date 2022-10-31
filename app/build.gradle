@@ -85,7 +85,7 @@ dependencies {
 
     //chart
     implementation('io.github.bytebeats:compose-charts:0.1.1')
-
+    implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
     //number picker
     implementation "com.chargemap.compose:numberpicker:1.0.3"
 
