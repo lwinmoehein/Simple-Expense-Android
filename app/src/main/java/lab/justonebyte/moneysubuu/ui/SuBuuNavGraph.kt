@@ -39,7 +39,7 @@ fun SuBuuNavGraph(
     paddings: PaddingValues,
     navController: NavHostController = rememberNavController(),
     scaffoldState: ScaffoldState = rememberScaffoldState(),
-    startDestination: String = MainDestinations.STATS_ROUTE
+    startDestination: String = MainDestinations.HOME_ROUTE
 ) {
     val coroutineScope = rememberCoroutineScope()
     val openDrawer: () -> Unit = { coroutineScope.launch { scaffoldState.drawerState.open() } }

@@ -3,15 +3,18 @@ package lab.justonebyte.moneysubuu.ui.home
 import android.app.DatePickerDialog
 import android.util.Log
 import android.widget.DatePicker
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import lab.justonebyte.moneysubuu.model.TransactionType
@@ -109,17 +112,21 @@ fun BalanceCard(
                                 }
                             )
                         },
-                    elevation = 10.dp
+                    backgroundColor= Color.Green,
+                    border = BorderStroke(1.dp, Color.Green)
                 ) {
                     Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.Center) {
                         Text(
                             text = "Income : ",
-                            style = MaterialTheme.typography.subtitle2
+                            style = MaterialTheme.typography.subtitle2,
+                            color = Color.White
+
                         )
                         Text(
-                            color = Green,
                             text = incomeBalance.toString(),
-                            style = MaterialTheme.typography.h6
+                            style = MaterialTheme.typography.h6,
+                            color = Color.White
+
 
                         )
                     }
@@ -142,17 +149,19 @@ fun BalanceCard(
                                 }
                             )
                         },
-                    elevation = 10.dp
+                    backgroundColor = Color.Red
+
                 ) {
                     Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.Center) {
                         Text(
                             text = "Expense : ",
-                            style = MaterialTheme.typography.subtitle2
+                            style = MaterialTheme.typography.subtitle2,
+                            color = Color.White
                         )
                         Text(
-                            color = Red900,
                             text = expenseBalance.toString(),
-                            style = MaterialTheme.typography.h6
+                            style = MaterialTheme.typography.h6,
+                                    color = Color.White
 
                         )
                     }

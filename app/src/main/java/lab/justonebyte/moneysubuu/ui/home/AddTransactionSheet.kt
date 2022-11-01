@@ -80,6 +80,7 @@ fun AddTransactionSheetContent(
     val mDate = remember (currentTransaction){ mutableStateOf(currentTransaction?.created_at ?: dateFormatter(System.currentTimeMillis())) }
     val isEditMode = currentTransaction != null
 
+    val isAddTransactionConfirmDialogOpen = remember { mutableStateOf(false) }
 
 
     fun clearTransactionForm() {
@@ -88,6 +89,42 @@ fun AddTransactionSheetContent(
         currentType.value = 1
         mDate.value = dateFormatter(System.currentTimeMillis())
         localFocusManage.clearFocus()
+    }
+
+    if (isAddTransactionConfirmDialogOpen.value) {
+        GeneralDialog(
+            dialogState = isAddTransactionConfirmDialogOpen,
+            title = "Are you sure?",
+            positiveBtnText = "Confirm",
+            negativeBtnText = "Cancel",
+            message = "Are you sure adding this record to your money database?",
+            onPositiveBtnClicked = {
+                isAddTransactionConfirmDialogOpen.value = false
+                val category = currentCategory.value
+                val isValidCategorySelected =if(category==null) false else !categories.filter { it.transaction_type.value == currentType.value && it.id== category.id  }.isEmpty()
+                val amount =
+                    if (currentAmount.value.isEmpty()) 0 else currentAmount.value.toInt()
+
+                if (!isValidCategorySelected || amount <= 0) {
+                    showIncorrectDataSnack()
+                } else {
+                    currentCategory.value?.let {
+                        onConfirmTransactionForm(
+                            currentType.value,
+                            amount,
+                            it,
+                            mDate.value.replace('/', '-'),
+
+                            )
+                        onCloseBottomSheet()
+                        clearTransactionForm()
+                    }
+                }
+            },
+            onNegativeBtnClicked = {
+                isAddTransactionConfirmDialogOpen.value =false
+            }
+        )
     }
 
 
@@ -246,26 +283,7 @@ fun AddTransactionSheetContent(
                     .clip(RoundedCornerShape(10.dp))
                     .background(MaterialTheme.colors.primary),
                 onClick = {
-                    val category = currentCategory.value
-                    val isValidCategorySelected =if(category==null) false else !categories.filter { it.transaction_type.value == currentType.value && it.id== category.id  }.isEmpty()
-                    val amount =
-                        if (currentAmount.value.isEmpty()) 0 else currentAmount.value.toInt()
-
-                    if (!isValidCategorySelected || amount <= 0) {
-                        showIncorrectDataSnack()
-                    } else {
-                        currentCategory.value?.let {
-                            onConfirmTransactionForm(
-                                currentType.value,
-                                amount,
-                                it,
-                                mDate.value.replace('/', '-'),
-
-                                )
-                            onCloseBottomSheet()
-                            clearTransactionForm()
-                        }
-                    }
+                    isAddTransactionConfirmDialogOpen.value = true
 
                 }) {
                 Text(text = if(isEditMode) "Confirm Edit" else "Add Transaction", color = Color.White)
