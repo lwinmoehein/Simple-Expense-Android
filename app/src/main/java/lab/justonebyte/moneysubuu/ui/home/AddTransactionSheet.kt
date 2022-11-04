@@ -18,7 +18,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
@@ -29,6 +31,7 @@ import lab.justonebyte.moneysubuu.model.TransactionCategory
 import lab.justonebyte.moneysubuu.model.TransactionType
 import lab.justonebyte.moneysubuu.ui.appContentPadding
 import lab.justonebyte.moneysubuu.ui.components.*
+import lab.justonebyte.moneysubuu.ui.theme.*
 import lab.justonebyte.moneysubuu.utils.dateFormatter
 import java.util.*
 
@@ -161,31 +164,29 @@ fun AddTransactionSheetContent(
                 .fillMaxWidth()
         ) {
             TextButton(
-                modifier = Modifier.weight(1f),
-                border = BorderStroke(
-                    2.dp,
-                    if (currentType.value == TransactionType.Income.value) MaterialTheme.colors.primary else Color.Transparent
-                ),
-                onClick = { currentType.value = TransactionType.Income.value }
+                modifier = Modifier
+                    .weight(1f).clip(RoundedCornerShape(5.dp))
+                    .background(if(currentType.value==TransactionType.Income.value) positiveColor else positiveSecondaryColor)
+                   ,
+                onClick = { currentType.value = TransactionType.Income.value },
             ) {
                 Text(
                     text = "Income",
                     style = MaterialTheme.typography.subtitle1,
-                    color = if (currentType.value == TransactionType.Income.value) MaterialTheme.colors.primary else Color.Black
+                    color = MaterialTheme.colors.onPrimary,
                 )
             }
+            Divider(Modifier.width(20.dp),color=Color.Transparent)
             TextButton(
-                modifier = Modifier.weight(1f),
-                border = BorderStroke(
-                    2.dp,
-                    if (currentType.value == TransactionType.Expense.value) MaterialTheme.colors.primary else Color.Transparent
-                ),
-                onClick = { currentType.value = TransactionType.Expense.value }
+                modifier = Modifier
+                    .weight(1f).clip(RoundedCornerShape(5.dp))
+                    .background(if(currentType.value==TransactionType.Expense.value) negativeColor else negativeSecondaryColor),
+                onClick = { currentType.value = TransactionType.Expense.value },
             ) {
                 Text(
                     text = "Expense",
                     style = MaterialTheme.typography.subtitle1,
-                    color = if (currentType.value == TransactionType.Expense.value) MaterialTheme.colors.primary else Color.Black
+                    color = MaterialTheme.colors.onPrimary
                 )
             }
         }
@@ -265,7 +266,7 @@ fun AddTransactionSheetContent(
             horizontalArrangement = Arrangement.SpaceBetween,
             modifier = Modifier.fillMaxWidth()
         ) {
-            TextButton(
+            OutlinedButton(
                 onClick = { onCloseBottomSheet() },
                 modifier = Modifier
                     .absolutePadding(left = 10.dp, right = 10.dp)
@@ -275,18 +276,15 @@ fun AddTransactionSheetContent(
             ) {
                 Text(text = "Cancel", style = MaterialTheme.typography.button)
             }
-            TextButton(
+            Button(
+                onClick = { isAddTransactionConfirmDialogOpen.value = true },
                 modifier = Modifier
                     .absolutePadding(left = 10.dp, right = 10.dp)
                     .weight(1f)
                     .absolutePadding(top = 20.dp, bottom = 20.dp)
                     .clip(RoundedCornerShape(10.dp))
-                    .background(MaterialTheme.colors.primary),
-                onClick = {
-                    isAddTransactionConfirmDialogOpen.value = true
-
-                }) {
-                Text(text = if(isEditMode) "Confirm Edit" else "Add Transaction", color = Color.White)
+            ) {
+                Text(text = if(isEditMode) "Confirm Edit" else "Confirm", style = MaterialTheme.typography.button)
             }
         }
     }

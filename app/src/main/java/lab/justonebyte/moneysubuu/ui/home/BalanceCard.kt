@@ -18,9 +18,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import lab.justonebyte.moneysubuu.model.TransactionType
-import lab.justonebyte.moneysubuu.ui.theme.Green
-import lab.justonebyte.moneysubuu.ui.theme.Red900
-import lab.justonebyte.moneysubuu.ui.theme.SuBuuShapes
+import lab.justonebyte.moneysubuu.ui.theme.*
 import lab.justonebyte.moneysubuu.utils.dateFormatter
 import lab.justonebyte.moneysubuu.utils.getCurrentMonth
 import lab.justonebyte.moneysubuu.utils.getToday
@@ -112,22 +110,19 @@ fun BalanceCard(
                                 }
                             )
                         },
-                    backgroundColor= Color.Green,
-                    border = BorderStroke(1.dp, Color.Green)
+                    border = BorderStroke(1.dp, positiveColor)
                 ) {
                     Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.Center) {
                         Text(
                             text = "Income : ",
                             style = MaterialTheme.typography.subtitle2,
-                            color = Color.White
+                            color = positiveColor
 
                         )
                         Text(
                             text = incomeBalance.toString(),
                             style = MaterialTheme.typography.h6,
-                            color = Color.White
-
-
+                            color = positiveColor
                         )
                     }
                 }
@@ -149,19 +144,19 @@ fun BalanceCard(
                                 }
                             )
                         },
-                    backgroundColor = Color.Red
+                    border = BorderStroke(1.dp, negativeColor)
 
                 ) {
                     Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.Center) {
                         Text(
                             text = "Expense : ",
                             style = MaterialTheme.typography.subtitle2,
-                            color = Color.White
+                            color = negativeColor
                         )
                         Text(
                             text = expenseBalance.toString(),
                             style = MaterialTheme.typography.h6,
-                                    color = Color.White
+                            color = negativeColor
 
                         )
                     }

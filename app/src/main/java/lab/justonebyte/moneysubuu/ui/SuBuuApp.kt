@@ -1,12 +1,10 @@
 package lab.justonebyte.moneysubuu.ui
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.Scaffold
+import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
@@ -20,6 +18,7 @@ import com.google.accompanist.insets.ProvideWindowInsets
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import kotlinx.coroutines.launch
 import lab.justonebyte.moneysubuu.ui.theme.MoneySuBuuTheme
+import lab.justonebyte.moneysubuu.ui.theme.primaryVariant
 
 val appContentPadding = 20.dp
 @Composable
@@ -29,7 +28,7 @@ fun SuBuuApp(
         ProvideWindowInsets {
             val systemUiController = rememberSystemUiController()
             SideEffect {
-                systemUiController.setSystemBarsColor(Color.Transparent, darkIcons = false)
+                systemUiController.setSystemBarsColor(primaryVariant, darkIcons = false)
             }
 
             val navController = rememberNavController()
@@ -46,7 +45,13 @@ fun SuBuuApp(
                     Row(
                         Modifier
                             .fillMaxWidth()
-                            .absolutePadding(right = 20.dp, left = 20.dp), horizontalArrangement = Arrangement.Start) {
+                            .background(MaterialTheme.colors.primary)
+                            .absolutePadding(
+                                right = 20.dp,
+                                left = 20.dp),
+                        horizontalArrangement = Arrangement.Start,
+
+                    ) {
                         IconButton(onClick = {
                             if(scaffoldState.drawerState.isOpen){
                                 coroutineScope.launch { scaffoldState.drawerState.close() }
@@ -54,7 +59,7 @@ fun SuBuuApp(
                                 coroutineScope.launch { scaffoldState.drawerState.open() }
                             }
                         }) {
-                            Icon(imageVector = Icons.Filled.Menu, contentDescription = "open menu")
+                            Icon(imageVector = Icons.Filled.Menu, contentDescription = "open menu", tint = MaterialTheme.colors.onPrimary)
                         }
                     }
                 },

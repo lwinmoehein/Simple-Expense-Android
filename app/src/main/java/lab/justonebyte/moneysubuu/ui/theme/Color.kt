@@ -10,4 +10,15 @@ val Red900 = Color(0xffc20029)
 val Gold = Color(0xFFF3CC0C)
 val Green = Color(0xFFBDE718)
 
+//new design
+val primary = Color(0xFF1E4DCE)
+val primaryLight = Color(0xFF9AA6E7)
+val complementary = Color(0xFFCE9F1E)
+val complementaryLight = Color(0xd1dd43)
+val primaryVariant = Color(0xFF013BB7)
 
+val positiveColor = Color(0xFF1ECE76)
+val negativeColor = Color(0xFF1E76CE)
+
+val positiveSecondaryColor = Color(0xFF93E2B0)
+val negativeSecondaryColor = Color(0xFF2896EF)

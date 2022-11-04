@@ -54,7 +54,7 @@ fun HomeTabs(
 
     Column {
         TabRow(
-            backgroundColor = Color.Transparent,
+            backgroundColor = MaterialTheme.colors.primary,
             selectedTabIndex = tabIndex,
             indicator = { tabPositions -> // 3.
                 TabRowDefaults.Indicator(
