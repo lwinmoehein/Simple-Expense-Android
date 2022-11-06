@@ -10,9 +10,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import lab.justonebyte.moneysubuu.model.Transaction
-import lab.justonebyte.moneysubuu.ui.theme.Green
-import lab.justonebyte.moneysubuu.ui.theme.Red900
-import lab.justonebyte.moneysubuu.ui.theme.SuBuuShapes
+import lab.justonebyte.moneysubuu.ui.theme.*
 import lab.justonebyte.moneysubuu.utils.dateFormatter
 
 @Composable
@@ -46,7 +44,7 @@ fun TransactionItem(transaction:Transaction,modifier: Modifier=Modifier ,onTrans
         Text(
             text =if (transaction.type.value==1) transaction.amount.toString() else "-"+transaction.amount.toString(),
             modifier = Modifier.weight(1f),
-            color = if(transaction.type.value==1) Green else Red900
+            color = if(transaction.type.value==1) positiveColor else negativeColor
         )
         Text(text = transaction.created_at,modifier = Modifier.weight(1f))
     }

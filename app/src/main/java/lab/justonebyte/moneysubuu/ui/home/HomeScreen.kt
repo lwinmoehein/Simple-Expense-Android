@@ -10,9 +10,12 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AddCircle
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
 import kotlinx.coroutines.launch
@@ -21,7 +24,10 @@ import lab.justonebyte.moneysubuu.model.TransactionCategory
 import lab.justonebyte.moneysubuu.ui.components.SnackBarType
 import lab.justonebyte.moneysubuu.ui.components.SuBuuSnackBar
 import lab.justonebyte.moneysubuu.ui.components.SuBuuSnackBarHost
+import lab.justonebyte.moneysubuu.ui.theme.negativeColor
+import lab.justonebyte.moneysubuu.ui.theme.positiveColor
 import java.util.*
+
 
 @OptIn(ExperimentalMaterialApi::class, com.google.accompanist.pager.ExperimentalPagerApi::class)
 @Composable
@@ -43,6 +49,10 @@ fun HomeScreen(
     val currentTransaction = remember {
         mutableStateOf<Transaction?>(null)
     }
+    val currentType:MutableState<Int> = remember(currentTransaction) { mutableStateOf(
+        currentTransaction.value?.type?.value ?: 1) }
+
+    val isChooseAddTransactionTypeOpen =  remember { mutableStateOf(false)}
 
 
     if(isMonthPickerShown.value){
@@ -78,10 +88,10 @@ fun HomeScreen(
                         .absolutePadding(bottom = 100.dp, right = 30.dp)
                         .clip(CircleShape)
                         .clickable {
-                            currentTransaction.value = null
                             coroutineScope.launch {
                                 bottomSheetScaffoldState.bottomSheetState.expand()
                             }
+                            isChooseAddTransactionTypeOpen.value = true
                         }) {
                     Icon(
                         modifier = Modifier
@@ -93,6 +103,7 @@ fun HomeScreen(
                         tint = MaterialTheme.colors.primary
                     )
                 }
+
             }
         },
         scaffoldState = bottomSheetScaffoldState,
@@ -106,57 +117,98 @@ fun HomeScreen(
         ),
 
         sheetContent = {
-            Card(
-                        Modifier.heightIn(min = 500.dp, max = 1000.dp),
-            ) {
-                     AddTransactionSheetContent(
-                          currentTransaction = currentTransaction.value,
-                         categories =  homeUiState.categories,
-                         onConfirmTransactionForm = { type, amount, category,date->
-                             Log.i("on confirm sheet",if(currentTransaction.value!=null) "yes" else "no")
-                             if(currentTransaction.value==null)
-                                 homeViewModel.addTransaction(
-                                     transactionCategory = category,
-                                     type = type,
-                                     amount = amount,
-                                     date = date
-                                 )
-                             else
-                                 currentTransaction.value?.let {
-                                     homeViewModel.updateTransaction(
-                                         transactionId =  it.id,
-                                         transactionCategory = category,
-                                         type = type,
-                                         amount = amount,
-                                         date = date
-                                     )
-                                 }
+          if(isChooseAddTransactionTypeOpen.value){
+              Column(
+                  modifier= Modifier
+                      .height(200.dp)
+                      .padding(20.dp),
+                  horizontalAlignment = Alignment.CenterHorizontally,
+                  verticalArrangement = Arrangement.Center
+              ) {
+                  TextButton(
+                      modifier = Modifier
+                          .fillMaxWidth()
+                          .clip(RoundedCornerShape(5.dp))
+                          .padding(0.dp)
+                          .background(positiveColor)
+                          ,
+                      onClick = {
+                          currentType.value = 1
+                          isChooseAddTransactionTypeOpen.value = false
+                      }
+                  ) {
+                      Text(text = "Add Income",color=MaterialTheme.colors.onPrimary)
+                  }
+                  Divider(Modifier.height(20.dp), color = Color.Transparent)
+                  TextButton(
+                      modifier = Modifier
+                          .fillMaxWidth()
+                          .clip(RoundedCornerShape(5.dp))
+                          .padding(0.dp)
+                          .background(negativeColor)
+                          ,
+                      onClick = {
+                          currentType.value = 2
+                          isChooseAddTransactionTypeOpen.value = false
+                      }
+                  ) {
+                      Text(text = "Add Expense", color = MaterialTheme.colors.onPrimary)
+                  }
+              }
+          }else{
+              Card(
+                  Modifier.heightIn(min = 500.dp, max = 1000.dp),
+              ) {
+                  AddTransactionSheetContent(
+                      currentType = currentType.value,
+                      currentTransaction = currentTransaction.value,
+                      categories =  homeUiState.categories,
+                      onConfirmTransactionForm = { type, amount, category,date->
+                          Log.i("on confirm sheet",if(currentTransaction.value!=null) "yes" else "no")
+                          if(currentTransaction.value==null)
+                              homeViewModel.addTransaction(
+                                  transactionCategory = category,
+                                  type = type,
+                                  amount = amount,
+                                  date = date
+                              )
+                          else
+                              currentTransaction.value?.let {
+                                  homeViewModel.updateTransaction(
+                                      transactionId =  it.id,
+                                      transactionCategory = category,
+                                      type = type,
+                                      amount = amount,
+                                      date = date
+                                  )
+                              }
 
 
-                         },
-                         onCloseBottomSheet = {
-                             coroutineScope.launch {
-                                 bottomSheetScaffoldState.bottomSheetState.collapse()
-                             }
-                         },
-                         showIncorrectDataSnack = {
-                             homeViewModel.showSnackBar(SnackBarType.INCORRECT_DATA)
-                         },
-                         onAddCategory = { name,type->
-                             homeViewModel.addCategory(
-                                 TransactionCategory(
-                                     id = 1,
-                                     transaction_type = type,
-                                     name = name,
-                                     created_at = System.currentTimeMillis()
-                                 )
-                             )
-                         },
-                         isBottomSheetOpened = bottomSheetScaffoldState.bottomSheetState.isExpanded
-                     )
+                      },
+                      onCloseBottomSheet = {
+                          coroutineScope.launch {
+                              bottomSheetScaffoldState.bottomSheetState.collapse()
+                          }
+                      },
+                      showIncorrectDataSnack = {
+                          homeViewModel.showSnackBar(SnackBarType.INCORRECT_DATA)
+                      },
+                      onAddCategory = { name,type->
+                          homeViewModel.addCategory(
+                              TransactionCategory(
+                                  id = 1,
+                                  transaction_type = type,
+                                  name = name,
+                                  created_at = System.currentTimeMillis()
+                              )
+                          )
+                      },
+                      isBottomSheetOpened = bottomSheetScaffoldState.bottomSheetState.isExpanded
+                  )
 
 
-            }
+              }
+          }
         }, sheetPeekHeight = 0.dp
     ) {
 

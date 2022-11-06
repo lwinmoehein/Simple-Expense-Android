@@ -63,6 +63,28 @@ fun BalanceCard(
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
 
+
+        Card(
+            shape = SuBuuShapes.small,
+            modifier = modifier
+                .height(100.dp)
+                .fillMaxWidth()
+                .padding(10.dp)
+                .clickable {
+//                    goToPiechart(
+//                        TransactionType.Income.value,
+//                        balanceType.value,
+//                        when (balanceType) {
+//                            BalanceType.DAILY -> mDate.value
+//                            BalanceType.MONTHLY -> selectedMonth
+//                            BalanceType.YEARLY -> selectedYear
+//                            else -> "Total"
+//                        }
+//                    )
+                },
+//            backgroundColor = MaterialTheme.colors.primary,
+            contentColor = MaterialTheme.colors.onPrimary
+        ) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(
                     text = "Balance : ",
@@ -71,7 +93,7 @@ fun BalanceCard(
                 Text(
                     text = currentBalance.toString(),
                     style = MaterialTheme.typography.h6,
-                    color = if(currentBalance>0) Green else Red900
+                    color = if(currentBalance>0) MaterialTheme.colors.onPrimary else Red900
                 )
             }
             Row(horizontalArrangement = Arrangement.Center){
@@ -90,7 +112,7 @@ fun BalanceCard(
                     })
                 }
             }
-            Spacer(modifier = Modifier.height(20.dp))
+        }
             Row() {
                 Card(
                     shape = SuBuuShapes.small,
@@ -110,19 +132,19 @@ fun BalanceCard(
                                 }
                             )
                         },
-                    border = BorderStroke(1.dp, positiveColor)
+//                    border = BorderStroke(1.dp, positiveColor),
+//                backgroundColor = positiveColor,
+                    contentColor = MaterialTheme.colors.onPrimary
                 ) {
                     Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.Center) {
                         Text(
                             text = "Income : ",
                             style = MaterialTheme.typography.subtitle2,
-                            color = positiveColor
 
                         )
                         Text(
                             text = incomeBalance.toString(),
                             style = MaterialTheme.typography.h6,
-                            color = positiveColor
                         )
                     }
                 }
@@ -144,19 +166,20 @@ fun BalanceCard(
                                 }
                             )
                         },
-                    border = BorderStroke(1.dp, negativeColor)
+//                    border = BorderStroke(1.dp, negativeColor),
+                backgroundColor = MaterialTheme.colors.surface,
+                    contentColor = MaterialTheme.colors.onPrimary
+
 
                 ) {
                     Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.Center) {
                         Text(
                             text = "Expense : ",
                             style = MaterialTheme.typography.subtitle2,
-                            color = negativeColor
                         )
                         Text(
                             text = expenseBalance.toString(),
                             style = MaterialTheme.typography.h6,
-                            color = negativeColor
 
                         )
                     }

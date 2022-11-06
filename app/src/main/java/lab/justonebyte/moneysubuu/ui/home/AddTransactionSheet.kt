@@ -6,15 +6,14 @@ import android.widget.DatePicker
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -38,6 +37,7 @@ import java.util.*
 
 @Composable
 fun AddTransactionSheetContent(
+    currentType: Int,
     onCloseBottomSheet:()->Unit,
     categories:List<TransactionCategory>,
     showIncorrectDataSnack:()->Unit,
@@ -77,19 +77,21 @@ fun AddTransactionSheetContent(
     val mDay: Int = mCalendar.get(Calendar.DAY_OF_MONTH)
 
     //initialize form variables
-    val currentType = remember(currentTransaction) { mutableStateOf(currentTransaction?.type?.value ?: 1) }
+    val currentType = remember(currentTransaction) { mutableStateOf(currentTransaction?.type?.value ?: currentType) }
     val currentAmount = remember(currentTransaction) { mutableStateOf(currentTransaction?.amount?.toString() ?: "") }
     val currentCategory = remember(currentTransaction) { mutableStateOf(currentTransaction?.category) }
     val mDate = remember (currentTransaction){ mutableStateOf(currentTransaction?.created_at ?: dateFormatter(System.currentTimeMillis())) }
     val isEditMode = currentTransaction != null
 
     val isAddTransactionConfirmDialogOpen = remember { mutableStateOf(false) }
+    var tabIndex by remember { mutableStateOf(1) }
+
 
 
     fun clearTransactionForm() {
         currentAmount.value = ""
-        currentCategory.value = null
         currentType.value = 1
+        currentCategory.value = null
         mDate.value = dateFormatter(System.currentTimeMillis())
         localFocusManage.clearFocus()
     }
@@ -159,37 +161,38 @@ fun AddTransactionSheetContent(
             }
         }
         Spacer(modifier = Modifier.height(20.dp))
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-        ) {
-            TextButton(
-                modifier = Modifier
-                    .weight(1f).clip(RoundedCornerShape(5.dp))
-                    .background(if(currentType.value==TransactionType.Income.value) positiveColor else positiveSecondaryColor)
-                   ,
-                onClick = { currentType.value = TransactionType.Income.value },
-            ) {
-                Text(
-                    text = "Income",
-                    style = MaterialTheme.typography.subtitle1,
-                    color = MaterialTheme.colors.onPrimary,
-                )
-            }
-            Divider(Modifier.width(20.dp),color=Color.Transparent)
-            TextButton(
-                modifier = Modifier
-                    .weight(1f).clip(RoundedCornerShape(5.dp))
-                    .background(if(currentType.value==TransactionType.Expense.value) negativeColor else negativeSecondaryColor),
-                onClick = { currentType.value = TransactionType.Expense.value },
-            ) {
-                Text(
-                    text = "Expense",
-                    style = MaterialTheme.typography.subtitle1,
-                    color = MaterialTheme.colors.onPrimary
-                )
-            }
-        }
+//        Row(
+//            modifier = Modifier
+//                .fillMaxWidth()
+//        ) {
+//            TextButton(
+//                modifier = Modifier
+//                    .weight(1f).clip(RoundedCornerShape(5.dp))
+//                    .background(if(currentType.value==TransactionType.Income.value) positiveColor else positiveSecondaryColor)
+//                   ,
+//                onClick = { currentType.value = TransactionType.Income.value },
+//                border = BorderStroke(1.dp, positiveColor)
+//            ) {
+//                Text(
+//                    text = "Income",
+//                    style = MaterialTheme.typography.subtitle1,
+//                    color = MaterialTheme.colors.onPrimary,
+//                )
+//            }
+//            Divider(Modifier.width(20.dp),color=Color.Transparent)
+//            TextButton(
+//                modifier = Modifier
+//                    .weight(1f).clip(RoundedCornerShape(5.dp))
+//                    .background(if(currentType.value==TransactionType.Expense.value) negativeColor else negativeSecondaryColor),
+//                onClick = { currentType.value = TransactionType.Expense.value },
+//            ) {
+//                Text(
+//                    text = "Expense",
+//                    style = MaterialTheme.typography.subtitle1,
+//                    color = MaterialTheme.colors.onPrimary
+//                )
+//            }
+//        }
         Spacer(modifier = Modifier.height(20.dp))
         Card(elevation = 8.dp) {
             Row(
