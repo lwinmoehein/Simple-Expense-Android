@@ -8,6 +8,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.AddCircle
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -85,23 +86,31 @@ fun HomeScreen(
             if(!bottomSheetScaffoldState.bottomSheetState.isAnimationRunning && bottomSheetScaffoldState.bottomSheetState.isCollapsed){
                 Box(
                     modifier = Modifier
-                        .absolutePadding(bottom = 100.dp, right = 30.dp)
-                        .clip(CircleShape)
-                        .clickable {
-                            coroutineScope.launch {
-                                bottomSheetScaffoldState.bottomSheetState.expand()
-                            }
-                            isChooseAddTransactionTypeOpen.value = true
-                        }) {
-                    Icon(
-                        modifier = Modifier
-                            .width(60.dp)
-                            .height(60.dp)
-                            .background(MaterialTheme.colors.onPrimary)
-                        ,
-                        imageVector = Icons.Filled.AddCircle, contentDescription = "add transaction",
-                        tint = MaterialTheme.colors.primary
-                    )
+                        .absolutePadding(bottom = 100.dp, left = 30.dp)
+                       ) {
+                  TextButton(
+                      onClick = {
+                          coroutineScope.launch {
+                              bottomSheetScaffoldState.bottomSheetState.expand()
+                          }
+                          isChooseAddTransactionTypeOpen.value = true
+                      },
+                      modifier = Modifier
+                          .fillMaxWidth()
+                          .clip(RoundedCornerShape(8.dp))
+                          .padding(0.dp)
+                          .background(MaterialTheme.colors.primary)
+                  ) {
+                      Text(text = "Add New Record", style = MaterialTheme.typography.button, color = MaterialTheme.colors.onPrimary)
+                      Icon(
+                          modifier = Modifier
+                              .width(30.dp)
+                              .height(30.dp)
+                          ,
+                          imageVector = Icons.Filled.Add, contentDescription = "add transaction",
+                          tint = MaterialTheme.colors.onPrimary
+                      )
+                  }
                 }
 
             }
