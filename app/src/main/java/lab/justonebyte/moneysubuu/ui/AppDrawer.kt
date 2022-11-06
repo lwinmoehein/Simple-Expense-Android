@@ -40,6 +40,7 @@ fun AppDrawer(
     navigateToHome: () -> Unit,
     navigateToSettings: () -> Unit,
     navigateToStats:()->Unit,
+    navigateToCategory:()->Unit,
     closeDrawer: () -> Unit
 ) {
 
@@ -62,6 +63,15 @@ fun AppDrawer(
             isSelected = currentRoute == MainDestinations.STATS_ROUTE,
             action = {
                 navigateToStats()
+                closeDrawer()
+            }
+        )
+        DrawerButton(
+            icon = Icons.Filled.Info,
+            label = "Manage Categories",
+            isSelected = currentRoute == MainDestinations.CATEGORY_ROUTE,
+            action = {
+                navigateToCategory()
                 closeDrawer()
             }
         )

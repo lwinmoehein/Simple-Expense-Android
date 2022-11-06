@@ -15,6 +15,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import kotlinx.coroutines.launch
 import lab.justonebyte.moneysubuu.model.TransactionType
+import lab.justonebyte.moneysubuu.ui.category.ManageCategoryScreen
 import lab.justonebyte.moneysubuu.ui.detail.TransactionDetailScreen
 import lab.justonebyte.moneysubuu.ui.home.HomeScreen
 import lab.justonebyte.moneysubuu.ui.home.HomeTab
@@ -29,6 +30,8 @@ object MainDestinations {
     const val STATS_ROUTE = "stats"
     const val DETAIL_ROUTE = "detail/{type}/{tab}/{date}"
     const val SETTINGS_ROUTE = "settings"
+    const val CATEGORY_ROUTE = "category"
+
     fun getDetailRoute(type:Int,tab:Int,date:String):String{
         return "detail/${type}/${tab}/${date}"
     }
@@ -64,6 +67,9 @@ fun SuBuuNavGraph(
         }
         composable(MainDestinations.STATS_ROUTE) {
             StatsScreen(goBack = {navController.popBackStack()} )
+        }
+        composable(MainDestinations.CATEGORY_ROUTE) {
+            ManageCategoryScreen(goBack = {navController.popBackStack()} )
         }
         composable(
             MainDestinations.DETAIL_ROUTE,
