@@ -16,6 +16,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import lab.justonebyte.moneysubuu.model.TransactionType
 import lab.justonebyte.moneysubuu.ui.theme.*
@@ -66,8 +67,9 @@ fun BalanceCard(
 
         Card(
             shape = SuBuuShapes.small,
+            elevation = 6.dp,
             modifier = modifier
-                .height(100.dp)
+                .height(120.dp)
                 .fillMaxWidth()
                 .padding(10.dp)
                 .clickable {
@@ -83,39 +85,41 @@ fun BalanceCard(
 //                    )
                 },
 //            backgroundColor = MaterialTheme.colors.primary,
-            contentColor = MaterialTheme.colors.onPrimary
+            contentColor = MaterialTheme.colors.primary
         ) {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Text(
-                    text = "Balance : ",
-                    style = MaterialTheme.typography.h5
-                )
-                Text(
-                    text = currentBalance.toString(),
-                    style = MaterialTheme.typography.h6,
-                    color = if(currentBalance>0) MaterialTheme.colors.onPrimary else Red900
-                )
-            }
-            Row(horizontalArrangement = Arrangement.Center){
-                TextButton(onClick = {
-                    when(balanceType){
-                        BalanceType.DAILY->mDatePickerDialog.show()
-                        BalanceType.MONTHLY->onMonthChoose()
-                        BalanceType.YEARLY->onMonthChoose()
-                    }
-                }) {
-                    Text(text =  when(balanceType){
-                        BalanceType.DAILY-> if(mDate.value==currentDay) "Today" else mDate.value
-                        BalanceType.MONTHLY->if(selectedMonth==currentMonth) "This Month" else selectedMonth
-                        BalanceType.YEARLY->selectedYear
-                        else->"Total"
-                    })
-                }
-            }
+              Column(
+                  horizontalAlignment = Alignment.CenterHorizontally
+              ) {
+                  Row(horizontalArrangement = Arrangement.Center){
+                      TextButton(onClick = {
+                          when(balanceType){
+                              BalanceType.DAILY->mDatePickerDialog.show()
+                              BalanceType.MONTHLY->onMonthChoose()
+                              BalanceType.YEARLY->onMonthChoose()
+                          }
+                      }) {
+                          Text(text =  when(balanceType){
+                              BalanceType.DAILY-> if(mDate.value==currentDay) "Balance For today" else "For : "+mDate.value
+                              BalanceType.MONTHLY->if(selectedMonth==currentMonth) "Balance For this Month" else selectedMonth
+                              BalanceType.YEARLY->"Balance For year $selectedYear"
+                              else->"Total Balance"
+                          })
+                      }
+                  }
+                  Row(horizontalArrangement = Arrangement.Center) {
+                      Text(
+                          text = currentBalance.toString() + " Kyats",
+                          style = MaterialTheme.typography.h6,
+                          fontWeight = FontWeight.ExtraBold,
+                          color = if(currentBalance>0) MaterialTheme.colors.primary else Red900
+                      )
+                  }
+              }
         }
             Row() {
                 Card(
                     shape = SuBuuShapes.small,
+                    elevation = 6.dp,
                     modifier = modifier
                         .height(100.dp)
                         .padding(10.dp)
@@ -134,7 +138,7 @@ fun BalanceCard(
                         },
 //                    border = BorderStroke(1.dp, positiveColor),
 //                backgroundColor = positiveColor,
-                    contentColor = MaterialTheme.colors.onPrimary
+                    contentColor = positiveColor
                 ) {
                     Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.Center) {
                         Text(
@@ -150,6 +154,7 @@ fun BalanceCard(
                 }
                 Card(
                     shape = SuBuuShapes.small,
+                    elevation = 6.dp,
                     modifier = modifier
                         .weight(1f)
                         .height(100.dp)
@@ -168,7 +173,7 @@ fun BalanceCard(
                         },
 //                    border = BorderStroke(1.dp, negativeColor),
                 backgroundColor = MaterialTheme.colors.surface,
-                    contentColor = MaterialTheme.colors.onPrimary
+                    contentColor = negativeColor
 
 
                 ) {
