@@ -1,26 +1,19 @@
 package lab.justonebyte.moneysubuu.ui.category
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.util.lerp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.accompanist.pager.*
 import kotlinx.coroutines.launch
 import lab.justonebyte.moneysubuu.model.TransactionCategory
 import lab.justonebyte.moneysubuu.model.TransactionType
 import lab.justonebyte.moneysubuu.ui.theme.positiveColor
-import kotlin.math.absoluteValue
 
 sealed class CategoryTab(val index:Int,val title:String){
     object  Income:CategoryTab(1,"Income")
@@ -40,6 +33,7 @@ fun CategoryTabs(
     var tabIndex by remember { mutableStateOf(1) }
     val pagerState = rememberPagerState()
     val coroutineScope = rememberCoroutineScope()
+    val currentTab:MutableState<CategoryTab> = remember { mutableStateOf(CategoryTab.Income) }
 
     LaunchedEffect(pagerState) {
         // Collect from the pager state a snapshotFlow reading the currentPage
@@ -75,6 +69,7 @@ fun CategoryTabs(
                     unselectedContentColor = MaterialTheme.colors.onPrimary,
                     selected = false,
                     onClick = {
+                        currentTab.value = tab
                         coroutineScope.launch { pagerState.animateScrollToPage(index) }
                     },
                     text = { Text(text = tab.title) }
@@ -86,13 +81,13 @@ fun CategoryTabs(
             state = pagerState,
         ) { tabIndex ->
 
-               if(tabIndex===CategoryTab.Income.index){
-                   IncomeCategoryTab(
-                      uiState = categoryUiState
+               if(currentTab.value===CategoryTab.Expense){
+                   ExpenseCategoryTab(
+                       uiState =  categoryUiState
                    )
                }else{
-                   ExpenseCategoryTab(
-                      uiState =  categoryUiState
+                   IncomeCategoryTab(
+                       uiState = categoryUiState
                    )
                }
 
@@ -119,6 +114,7 @@ fun ManageCategoryScreen(
 fun IncomeCategoryTab(uiState: CategoryUiState){
     val incomeCategories =  uiState.categories.filter { it.transaction_type==TransactionType.Income }
     Column(verticalArrangement = Arrangement.Top) {
+        Text(text = "income")
         incomeCategories.forEach{
             CategoryItem(category = it)
         }
@@ -129,6 +125,8 @@ fun IncomeCategoryTab(uiState: CategoryUiState){
 fun ExpenseCategoryTab(uiState: CategoryUiState){
     val expenseCategories =  uiState.categories.filter { it.transaction_type==TransactionType.Expense }
     Column(verticalArrangement = Arrangement.Top) {
+        Text(text = "ex")
+
         expenseCategories.forEach{
             CategoryItem(category = it)
         }
@@ -137,7 +135,10 @@ fun ExpenseCategoryTab(uiState: CategoryUiState){
 @Composable
 fun CategoryItem(category:TransactionCategory){
         Card(elevation = 2.dp, backgroundColor = positiveColor) {
-            Column(Modifier.fillMaxWidth().padding(5.dp), verticalArrangement = Arrangement.Center) {
+            Column(
+                Modifier
+                    .fillMaxWidth()
+                    .padding(5.dp), verticalArrangement = Arrangement.Center) {
                 Text(text = category.name, color = MaterialTheme.colors.onPrimary)
             }
         }
