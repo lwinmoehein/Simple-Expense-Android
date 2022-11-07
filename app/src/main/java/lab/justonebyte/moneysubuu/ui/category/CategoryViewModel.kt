@@ -42,6 +42,20 @@ class CategoryViewModel @Inject constructor(
             _viewModelUiState.update { it.copy(categories = categories) }
         }
     }
-
+    fun addCategory(transactinCategory:TransactionCategory){
+        viewModelScope.launch {
+            categoryRepository.insert(transactionCategory = transactinCategory)
+        }
+    }
+    fun showSnackBar(type:SnackBarType){
+        _viewModelUiState.update {
+            it.copy(currentSnackBar = type)
+        }
+    }
+    fun clearSnackBar(){
+        _viewModelUiState.update {
+            it.copy(currentSnackBar = null)
+        }
+    }
 }
 

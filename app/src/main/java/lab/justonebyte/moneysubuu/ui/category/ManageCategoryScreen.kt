@@ -1,21 +1,30 @@
 package lab.justonebyte.moneysubuu.ui.category
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.accompanist.pager.*
 import kotlinx.coroutines.launch
 import lab.justonebyte.moneysubuu.model.TransactionCategory
 import lab.justonebyte.moneysubuu.model.TransactionType
+import lab.justonebyte.moneysubuu.ui.components.*
 import lab.justonebyte.moneysubuu.ui.theme.negativeColor
 import lab.justonebyte.moneysubuu.ui.theme.positiveColor
 
@@ -32,6 +41,7 @@ val tabs = listOf(
 @Composable
 fun CategoryTabs(
     categoryUiState: CategoryUiState,
+    categoryViewModel: CategoryViewModel,
     onTabChanged:(CategoryTab)->Unit
 ) {
 
@@ -52,11 +62,13 @@ fun CategoryTabs(
     }
 
     Column(
-        modifier = Modifier.padding(20.dp)
+        Modifier.absolutePadding(top = 20.dp)
     ) {
         TabRow(
             backgroundColor = MaterialTheme.colors.primary,
-            modifier = Modifier.clip(RoundedCornerShape(10.dp)),
+            modifier = Modifier
+                .absolutePadding(left = 10.dp, right = 10.dp)
+                .clip(RoundedCornerShape(5.dp)),
             selectedTabIndex = tabIndex,
             indicator = { tabPositions -> // 3.
                 TabRowDefaults.Indicator(
@@ -65,7 +77,7 @@ fun CategoryTabs(
                         tabPositions
                     ),
                     color = MaterialTheme.colors.secondary,
-                    height = 3.dp
+                    height = 4.dp
                 )
             }) {
             tabs.forEachIndexed { index, tab ->
@@ -84,6 +96,7 @@ fun CategoryTabs(
         HorizontalPager( // 4.
             count = tabs.size,
             state = pagerState,
+            modifier = Modifier.absolutePadding(left = 10.dp, right = 10.dp)
         ) { tabIndex ->
 
 
@@ -94,7 +107,14 @@ fun CategoryTabs(
                         )
                     }else{
                         IncomeCategoryTab(
-                            uiState = categoryUiState
+                            uiState = categoryUiState,
+                            addCategory = {
+                                categoryViewModel.addCategory(it)
+                                categoryViewModel.showSnackBar(SnackBarType.ADD_CATEGORY_SUCCESS)
+                            },
+                            clearSnackBar = {
+                                categoryViewModel.clearSnackBar()
+                            }
                         )
                     }
 
@@ -112,22 +132,44 @@ fun ManageCategoryScreen(
 
    CategoryTabs(
        categoryUiState = categoryUiState,
+       categoryViewModel = categoryViewModel,
        onTabChanged = {}
    )
 
 
 }
 
+@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun IncomeCategoryTab(uiState: CategoryUiState){
+fun IncomeCategoryTab(
+    uiState: CategoryUiState,
+    clearSnackBar:()->Unit,
+    addCategory:(transactionCategory:TransactionCategory)->Unit
+){
     val incomeCategories =  uiState.categories.filter { it.transaction_type==TransactionType.Income }
-    val coroutineScope = rememberCoroutineScope()
+    val isAddCategoryDialogOpen = remember { mutableStateOf(false) }
     val bottomSheetScaffoldState = rememberBottomSheetScaffoldState(
         bottomSheetState = BottomSheetState(BottomSheetValue.Collapsed)
     )
 
+    AddCategoryDialog(
+        isShown =  isAddCategoryDialogOpen.value,
+        onDialogDismiss = { isAddCategoryDialogOpen.value = false },
+        onConfirmClick = {
+            val category = TransactionCategory(
+                id = 1,
+                name = it,
+                transaction_type = TransactionType.Income,
+                created_at =  System.currentTimeMillis()
+            )
+            addCategory(category)
+            isAddCategoryDialogOpen.value = false
+        } )
+
     BottomSheetScaffold(
+        scaffoldState = bottomSheetScaffoldState,
+        snackbarHost =  { SuBuuSnackBarHost(hostState = it) },
         floatingActionButton = {
                 Box(
                     modifier = Modifier
@@ -135,56 +177,51 @@ fun IncomeCategoryTab(uiState: CategoryUiState){
                 ) {
                     TextButton(
                         onClick = {
-                            coroutineScope.launch {
-                                bottomSheetScaffoldState.bottomSheetState.expand()
-                            }
+                            isAddCategoryDialogOpen.value = true
                         },
                         modifier = Modifier
                             .fillMaxWidth()
                             .clip(RoundedCornerShape(8.dp))
                             .padding(0.dp)
-                            .background(MaterialTheme.colors.primary)
+                            .background(positiveColor)
                     ) {
-                        Text(text = "Add New Record", style = MaterialTheme.typography.button, color = MaterialTheme.colors.onPrimary)
+                        Text(text = "Add New Category", style = MaterialTheme.typography.button, color = MaterialTheme.colors.onPrimary)
                         Icon(
                             modifier = Modifier
                                 .width(30.dp)
                                 .height(30.dp)
                             ,
-                            imageVector = Icons.Filled.Add, contentDescription = "add transaction",
+                            imageVector = Icons.Filled.Add, contentDescription = "add category",
                             tint = MaterialTheme.colors.onPrimary
                         )
                     }
-                }
+            }
         },
-        scaffoldState = bottomSheetScaffoldState,
-        sheetElevation = 8.dp,
-        sheetShape = RoundedCornerShape(
-            bottomStart = 0.dp,
-            bottomEnd = 0.dp,
-            topStart = 12.dp,
-            topEnd = 12.dp
-        ),
-
         sheetContent = {
-            Text(text = "hello")
+            Text(text = "")
         }, sheetPeekHeight = 0.dp
+
     ) {
-        Column(verticalArrangement = Arrangement.Top) {
-            Text(text = "Income Categories List", style = MaterialTheme.typography.subtitle1, modifier = Modifier.absolutePadding(top = 30.dp, bottom = 20.dp))
+        Column(verticalArrangement = Arrangement.Top, modifier = Modifier.absolutePadding(left = 2.dp, right = 2.dp)) {
+            Text(text = "Income Categories List :", style = MaterialTheme.typography.h6, modifier = Modifier.absolutePadding(top = 30.dp, bottom = 20.dp))
             incomeCategories.forEach{
                 CategoryItem(category = it, itemColor = positiveColor)
             }
         }
     }
+    SuBuuSnackBar(
+        onDismissSnackBar = { clearSnackBar() },
+        scaffoldState = bottomSheetScaffoldState,
+        snackBarType = uiState.currentSnackBar,
+    )
 
 }
 
 @Composable
 fun ExpenseCategoryTab(uiState: CategoryUiState){
     val expenseCategories =  uiState.categories.filter { it.transaction_type==TransactionType.Expense }
-    Column(verticalArrangement = Arrangement.Top) {
-        Text(text = "Expense Categories List", style = MaterialTheme.typography.subtitle1, modifier = Modifier.absolutePadding(top = 30.dp, bottom = 20.dp))
+    Column(verticalArrangement = Arrangement.Top, modifier = Modifier.absolutePadding(left = 2.dp, right = 2.dp)) {
+        Text(text = "Expense Categories List :", style = MaterialTheme.typography.h6, modifier = Modifier.absolutePadding(top = 30.dp, bottom = 20.dp))
         expenseCategories.forEach{
             CategoryItem(category = it, itemColor = negativeColor)
         }
@@ -192,7 +229,7 @@ fun ExpenseCategoryTab(uiState: CategoryUiState){
 }
 @Composable
 fun CategoryItem(category:TransactionCategory,modifier: Modifier=Modifier,itemColor:Color){
-        Card(elevation = 5.dp, contentColor = itemColor, modifier = modifier) {
+        Card(elevation = 2.dp, contentColor = itemColor, modifier = modifier) {
             Column(
                 Modifier
                     .fillMaxWidth()

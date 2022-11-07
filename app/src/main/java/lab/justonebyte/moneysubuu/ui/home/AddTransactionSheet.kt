@@ -161,39 +161,6 @@ fun AddTransactionSheetContent(
             }
         }
         Spacer(modifier = Modifier.height(20.dp))
-//        Row(
-//            modifier = Modifier
-//                .fillMaxWidth()
-//        ) {
-//            TextButton(
-//                modifier = Modifier
-//                    .weight(1f).clip(RoundedCornerShape(5.dp))
-//                    .background(if(currentType.value==TransactionType.Income.value) positiveColor else positiveSecondaryColor)
-//                   ,
-//                onClick = { currentType.value = TransactionType.Income.value },
-//                border = BorderStroke(1.dp, positiveColor)
-//            ) {
-//                Text(
-//                    text = "Income",
-//                    style = MaterialTheme.typography.subtitle1,
-//                    color = MaterialTheme.colors.onPrimary,
-//                )
-//            }
-//            Divider(Modifier.width(20.dp),color=Color.Transparent)
-//            TextButton(
-//                modifier = Modifier
-//                    .weight(1f).clip(RoundedCornerShape(5.dp))
-//                    .background(if(currentType.value==TransactionType.Expense.value) negativeColor else negativeSecondaryColor),
-//                onClick = { currentType.value = TransactionType.Expense.value },
-//            ) {
-//                Text(
-//                    text = "Expense",
-//                    style = MaterialTheme.typography.subtitle1,
-//                    color = MaterialTheme.colors.onPrimary
-//                )
-//            }
-//        }
-        Spacer(modifier = Modifier.height(20.dp))
         Card(elevation = 8.dp) {
             Row(
                 horizontalArrangement = Arrangement.Center,
