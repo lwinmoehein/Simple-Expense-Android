@@ -1,31 +1,26 @@
 package lab.justonebyte.moneysubuu.ui.category
 
 import android.annotation.SuppressLint
+import android.util.Log
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.BasicTextField
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.accompanist.pager.*
 import kotlinx.coroutines.launch
 import lab.justonebyte.moneysubuu.model.TransactionCategory
 import lab.justonebyte.moneysubuu.model.TransactionType
 import lab.justonebyte.moneysubuu.ui.components.*
-import lab.justonebyte.moneysubuu.ui.theme.negativeColor
 import lab.justonebyte.moneysubuu.ui.theme.positiveColor
 
 sealed class CategoryTab(val index:Int,val title:String){
@@ -42,7 +37,8 @@ val tabs = listOf(
 fun CategoryTabs(
     categoryUiState: CategoryUiState,
     categoryViewModel: CategoryViewModel,
-    onTabChanged:(CategoryTab)->Unit
+    onTabChanged:(CategoryTab)->Unit,
+    type:TransactionType
 ) {
 
     var tabIndex by remember { mutableStateOf(1) }
@@ -87,6 +83,9 @@ fun CategoryTabs(
                     selected = false,
                     onClick = {
                         currentTab.value = tab
+                        Log.i("tab:",index.toString());
+                        Log.i("tab:",tab.title);
+                        onTabChanged(currentTab.value);
                         coroutineScope.launch { pagerState.animateScrollToPage(index) }
                     },
                     text = { Text(text = tab.title) }
@@ -97,16 +96,8 @@ fun CategoryTabs(
             count = tabs.size,
             state = pagerState,
             modifier = Modifier.absolutePadding(left = 10.dp, right = 10.dp)
-        ) { tabIndex ->
-
-
-
-                    if(currentTab.value===CategoryTab.Expense){
-                        ExpenseCategoryTab(
-                            uiState =  categoryUiState
-                        )
-                    }else{
-                        IncomeCategoryTab(
+        ) { _ ->
+                        CategoryTab(
                             uiState = categoryUiState,
                             addCategory = {
                                 categoryViewModel.addCategory(it)
@@ -114,10 +105,9 @@ fun CategoryTabs(
                             },
                             clearSnackBar = {
                                 categoryViewModel.clearSnackBar()
-                            }
+                            },
+                            type = type
                         )
-                    }
-
         }
     }
 }
@@ -129,11 +119,19 @@ fun ManageCategoryScreen(
 ){
     val categoryViewModel = hiltViewModel<CategoryViewModel>()
     val categoryUiState by categoryViewModel.viewModelUiState.collectAsState()
+    val currentCategoryType = remember { mutableStateOf(TransactionType.Income) }
 
    CategoryTabs(
        categoryUiState = categoryUiState,
        categoryViewModel = categoryViewModel,
-       onTabChanged = {}
+       onTabChanged = {
+           if(it.index==0){
+               currentCategoryType.value = TransactionType.Income
+           }else{
+               currentCategoryType.value = TransactionType.Expense
+           }
+       },
+       type = currentCategoryType.value
    )
 
 
@@ -142,12 +140,13 @@ fun ManageCategoryScreen(
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun IncomeCategoryTab(
+fun CategoryTab(
     uiState: CategoryUiState,
     clearSnackBar:()->Unit,
-    addCategory:(transactionCategory:TransactionCategory)->Unit
+    addCategory:(transactionCategory:TransactionCategory)->Unit,
+    type:TransactionType = TransactionType.Income
 ){
-    val incomeCategories =  uiState.categories.filter { it.transaction_type==TransactionType.Income }
+    val categories =  uiState.categories.filter { it.transaction_type==type }
     val isAddCategoryDialogOpen = remember { mutableStateOf(false) }
     val bottomSheetScaffoldState = rememberBottomSheetScaffoldState(
         bottomSheetState = BottomSheetState(BottomSheetValue.Collapsed)
@@ -160,7 +159,7 @@ fun IncomeCategoryTab(
             val category = TransactionCategory(
                 id = 1,
                 name = it,
-                transaction_type = TransactionType.Income,
+                transaction_type = type,
                 created_at =  System.currentTimeMillis()
             )
             addCategory(category)
@@ -185,7 +184,7 @@ fun IncomeCategoryTab(
                             .padding(0.dp)
                             .background(positiveColor)
                     ) {
-                        Text(text = "Add New Category", style = MaterialTheme.typography.button, color = MaterialTheme.colors.onPrimary)
+                        Text(text = "Add New Income Category", style = MaterialTheme.typography.button, color = MaterialTheme.colors.onPrimary)
                         Icon(
                             modifier = Modifier
                                 .width(30.dp)
@@ -202,9 +201,13 @@ fun IncomeCategoryTab(
         }, sheetPeekHeight = 0.dp
 
     ) {
-        Column(verticalArrangement = Arrangement.Top, modifier = Modifier.absolutePadding(left = 2.dp, right = 2.dp)) {
-            Text(text = "Income Categories List :", style = MaterialTheme.typography.h6, modifier = Modifier.absolutePadding(top = 30.dp, bottom = 20.dp))
-            incomeCategories.forEach{
+        Text(text = "Income Categories List :", style = MaterialTheme.typography.h6, modifier = Modifier.absolutePadding(top = 30.dp, bottom = 20.dp))
+
+        LazyColumn(
+            verticalArrangement = Arrangement.Top,
+            modifier = Modifier.absolutePadding(left = 2.dp, right = 2.dp, bottom = 100.dp)
+        ) {
+            items(categories){
                 CategoryItem(category = it, itemColor = positiveColor)
             }
         }
@@ -217,16 +220,7 @@ fun IncomeCategoryTab(
 
 }
 
-@Composable
-fun ExpenseCategoryTab(uiState: CategoryUiState){
-    val expenseCategories =  uiState.categories.filter { it.transaction_type==TransactionType.Expense }
-    Column(verticalArrangement = Arrangement.Top, modifier = Modifier.absolutePadding(left = 2.dp, right = 2.dp)) {
-        Text(text = "Expense Categories List :", style = MaterialTheme.typography.h6, modifier = Modifier.absolutePadding(top = 30.dp, bottom = 20.dp))
-        expenseCategories.forEach{
-            CategoryItem(category = it, itemColor = negativeColor)
-        }
-    }
-}
+
 @Composable
 fun CategoryItem(category:TransactionCategory,modifier: Modifier=Modifier,itemColor:Color){
         Card(elevation = 2.dp, contentColor = itemColor, modifier = modifier) {

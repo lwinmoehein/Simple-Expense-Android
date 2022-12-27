@@ -95,7 +95,7 @@ fun BalanceCard(
                           when(balanceType){
                               BalanceType.DAILY->mDatePickerDialog.show()
                               BalanceType.MONTHLY->onMonthChoose()
-                              BalanceType.YEARLY->onMonthChoose()
+                              else->onMonthChoose()
                           }
                       }) {
                           Text(text =  when(balanceType){
