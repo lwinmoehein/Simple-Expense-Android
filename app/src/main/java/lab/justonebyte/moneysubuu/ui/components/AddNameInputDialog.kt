@@ -1,5 +1,6 @@
 package lab.justonebyte.moneysubuu.ui.category
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
@@ -27,11 +28,11 @@ fun AddNameInputDialog(
     onDialogDismiss:()->Unit,
     onConfirmClick:(name:String)->Unit
 ){
-    val nameInputValue = remember { mutableStateOf(initialValue) }
-    val focusRequester = remember() {
-        FocusRequester()
-    }
     if(isShown){
+        val nameInputValue = remember { mutableStateOf(initialValue) }
+        val focusRequester = remember() {
+            FocusRequester()
+        }
         Dialog(onDismissRequest = {onDialogDismiss()}) {
             Column(
                 Modifier

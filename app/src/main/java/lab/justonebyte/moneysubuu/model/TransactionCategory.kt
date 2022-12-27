@@ -23,7 +23,15 @@ data class TransactionCategory(
             )
         }
         fun mapToEntity(transactionCategory: TransactionCategory): CategoryEntity {
+            if(transactionCategory.id==0){
+                return CategoryEntity(
+                    name = transactionCategory.name,
+                    created_at = transactionCategory.created_at,
+                    transaction_type = transactionCategory.transaction_type.value
+                )
+            }
             return CategoryEntity(
+                id = transactionCategory.id,
                 name = transactionCategory.name,
                 created_at = transactionCategory.created_at,
                 transaction_type = transactionCategory.transaction_type.value

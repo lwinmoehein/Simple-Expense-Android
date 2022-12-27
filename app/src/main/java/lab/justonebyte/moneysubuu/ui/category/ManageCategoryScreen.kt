@@ -34,6 +34,7 @@ val tabs = listOf(
     CategoryTab.Income,CategoryTab.Expense
 )
 
+@OptIn(ExperimentalMaterialApi::class)
 @ExperimentalPagerApi
 @Composable
 fun CategoryTabs(
@@ -47,6 +48,9 @@ fun CategoryTabs(
     val pagerState = rememberPagerState()
     val coroutineScope = rememberCoroutineScope()
     val currentTab:MutableState<CategoryTab> = remember { mutableStateOf(CategoryTab.Income) }
+    val scaffoldState = rememberBottomSheetScaffoldState(
+        bottomSheetState = BottomSheetState(BottomSheetValue.Collapsed)
+    )
 
     LaunchedEffect(pagerState) {
         // Collect from the pager state a snapshotFlow reading the currentPage
@@ -97,22 +101,27 @@ fun CategoryTabs(
             state = pagerState,
             modifier = Modifier.absolutePadding(left = 10.dp, right = 10.dp)
         ) { _ ->
-                        CategoryTab(
+                        CategoryTabItem(
                             uiState = categoryUiState,
                             addCategory = {
                                 categoryViewModel.addCategory(it)
                                 categoryViewModel.showSnackBar(SnackBarType.ADD_CATEGORY_SUCCESS)
                             },
+                            updateCategory = { category,updatedName->
+                                categoryViewModel.updateCategory(category,updatedName)
+                                categoryViewModel.showSnackBar(SnackBarType.ADD_CATEGORY_SUCCESS)
+                            },
                             clearSnackBar = {
                                 categoryViewModel.clearSnackBar()
                             },
-                            type = type
+                            type = type,
+                            bottomSheetScaffoldState = scaffoldState
                         )
         }
     }
 }
 
-@OptIn(ExperimentalPagerApi::class)
+@OptIn(ExperimentalPagerApi::class, ExperimentalMaterialApi::class)
 @Composable
 fun ManageCategoryScreen(
     goBack:()->Unit
@@ -140,34 +149,53 @@ fun ManageCategoryScreen(
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun CategoryTab(
+fun CategoryTabItem(
     uiState: CategoryUiState,
     clearSnackBar:()->Unit,
     addCategory:(transactionCategory:TransactionCategory)->Unit,
-    type:TransactionType = TransactionType.Income
+    updateCategory:(transactionCategory:TransactionCategory,updatedName:String)->Unit,
+    type:TransactionType = TransactionType.Income,
+    bottomSheetScaffoldState:BottomSheetScaffoldState
 ){
+
     val categories =  uiState.categories.filter { it.transaction_type==type }
-    val isAddCategoryDialogOpen = remember { mutableStateOf(false) }
+    val isReusableInputDialogShown = remember { mutableStateOf(false) }
+    val currentEditingCategory = remember { mutableStateOf<TransactionCategory?>(null) }
     val coroutineScope = rememberCoroutineScope()
 
-    val bottomSheetScaffoldState = rememberBottomSheetScaffoldState(
-        bottomSheetState = BottomSheetState(BottomSheetValue.Collapsed)
-    )
 
     AddNameInputDialog(
+        initialValue = currentEditingCategory.value?.name?:"",
         title = if(type==TransactionType.Income) "Enter income category name :" else "Enter expense category name :",
-        isShown =  isAddCategoryDialogOpen.value,
+        isShown =  isReusableInputDialogShown.value,
         dialogColor = if(type==TransactionType.Income) positiveColor else negativeColor,
-        onDialogDismiss = { isAddCategoryDialogOpen.value = false },
+        onDialogDismiss = {
+                            isReusableInputDialogShown.value = false
+                            currentEditingCategory.value = null
+                            coroutineScope.launch {
+                                bottomSheetScaffoldState.bottomSheetState.collapse()
+                            }
+                          },
         onConfirmClick = {
-            val category = TransactionCategory(
-                id = 1,
-                name = it,
-                transaction_type = type,
-                created_at =  System.currentTimeMillis()
-            )
-            addCategory(category)
-            isAddCategoryDialogOpen.value = false
+            coroutineScope.launch {
+                bottomSheetScaffoldState.bottomSheetState.collapse()
+            }
+            isReusableInputDialogShown.value = false
+
+            if(currentEditingCategory.value==null){
+                val category = TransactionCategory(
+                    id = 0,
+                    name = it,
+                    transaction_type = type,
+                    created_at =  System.currentTimeMillis()
+                )
+                addCategory(category)
+            }else{
+                    updateCategory(currentEditingCategory.value!!,it)
+            }
+
+            currentEditingCategory.value = null
+
         }
     )
 
@@ -182,7 +210,8 @@ fun CategoryTab(
                 ) {
                     TextButton(
                         onClick = {
-                            isAddCategoryDialogOpen.value = true
+                            currentEditingCategory.value = null
+                            isReusableInputDialogShown.value = true
                         },
                         modifier = Modifier
                             .fillMaxWidth()
@@ -217,7 +246,7 @@ fun CategoryTab(
                        .background(primary)
                    ,
                    onClick = {
-
+                        isReusableInputDialogShown.value = true
                    }
                ) {
                    Text(text = "Edit Category",color=MaterialTheme.colors.onPrimary)
@@ -251,9 +280,10 @@ fun CategoryTab(
                     category = it,
                     itemColor =  if(type==TransactionType.Income) positiveColor else negativeColor,
                     onClick = {
-                       coroutineScope.launch {
-                           bottomSheetScaffoldState.bottomSheetState.expand()
-                       }
+                        coroutineScope.launch {
+                            currentEditingCategory.value = it
+                            bottomSheetScaffoldState.bottomSheetState.expand()
+                        }
                     }
                 )
             }

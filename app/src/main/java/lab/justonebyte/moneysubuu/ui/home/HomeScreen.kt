@@ -205,7 +205,7 @@ fun HomeScreen(
                       onAddCategory = { name,type->
                           homeViewModel.addCategory(
                               TransactionCategory(
-                                  id = 1,
+                                  id = 0,
                                   transaction_type = type,
                                   name = name,
                                   created_at = System.currentTimeMillis()

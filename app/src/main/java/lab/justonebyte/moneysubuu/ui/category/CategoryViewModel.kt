@@ -1,5 +1,6 @@
 package lab.justonebyte.moneysubuu.ui.category
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -43,8 +44,20 @@ class CategoryViewModel @Inject constructor(
         }
     }
     fun addCategory(transactinCategory:TransactionCategory){
+        Log.i("addCategory:",transactinCategory.name)
         viewModelScope.launch {
             categoryRepository.insert(transactionCategory = transactinCategory)
+        }
+    }
+    fun updateCategory(transactinCategory:TransactionCategory,name:String){
+        val category = TransactionCategory(
+            name = name,
+            id = transactinCategory.id,
+            transaction_type = transactinCategory.transaction_type,
+            created_at = transactinCategory.created_at
+        )
+        viewModelScope.launch {
+            categoryRepository.update(transactionCategory = category)
         }
     }
     fun showSnackBar(type:SnackBarType){
