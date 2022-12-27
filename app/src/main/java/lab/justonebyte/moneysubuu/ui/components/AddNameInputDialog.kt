@@ -16,18 +16,18 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
-import lab.justonebyte.moneysubuu.model.TransactionType
-import lab.justonebyte.moneysubuu.ui.theme.negativeColor
-import lab.justonebyte.moneysubuu.ui.theme.positiveColor
+import lab.justonebyte.moneysubuu.ui.theme.primary
 
 @Composable
-fun AddCategoryDialog(
+fun AddNameInputDialog(
     isShown:Boolean = false,
-    categoryType: TransactionType = TransactionType.Income,
+    initialValue:String = "",
+    title:String = "Enter :",
+    dialogColor:Color = primary,
     onDialogDismiss:()->Unit,
-    onConfirmClick:(categoryName:String)->Unit
+    onConfirmClick:(name:String)->Unit
 ){
-    val currentCategoryName = remember { mutableStateOf("") }
+    val nameInputValue = remember { mutableStateOf(initialValue) }
     val focusRequester = remember() {
         FocusRequester()
     }
@@ -41,18 +41,23 @@ fun AddCategoryDialog(
                     .padding(20.dp)
 
             ) {
-                Text(text =if(categoryType==TransactionType.Income) "Enter income category name :" else "Enter expense category name :", style = MaterialTheme.typography.subtitle1, fontWeight = FontWeight.Bold, color =  if(categoryType==TransactionType.Income) positiveColor else negativeColor)
+                Text(
+                    text = title,
+                    style = MaterialTheme.typography.subtitle1,
+                    fontWeight = FontWeight.Bold,
+                    color =  dialogColor
+                )
                 Divider(Modifier.height(10.dp), color = Color.Transparent)
                 BasicTextField(
-                    value = currentCategoryName.value,
+                    value = nameInputValue.value,
                     onValueChange = {
-                        currentCategoryName.value = it
+                        nameInputValue.value = it
                     },
                     modifier = Modifier
                         .fillMaxWidth()
                         .heightIn(min = 40.dp)
                         .clip(RoundedCornerShape(5.dp))
-                        .border(2.dp,  if(categoryType==TransactionType.Income) positiveColor else negativeColor).absolutePadding(left = 10.dp, right = 10.dp, top = 5.dp, bottom = 5.dp),
+                        .border(2.dp,dialogColor).absolutePadding(left = 10.dp, right = 10.dp, top = 5.dp, bottom = 5.dp),
                     singleLine = true,
                     textStyle = MaterialTheme.typography.subtitle1,
                 )
@@ -65,7 +70,7 @@ fun AddCategoryDialog(
                     OutlinedButton(
                         modifier = Modifier.weight(1f),
                         onClick = {
-                            currentCategoryName.value = ""
+                            nameInputValue.value = ""
                             onDialogDismiss()
                         }
                     ) {
@@ -73,13 +78,13 @@ fun AddCategoryDialog(
                     }
                     Divider(modifier = Modifier.width(10.dp),color= Color.Transparent)
                     Button(
-                        colors = ButtonDefaults.buttonColors(backgroundColor = if(categoryType==TransactionType.Income) positiveColor else negativeColor, contentColor = MaterialTheme.colors.onPrimary),
+                        colors = ButtonDefaults.buttonColors(backgroundColor = dialogColor, contentColor = MaterialTheme.colors.onPrimary),
                         modifier = Modifier
                             .weight(1f)
                             .clip(RoundedCornerShape(10.dp)),
                         onClick = {
-                            onConfirmClick(currentCategoryName.value)
-                            currentCategoryName.value = ""
+                            onConfirmClick(nameInputValue.value)
+                            nameInputValue.value = ""
                         }
                     ) {
                         Text(text = "Add")

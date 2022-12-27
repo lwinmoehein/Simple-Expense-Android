@@ -1,7 +1,6 @@
 package lab.justonebyte.moneysubuu.ui.category
 
 import android.annotation.SuppressLint
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -11,6 +10,7 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -21,8 +21,10 @@ import kotlinx.coroutines.launch
 import lab.justonebyte.moneysubuu.model.TransactionCategory
 import lab.justonebyte.moneysubuu.model.TransactionType
 import lab.justonebyte.moneysubuu.ui.components.*
+import lab.justonebyte.moneysubuu.ui.theme.Red300
 import lab.justonebyte.moneysubuu.ui.theme.negativeColor
 import lab.justonebyte.moneysubuu.ui.theme.positiveColor
+import lab.justonebyte.moneysubuu.ui.theme.primary
 
 sealed class CategoryTab(val index:Int,val title:String){
     object  Income:CategoryTab(1,"Income")
@@ -146,13 +148,16 @@ fun CategoryTab(
 ){
     val categories =  uiState.categories.filter { it.transaction_type==type }
     val isAddCategoryDialogOpen = remember { mutableStateOf(false) }
+    val coroutineScope = rememberCoroutineScope()
+
     val bottomSheetScaffoldState = rememberBottomSheetScaffoldState(
         bottomSheetState = BottomSheetState(BottomSheetValue.Collapsed)
     )
 
-    AddCategoryDialog(
-        categoryType = type,
+    AddNameInputDialog(
+        title = if(type==TransactionType.Income) "Enter income category name :" else "Enter expense category name :",
         isShown =  isAddCategoryDialogOpen.value,
+        dialogColor = if(type==TransactionType.Income) positiveColor else negativeColor,
         onDialogDismiss = { isAddCategoryDialogOpen.value = false },
         onConfirmClick = {
             val category = TransactionCategory(
@@ -163,12 +168,14 @@ fun CategoryTab(
             )
             addCategory(category)
             isAddCategoryDialogOpen.value = false
-        } )
+        }
+    )
 
     BottomSheetScaffold(
         scaffoldState = bottomSheetScaffoldState,
         snackbarHost =  { SuBuuSnackBarHost(hostState = it) },
         floatingActionButton = {
+            if(!bottomSheetScaffoldState.bottomSheetState.isAnimationRunning && bottomSheetScaffoldState.bottomSheetState.isCollapsed){
                 Box(
                     modifier = Modifier
                         .absolutePadding(bottom = 100.dp, left = 30.dp)
@@ -181,7 +188,7 @@ fun CategoryTab(
                             .fillMaxWidth()
                             .clip(RoundedCornerShape(8.dp))
                             .padding(0.dp)
-                            .background(if(type==TransactionType.Income) positiveColor else negativeColor)
+                            .background(if (type == TransactionType.Income) positiveColor else negativeColor)
                     ) {
                         Text(text =  if(type==TransactionType.Income) "Add New Income Category" else "Add New Expense Category", style = MaterialTheme.typography.button, color = MaterialTheme.colors.onPrimary)
                         Icon(
@@ -193,10 +200,43 @@ fun CategoryTab(
                             tint = MaterialTheme.colors.onPrimary
                         )
                     }
+                }
             }
         },
         sheetContent = {
-            Text(text = "")
+           Column(
+               modifier= Modifier.height(200.dp).padding(20.dp),
+               verticalArrangement = Arrangement.Center,
+               horizontalAlignment = Alignment.CenterHorizontally
+           ) {
+               TextButton(
+                   modifier = Modifier
+                       .fillMaxWidth()
+                       .clip(RoundedCornerShape(5.dp))
+                       .padding(0.dp)
+                       .background(primary)
+                   ,
+                   onClick = {
+
+                   }
+               ) {
+                   Text(text = "Edit Category",color=MaterialTheme.colors.onPrimary)
+               }
+               Divider(Modifier.height(20.dp), color = Color.Transparent)
+               TextButton(
+                   modifier = Modifier
+                       .fillMaxWidth()
+                       .clip(RoundedCornerShape(5.dp))
+                       .padding(0.dp)
+                       .background(Red300)
+                   ,
+                   onClick = {
+
+                   }
+               ) {
+                   Text(text = "Delete Category", color = MaterialTheme.colors.onPrimary)
+               }
+           }
         }, sheetPeekHeight = 0.dp
 
     ) {
@@ -207,7 +247,15 @@ fun CategoryTab(
             modifier = Modifier.absolutePadding(left = 2.dp, right = 2.dp, bottom = 100.dp)
         ) {
             items(categories){
-                CategoryItem(category = it, itemColor =  if(type==TransactionType.Income) positiveColor else negativeColor)
+                CategoryItem(
+                    category = it,
+                    itemColor =  if(type==TransactionType.Income) positiveColor else negativeColor,
+                    onClick = {
+                       coroutineScope.launch {
+                           bottomSheetScaffoldState.bottomSheetState.expand()
+                       }
+                    }
+                )
             }
         }
     }
@@ -220,9 +268,22 @@ fun CategoryTab(
 }
 
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun CategoryItem(category:TransactionCategory,modifier: Modifier=Modifier,itemColor:Color){
-        Card(elevation = 2.dp, contentColor = itemColor, modifier = modifier) {
+fun CategoryItem(
+    modifier: Modifier=Modifier,
+    category:TransactionCategory,
+    itemColor:Color,
+    onClick:()->Unit
+){
+        Card(
+            elevation = 2.dp,
+            contentColor = itemColor,
+            modifier = modifier,
+            onClick = {
+                onClick()
+            }
+        ) {
             Column(
                 Modifier
                     .fillMaxWidth()
