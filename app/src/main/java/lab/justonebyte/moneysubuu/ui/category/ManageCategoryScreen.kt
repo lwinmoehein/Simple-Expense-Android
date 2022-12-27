@@ -21,6 +21,7 @@ import kotlinx.coroutines.launch
 import lab.justonebyte.moneysubuu.model.TransactionCategory
 import lab.justonebyte.moneysubuu.model.TransactionType
 import lab.justonebyte.moneysubuu.ui.components.*
+import lab.justonebyte.moneysubuu.ui.theme.negativeColor
 import lab.justonebyte.moneysubuu.ui.theme.positiveColor
 
 sealed class CategoryTab(val index:Int,val title:String){
@@ -31,7 +32,6 @@ val tabs = listOf(
     CategoryTab.Income,CategoryTab.Expense
 )
 
-@OptIn(ExperimentalMaterialApi::class)
 @ExperimentalPagerApi
 @Composable
 fun CategoryTabs(
@@ -83,8 +83,6 @@ fun CategoryTabs(
                     selected = false,
                     onClick = {
                         currentTab.value = tab
-                        Log.i("tab:",index.toString());
-                        Log.i("tab:",tab.title);
                         onTabChanged(currentTab.value);
                         coroutineScope.launch { pagerState.animateScrollToPage(index) }
                     },
@@ -125,7 +123,7 @@ fun ManageCategoryScreen(
        categoryUiState = categoryUiState,
        categoryViewModel = categoryViewModel,
        onTabChanged = {
-           if(it.index==0){
+           if(it.index==1){
                currentCategoryType.value = TransactionType.Income
            }else{
                currentCategoryType.value = TransactionType.Expense
@@ -153,6 +151,7 @@ fun CategoryTab(
     )
 
     AddCategoryDialog(
+        categoryType = type,
         isShown =  isAddCategoryDialogOpen.value,
         onDialogDismiss = { isAddCategoryDialogOpen.value = false },
         onConfirmClick = {
@@ -182,9 +181,9 @@ fun CategoryTab(
                             .fillMaxWidth()
                             .clip(RoundedCornerShape(8.dp))
                             .padding(0.dp)
-                            .background(positiveColor)
+                            .background(if(type==TransactionType.Income) positiveColor else negativeColor)
                     ) {
-                        Text(text = "Add New Income Category", style = MaterialTheme.typography.button, color = MaterialTheme.colors.onPrimary)
+                        Text(text =  if(type==TransactionType.Income) "Add New Income Category" else "Add New Expense Category", style = MaterialTheme.typography.button, color = MaterialTheme.colors.onPrimary)
                         Icon(
                             modifier = Modifier
                                 .width(30.dp)
@@ -201,14 +200,14 @@ fun CategoryTab(
         }, sheetPeekHeight = 0.dp
 
     ) {
-        Text(text = "Income Categories List :", style = MaterialTheme.typography.h6, modifier = Modifier.absolutePadding(top = 30.dp, bottom = 20.dp))
+        Text(text = if(type===TransactionType.Income) "Income Categories List :" else "Expense Categories List :", style = MaterialTheme.typography.h6, modifier = Modifier.absolutePadding(top = 30.dp, bottom = 20.dp))
 
         LazyColumn(
             verticalArrangement = Arrangement.Top,
             modifier = Modifier.absolutePadding(left = 2.dp, right = 2.dp, bottom = 100.dp)
         ) {
             items(categories){
-                CategoryItem(category = it, itemColor = positiveColor)
+                CategoryItem(category = it, itemColor =  if(type==TransactionType.Income) positiveColor else negativeColor)
             }
         }
     }

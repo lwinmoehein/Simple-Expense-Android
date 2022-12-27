@@ -17,6 +17,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import lab.justonebyte.moneysubuu.model.TransactionType
+import lab.justonebyte.moneysubuu.ui.theme.negativeColor
 import lab.justonebyte.moneysubuu.ui.theme.positiveColor
 
 @Composable
@@ -40,7 +41,7 @@ fun AddCategoryDialog(
                     .padding(20.dp)
 
             ) {
-                Text(text =if(categoryType==TransactionType.Income) "Enter income category name :" else "Enter expense category name :", style = MaterialTheme.typography.subtitle1, fontWeight = FontWeight.Bold, color = positiveColor)
+                Text(text =if(categoryType==TransactionType.Income) "Enter income category name :" else "Enter expense category name :", style = MaterialTheme.typography.subtitle1, fontWeight = FontWeight.Bold, color =  if(categoryType==TransactionType.Income) positiveColor else negativeColor)
                 Divider(Modifier.height(10.dp), color = Color.Transparent)
                 BasicTextField(
                     value = currentCategoryName.value,
@@ -51,7 +52,7 @@ fun AddCategoryDialog(
                         .fillMaxWidth()
                         .heightIn(min = 40.dp)
                         .clip(RoundedCornerShape(5.dp))
-                        .border(2.dp, positiveColor).absolutePadding(left = 10.dp, right = 10.dp, top = 5.dp, bottom = 5.dp),
+                        .border(2.dp,  if(categoryType==TransactionType.Income) positiveColor else negativeColor).absolutePadding(left = 10.dp, right = 10.dp, top = 5.dp, bottom = 5.dp),
                     singleLine = true,
                     textStyle = MaterialTheme.typography.subtitle1,
                 )
@@ -72,7 +73,7 @@ fun AddCategoryDialog(
                     }
                     Divider(modifier = Modifier.width(10.dp),color= Color.Transparent)
                     Button(
-                        colors = ButtonDefaults.buttonColors(backgroundColor = positiveColor, contentColor = MaterialTheme.colors.onPrimary),
+                        colors = ButtonDefaults.buttonColors(backgroundColor = if(categoryType==TransactionType.Income) positiveColor else negativeColor, contentColor = MaterialTheme.colors.onPrimary),
                         modifier = Modifier
                             .weight(1f)
                             .clip(RoundedCornerShape(10.dp)),
