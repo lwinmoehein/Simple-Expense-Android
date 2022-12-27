@@ -60,6 +60,12 @@ class CategoryViewModel @Inject constructor(
             categoryRepository.update(transactionCategory = category)
         }
     }
+    fun removeCategory(transactinCategory:TransactionCategory){
+        viewModelScope.launch {
+            categoryRepository.delete(id = transactinCategory.id)
+        }
+    }
+
     fun showSnackBar(type:SnackBarType){
         _viewModelUiState.update {
             it.copy(currentSnackBar = type)

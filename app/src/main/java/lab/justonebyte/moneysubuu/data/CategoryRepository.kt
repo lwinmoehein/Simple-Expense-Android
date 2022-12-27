@@ -4,14 +4,13 @@ import android.util.Log
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import lab.justonebyte.moneysubuu.model.TransactionCategory
-import java.util.*
 import javax.inject.Inject
 
 interface CategoryRepository {
     fun getCategories(): Flow<List<TransactionCategory>>
     suspend fun insert(transactionCategory: TransactionCategory)
     suspend fun update(transactionCategory: TransactionCategory)
-    suspend fun delete(id:Double)
+    suspend fun delete(id: Int)
 
 }
 class  CategoryRepositoryImpl @Inject constructor(val categoryDao: CategoryDao) : CategoryRepository{
@@ -29,7 +28,7 @@ class  CategoryRepositoryImpl @Inject constructor(val categoryDao: CategoryDao) 
         categoryDao.update(categoryEntity)
     }
 
-    override suspend fun delete(id: Double) {
+    override suspend fun delete(id: Int) {
         categoryDao.delete(id)
     }
 }

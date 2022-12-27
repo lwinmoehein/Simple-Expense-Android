@@ -109,7 +109,12 @@ fun CategoryTabs(
                             },
                             updateCategory = { category,updatedName->
                                 categoryViewModel.updateCategory(category,updatedName)
-                                categoryViewModel.showSnackBar(SnackBarType.ADD_CATEGORY_SUCCESS)
+                                categoryViewModel.showSnackBar(SnackBarType.UPDATE_CATEGORY_SUCCESS)
+                            },
+                            removeCategory = {
+                                categoryViewModel.removeCategory(it)
+                                categoryViewModel.showSnackBar(SnackBarType.REMOVE_CATEGORY_SUCCESS)
+
                             },
                             clearSnackBar = {
                                 categoryViewModel.clearSnackBar()
@@ -154,6 +159,7 @@ fun CategoryTabItem(
     clearSnackBar:()->Unit,
     addCategory:(transactionCategory:TransactionCategory)->Unit,
     updateCategory:(transactionCategory:TransactionCategory,updatedName:String)->Unit,
+    removeCategory:(transactionCategory:TransactionCategory)->Unit,
     type:TransactionType = TransactionType.Income,
     bottomSheetScaffoldState:BottomSheetScaffoldState
 ){
@@ -260,7 +266,7 @@ fun CategoryTabItem(
                        .background(Red300)
                    ,
                    onClick = {
-
+                       currentEditingCategory.value?.let { removeCategory(it) }
                    }
                ) {
                    Text(text = "Delete Category", color = MaterialTheme.colors.onPrimary)
