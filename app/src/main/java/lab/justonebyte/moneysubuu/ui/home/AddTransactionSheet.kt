@@ -7,14 +7,17 @@ import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
@@ -23,7 +26,9 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import lab.justonebyte.moneysubuu.model.Transaction
 import lab.justonebyte.moneysubuu.model.TransactionCategory
@@ -35,6 +40,7 @@ import lab.justonebyte.moneysubuu.utils.dateFormatter
 import java.util.*
 
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun AddTransactionSheetContent(
     currentType: Int,
@@ -84,9 +90,7 @@ fun AddTransactionSheetContent(
     val isEditMode = currentTransaction != null
 
     val isAddTransactionConfirmDialogOpen = remember { mutableStateOf(false) }
-    var tabIndex by remember { mutableStateOf(1) }
-
-
+    val categoryColor = if(currentType.value==1) positiveColor else negativeColor
 
     fun clearTransactionForm() {
         currentAmount.value = ""
@@ -168,28 +172,42 @@ fun AddTransactionSheetContent(
                 modifier = Modifier
                     .fillMaxWidth()
                     .absolutePadding(left = 10.dp, right = 10.dp)
+
             ) {
                 Text(
                     "Amount in Kyat: ",
-                    modifier = Modifier.weight(1f),
+                    modifier = Modifier.weight(1f).absolutePadding(top = 10.dp, bottom = 10.dp),
                     style = MaterialTheme.typography.subtitle2
                 )
-                CustomTextField(
-                    focusRequester = focusRequester,
-                    onFocusChanged = {
-                        isAmountInputFocused.value= it.isFocused
-                    },
-                    text = currentAmount.value,
+//                CustomTextField(
+//                    focusRequester = focusRequester,
+//                    onFocusChanged = {
+//                        isAmountInputFocused.value= it.isFocused
+//                    },
+//                    text = currentAmount.value,
+//                    modifier = Modifier
+//                        .weight(1f)
+//                        .padding(4.dp)
+//                        .height(50.dp),
+//                    placeholderText = "Amount in Kyat",
+//                    onValueChange = {
+//                        currentAmount.value = it.filter { it.isDigit() }
+//                    },
+//                    keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
+//
+//                )
+                TextInputFieldOne(
+                    background = Color.Transparent,
+                    textFieldValue = remember { mutableStateOf(TextFieldValue(currentAmount.value)) },
                     modifier = Modifier
                         .weight(1f)
-                        .padding(4.dp)
-                        .height(50.dp),
-                    placeholderText = "Amount in Kyat",
+                        .padding(0.dp),
                     onValueChange = {
-                        currentAmount.value = it.filter { it.isDigit() }
+                        currentAmount.value = it.text
                     },
-                    keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
-
+                    placeholder = "Enter amount",
+                    keyboardType = KeyboardType.Number,
+                    textColor = categoryColor
                 )
 
             }
@@ -226,7 +244,7 @@ fun AddTransactionSheetContent(
                         onClick = { mDatePickerDialog.show() },
                         modifier = Modifier.weight(1f)
                     ) {
-                        Text(text = mDate.value)
+                        Text(text = mDate.value, color = categoryColor)
                     }
                     Spacer(modifier = Modifier.weight(1f))
                 }
@@ -244,9 +262,10 @@ fun AddTransactionSheetContent(
                     .absolutePadding(top = 20.dp, bottom = 20.dp)
                     .clip(RoundedCornerShape(10.dp))
             ) {
-                Text(text = "Cancel", style = MaterialTheme.typography.button)
+                Text(text = "Cancel", style = MaterialTheme.typography.button, color = categoryColor)
             }
             Button(
+                colors = ButtonDefaults.buttonColors(backgroundColor = categoryColor),
                 onClick = { isAddTransactionConfirmDialogOpen.value = true },
                 modifier = Modifier
                     .absolutePadding(left = 10.dp, right = 10.dp)
@@ -254,7 +273,7 @@ fun AddTransactionSheetContent(
                     .absolutePadding(top = 20.dp, bottom = 20.dp)
                     .clip(RoundedCornerShape(10.dp))
             ) {
-                Text(text = if(isEditMode) "Confirm Edit" else "Confirm", style = MaterialTheme.typography.button)
+                Text(text = if(isEditMode) "Confirm Edit" else "Confirm", style = MaterialTheme.typography.button, color = MaterialTheme.colors.onPrimary)
             }
         }
     }
