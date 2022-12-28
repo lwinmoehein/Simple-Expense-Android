@@ -4,14 +4,9 @@ import android.app.Activity
 import android.app.DatePickerDialog
 import android.widget.DatePicker
 import androidx.activity.compose.BackHandler
-import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.KeyboardActions
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
@@ -20,13 +15,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
@@ -179,35 +171,20 @@ fun AddTransactionSheetContent(
                     modifier = Modifier.weight(1f).absolutePadding(top = 10.dp, bottom = 10.dp),
                     style = MaterialTheme.typography.subtitle2
                 )
-//                CustomTextField(
-//                    focusRequester = focusRequester,
-//                    onFocusChanged = {
-//                        isAmountInputFocused.value= it.isFocused
-//                    },
-//                    text = currentAmount.value,
-//                    modifier = Modifier
-//                        .weight(1f)
-//                        .padding(4.dp)
-//                        .height(50.dp),
-//                    placeholderText = "Amount in Kyat",
-//                    onValueChange = {
-//                        currentAmount.value = it.filter { it.isDigit() }
-//                    },
-//                    keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
-//
-//                )
+
                 TextInputFieldOne(
                     background = Color.Transparent,
                     textFieldValue = remember { mutableStateOf(TextFieldValue(currentAmount.value)) },
                     modifier = Modifier
                         .weight(1f)
-                        .padding(0.dp),
+                        .padding(0.dp) ,
                     onValueChange = {
                         currentAmount.value = it.text
                     },
                     placeholder = "Enter amount",
                     keyboardType = KeyboardType.Number,
-                    textColor = categoryColor
+                    textColor = categoryColor,
+                    hideKeyboard = !isBottomSheetOpened,
                 )
 
             }

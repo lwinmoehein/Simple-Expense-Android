@@ -23,6 +23,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -55,7 +56,8 @@ fun TextInputFieldOne(
     height: Dp = ELEMENT_HEIGHT,
     isError: Boolean = false,
     onValueChange: (TextFieldValue) -> Unit = {},
-    textColor:Color = MaterialTheme.colors.primary
+    textColor:Color = MaterialTheme.colors.primary,
+    hideKeyboard:Boolean = false
 ) {
     val focusManager = LocalFocusManager.current
     val bringIntoViewRequester = remember { BringIntoViewRequester() }
@@ -63,6 +65,7 @@ fun TextInputFieldOne(
     val interactionSourceState = interactionSource.collectIsFocusedAsState()
     val scope = rememberCoroutineScope()
     val ime = LocalWindowInsets.current.ime
+    val keyboardController = LocalSoftwareKeyboardController.current
 
     // Bring the composable into view (visible to user).
     LaunchedEffect(ime.isVisible, interactionSourceState.value) {
@@ -72,6 +75,10 @@ fun TextInputFieldOne(
                 bringIntoViewRequester.bringIntoView()
             }
         }
+    }
+    if(hideKeyboard){
+        focusManager.clearFocus()
+        keyboardController?.hide()
     }
 
     BasicTextField(
@@ -84,13 +91,15 @@ fun TextInputFieldOne(
         ),
         onValueChange = {
             textFieldValue.value = it
-
             onValueChange(it)
         },
         keyboardActions = keyboardActions ?: KeyboardActions(
             onDone = { focusManager.clearFocus() },
             onNext = { focusManager.moveFocus(FocusDirection.Down) },
-            onSearch = { focusManager.clearFocus() }
+            onSearch = {
+                focusManager.clearFocus()
+                keyboardController?.hide()
+            }
         ),
         keyboardOptions = KeyboardOptions(
             keyboardType = keyboardType,
