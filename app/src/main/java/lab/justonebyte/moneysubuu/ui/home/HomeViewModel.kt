@@ -1,7 +1,6 @@
 package lab.justonebyte.moneysubuu.ui.home
 
 import android.util.Log
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -18,7 +17,6 @@ import lab.justonebyte.moneysubuu.ui.components.SnackBarType
 import lab.justonebyte.moneysubuu.utils.dateFormatter
 import lab.justonebyte.moneysubuu.utils.monthFormatter
 import lab.justonebyte.moneysubuu.utils.yearFormatter
-import java.time.LocalDate
 import javax.inject.Inject
 
 data class HomeUiState(
@@ -153,6 +151,15 @@ class HomeViewModel @Inject constructor(
             )
         }
     }
+
+    fun deleteTransaction(transaction: Transaction){
+        Log.i("delete tran", transaction.id.toString())
+
+        viewModelScope.launch {
+            transactionRepository.delete(transaction)
+        }
+    }
+
     fun addCategory(transactinCategory:TransactionCategory){
         viewModelScope.launch {
             categoryRepository.insert(transactionCategory = transactinCategory)
