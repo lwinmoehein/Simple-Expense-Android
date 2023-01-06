@@ -45,6 +45,23 @@ fun HomeScreen(
     val isChooseAddTransactionTypeOpen =  remember { mutableStateOf(false)}
     val isSelectedTransactionEditMode = remember { mutableStateOf<Boolean?>(null) }
     val isDeleteTransactionDialogOpen = remember { mutableStateOf(false) }
+    
+    LaunchedEffect(key1 = currentTransaction.value, block =  {
+        if(currentTransaction.value!=null)
+            bottomSheetScaffoldState.bottomSheetState.expand()
+    } )
+
+
+
+    fun clearStates(){
+        println("clearing states:")
+        isChooseAddTransactionTypeOpen.value = false
+        isSelectedTransactionEditMode.value = null
+        isDeleteTransactionDialogOpen.value = false
+        currentTransaction.value = null
+        currentType.value = 1
+    }
+
 
 
     if (isDeleteTransactionDialogOpen.value) {
@@ -57,15 +74,10 @@ fun HomeScreen(
             onPositiveBtnClicked = {
                 currentTransaction.value?.let { homeViewModel.deleteTransaction(it) }
 
-
-                isDeleteTransactionDialogOpen.value =false
-                currentTransaction.value = null
-                isSelectedTransactionEditMode.value = null
+                clearStates()
             },
             onNegativeBtnClicked = {
-                isDeleteTransactionDialogOpen.value =false
-                currentTransaction.value = null
-                isSelectedTransactionEditMode.value = null
+                clearStates()
             }
         )
     }
@@ -121,17 +133,7 @@ fun HomeScreen(
         ),
 
         sheetContent = {
-            if(currentTransaction.value!=null && isSelectedTransactionEditMode.value==null){
-                ChooseTransactionAction(
-                    onDeleteClick = {
-                        isDeleteTransactionDialogOpen.value = true
-                    },
-                    onEditClick = {
-                        isSelectedTransactionEditMode.value = true
-                    }
-                )
-            }
-            else if(isChooseAddTransactionTypeOpen.value){
+            if(isChooseAddTransactionTypeOpen.value && currentTransaction.value==null){
                 AddTransactionAction(
                     onAddIncome = {
                         currentType.value = 1
@@ -140,6 +142,17 @@ fun HomeScreen(
                     onAddExpense = {
                         currentType.value = 2
                         isChooseAddTransactionTypeOpen.value = false
+                    }
+                )
+
+            }
+            else if(currentTransaction.value!=null && isSelectedTransactionEditMode.value==null){
+                ChooseTransactionAction(
+                    onDeleteClick = {
+                        isDeleteTransactionDialogOpen.value = true
+                    },
+                    onEditClick = {
+                        isSelectedTransactionEditMode.value = true
                     }
                 )
           }else{
@@ -151,6 +164,7 @@ fun HomeScreen(
                       currentTransaction = currentTransaction.value,
                       categories =  homeUiState.categories,
                       onConfirmTransactionForm = { type, amount, category,date->
+                          clearStates()
                           Log.i("on confirm sheet",if(currentTransaction.value!=null) "yes" else "no")
                           if(currentTransaction.value==null)
                               homeViewModel.addTransaction(
@@ -173,6 +187,7 @@ fun HomeScreen(
 
                       },
                       onCloseBottomSheet = {
+                          clearStates()
                           coroutineScope.launch {
                               bottomSheetScaffoldState.bottomSheetState.collapse()
                           }
@@ -221,11 +236,12 @@ fun HomeScreen(
                 isMonthPickerShown.value =true
             },
             onTransactionClick = {
-                coroutineScope.launch {
-                    currentTransaction.value = it
-                    bottomSheetScaffoldState.bottomSheetState.expand()
-                }
-            }
+//                coroutineScope.launch {
+//                    bottomSheetScaffoldState.bottomSheetState.expand()
+//                }
+                                 currentTransaction.value = it
+
+            },
         )
         SuBuuSnackBar(
             onDismissSnackBar = { homeViewModel.clearSnackBar() },
