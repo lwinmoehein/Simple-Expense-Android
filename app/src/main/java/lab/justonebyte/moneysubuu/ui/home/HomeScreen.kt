@@ -117,6 +117,7 @@ fun HomeScreen(
                        coroutineScope.launch {
                            bottomSheetScaffoldState.bottomSheetState.expand()
                        }
+                       clearStates()
                        isChooseAddTransactionTypeOpen.value = true
                    }
                )
