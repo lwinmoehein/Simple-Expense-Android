@@ -24,7 +24,8 @@ fun TransactionsCard(
         modifier = modifier
             .fillMaxWidth()
             .fillMaxHeight()
-            .padding(10.dp),
+            .padding(10.dp)
+            .absolutePadding(bottom = 100.dp),
         elevation = 10.dp
     ) {
         LazyColumn(){

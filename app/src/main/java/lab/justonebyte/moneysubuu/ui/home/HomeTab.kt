@@ -1,17 +1,15 @@
 package lab.justonebyte.moneysubuu.ui.home
 
-import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.util.lerp
-import com.google.accompanist.pager.*
+import com.google.accompanist.pager.ExperimentalPagerApi
+import com.google.accompanist.pager.HorizontalPager
+import com.google.accompanist.pager.pagerTabIndicatorOffset
+import com.google.accompanist.pager.rememberPagerState
 import kotlinx.coroutines.launch
 import lab.justonebyte.moneysubuu.model.Transaction
-import kotlin.math.absoluteValue
 
 sealed class HomeTab(val index:Int,val title:String){
     object  Daily:HomeTab(1,"Daily")

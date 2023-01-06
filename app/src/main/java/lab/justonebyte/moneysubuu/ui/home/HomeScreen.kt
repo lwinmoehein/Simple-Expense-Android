@@ -215,35 +215,45 @@ fun HomeScreen(
         }, sheetPeekHeight = 0.dp
     ) {
 
-        HomeTabs(
-            goToPieChart = {type, tab, date ->
-                goToPieChartDetail(type,tab,date)
-            },
-            homeUiState = homeUiState,
-            onTabChanged = {
-                balanceType.value = it
-                when(it){
-                    BalanceType.DAILY->homeViewModel.collectDailyBalance()
-                    BalanceType.MONTHLY->homeViewModel.collectMonthlyBalance()
-                    BalanceType.YEARLY->homeViewModel.collectYearlyBalance()
-                    else->homeViewModel.collectTotalBalance()
-                }
-            },
-            collectBalanceOfDay = {
-                homeViewModel.collectDailyBalance(it)
-            },
-            selectedBalanceType = balanceType.value,
-            onMonthChoose = {
-                isMonthPickerShown.value =true
-            },
-            onTransactionClick = {
-//                coroutineScope.launch {
-//                    bottomSheetScaffoldState.bottomSheetState.expand()
+//        HomeTabs(
+//            goToPieChart = {type, tab, date ->
+//                goToPieChartDetail(type,tab,date)
+//            },
+//            homeUiState = homeUiState,
+//            onTabChanged = {
+//                balanceType.value = it
+//                when(it){
+//                    BalanceType.DAILY->homeViewModel.collectDailyBalance()
+//                    BalanceType.MONTHLY->homeViewModel.collectMonthlyBalance()
+//                    BalanceType.YEARLY->homeViewModel.collectYearlyBalance()
+//                    else->homeViewModel.collectTotalBalance()
 //                }
-                                 currentTransaction.value = it
-
-            },
-        )
+//            },
+//            collectBalanceOfDay = {
+//                homeViewModel.collectDailyBalance(it)
+//            },
+//            selectedBalanceType = balanceType.value,
+//            onMonthChoose = {
+//                isMonthPickerShown.value =true
+//            },
+//            onTransactionClick = { currentTransaction.value = it },
+//        )
+        Card {
+            HomeContent(
+                goToPieChart = { type, tab, date ->
+                    goToPieChartDetail(type,tab,date)
+                },
+                homeUiState = homeUiState,
+                collectBalanceOfDay = { homeViewModel.collectDailyBalance(it) },
+                balanceType =  balanceType.value,
+                onMonthChoose = {
+                    isMonthPickerShown.value =true
+                },
+                onTransactionClick = {
+                    currentTransaction.value = it
+                }
+            )
+        }
         SuBuuSnackBar(
             onDismissSnackBar = { homeViewModel.clearSnackBar() },
             scaffoldState = bottomSheetScaffoldState,

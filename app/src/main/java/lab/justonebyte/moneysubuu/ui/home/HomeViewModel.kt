@@ -47,7 +47,8 @@ class HomeViewModel @Inject constructor(
         get() =  _viewModelUiState
 
     init {
-        collectDailyBalance()
+       // collectDailyBalance()
+        collectYearlyBalance()
         viewModelScope.launch {
             launch {
                 collectCategories()
