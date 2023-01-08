@@ -4,14 +4,10 @@ package lab.justonebyte.moneysubuu.ui.detail
 // for a `var` variable also add
 
 import android.app.DatePickerDialog
-import android.util.Log
 import android.widget.DatePicker
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -24,15 +20,11 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
 import lab.justonebyte.moneysubuu.model.Transaction
 import lab.justonebyte.moneysubuu.model.TransactionType
-import lab.justonebyte.moneysubuu.ui.home.BalanceType
-import lab.justonebyte.moneysubuu.ui.home.HomeTab
 import lab.justonebyte.moneysubuu.ui.home.MonthPicker
+import lab.justonebyte.moneysubuu.utils.TransactionGroup
 import lab.justonebyte.moneysubuu.utils.dateFormatter
-import lab.justonebyte.moneysubuu.utils.monthFormatter
-import lab.justonebyte.moneysubuu.utils.yearFormatter
 import me.bytebeats.views.charts.pie.PieChart
 import me.bytebeats.views.charts.pie.PieChartData
 import me.bytebeats.views.charts.pie.render.SimpleSliceDrawer
@@ -44,7 +36,7 @@ fun TransactionDetailScreen(
     modifier: Modifier = Modifier,
     goBack:()->Unit,
     transactionType:TransactionType = TransactionType.Income,
-    tabType:HomeTab = HomeTab.Daily,
+    tabType:TransactionGroup = TransactionGroup.Daily,
     dateData:String = dateFormatter(System.currentTimeMillis())
 ){
     val detailViewModel = hiltViewModel<TransactionDetailViewModel>()
@@ -58,26 +50,26 @@ fun TransactionDetailScreen(
     val mCalendar = Calendar.getInstance()
     mCalendar.time = Date()
     val mYear: Int = remember(dateData) {
-        if(tabType==HomeTab.Daily) dateData.split('-')[0].toInt() else mCalendar.get(Calendar.YEAR)
+        if(tabType==TransactionGroup.Daily) dateData.split('-')[0].toInt() else mCalendar.get(Calendar.YEAR)
     }
     val mMonth: Int = remember(dateData){
-        (if(tabType==HomeTab.Daily) dateData.split('-')[1].toInt() else mCalendar.get(Calendar.MONTH))-1
+        (if(tabType==TransactionGroup.Daily) dateData.split('-')[1].toInt() else mCalendar.get(Calendar.MONTH))-1
     }
     val mDay: Int = remember(dateData){
-        if(tabType==HomeTab.Daily) dateData.split('-')[2].toInt() else mCalendar.get(Calendar.DAY_OF_MONTH)
+        if(tabType==TransactionGroup.Daily) dateData.split('-')[2].toInt() else mCalendar.get(Calendar.DAY_OF_MONTH)
     }
     val mDate = remember(dateData) { mutableStateOf(dateData ) }
     //month picker
     val isMonthPickerShown = remember { mutableStateOf(false)}
-    val selectedMonthMonth = remember(dateData) { mutableStateOf(if(tabType==HomeTab.Monthly) dateData.split('-')[1].toInt() else 1)}
-    val selectedMonthYear= remember(dateData) { mutableStateOf(if(tabType==HomeTab.Yearly || tabType==HomeTab.Monthly) dateData.split('-')[0].toInt() else 1)}
+    val selectedMonthMonth = remember(dateData) { mutableStateOf(if(tabType==TransactionGroup.Monthly) dateData.split('-')[1].toInt() else 1)}
+    val selectedMonthYear= remember(dateData) { mutableStateOf(if(tabType==TransactionGroup.Yearly || tabType==TransactionGroup.Monthly) dateData.split('-')[0].toInt() else 1)}
 
 
     LaunchedEffect(key1 = mDate.value, block = {
             when(tabType){
-                HomeTab.Daily->detailViewModel.bindPieChartData(HomeTab.Daily,mDate.value)
-                HomeTab.Monthly->detailViewModel.bindPieChartData(tabType = tabType,"${selectedMonthYear.value}-${if(selectedMonthMonth.value<10) "0"+selectedMonthMonth.value else selectedMonthMonth.value}")
-                HomeTab.Yearly-> detailViewModel.bindPieChartData(tabType = tabType,"${selectedMonthYear.value}")
+                TransactionGroup.Daily->detailViewModel.bindPieChartData(TransactionGroup.Daily,mDate.value)
+                TransactionGroup.Monthly->detailViewModel.bindPieChartData(tabType = tabType,"${selectedMonthYear.value}-${if(selectedMonthMonth.value<10) "0"+selectedMonthMonth.value else selectedMonthMonth.value}")
+                TransactionGroup.Yearly-> detailViewModel.bindPieChartData(tabType = tabType,"${selectedMonthYear.value}")
                 else->detailViewModel.bindPieChartData(tabType = tabType,"")
             }
     } )
@@ -108,13 +100,13 @@ fun TransactionDetailScreen(
                 },
                 onConfirmPicker = {
                     isMonthPickerShown.value =false
-                    if(tabType == HomeTab.Monthly){
+                    if(tabType == TransactionGroup.Monthly){
                         detailViewModel.bindPieChartData(tabType = tabType,"${selectedMonthYear.value}-${if(selectedMonthMonth.value<10) "0"+selectedMonthMonth.value else selectedMonthMonth.value}")
                     }else{
                         detailViewModel.bindPieChartData(tabType = tabType,"${selectedMonthYear.value}")
                     }
                 },
-                isMonthPicker = tabType == HomeTab.Monthly
+                isMonthPicker = tabType == TransactionGroup.Monthly
             )
         }
     }
@@ -138,23 +130,23 @@ fun TransactionDetailScreen(
                            Icon(imageVector = Icons.Filled.ArrowBack, contentDescription = "back menu")
                        }
                        when(tabType){
-                           HomeTab.Daily-> Text(text = if(transactionType==TransactionType.Income) "Daily Income Data" else "Daily Spending Data")
-                           HomeTab.Monthly-> Text(text =if(transactionType==TransactionType.Income) "Monthly Income Data" else "Monthly Spending Data")
-                           HomeTab.Yearly-> Text(text =if(transactionType==TransactionType.Income) "Yearly Income Data" else "Yearly Spending Data")
+                           TransactionGroup.Daily-> Text(text = if(transactionType==TransactionType.Income) "Daily Income Data" else "Daily Spending Data")
+                           TransactionGroup.Monthly-> Text(text =if(transactionType==TransactionType.Income) "Monthly Income Data" else "Monthly Spending Data")
+                           TransactionGroup.Yearly-> Text(text =if(transactionType==TransactionType.Income) "Yearly Income Data" else "Yearly Spending Data")
                            else->Text(if(transactionType==TransactionType.Income) "Total Income" else "Total Spending")
                        }
                    }
                     Row(verticalAlignment = Alignment.CenterVertically) {
                        when(tabType){
-                          HomeTab.Daily-> TextButton(onClick = {
+                          TransactionGroup.Daily-> TextButton(onClick = {
                                               mDatePickerDialog.show()
                                           }) {
                                               Text(text = mDate.value)
                                           }
-                           HomeTab.Monthly-> TextButton(onClick = { isMonthPickerShown.value = true}) {
+                           TransactionGroup.Monthly-> TextButton(onClick = { isMonthPickerShown.value = true}) {
                                Text(text = "For "+selectedMonthYear.value+"-"+if(selectedMonthMonth.value<10) "0"+selectedMonthMonth.value else selectedMonthMonth.value)
                            }
-                           HomeTab.Yearly-> TextButton(onClick = { isMonthPickerShown.value=true }) {
+                           TransactionGroup.Yearly-> TextButton(onClick = { isMonthPickerShown.value=true }) {
                                Text(text = "For "+selectedMonthYear.value)
                            }
                            else-> Text(text = "")

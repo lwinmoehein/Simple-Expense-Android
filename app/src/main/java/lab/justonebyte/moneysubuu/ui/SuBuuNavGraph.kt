@@ -2,11 +2,9 @@ package lab.justonebyte.moneysubuu.ui
 
 import StatsScreen
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material.ScaffoldState
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.*
-import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -18,8 +16,9 @@ import lab.justonebyte.moneysubuu.model.TransactionType
 import lab.justonebyte.moneysubuu.ui.category.ManageCategoryScreen
 import lab.justonebyte.moneysubuu.ui.detail.TransactionDetailScreen
 import lab.justonebyte.moneysubuu.ui.home.HomeScreen
-import lab.justonebyte.moneysubuu.ui.home.HomeTab
+import lab.justonebyte.moneysubuu.ui.home.SuBuuAppHomeScreen
 import lab.justonebyte.moneysubuu.ui.settings.SettingsScreen
+import lab.justonebyte.moneysubuu.utils.TransactionGroup
 import lab.justonebyte.moneysubuu.utils.dateFormatter
 
 /**
@@ -53,11 +52,7 @@ fun SuBuuNavGraph(
     ) {
 
         composable(MainDestinations.HOME_ROUTE) {
-            HomeScreen(
-                goToPieChartDetail = {type, tab, date ->
-                    navController.navigate(MainDestinations.getDetailRoute(type,tab,date))
-                }
-            )
+            SuBuuAppHomeScreen(navController=navController)
         }
 
         composable(MainDestinations.SETTINGS_ROUTE) {
@@ -84,10 +79,10 @@ fun SuBuuNavGraph(
                 else->TransactionType.Expense
             }
             val tabType =  when(navController.currentBackStackEntry?.arguments?.getInt("tab")){
-                HomeTab.Daily.index->HomeTab.Daily
-                HomeTab.Monthly.index->HomeTab.Monthly
-                HomeTab.Yearly.index->HomeTab.Yearly
-                else->HomeTab.Total
+                TransactionGroup.Daily.index->TransactionGroup.Daily
+                TransactionGroup.Monthly.index->TransactionGroup.Monthly
+                TransactionGroup.Yearly.index->TransactionGroup.Yearly
+                else->TransactionGroup.Total
             }
             val date =  navController.currentBackStackEntry?.arguments?.getString("date")
 

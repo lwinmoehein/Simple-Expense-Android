@@ -9,7 +9,6 @@ import lab.justonebyte.moneysubuu.ui.appContentPadding
 
 @Composable
 fun LoanScreen(
-    openDrawer:()->Unit,
 ){
     Column (
         modifier = Modifier.padding(appContentPadding)

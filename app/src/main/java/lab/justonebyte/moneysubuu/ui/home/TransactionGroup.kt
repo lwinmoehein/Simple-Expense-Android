@@ -4,33 +4,31 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.navigation.NavController
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.pagerTabIndicatorOffset
 import com.google.accompanist.pager.rememberPagerState
 import kotlinx.coroutines.launch
 import lab.justonebyte.moneysubuu.model.Transaction
+import lab.justonebyte.moneysubuu.ui.MainDestinations
+import lab.justonebyte.moneysubuu.ui.budget.BudgetScreen
+import lab.justonebyte.moneysubuu.ui.loan.LoanScreen
 
-sealed class HomeTab(val index:Int,val title:String){
-    object  Daily:HomeTab(1,"Daily")
-    object Monthly:HomeTab(2,"monthly")
-    object Yearly:HomeTab(3,"Yearly")
-    object Total:HomeTab(4,"Total")
+sealed class HomeTab(val index:Int, val title:String){
+    object  Home:HomeTab(1,"Home")
+    object Loans:HomeTab(2,"Loans")
+    object Budgets:HomeTab(3,"Budgets")
 }
 val tabs = listOf(
-    HomeTab.Daily,HomeTab.Monthly,HomeTab.Yearly,HomeTab.Total
+    HomeTab.Home,HomeTab.Loans,HomeTab.Budgets
 )
 
 @ExperimentalPagerApi
 @Composable
 fun HomeTabs(
-    goToPieChart:(type:Int,tab:Int,date:String)->Unit,
     homeUiState:HomeUiState,
-    onTabChanged:(BalanceType)->Unit,
-    collectBalanceOfDay:(day:String)->Unit,
-    selectedBalanceType: BalanceType,
-    onMonthChoose:()->Unit,
-    onTransactionClick:(transaction:Transaction)->Unit
+    navController: NavController
 ) {
 
     var tabIndex by remember { mutableStateOf(1) }
@@ -40,13 +38,7 @@ fun HomeTabs(
     LaunchedEffect(pagerState) {
         // Collect from the pager state a snapshotFlow reading the currentPage
         snapshotFlow { pagerState.currentPage }.collect { page ->
-            val balanceType = when(pagerState.currentPage+1){
-                HomeTab.Daily.index->BalanceType.DAILY
-                HomeTab.Monthly.index->BalanceType.MONTHLY
-                HomeTab.Yearly.index->BalanceType.YEARLY
-                else->BalanceType.TOTAL
-            }
-            onTabChanged(balanceType)
+
         }
     }
 
@@ -78,24 +70,16 @@ fun HomeTabs(
             state = pagerState,
         ) { tabIndex ->
             Card {
-                HomeContent(
-                    goToPieChart = { type, tab, date ->
-                        goToPieChart(type,tab,date)
-                    },
-                    homeUiState = homeUiState,
-                    collectBalanceOfDay = {
-                        collectBalanceOfDay(it)
-                    },
-                    balanceType = selectedBalanceType,
-                    onMonthChoose = {
-                        onMonthChoose()
-                    },
-                    onTransactionClick = {
-                        onTransactionClick(it)
-                    }
-                )
+                when(tabIndex+1){
+                    HomeTab.Home.index-> HomeScreen(
+                                                goToPieChartDetail = {type, tab, date ->
+                                                    navController.navigate(MainDestinations.getDetailRoute(type,tab,date))
+                                                }
+                                            )
+                    HomeTab.Loans.index -> LoanScreen()
+                    else -> BudgetScreen()
+                }
             }
-
         }
     }
 }
