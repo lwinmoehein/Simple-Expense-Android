@@ -165,26 +165,29 @@ fun HomeScreen(
                       currentTransaction = currentTransaction.value,
                       categories =  homeUiState.categories,
                       onConfirmTransactionForm = { type, amount, category,date->
-                          clearStates()
                           Log.i("on confirm sheet",if(currentTransaction.value!=null) "yes" else "no")
-                          if(currentTransaction.value==null)
+                          if(currentTransaction.value==null) {
+                              println("edit:transaction:add")
+
                               homeViewModel.addTransaction(
                                   transactionCategory = category,
                                   type = type,
                                   amount = amount,
                                   date = date
                               )
-                          else
+                          } else {
+                              println("edit:transaction:update")
                               currentTransaction.value?.let {
                                   homeViewModel.updateTransaction(
-                                      transactionId =  it.id,
+                                      transactionId = it.id,
                                       transactionCategory = category,
                                       type = type,
                                       amount = amount,
                                       date = date
                                   )
                               }
-
+                          }
+                          clearStates()
 
                       },
                       onCloseBottomSheet = {
