@@ -8,7 +8,10 @@ import java.util.*
 fun dateFormatter(milliseconds: Long): String {
     return SimpleDateFormat("yyyy-MM-dd").format(Date(milliseconds)).toString()
 }
-
+@SuppressLint("SimpleDateFormat")
+fun weekFormatter(milliseconds: Long): String {
+    return SimpleDateFormat("ww").format(Date(milliseconds)).toString()
+}
 @SuppressLint("SimpleDateFormat")
 fun monthFormatter(milliseconds: Long): String {
     return SimpleDateFormat("yyyy-MM").format(Date(milliseconds)).toString()

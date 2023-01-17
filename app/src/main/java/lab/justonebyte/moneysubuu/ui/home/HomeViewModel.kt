@@ -16,6 +16,7 @@ import lab.justonebyte.moneysubuu.model.TransactionType
 import lab.justonebyte.moneysubuu.ui.components.SnackBarType
 import lab.justonebyte.moneysubuu.utils.dateFormatter
 import lab.justonebyte.moneysubuu.utils.monthFormatter
+import lab.justonebyte.moneysubuu.utils.weekFormatter
 import lab.justonebyte.moneysubuu.utils.yearFormatter
 import javax.inject.Inject
 
@@ -28,6 +29,7 @@ data class HomeUiState(
     val transactions:List<Transaction> = emptyList(),
     val currentSnackBar : SnackBarType? = null,
     val selectedDay:String = dateFormatter(System.currentTimeMillis()),
+    val selectedWeek:String = weekFormatter(System.currentTimeMillis()),
     val selectedMonth:String = monthFormatter(System.currentTimeMillis()),
     val selectedYear:String = yearFormatter(System.currentTimeMillis())
 
@@ -48,7 +50,8 @@ class HomeViewModel @Inject constructor(
 
     init {
        // collectDailyBalance()
-        collectYearlyBalance()
+        //collectYearlyBalance()
+        collectWeeklyBalance()
         viewModelScope.launch {
             launch {
                 collectCategories()
@@ -73,6 +76,17 @@ class HomeViewModel @Inject constructor(
             }
         }
     }
+    fun collectWeeklyBalance(dateValue:String =  viewModelUiState.value.selectedWeek){
+        _viewModelUiState.update {
+            it.copy(selectedWeek = dateValue)
+        }
+        viewModelScope.launch {
+            transactionRepository.getWeeklyTransactions(dateValue).collect{ transactions->
+                bindBalanceData(transactions)
+            }
+        }
+    }
+
      fun collectMonthlyBalance(dateValue:String=  viewModelUiState.value.selectedMonth){
          _viewModelUiState.update {
              it.copy(selectedMonth = dateValue)
@@ -83,6 +97,7 @@ class HomeViewModel @Inject constructor(
             }
         }
     }
+
      fun collectYearlyBalance(dateValue:String= viewModelUiState.value.selectedYear){
          _viewModelUiState.update {
              it.copy(selectedYear = dateValue)

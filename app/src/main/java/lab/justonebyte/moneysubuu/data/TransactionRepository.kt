@@ -1,12 +1,14 @@
 package lab.justonebyte.moneysubuu.data
 
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.count
 import kotlinx.coroutines.flow.map
 import lab.justonebyte.moneysubuu.model.Transaction
 import javax.inject.Inject
 
 interface TransactionRepository {
     fun getDailyTransactions(day:String): Flow<List<Transaction>>
+    fun getWeeklyTransactions(week:String): Flow<List<Transaction>>
     fun getMonthlyTransactions(month:String): Flow<List<Transaction>>
     fun getYearlyTransactions(year:String): Flow<List<Transaction>>
     fun getTotalTransactions(): Flow<List<Transaction>>
@@ -19,6 +21,12 @@ interface TransactionRepository {
 class TransactionRepositoryImpl @Inject constructor(val transactionDao: TransactionDao):TransactionRepository {
     override fun getDailyTransactions(day:String): Flow<List<Transaction>> {
         val transactionEntities = transactionDao.getTransactions(day)
+        return transactionEntities.map { list -> list.map { Transaction.Mapper.mapToDomain(it) } }
+    }
+
+    override fun getWeeklyTransactions(week: String): Flow<List<Transaction>> {
+        println("week:$week")
+        val transactionEntities = transactionDao.getTransactionsByWeek(week)
         return transactionEntities.map { list -> list.map { Transaction.Mapper.mapToDomain(it) } }
     }
 
