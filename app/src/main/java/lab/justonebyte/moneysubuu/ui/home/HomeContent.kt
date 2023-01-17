@@ -9,6 +9,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import lab.justonebyte.moneysubuu.model.Transaction
+import lab.justonebyte.moneysubuu.model.TransactionType
 
 
 @Composable
@@ -18,7 +19,8 @@ fun HomeContent(
     collectBalanceOfDay:(day:String)->Unit,
     balanceType: BalanceType,
     onMonthChoose:()->Unit,
-    onTransactionClick:(t: Transaction)->Unit
+    onTransactionClick:(t: Transaction)->Unit,
+    onTypeChanged:(type:BalanceType)->Unit
 ){
 
     Scaffold {
@@ -40,7 +42,8 @@ fun HomeContent(
                 },
                 goToPiechart ={ type, tab, date ->
                     goToPieChart(type,tab,date)
-                }
+                },
+                onTypeChanged = onTypeChanged
             )
             SectionTitle(title = "History")
             TransactionsCard(

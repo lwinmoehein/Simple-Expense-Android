@@ -254,7 +254,16 @@ fun HomeScreen(
                 },
                 onTransactionClick = {
                     currentTransaction.value = it
-                }
+                },
+                onTypeChanged = { type->
+                    balanceType.value = type
+                    when(type){
+                        BalanceType.DAILY->homeViewModel.collectDailyBalance()
+                        BalanceType.MONTHLY->homeViewModel.collectMonthlyBalance()
+                        BalanceType.YEARLY->homeViewModel.collectYearlyBalance()
+                        else->homeViewModel.collectTotalBalance()
+                    }
+                },
             )
         }
         SuBuuSnackBar(

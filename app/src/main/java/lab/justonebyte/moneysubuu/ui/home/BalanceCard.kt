@@ -1,6 +1,7 @@
 package lab.justonebyte.moneysubuu.ui.home
 
 import android.app.DatePickerDialog
+import android.graphics.Paint.Align
 import android.widget.DatePicker
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -12,6 +13,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.Alignment.Companion.CenterHorizontally
+import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
@@ -33,7 +36,8 @@ fun ChooseTransactionTypeCard(
     selectedMonth: String,
     selectedYear: String,
     balanceType: BalanceType,
-    onMonthChoose: () -> Unit
+    onMonthChoose: () -> Unit,
+    onTypeChanged: (type: BalanceType) -> Unit
 ){
     val currentDay = getToday()
     val currentMonth = getCurrentMonth()
@@ -50,6 +54,10 @@ fun ChooseTransactionTypeCard(
             collectBalaceOfDay(mDate.value)
         }, mYear, mMonth-1, mDay
     )
+    val balanceTypeOptions = listOf(OptionItem("Daily",BalanceType.DAILY),OptionItem("Monthly",BalanceType.MONTHLY),OptionItem("Yearly",BalanceType.YEARLY),OptionItem("Total",BalanceType.TOTAL))
+    val currentBalanceType = remember {
+        mutableStateOf(BalanceType.DAILY)
+    }
 
     SectionTitle(title = "Choose Type")
 
@@ -78,15 +86,17 @@ fun ChooseTransactionTypeCard(
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.Start,
             ) {
-                val options = listOf(OptionItem("Daily",1),OptionItem("Monthly",2),OptionItem("Yearly",3))
 
                 AppOption(
                     modifier = Modifier
                         .fillMaxWidth()
                         .absolutePadding(bottom = 5.dp),
                     label = "Select Day :",
-                    options = options,
-                    onItemSelected = {}
+                    options = balanceTypeOptions,
+                    onItemSelected = {
+                        currentBalanceType.value = it.value as BalanceType
+                        onTypeChanged(currentBalanceType.value)
+                    }
                 )
 
 
@@ -123,7 +133,8 @@ fun BalanceCard(
     selectedMonth:String,
     selectedYear:String,
     balanceType: BalanceType,
-    onMonthChoose:()->Unit
+    onMonthChoose:()->Unit,
+    onTypeChanged:(type:BalanceType)->Unit
 ){
 
 
@@ -139,7 +150,8 @@ fun BalanceCard(
             selectedMonth = selectedMonth,
             selectedYear = selectedYear,
             balanceType = balanceType,
-            onMonthChoose = onMonthChoose
+            onMonthChoose = onMonthChoose,
+            onTypeChanged = onTypeChanged
         )
 
         SectionTitle(title = "Balances",modifier = Modifier.absolutePadding(top = 15.dp))
@@ -173,25 +185,25 @@ fun BalanceCard(
               ) {
                      Column(horizontalAlignment = Alignment.Start, verticalArrangement = Arrangement.Center) {
                          Text(
-                             text = "Balance : ",
-                             modifier = Modifier.weight(1f),
+                             text = "Balance  : ",
+                             modifier = Modifier.weight(1f).wrapContentHeight(align = CenterVertically),
                              color = if(currentBalance>0) MaterialTheme.colors.primaryVariant else Red900,
                              )
                          Text(
                              text = "Income  : ",
-                             modifier = Modifier.weight(1f),
+                             modifier = Modifier.weight(1f).wrapContentHeight(align = CenterVertically),
                              color = positiveColor
 
                              )
                          Text(
                              text = "Expense : ",
-                             modifier = Modifier.weight(1f),
+                             modifier = Modifier.weight(1f).wrapContentHeight(align = CenterVertically),
                              color = negativeColor
 
                          )
                      }
                   Column(horizontalAlignment = Alignment.Start, verticalArrangement = Arrangement.Center) {
-                      Row(horizontalArrangement = Arrangement.Start, verticalAlignment = Alignment.CenterVertically) {
+                      Row(horizontalArrangement = Arrangement.Start, verticalAlignment = Alignment.CenterVertically, modifier = Modifier.weight(1f)) {
                           Text(
                               text = "$currentBalance",
                               style = MaterialTheme.typography.h6,
@@ -200,7 +212,7 @@ fun BalanceCard(
                           )
                           Text(text = " Ks",color = if(currentBalance>0) MaterialTheme.colors.primaryVariant else Red900,)
                       }
-                      Row(horizontalArrangement = Arrangement.Start, verticalAlignment = Alignment.CenterVertically) {
+                      Row(horizontalArrangement = Arrangement.Start, verticalAlignment = Alignment.CenterVertically, modifier = Modifier.weight(1f)) {
 
                           Text(
                               text = "$incomeBalance",
@@ -211,7 +223,7 @@ fun BalanceCard(
 
 
                       }
-                      Row(horizontalArrangement = Arrangement.Start, verticalAlignment = Alignment.CenterVertically) {
+                      Row(horizontalArrangement = Arrangement.Start, verticalAlignment = Alignment.CenterVertically, modifier = Modifier.weight(1f)) {
                           Text(
                               text = "$expenseBalance",
                               style = MaterialTheme.typography.h6,
