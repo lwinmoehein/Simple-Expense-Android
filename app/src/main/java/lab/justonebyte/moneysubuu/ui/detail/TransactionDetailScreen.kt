@@ -23,6 +23,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import lab.justonebyte.moneysubuu.model.Transaction
 import lab.justonebyte.moneysubuu.model.TransactionType
 import lab.justonebyte.moneysubuu.ui.home.MonthPicker
+import lab.justonebyte.moneysubuu.ui.theme.*
 import lab.justonebyte.moneysubuu.utils.TransactionGroup
 import lab.justonebyte.moneysubuu.utils.dateFormatter
 import me.bytebeats.views.charts.pie.PieChart
@@ -164,7 +165,10 @@ fun CustomLineGraph() {
 
 }
 fun randomLength() = 100f
-fun randomColor() = listOf(Color.Gray,Color.Green,Color.Red).random()
+fun randomColor() = listOf(
+    bar1,bar2,bar3,bar4,bar5,bar6,bar7,bar8,bar9,bar10,bar11,bar12,bar13,bar14,bar15,bar16,bar17,bar18,bar19,
+    bar20
+).random()
 @Composable
 fun CustomPieChartWithData(
     modifier: Modifier=Modifier,
