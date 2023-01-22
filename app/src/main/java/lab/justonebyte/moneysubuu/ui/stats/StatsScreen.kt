@@ -12,6 +12,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import lab.justonebyte.moneysubuu.model.Transaction
 import lab.justonebyte.moneysubuu.model.TransactionType
 import lab.justonebyte.moneysubuu.ui.detail.randomColor
+import lab.justonebyte.moneysubuu.ui.home.SectionTitle
 import lab.justonebyte.moneysubuu.ui.stats.StatsViewModel
 import me.bytebeats.views.charts.bar.BarChart
 import me.bytebeats.views.charts.bar.BarChartData
@@ -62,12 +63,13 @@ fun StatsScreen(goBack:()->Unit) {
             Column(Modifier.weight(1f)) {
                 mostIncomeCategory?.first?.name?.let { mostIncomeCategory ->
                    Row() {
-                       Text(text = mostIncomeCategory, color = Color.Green, fontWeight = FontWeight.ExtraBold)
-                       Text(
-                           text=" category gets you most money.",
-                           style = MaterialTheme.typography.subtitle1,
-                           modifier = Modifier.absolutePadding(bottom = 5.dp)
-                       )
+//                       Text(
+//                           text="Your income for",
+//                           style = MaterialTheme.typography.subtitle1,
+//                           modifier = Modifier.absolutePadding(bottom = 5.dp)
+//                       )
+                       SectionTitle(title = "Your income for")
+
                    }
                 }
 
@@ -77,12 +79,12 @@ fun StatsScreen(goBack:()->Unit) {
             Column(Modifier.weight(1f)) {
                 mostCostCategory?.first?.name?.let { mostCostCategory ->
                     Row() {
-                        Text(text = mostCostCategory, color = Color.Red)
-                        Text(
-                            text=" category costs you most money.",
-                            style = MaterialTheme.typography.subtitle1,
-                            modifier = Modifier.absolutePadding(bottom = 5.dp)
-                        )
+//                        Text(
+//                            text="Your expense for",
+//                            style = MaterialTheme.typography.subtitle1,
+//                            modifier = Modifier.absolutePadding(bottom = 5.dp)
+//                        )
+                         SectionTitle(title = "Your expense for")
                     }
                 }
                 Divider(modifier = Modifier.absolutePadding(bottom = 10.dp))
