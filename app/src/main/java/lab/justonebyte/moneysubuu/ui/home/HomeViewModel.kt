@@ -51,7 +51,7 @@ class HomeViewModel @Inject constructor(
     init {
        // collectDailyBalance()
         //collectYearlyBalance()
-        collectWeeklyBalance()
+        collectMonthlyBalance()
         viewModelScope.launch {
             launch {
                 collectCategories()

@@ -43,28 +43,28 @@ fun HomeTabs(
     }
 
     Column {
-        TabRow(
-            backgroundColor = MaterialTheme.colors.primary,
-            selectedTabIndex = tabIndex,
-            indicator = { tabPositions -> // 3.
-                TabRowDefaults.Indicator(
-                    Modifier.pagerTabIndicatorOffset(
-                        pagerState,
-                        tabPositions
-                    ),
-                    color = MaterialTheme.colors.primary
-                )
-            }) {
-            tabs.forEachIndexed { index, tab ->
-                Tab(
-                    selected = tabIndex == index,
-                    onClick = {
-                        coroutineScope.launch { pagerState.animateScrollToPage(index) }
-                    },
-                    text = { Text(text = tab.title) }
-                )
-            }
-        }
+//        TabRow(
+//            backgroundColor = MaterialTheme.colors.primary,
+//            selectedTabIndex = tabIndex,
+//            indicator = { tabPositions -> // 3.
+//                TabRowDefaults.Indicator(
+//                    Modifier.pagerTabIndicatorOffset(
+//                        pagerState,
+//                        tabPositions
+//                    ),
+//                    color = MaterialTheme.colors.primary
+//                )
+//            }) {
+//            tabs.forEachIndexed { index, tab ->
+//                Tab(
+//                    selected = tabIndex == index,
+//                    onClick = {
+//                        coroutineScope.launch { pagerState.animateScrollToPage(index) }
+//                    },
+//                    text = { Text(text = tab.title) }
+//                )
+//            }
+//        }
         HorizontalPager( // 4.
             count = tabs.size,
             state = pagerState,

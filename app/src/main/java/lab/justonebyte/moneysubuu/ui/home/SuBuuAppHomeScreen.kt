@@ -6,6 +6,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import lab.justonebyte.moneysubuu.ui.MainDestinations
 
 @OptIn(ExperimentalMaterialApi::class, com.google.accompanist.pager.ExperimentalPagerApi::class)
 @Composable
@@ -14,6 +15,10 @@ fun SuBuuAppHomeScreen(
 ) {
     val homeViewModel = hiltViewModel<HomeViewModel>()
     val homeUiState by homeViewModel.viewModelUiState.collectAsState()
-    
-    HomeTabs(homeUiState = homeUiState,navController=navController)
+
+    HomeScreen(
+        goToPieChartDetail = {type, tab, date ->
+            navController.navigate(MainDestinations.getDetailRoute(type,tab,date))
+        }
+    )
 }

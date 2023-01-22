@@ -56,7 +56,7 @@ fun ChooseTransactionTypeCard(
     )
     val balanceTypeOptions = listOf(OptionItem("Daily",BalanceType.DAILY),OptionItem("Monthly",BalanceType.MONTHLY),OptionItem("Yearly",BalanceType.YEARLY),OptionItem("Total",BalanceType.TOTAL))
     val currentBalanceType = remember {
-        mutableStateOf(BalanceType.DAILY)
+        mutableStateOf(BalanceType.MONTHLY)
     }
 
     SectionTitle(title = "Choose Type")
@@ -96,6 +96,12 @@ fun ChooseTransactionTypeCard(
                     onItemSelected = {
                         currentBalanceType.value = it.value as BalanceType
                         onTypeChanged(currentBalanceType.value)
+                    },
+                    selectedOption = when(balanceType){
+                        BalanceType.DAILY->balanceTypeOptions[0]
+                        BalanceType.MONTHLY->balanceTypeOptions[1]
+                        BalanceType.YEARLY->balanceTypeOptions[2]
+                        else->balanceTypeOptions[3]
                     }
                 )
 
@@ -107,7 +113,8 @@ fun ChooseTransactionTypeCard(
                             when (balanceType) {
                                 BalanceType.DAILY -> mDatePickerDialog.show()
                                 BalanceType.MONTHLY -> onMonthChoose()
-                                else -> onMonthChoose()
+                                BalanceType.YEARLY -> onMonthChoose()
+                                else->{}
                             }
                         },
                     text =  when(balanceType){

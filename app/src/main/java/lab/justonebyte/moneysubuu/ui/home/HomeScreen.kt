@@ -31,7 +31,7 @@ fun HomeScreen(
         bottomSheetState = BottomSheetState(BottomSheetValue.Collapsed)
     )
     val coroutineScope = rememberCoroutineScope()
-    val balanceType = remember{ mutableStateOf(BalanceType.DAILY)}
+    val balanceType = remember{ mutableStateOf(BalanceType.MONTHLY)}
 
     val isMonthPickerShown = remember { mutableStateOf(false)}
     val selectedMonthYear = remember { mutableStateOf(calendar.get(Calendar.YEAR))}
@@ -218,29 +218,7 @@ fun HomeScreen(
         }, sheetPeekHeight = 0.dp
     ) {
 
-//        HomeTabs(
-//            goToPieChart = {type, tab, date ->
-//                goToPieChartDetail(type,tab,date)
-//            },
-//            homeUiState = homeUiState,
-//            onTabChanged = {
-//                balanceType.value = it
-//                when(it){
-//                    BalanceType.DAILY->homeViewModel.collectDailyBalance()
-//                    BalanceType.MONTHLY->homeViewModel.collectMonthlyBalance()
-//                    BalanceType.YEARLY->homeViewModel.collectYearlyBalance()
-//                    else->homeViewModel.collectTotalBalance()
-//                }
-//            },
-//            collectBalanceOfDay = {
-//                homeViewModel.collectDailyBalance(it)
-//            },
-//            selectedBalanceType = balanceType.value,
-//            onMonthChoose = {
-//                isMonthPickerShown.value =true
-//            },
-//            onTransactionClick = { currentTransaction.value = it },
-//        )
+
         Card {
             HomeContent(
                 goToPieChart = { type, tab, date ->
