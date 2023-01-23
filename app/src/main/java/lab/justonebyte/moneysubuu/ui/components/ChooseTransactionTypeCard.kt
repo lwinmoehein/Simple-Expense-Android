@@ -26,11 +26,11 @@ import java.util.*
 @Composable
 fun ChooseTransactionTypeCard(
     modifier: Modifier = Modifier,
-    collectBalaceOfDay: (day: String) -> Unit,
     selectedDay: String,
     selectedMonth: String,
     selectedYear: String,
     balanceType: BalanceType,
+    onDatePicked: (day: String) -> Unit,
     onMonthPicked: (month:String) -> Unit,
     onYearPicked: (year:String) -> Unit,
     onTypeChanged: (type: BalanceType) -> Unit
@@ -57,12 +57,18 @@ fun ChooseTransactionTypeCard(
     val isMonthPickerShown = remember { mutableStateOf(false) }
     val mDate = remember { mutableStateOf(selectedDay) }
 
+    val chosenDateString = when(balanceType){
+        BalanceType.DAILY-> if(selectedDay==currentDay) "Today" else selectedDay
+        BalanceType.MONTHLY->if(selectedMonth==currentMonth) "This month" else selectedMonth
+        BalanceType.YEARLY->if(selectedYear==currentYear) "This year" else selectedYear
+        else->"Total" }
+
 
     val mDatePickerDialog = DatePickerDialog(
         mContext,
         { _: DatePicker, mYear: Int, mMonth: Int, mDayOfMonth: Int ->
             mDate.value = "$mYear-${if(mMonth+1>=10) mMonth+1 else "0"+(mMonth+1)}-${if(mDayOfMonth<10) "0"+mDayOfMonth else mDayOfMonth}"
-            collectBalaceOfDay(mDate.value)
+            onDatePicked(mDate.value)
         }, mYear, mMonth-1, mDay
     )
 
@@ -157,11 +163,7 @@ fun ChooseTransactionTypeCard(
                                 else->{}
                             }
                         },
-                    text =  when(balanceType){
-                        BalanceType.DAILY-> if(mDate.value==currentDay) "Today" else ""+mDate.value
-                        BalanceType.MONTHLY->if(selectedMonth==currentMonth) "This month" else selectedMonth
-                        BalanceType.YEARLY->if(selectedYear==currentYear) "This year" else selectedYear
-                        else->"Total" }
+                    text =  chosenDateString
                 )
             }
         }

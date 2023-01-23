@@ -21,9 +21,7 @@ import java.util.*
 
 @OptIn(ExperimentalMaterialApi::class, com.google.accompanist.pager.ExperimentalPagerApi::class)
 @Composable
-fun HomeScreen(
-    goToPieChartDetail:(type:Int,tab:Int,date:String)->Unit,
-){
+fun HomeScreen(){
     val homeViewModel = hiltViewModel<HomeViewModel>()
     val homeUiState by homeViewModel.viewModelUiState.collectAsState()
     val bottomSheetScaffoldState = rememberBottomSheetScaffoldState(
@@ -191,9 +189,6 @@ fun HomeScreen(
 
         Card {
             HomeContent(
-                goToPieChart = { type, tab, date ->
-                    goToPieChartDetail(type,tab,date)
-                },
                 homeUiState = homeUiState,
                 collectBalanceOfDay = { homeViewModel.collectDailyBalance(it) },
                 balanceType =  balanceType.value,

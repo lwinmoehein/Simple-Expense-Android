@@ -13,12 +13,5 @@ import lab.justonebyte.moneysubuu.ui.MainDestinations
 fun SuBuuAppHomeScreen(
     navController: NavController
 ) {
-    val homeViewModel = hiltViewModel<HomeViewModel>()
-    val homeUiState by homeViewModel.viewModelUiState.collectAsState()
-
-    HomeScreen(
-        goToPieChartDetail = {type, tab, date ->
-            navController.navigate(MainDestinations.getDetailRoute(type,tab,date))
-        }
-    )
+    HomeScreen()
 }
