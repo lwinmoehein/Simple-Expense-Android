@@ -1,6 +1,5 @@
 package lab.justonebyte.moneysubuu.ui.home
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Card
 import androidx.compose.material.MaterialTheme
@@ -13,7 +12,6 @@ import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import lab.justonebyte.moneysubuu.model.TransactionType
 import lab.justonebyte.moneysubuu.ui.components.ChooseTransactionTypeCard
 import lab.justonebyte.moneysubuu.ui.theme.Red900
 import lab.justonebyte.moneysubuu.ui.theme.SuBuuShapes
@@ -23,16 +21,15 @@ import lab.justonebyte.moneysubuu.ui.theme.positiveColor
 
 @Composable
 fun BalanceCard(
-    goToPiechart:(type:Int,tab:Int,date:String)->Unit,
     modifier: Modifier = Modifier,
-    currentBalance: Int ,
+    currentBalance: Int,
     incomeBalance:Int,
     expenseBalance:Int,
-    collectBalaceOfDay:(day:String)->Unit,
     selectedDay:String,
     selectedMonth:String,
     selectedYear:String,
     balanceType: BalanceType,
+    onDatePicked:(day:String)->Unit,
     onMonthPicked:(month:String)->Unit,
     onYearPicked:(year:String)->Unit,
     onTypeChanged:(type:BalanceType)->Unit
@@ -46,7 +43,7 @@ fun BalanceCard(
         ) {
 
         ChooseTransactionTypeCard(
-            collectBalaceOfDay = collectBalaceOfDay,
+            onDatePicked = onDatePicked,
             selectedDay =  selectedDay,
             selectedMonth = selectedMonth,
             selectedYear = selectedYear,
@@ -63,19 +60,7 @@ fun BalanceCard(
             modifier = modifier
                 .wrapContentHeight()
                 .fillMaxWidth()
-                .padding(10.dp)
-                .clickable {
-                    goToPiechart(
-                        TransactionType.Income.value,
-                        balanceType.value,
-                        when (balanceType) {
-                            BalanceType.DAILY -> mDate.value
-                            BalanceType.MONTHLY -> selectedMonth
-                            BalanceType.YEARLY -> selectedYear
-                            else -> "Total"
-                        }
-                    )
-                },
+                .padding(10.dp),
             contentColor = MaterialTheme.colors.primary
         ) {
 

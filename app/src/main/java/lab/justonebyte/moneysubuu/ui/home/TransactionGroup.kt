@@ -71,11 +71,7 @@ fun HomeTabs(
         ) { tabIndex ->
             Card {
                 when(tabIndex+1){
-                    HomeTab.Home.index-> HomeScreen(
-                                                goToPieChartDetail = {type, tab, date ->
-                                                    navController.navigate(MainDestinations.getDetailRoute(type,tab,date))
-                                                }
-                                            )
+                    HomeTab.Home.index-> HomeScreen()
                     HomeTab.Loans.index -> LoanScreen()
                     else -> BudgetScreen()
                 }
