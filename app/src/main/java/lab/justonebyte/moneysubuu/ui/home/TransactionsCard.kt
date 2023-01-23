@@ -26,8 +26,11 @@ fun TransactionsCard(
             .fillMaxHeight()
             .padding(10.dp)
             .absolutePadding(bottom = 100.dp),
-        elevation = 10.dp
+        elevation = 3.dp
     ) {
+        if(transactions.isEmpty()){
+            NoData(modifier = Modifier)
+        }
         LazyColumn(){
             items(transactions){
                 TransactionItem(transaction = it, onTransactionClick = {onTransactionClick(it)})
@@ -39,7 +42,9 @@ fun TransactionsCard(
 @Composable
 fun TransactionItem(transaction:Transaction,modifier: Modifier=Modifier ,onTransactionClick: (transaction: Transaction) -> Unit){
     Row(
-        modifier = modifier.padding(10.dp).clickable { onTransactionClick(transaction)  }
+        modifier = modifier
+            .padding(10.dp)
+            .clickable { onTransactionClick(transaction) }
     ) {
         Text(text = transaction.category.name,modifier = Modifier.weight(1f))
         Text(

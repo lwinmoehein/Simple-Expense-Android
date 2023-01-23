@@ -24,18 +24,14 @@ import java.util.*
 fun HomeScreen(
     goToPieChartDetail:(type:Int,tab:Int,date:String)->Unit,
 ){
-    val calendar = Calendar.getInstance()
     val homeViewModel = hiltViewModel<HomeViewModel>()
     val homeUiState by homeViewModel.viewModelUiState.collectAsState()
     val bottomSheetScaffoldState = rememberBottomSheetScaffoldState(
         bottomSheetState = BottomSheetState(BottomSheetValue.Collapsed)
     )
     val coroutineScope = rememberCoroutineScope()
-    val balanceType = remember{ mutableStateOf(BalanceType.DAILY)}
+    val balanceType = remember{ mutableStateOf(BalanceType.MONTHLY)}
 
-    val isMonthPickerShown = remember { mutableStateOf(false)}
-    val selectedMonthYear = remember { mutableStateOf(calendar.get(Calendar.YEAR))}
-    val selectedMonthMonth = remember { mutableStateOf(calendar.get(Calendar.MONTH)+1)}
     val currentTransaction = remember {
         mutableStateOf<Transaction?>(null)
     }
@@ -82,32 +78,6 @@ fun HomeScreen(
         )
     }
 
-
-
-    if(isMonthPickerShown.value){
-        Dialog(onDismissRequest = { isMonthPickerShown.value=false }) {
-                MonthPicker(
-                    selectedMonth = selectedMonthMonth.value,
-                    selectedYear =selectedMonthYear.value ,
-                    onYearSelected ={
-                      selectedMonthYear.value=it
-                    } ,
-                    onMonthSelected = {
-                        selectedMonthMonth.value=it
-
-                    },
-                    onConfirmPicker = {
-                        isMonthPickerShown.value =false
-                        if(balanceType.value==BalanceType.MONTHLY){
-                            homeViewModel.collectMonthlyBalance("${selectedMonthYear.value}-${if(selectedMonthMonth.value<10) "0"+selectedMonthMonth.value else selectedMonthMonth.value}")
-                        }else{
-                            homeViewModel.collectYearlyBalance(selectedMonthYear.value.toString())
-                        }
-                    },
-                    isMonthPicker = balanceType.value==BalanceType.MONTHLY
-            )
-        }
-    }
 
     BottomSheetScaffold(
         floatingActionButton = {
@@ -165,26 +135,29 @@ fun HomeScreen(
                       currentTransaction = currentTransaction.value,
                       categories =  homeUiState.categories,
                       onConfirmTransactionForm = { type, amount, category,date->
-                          clearStates()
                           Log.i("on confirm sheet",if(currentTransaction.value!=null) "yes" else "no")
-                          if(currentTransaction.value==null)
+                          if(currentTransaction.value==null) {
+                              println("edit:transaction:add")
+
                               homeViewModel.addTransaction(
                                   transactionCategory = category,
                                   type = type,
                                   amount = amount,
                                   date = date
                               )
-                          else
+                          } else {
+                              println("edit:transaction:update")
                               currentTransaction.value?.let {
                                   homeViewModel.updateTransaction(
-                                      transactionId =  it.id,
+                                      transactionId = it.id,
                                       transactionCategory = category,
                                       type = type,
                                       amount = amount,
                                       date = date
                                   )
                               }
-
+                          }
+                          clearStates()
 
                       },
                       onCloseBottomSheet = {
@@ -215,29 +188,7 @@ fun HomeScreen(
         }, sheetPeekHeight = 0.dp
     ) {
 
-//        HomeTabs(
-//            goToPieChart = {type, tab, date ->
-//                goToPieChartDetail(type,tab,date)
-//            },
-//            homeUiState = homeUiState,
-//            onTabChanged = {
-//                balanceType.value = it
-//                when(it){
-//                    BalanceType.DAILY->homeViewModel.collectDailyBalance()
-//                    BalanceType.MONTHLY->homeViewModel.collectMonthlyBalance()
-//                    BalanceType.YEARLY->homeViewModel.collectYearlyBalance()
-//                    else->homeViewModel.collectTotalBalance()
-//                }
-//            },
-//            collectBalanceOfDay = {
-//                homeViewModel.collectDailyBalance(it)
-//            },
-//            selectedBalanceType = balanceType.value,
-//            onMonthChoose = {
-//                isMonthPickerShown.value =true
-//            },
-//            onTransactionClick = { currentTransaction.value = it },
-//        )
+
         Card {
             HomeContent(
                 goToPieChart = { type, tab, date ->
@@ -246,12 +197,24 @@ fun HomeScreen(
                 homeUiState = homeUiState,
                 collectBalanceOfDay = { homeViewModel.collectDailyBalance(it) },
                 balanceType =  balanceType.value,
-                onMonthChoose = {
-                    isMonthPickerShown.value =true
+                onMonthPicked = {
+                    homeViewModel.collectMonthlyBalance(it)
+                },
+                onYearPicked = {
+                    homeViewModel.collectYearlyBalance(it)
                 },
                 onTransactionClick = {
                     currentTransaction.value = it
-                }
+                },
+                onTypeChanged = { type->
+                    balanceType.value = type
+                    when(type){
+                        BalanceType.DAILY->homeViewModel.collectDailyBalance()
+                        BalanceType.MONTHLY->homeViewModel.collectMonthlyBalance()
+                        BalanceType.YEARLY->homeViewModel.collectYearlyBalance()
+                        else->homeViewModel.collectTotalBalance()
+                    }
+                },
             )
         }
         SuBuuSnackBar(

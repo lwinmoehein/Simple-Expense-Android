@@ -1,30 +1,21 @@
-import android.util.Log
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material.Divider
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Scaffold
+import androidx.compose.material.rememberScaffoldState
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import lab.justonebyte.moneysubuu.model.Transaction
-import lab.justonebyte.moneysubuu.model.TransactionCategory
 import lab.justonebyte.moneysubuu.model.TransactionType
-import lab.justonebyte.moneysubuu.ui.detail.CustomPieChartWithData
-import lab.justonebyte.moneysubuu.ui.detail.TransactionDetailViewModel
+import lab.justonebyte.moneysubuu.ui.components.ChooseTransactionTypeCard
 import lab.justonebyte.moneysubuu.ui.detail.randomColor
-import lab.justonebyte.moneysubuu.ui.home.HomeTab
-import lab.justonebyte.moneysubuu.ui.stats.StatsUiState
+import lab.justonebyte.moneysubuu.ui.home.BalanceType
+import lab.justonebyte.moneysubuu.ui.home.SectionTitle
 import lab.justonebyte.moneysubuu.ui.stats.StatsViewModel
-import me.bytebeats.views.charts.AxisLabelFormatter
-import me.bytebeats.views.charts.LabelFormatter
 import me.bytebeats.views.charts.bar.BarChart
 import me.bytebeats.views.charts.bar.BarChartData
 import me.bytebeats.views.charts.bar.render.bar.SimpleBarDrawer
@@ -39,20 +30,10 @@ fun StatsScreen(goBack:()->Unit) {
     val scaffoldState = rememberScaffoldState()
     val statsViewModel = hiltViewModel<StatsViewModel>()
     val statsUiState by statsViewModel.viewModelUiState.collectAsState()
-
     val transactions = statsUiState.transactions
-    val mostCostCategory = transactions
-                                .filter { it.type==TransactionType.Expense }
-                                .groupBy { it.category }
-                                .map{it.key to it.value
-                                .sumOf { it.amount }}
-                                .maxByOrNull { it.second }
-    val mostIncomeCategory = transactions
-                                .filter { it.type==TransactionType.Income }
-                                .groupBy { it.category }
-                                .map{it.key to it.value
-                                .sumOf { it.amount }}
-                                .maxByOrNull { it.second }
+
+    val balanceType = remember{ mutableStateOf(BalanceType.MONTHLY) }
+
 
     Scaffold(
         scaffoldState = scaffoldState,
@@ -68,37 +49,59 @@ fun StatsScreen(goBack:()->Unit) {
             }
         }
     ) {
-        Column(modifier = Modifier
+        LazyColumn(modifier = Modifier
             .padding(10.dp)
             .padding(it)) {
-            Column(Modifier.weight(1f)) {
-                mostIncomeCategory?.first?.name?.let { mostIncomeCategory ->
-                   Row() {
-                       Text(text = mostIncomeCategory, color = Color.Green, fontWeight = FontWeight.ExtraBold)
-                       Text(
-                           text=" category gets you most money.",
-                           style = MaterialTheme.typography.subtitle1,
-                           modifier = Modifier.absolutePadding(bottom = 5.dp)
-                       )
-                   }
-                }
 
-                Divider(modifier = Modifier.absolutePadding(bottom = 10.dp))
-                CustomBarChart(transactions.filter { it.type==TransactionType.Income })
+
+            item {
+                ChooseTransactionTypeCard(
+                    modifier = Modifier.absolutePadding(bottom = 50.dp),
+                    collectBalaceOfDay = {
+                       statsViewModel.collectDailyBalance(it)
+                    },
+                    balanceType =  balanceType.value,
+                    onMonthPicked = {
+                         statsViewModel.collectMonthlyBalance(it)
+                    },
+                    onYearPicked = {
+                                   statsViewModel.collectYearlyBalance(it)
+                    },
+                    onTypeChanged = { type->
+                        balanceType.value = type
+                        when(type){
+                            BalanceType.DAILY->statsViewModel.collectDailyBalance()
+                            BalanceType.MONTHLY->statsViewModel.collectMonthlyBalance()
+                            BalanceType.YEARLY->statsViewModel.collectYearlyBalance()
+                            else->statsViewModel.collectTotalBalance()
+                        }
+                    },
+                    selectedYear = statsUiState.selectedYear,
+                    selectedMonth = statsUiState.selectedMonth,
+                    selectedDay = statsUiState.selectedDay
+                )
             }
-            Column(Modifier.weight(1f)) {
-                mostCostCategory?.first?.name?.let { mostCostCategory ->
+
+            item {
+                Column(
+                ) {
                     Row() {
-                        Text(text = mostCostCategory, color = Color.Red)
-                        Text(
-                            text=" category costs you most money.",
-                            style = MaterialTheme.typography.subtitle1,
-                            modifier = Modifier.absolutePadding(bottom = 5.dp)
-                        )
+                            SectionTitle(title = "Your income for")
                     }
+                    Divider(modifier = Modifier.absolutePadding(bottom = 5.dp))
+                    CustomBarChart(transactions.filter { it.type==TransactionType.Income })
                 }
-                Divider(modifier = Modifier.absolutePadding(bottom = 10.dp))
-                CustomBarChart(transactions.filter { it.type==TransactionType.Expense })
+            }
+
+            item {
+                Column(
+                ) {
+                    Row() {
+                            SectionTitle(title = "Your expense for")
+                    }
+                    Divider(modifier = Modifier.absolutePadding(bottom = 5.dp))
+                    CustomBarChart(transactions.filter { it.type==TransactionType.Expense })
+                }
             }
         }
     }
@@ -124,7 +127,7 @@ fun CustomBarChart(transactions:List<Transaction>){
             ),
             // Optional properties.
             modifier = Modifier
-                .fillMaxSize()
+                .height(300.dp)
                 .padding(20.dp),
             animation = simpleChartAnimation(),
             barDrawer = SimpleBarDrawer(),
