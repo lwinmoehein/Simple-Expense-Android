@@ -14,6 +14,7 @@ import lab.justonebyte.moneysubuu.model.TransactionType
 import lab.justonebyte.moneysubuu.ui.components.ChooseTransactionTypeCard
 import lab.justonebyte.moneysubuu.ui.detail.randomColor
 import lab.justonebyte.moneysubuu.ui.home.BalanceType
+import lab.justonebyte.moneysubuu.ui.home.NoData
 import lab.justonebyte.moneysubuu.ui.home.SectionTitle
 import lab.justonebyte.moneysubuu.ui.stats.StatsViewModel
 import me.bytebeats.views.charts.bar.BarChart
@@ -132,12 +133,12 @@ fun CustomBarChart(transactions:List<Transaction>){
             animation = simpleChartAnimation(),
             barDrawer = SimpleBarDrawer(),
             xAxisDrawer = SimpleXAxisDrawer(
-                axisLineThickness = 3.dp,
-                axisLineColor = MaterialTheme.colors.primary
+                axisLineThickness = 2.dp,
+                axisLineColor = MaterialTheme.colors.onSurface
             ),
             yAxisDrawer = SimpleYAxisDrawer(
-                axisLineThickness = 3.dp,
-                axisLineColor = MaterialTheme.colors.primary,
+                axisLineThickness = 2.dp,
+                axisLineColor = MaterialTheme.colors.onSurface,
                 drawLabelEvery = 1000,
                 labelValueFormatter = {
                     val yLabel = (it.toInt()/1000)*1000
@@ -149,5 +150,7 @@ fun CustomBarChart(transactions:List<Transaction>){
                 drawLocation = SimpleLabelDrawer.DrawLocation.Outside
             )
         )
+    }else{
+        NoData(modifier = Modifier.defaultMinSize(minHeight = 200.dp),"No Data.")
     }
 }

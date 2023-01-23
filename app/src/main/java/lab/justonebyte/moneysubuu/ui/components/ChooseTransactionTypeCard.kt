@@ -19,7 +19,8 @@ import androidx.compose.ui.window.Dialog
 import lab.justonebyte.moneysubuu.ui.home.*
 import lab.justonebyte.moneysubuu.ui.theme.SuBuuShapes
 import lab.justonebyte.moneysubuu.utils.getCurrentMonth
-import lab.justonebyte.moneysubuu.utils.getToday
+import lab.justonebyte.moneysubuu.utils.getCurrentDate
+import lab.justonebyte.moneysubuu.utils.getCurrentYear
 import java.util.*
 
 @Composable
@@ -35,8 +36,11 @@ fun ChooseTransactionTypeCard(
     onTypeChanged: (type: BalanceType) -> Unit
 ){
     val mContext = LocalContext.current
-    val currentDay = getToday()
+
+    val currentDay = getCurrentDate()
     val currentMonth = getCurrentMonth()
+    val currentYear = getCurrentYear()
+
     val calendar = Calendar.getInstance()
     val currentBalanceType = remember {
         mutableStateOf(BalanceType.MONTHLY)
@@ -155,8 +159,8 @@ fun ChooseTransactionTypeCard(
                         },
                     text =  when(balanceType){
                         BalanceType.DAILY-> if(mDate.value==currentDay) "Today" else ""+mDate.value
-                        BalanceType.MONTHLY->if(selectedMonth==currentMonth) "This Month" else selectedMonth
-                        BalanceType.YEARLY->" $selectedYear"
+                        BalanceType.MONTHLY->if(selectedMonth==currentMonth) "This month" else selectedMonth
+                        BalanceType.YEARLY->if(selectedYear==currentYear) "This year" else selectedYear
                         else->"Total" }
                 )
             }
