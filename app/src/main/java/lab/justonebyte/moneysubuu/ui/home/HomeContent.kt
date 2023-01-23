@@ -18,7 +18,8 @@ fun HomeContent(
     homeUiState: HomeUiState,
     collectBalanceOfDay:(day:String)->Unit,
     balanceType: BalanceType,
-    onMonthChoose:()->Unit,
+    onMonthPicked:(month:String)->Unit,
+    onYearPicked:(year:String)->Unit,
     onTransactionClick:(t: Transaction)->Unit,
     onTypeChanged:(type:BalanceType)->Unit
 ){
@@ -37,8 +38,11 @@ fun HomeContent(
                 selectedMonth = homeUiState.selectedMonth,
                 selectedYear = homeUiState.selectedYear,
                 balanceType = balanceType,
-                onMonthChoose = {
-                    onMonthChoose()
+                onMonthPicked = {
+                    onMonthPicked(it)
+                },
+                onYearPicked = {
+                    onYearPicked(it)
                 },
                 goToPiechart ={ type, tab, date ->
                     goToPieChart(type,tab,date)

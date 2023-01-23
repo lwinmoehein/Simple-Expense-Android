@@ -24,7 +24,6 @@ import java.util.*
 fun HomeScreen(
     goToPieChartDetail:(type:Int,tab:Int,date:String)->Unit,
 ){
-    val calendar = Calendar.getInstance()
     val homeViewModel = hiltViewModel<HomeViewModel>()
     val homeUiState by homeViewModel.viewModelUiState.collectAsState()
     val bottomSheetScaffoldState = rememberBottomSheetScaffoldState(
@@ -33,9 +32,6 @@ fun HomeScreen(
     val coroutineScope = rememberCoroutineScope()
     val balanceType = remember{ mutableStateOf(BalanceType.MONTHLY)}
 
-    val isMonthPickerShown = remember { mutableStateOf(false)}
-    val selectedMonthYear = remember { mutableStateOf(calendar.get(Calendar.YEAR))}
-    val selectedMonthMonth = remember { mutableStateOf(calendar.get(Calendar.MONTH)+1)}
     val currentTransaction = remember {
         mutableStateOf<Transaction?>(null)
     }
@@ -82,32 +78,6 @@ fun HomeScreen(
         )
     }
 
-
-
-    if(isMonthPickerShown.value){
-        Dialog(onDismissRequest = { isMonthPickerShown.value=false }) {
-                MonthPicker(
-                    selectedMonth = selectedMonthMonth.value,
-                    selectedYear =selectedMonthYear.value ,
-                    onYearSelected ={
-                      selectedMonthYear.value=it
-                    } ,
-                    onMonthSelected = {
-                        selectedMonthMonth.value=it
-
-                    },
-                    onConfirmPicker = {
-                        isMonthPickerShown.value =false
-                        if(balanceType.value==BalanceType.MONTHLY){
-                            homeViewModel.collectMonthlyBalance("${selectedMonthYear.value}-${if(selectedMonthMonth.value<10) "0"+selectedMonthMonth.value else selectedMonthMonth.value}")
-                        }else{
-                            homeViewModel.collectYearlyBalance(selectedMonthYear.value.toString())
-                        }
-                    },
-                    isMonthPicker = balanceType.value==BalanceType.MONTHLY
-            )
-        }
-    }
 
     BottomSheetScaffold(
         floatingActionButton = {
@@ -227,8 +197,11 @@ fun HomeScreen(
                 homeUiState = homeUiState,
                 collectBalanceOfDay = { homeViewModel.collectDailyBalance(it) },
                 balanceType =  balanceType.value,
-                onMonthChoose = {
-                    isMonthPickerShown.value =true
+                onMonthPicked = {
+                    homeViewModel.collectMonthlyBalance(it)
+                },
+                onYearPicked = {
+                    homeViewModel.collectYearlyBalance(it)
                 },
                 onTransactionClick = {
                     currentTransaction.value = it

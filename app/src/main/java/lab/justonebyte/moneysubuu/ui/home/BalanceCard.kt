@@ -33,7 +33,8 @@ fun BalanceCard(
     selectedMonth:String,
     selectedYear:String,
     balanceType: BalanceType,
-    onMonthChoose:()->Unit,
+    onMonthPicked:(month:String)->Unit,
+    onYearPicked:(year:String)->Unit,
     onTypeChanged:(type:BalanceType)->Unit
 ){
 
@@ -50,7 +51,8 @@ fun BalanceCard(
             selectedMonth = selectedMonth,
             selectedYear = selectedYear,
             balanceType = balanceType,
-            onMonthChoose = onMonthChoose,
+            onMonthPicked = onMonthPicked,
+            onYearPicked = onYearPicked,
             onTypeChanged = onTypeChanged
         )
 
@@ -74,7 +76,6 @@ fun BalanceCard(
                         }
                     )
                 },
-//            backgroundColor = MaterialTheme.colors.primary,
             contentColor = MaterialTheme.colors.primary
         ) {
 

@@ -15,13 +15,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import lab.justonebyte.moneysubuu.ui.home.AppOption
-import lab.justonebyte.moneysubuu.ui.home.BalanceType
-import lab.justonebyte.moneysubuu.ui.home.OptionItem
-import lab.justonebyte.moneysubuu.ui.home.SectionTitle
+import androidx.compose.ui.window.Dialog
+import lab.justonebyte.moneysubuu.ui.home.*
 import lab.justonebyte.moneysubuu.ui.theme.SuBuuShapes
 import lab.justonebyte.moneysubuu.utils.getCurrentMonth
 import lab.justonebyte.moneysubuu.utils.getToday
+import java.util.*
 
 @Composable
 fun ChooseTransactionTypeCard(
@@ -31,17 +30,30 @@ fun ChooseTransactionTypeCard(
     selectedMonth: String,
     selectedYear: String,
     balanceType: BalanceType,
-    onMonthChoose: () -> Unit,
+    onMonthPicked: (month:String) -> Unit,
+    onYearPicked: (year:String) -> Unit,
     onTypeChanged: (type: BalanceType) -> Unit
 ){
+    val mContext = LocalContext.current
     val currentDay = getToday()
     val currentMonth = getCurrentMonth()
-    val mContext = LocalContext.current
+    val calendar = Calendar.getInstance()
+    val currentBalanceType = remember {
+        mutableStateOf(BalanceType.MONTHLY)
+    }
+    //for date picker
     val mYear by remember(selectedDay) { mutableStateOf(selectedDay.split('-')[0].toInt()) }
     val mMonth by remember(selectedDay){ mutableStateOf(selectedDay.split('-')[1].toInt()) }
     val mDay by remember(selectedDay) { mutableStateOf(selectedDay.split('-')[2].toInt()) }
 
+    //for month picker
+    val selectedMonthYear = remember { mutableStateOf(calendar.get(Calendar.YEAR)) }
+    val selectedMonthMonth = remember { mutableStateOf(calendar.get(Calendar.MONTH)+1) }
+
+    val isMonthPickerShown = remember { mutableStateOf(false) }
     val mDate = remember { mutableStateOf(selectedDay) }
+
+
     val mDatePickerDialog = DatePickerDialog(
         mContext,
         { _: DatePicker, mYear: Int, mMonth: Int, mDayOfMonth: Int ->
@@ -49,15 +61,39 @@ fun ChooseTransactionTypeCard(
             collectBalaceOfDay(mDate.value)
         }, mYear, mMonth-1, mDay
     )
+
     val balanceTypeOptions = listOf(
         OptionItem("Daily", BalanceType.DAILY),
         OptionItem("Monthly", BalanceType.MONTHLY),
         OptionItem("Yearly", BalanceType.YEARLY),
         OptionItem("Total", BalanceType.TOTAL)
     )
-    val currentBalanceType = remember {
-        mutableStateOf(BalanceType.MONTHLY)
+
+    if(isMonthPickerShown.value){
+        Dialog(onDismissRequest = { isMonthPickerShown.value=false }) {
+            MonthPicker(
+                selectedMonth = selectedMonthMonth.value,
+                selectedYear =selectedMonthYear.value ,
+                onYearSelected ={
+                    selectedMonthYear.value=it
+                } ,
+                onMonthSelected = {
+                    selectedMonthMonth.value=it
+
+                },
+                onConfirmPicker = {
+                    isMonthPickerShown.value =false
+                    if(currentBalanceType.value==BalanceType.MONTHLY){
+                        onMonthPicked("${selectedMonthYear.value}-${if(selectedMonthMonth.value<10) "0"+selectedMonthMonth.value else selectedMonthMonth.value}")
+                    }else{
+                        onYearPicked(selectedMonthYear.value.toString())
+                    }
+                },
+                isMonthPicker = currentBalanceType.value==BalanceType.MONTHLY
+            )
+        }
     }
+
 
     SectionTitle(title = "Choose Type")
 
@@ -112,8 +148,8 @@ fun ChooseTransactionTypeCard(
                         .clickable {
                             when (balanceType) {
                                 BalanceType.DAILY -> mDatePickerDialog.show()
-                                BalanceType.MONTHLY -> onMonthChoose()
-                                BalanceType.YEARLY -> onMonthChoose()
+                                BalanceType.MONTHLY -> isMonthPickerShown.value = true
+                                BalanceType.YEARLY -> isMonthPickerShown.value = true
                                 else->{}
                             }
                         },
