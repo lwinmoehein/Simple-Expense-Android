@@ -1,5 +1,6 @@
 package lab.justonebyte.moneysubuu.ui.stats
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -11,6 +12,7 @@ import lab.justonebyte.moneysubuu.data.CategoryRepository
 import lab.justonebyte.moneysubuu.data.TransactionRepository
 import lab.justonebyte.moneysubuu.model.Transaction
 import lab.justonebyte.moneysubuu.model.TransactionCategory
+import lab.justonebyte.moneysubuu.model.TransactionType
 import lab.justonebyte.moneysubuu.ui.components.SnackBarType
 import lab.justonebyte.moneysubuu.utils.dateFormatter
 import lab.justonebyte.moneysubuu.utils.monthFormatter
@@ -40,18 +42,82 @@ class StatsViewModel @Inject constructor(
 
 
     init {
+        // collectDailyBalance()
+        //collectYearlyBalance()
+        collectMonthlyBalance()
         viewModelScope.launch {
             launch {
-                collectTransactions()
+                collectCategories()
+            }
+        }
+    }
+    fun collectTotalBalance(){
+        viewModelScope.launch {
+            transactionRepository.getTotalTransactions().collect{ transactions->
+                bindBalanceData(transactions)
+            }
+        }
+    }
+    fun collectDailyBalance(dateValue:String = viewModelUiState.value.selectedDay){
+        _viewModelUiState.update {
+            it.copy(selectedDay = dateValue)
+        }
+
+        viewModelScope.launch {
+            transactionRepository.getDailyTransactions(dateValue).collect{ transactions->
+                bindBalanceData(transactions)
             }
         }
     }
 
-    private suspend fun collectTransactions() {
-        transactionRepository.getTotalTransactions().collect { transactions->
-            _viewModelUiState.update { it.copy(transactions = transactions) }
+    fun collectMonthlyBalance(dateValue:String=  viewModelUiState.value.selectedMonth){
+        _viewModelUiState.update {
+            it.copy(selectedMonth = dateValue)
+        }
+        viewModelScope.launch {
+            transactionRepository.getMonthlyTransactions(dateValue).collect{ transactions->
+                bindBalanceData(transactions)
+            }
         }
     }
 
+    fun collectYearlyBalance(dateValue:String= viewModelUiState.value.selectedYear){
+        _viewModelUiState.update {
+            it.copy(selectedYear = dateValue)
+        }
+        viewModelScope.launch {
+            transactionRepository.getYearlyTransactions(dateValue).collect{ transactions->
+                bindBalanceData(transactions)
+            }
+        }
+    }
+
+    private fun bindBalanceData(transactions: List<Transaction>) {
+        val income = transactions.filter { it.type== TransactionType.Income }.sumOf{ it.amount }
+        val expense = transactions.filter { it.type== TransactionType.Expense }.sumOf { it.amount }
+        val sum = income-expense
+
+        _viewModelUiState.update {
+            it.copy(
+                transactions = transactions
+            )
+        }
+    }
+
+    private suspend fun collectCategories(){
+        categoryRepository.getCategories().collect{ categories->
+            _viewModelUiState.update { it.copy(categories = categories) }
+        }
+    }
+    fun showSnackBar(type:SnackBarType){
+        _viewModelUiState.update {
+            it.copy(currentSnackBar = type)
+        }
+    }
+    fun clearSnackBar(){
+        _viewModelUiState.update {
+            it.copy(currentSnackBar = null)
+        }
+    }
 }
 

@@ -59,7 +59,7 @@ fun AppDrawer(
         )
         DrawerButton(
             icon = Icons.Filled.Info,
-            label = "Stats",
+            label = "Charts",
             isSelected = currentRoute == MainDestinations.STATS_ROUTE,
             action = {
                 navigateToStats()
@@ -67,7 +67,7 @@ fun AppDrawer(
             }
         )
         DrawerButton(
-            icon = Icons.Filled.Info,
+            icon = Icons.Filled.Settings,
             label = "Manage Categories",
             isSelected = currentRoute == MainDestinations.CATEGORY_ROUTE,
             action = {
