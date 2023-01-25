@@ -92,5 +92,9 @@ dependencies {
     //number picker
     implementation "com.chargemap.compose:numberpicker:1.0.3"
 
+    //prefs
+    implementation("androidx.datastore:datastore:$datastore_version")
+    implementation("androidx.datastore:datastore-preferences:$datastore_version")
+
 
 }
