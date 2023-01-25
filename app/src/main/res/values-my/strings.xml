@@ -6,8 +6,15 @@
     <string name="my">မြန်မာ</string>
     <string name="kyat">ကျပ်</string>
     <string name="dollar">ဒေါ်လာ</string>
+    <string name="select_currency">ငွေကြေးကိုရွေးပါ</string>
+    <string name="select_balance">ဘယ်လိုစုပြီးပြ</string>
     <string name="incorrect_category_data">အမျိုးအစားနာမည်အား မှန်ကန်စွာထည့်ပါ။</string>
     <string name="remove_category_success">Category removed successfully.</string>
     <string name="add_category_success">New category added successfully.</string>
     <string name="update_category_success">Category name updated successfully.</string>
+
+    <string name="daily">နေ့စဥ်</string>
+    <string name="monthly">လစဥ်</string>
+    <string name="yearly">နှစ်စဥ်</string>
+    <string name="total">စုစုပေါင်း</string>
 </resources>

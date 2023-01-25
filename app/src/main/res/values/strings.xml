@@ -4,9 +4,17 @@
     <string name="my">Myanmar</string>
     <string name="kyat">Kyat</string>
     <string name="dollar">Dollar</string>
+    <string name="select_currency">Select Currency</string>
+    <string name="select_balance">Default Balance Type</string>
     <string name="incorrect_data">Please insert data correctly.</string>
     <string name="incorrect_category_data">Please insert category name correctly.</string>
     <string name="add_category_success">New category added successfully.</string>
     <string name="update_category_success">Category name updated successfully.</string>
     <string name="remove_category_success">Category removed successfully.</string>
+
+    <string name="daily">Daily</string>
+    <string name="monthly">Monthly</string>
+    <string name="yearly">Yearly</string>
+    <string name="total">Total</string>
+
 </resources>

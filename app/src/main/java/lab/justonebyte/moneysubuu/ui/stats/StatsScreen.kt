@@ -34,7 +34,7 @@ fun StatsScreen(goBack:()->Unit) {
     val statsUiState by statsViewModel.viewModelUiState.collectAsState()
     val transactions = statsUiState.transactions
 
-    val balanceType = remember{ mutableStateOf(BalanceType.MONTHLY) }
+    val balanceType = remember{ mutableStateOf<BalanceType>(BalanceType.MONTHLY) }
 
     val chosenDateString = when(balanceType.value){
         BalanceType.DAILY-> if(statsUiState.selectedDay== getCurrentDate()) "Today" else statsUiState.selectedDay
