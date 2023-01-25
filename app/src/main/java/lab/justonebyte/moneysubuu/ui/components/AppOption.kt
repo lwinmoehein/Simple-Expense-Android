@@ -1,4 +1,4 @@
-package lab.justonebyte.moneysubuu.ui.home
+package lab.justonebyte.moneysubuu.ui.components
 
 import androidx.compose.foundation.layout.Row
 import androidx.compose.material.*
@@ -7,7 +7,6 @@ import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 
 data class OptionItem(val name:String,val value:Any)
 
@@ -57,7 +56,7 @@ fun AppOption(
                     expanded = false
                     onItemSelected(selectedItem)
                 }) {
-                    Text(text = selectedOption.name)
+                    Text(text = selectedOption.name, style = MaterialTheme.typography.button)
                 }
             }
         }
