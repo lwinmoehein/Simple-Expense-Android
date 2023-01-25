@@ -12,6 +12,7 @@ import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import lab.justonebyte.moneysubuu.model.BalanceType
 import lab.justonebyte.moneysubuu.ui.components.ChooseTransactionTypeCard
 import lab.justonebyte.moneysubuu.ui.theme.Red900
 import lab.justonebyte.moneysubuu.ui.theme.SuBuuShapes
@@ -32,7 +33,7 @@ fun BalanceCard(
     onDatePicked:(day:String)->Unit,
     onMonthPicked:(month:String)->Unit,
     onYearPicked:(year:String)->Unit,
-    onTypeChanged:(type:BalanceType)->Unit
+    onTypeChanged:(type: BalanceType)->Unit
 ){
 
 

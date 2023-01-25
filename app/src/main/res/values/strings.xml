@@ -1,5 +1,9 @@
 <resources>
     <string name="app_name">Money Su Buu</string>
+    <string name="en">English</string>
+    <string name="my">Myanmar</string>
+    <string name="kyat">Kyat</string>
+    <string name="dollar">Dollar</string>
     <string name="incorrect_data">Please insert data correctly.</string>
     <string name="incorrect_category_data">Please insert category name correctly.</string>
     <string name="add_category_success">New category added successfully.</string>

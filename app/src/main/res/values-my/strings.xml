@@ -2,6 +2,10 @@
 <resources>
     <string name="app_name">Money Su Buu</string>
     <string name="incorrect_data">ကျေးဇူးပြု၍အချက်အလက်မှန်ကန်စွာထည့်ပါ။</string>
+    <string name="en">အင်္ဂလိပ်</string>
+    <string name="my">မြန်မာ</string>
+    <string name="kyat">ကျပ်</string>
+    <string name="dollar">ဒေါ်လာ</string>
     <string name="incorrect_category_data">အမျိုးအစားနာမည်အား မှန်ကန်စွာထည့်ပါ။</string>
     <string name="remove_category_success">Category removed successfully.</string>
     <string name="add_category_success">New category added successfully.</string>

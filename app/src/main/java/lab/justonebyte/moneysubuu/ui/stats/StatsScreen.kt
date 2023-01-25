@@ -1,13 +1,11 @@
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import lab.justonebyte.moneysubuu.model.BalanceType
 import lab.justonebyte.moneysubuu.model.Transaction
 import lab.justonebyte.moneysubuu.model.TransactionType
 import lab.justonebyte.moneysubuu.ui.components.AppOption
@@ -27,7 +25,6 @@ import me.bytebeats.views.charts.bar.render.label.SimpleLabelDrawer
 import me.bytebeats.views.charts.bar.render.xaxis.SimpleXAxisDrawer
 import me.bytebeats.views.charts.bar.render.yaxis.SimpleYAxisDrawer
 import me.bytebeats.views.charts.simpleChartAnimation
-import java.security.cert.PKIXRevocationChecker.Option
 
 
 @Composable
