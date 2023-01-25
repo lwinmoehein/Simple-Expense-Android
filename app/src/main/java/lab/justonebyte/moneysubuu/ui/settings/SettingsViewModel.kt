@@ -37,7 +37,7 @@ class SettingsViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             launch { collectSelectedCurrency() }
-            launch { collectSelectedCurrency() }
+            launch { collectDefaultBalanceType() }
         }
     }
     private suspend fun collectSelectedCurrency(){
@@ -65,7 +65,16 @@ class SettingsViewModel @Inject constructor(
     }
 
 
-
+    fun updateCurrency(currency: Currency){
+        viewModelScope.launch {
+            settingRepository.updateSelectedCurrency(currency.value)
+        }
+    }
+    fun updateDefaultBalanceType(balanceType: BalanceType){
+        viewModelScope.launch {
+            settingRepository.updateBalanceType(balanceType.value)
+        }
+    }
     fun showSnackBar(type: SnackBarType){
         _viewModelUiState.update {
             it.copy(currentSnackBar = type)

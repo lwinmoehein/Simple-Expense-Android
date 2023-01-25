@@ -44,7 +44,7 @@ fun ChooseTransactionTypeCard(
 
     val calendar = Calendar.getInstance()
     val currentBalanceType = remember {
-        mutableStateOf(BalanceType.MONTHLY)
+        mutableStateOf<BalanceType>(BalanceType.MONTHLY)
     }
     //for date picker
     val mYear by remember(selectedDay) { mutableStateOf(selectedDay.split('-')[0].toInt()) }

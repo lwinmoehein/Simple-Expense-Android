@@ -27,7 +27,7 @@ fun HomeScreen(){
         bottomSheetState = BottomSheetState(BottomSheetValue.Collapsed)
     )
     val coroutineScope = rememberCoroutineScope()
-    val balanceType = remember{ mutableStateOf(BalanceType.MONTHLY)}
+    val balanceType = remember{ mutableStateOf<BalanceType>(BalanceType.MONTHLY)}
 
     val currentTransaction = remember {
         mutableStateOf<Transaction?>(null)
