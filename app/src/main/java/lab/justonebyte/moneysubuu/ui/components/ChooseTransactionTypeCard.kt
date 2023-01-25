@@ -126,7 +126,14 @@ fun ChooseTransactionTypeCard(
                 horizontalAlignment = Alignment.Start,
             ) {
                 Text(text = "Show Data By : ",modifier= Modifier.absolutePadding(bottom = 5.dp))
-                Text(text = "Select Day : ")
+                if(balanceType!=BalanceType.TOTAL){
+                    Text(text = "Select"+ when (balanceType) {
+                        BalanceType.DAILY -> " day :"
+                        BalanceType.MONTHLY -> " month :"
+                        BalanceType.YEARLY -> " year :"
+                        else->{}
+                    })
+                }
             }
             Column(
                 verticalArrangement = Arrangement.Center,
@@ -137,7 +144,7 @@ fun ChooseTransactionTypeCard(
                     modifier = Modifier
                         .fillMaxWidth()
                         .absolutePadding(bottom = 5.dp),
-                    label = "Select Day :",
+                    label = "Select",
                     options = balanceTypeOptions,
                     onItemSelected = {
                         currentBalanceType.value = it.value as BalanceType
@@ -152,19 +159,21 @@ fun ChooseTransactionTypeCard(
                 )
 
 
-                Text(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clickable {
-                            when (balanceType) {
-                                BalanceType.DAILY -> mDatePickerDialog.show()
-                                BalanceType.MONTHLY -> isMonthPickerShown.value = true
-                                BalanceType.YEARLY -> isMonthPickerShown.value = true
-                                else->{}
-                            }
-                        },
-                    text =  chosenDateString
-                )
+                if(balanceType!=BalanceType.TOTAL){
+                    Text(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable {
+                                when (balanceType) {
+                                    BalanceType.DAILY -> mDatePickerDialog.show()
+                                    BalanceType.MONTHLY -> isMonthPickerShown.value = true
+                                    BalanceType.YEARLY -> isMonthPickerShown.value = true
+                                    else->{}
+                                }
+                            },
+                        text =  chosenDateString
+                    )
+                }
             }
         }
     }
