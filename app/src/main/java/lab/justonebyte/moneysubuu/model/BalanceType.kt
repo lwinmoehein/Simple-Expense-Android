@@ -1,4 +1,4 @@
-package lab.justonebyte.moneysubuu.ui.home
+package lab.justonebyte.moneysubuu.model
 
 enum class BalanceType(val value:Int) {
     DAILY(1),

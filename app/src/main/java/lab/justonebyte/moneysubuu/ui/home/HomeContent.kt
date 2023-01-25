@@ -8,6 +8,7 @@ import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import lab.justonebyte.moneysubuu.model.BalanceType
 import lab.justonebyte.moneysubuu.model.Transaction
 
 
@@ -19,7 +20,7 @@ fun HomeContent(
     onMonthPicked:(month:String)->Unit,
     onYearPicked:(year:String)->Unit,
     onTransactionClick:(t: Transaction)->Unit,
-    onTypeChanged:(type:BalanceType)->Unit
+    onTypeChanged:(type: BalanceType)->Unit
 ){
 
     Scaffold {

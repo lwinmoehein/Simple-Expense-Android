@@ -16,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
+import lab.justonebyte.moneysubuu.model.BalanceType
 import lab.justonebyte.moneysubuu.ui.home.*
 import lab.justonebyte.moneysubuu.ui.theme.SuBuuShapes
 import lab.justonebyte.moneysubuu.utils.getCurrentMonth
@@ -93,13 +94,13 @@ fun ChooseTransactionTypeCard(
                 },
                 onConfirmPicker = {
                     isMonthPickerShown.value =false
-                    if(currentBalanceType.value==BalanceType.MONTHLY){
+                    if(currentBalanceType.value== BalanceType.MONTHLY){
                         onMonthPicked("${selectedMonthYear.value}-${if(selectedMonthMonth.value<10) "0"+selectedMonthMonth.value else selectedMonthMonth.value}")
                     }else{
                         onYearPicked(selectedMonthYear.value.toString())
                     }
                 },
-                isMonthPicker = currentBalanceType.value==BalanceType.MONTHLY
+                isMonthPicker = currentBalanceType.value== BalanceType.MONTHLY
             )
         }
     }
@@ -126,7 +127,7 @@ fun ChooseTransactionTypeCard(
                 horizontalAlignment = Alignment.Start,
             ) {
                 Text(text = "Show Data By : ",modifier= Modifier.absolutePadding(bottom = 5.dp))
-                if(balanceType!=BalanceType.TOTAL){
+                if(balanceType!= BalanceType.TOTAL){
                     Text(text = "Select"+ when (balanceType) {
                         BalanceType.DAILY -> " day :"
                         BalanceType.MONTHLY -> " month :"
@@ -159,7 +160,7 @@ fun ChooseTransactionTypeCard(
                 )
 
 
-                if(balanceType!=BalanceType.TOTAL){
+                if(balanceType!= BalanceType.TOTAL){
                     Text(
                         modifier = Modifier
                             .fillMaxWidth()
