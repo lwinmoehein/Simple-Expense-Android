@@ -20,6 +20,9 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.outlined.Home
+import androidx.compose.material.icons.outlined.Info
+import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -49,7 +52,12 @@ fun AppDrawer(
         JetNewsLogo(Modifier.padding(16.dp))
         Divider(color = MaterialTheme.colors.onSurface.copy(alpha = .2f))
         DrawerButton(
-            icon = Icons.Filled.Home,
+            icon = {
+                Image(
+                    painterResource(id = R.drawable.ic_round_home_24),
+                    contentDescription = null,
+                )
+            },
             label = "Home",
             isSelected = currentRoute == MainDestinations.HOME_ROUTE,
             action = {
@@ -58,7 +66,12 @@ fun AppDrawer(
             }
         )
         DrawerButton(
-            icon = Icons.Filled.Info,
+            icon = {
+                Image(
+                    painterResource(id = R.drawable.ic_round_pie_chart_24),
+                    contentDescription = null,
+                )
+            },
             label = "Charts",
             isSelected = currentRoute == MainDestinations.STATS_ROUTE,
             action = {
@@ -67,7 +80,12 @@ fun AppDrawer(
             }
         )
         DrawerButton(
-            icon = Icons.Filled.Settings,
+            icon = {
+                Image(
+                    painterResource(id = R.drawable.ic_round_category_24),
+                    contentDescription = null,
+                )
+            },
             label = "Manage Categories",
             isSelected = currentRoute == MainDestinations.CATEGORY_ROUTE,
             action = {
@@ -76,7 +94,12 @@ fun AppDrawer(
             }
         )
         DrawerButton(
-            icon = Icons.Filled.Settings,
+            icon = {
+                Image(
+                    painterResource(id = R.drawable.ic_round_settings_24),
+                    contentDescription = null,
+                )
+            },
             label = "Settings",
             isSelected = currentRoute == MainDestinations.SETTINGS_ROUTE,
             action = {
@@ -107,7 +130,7 @@ private fun JetNewsLogo(modifier: Modifier = Modifier) {
 
 @Composable
 private fun DrawerButton(
-    icon: ImageVector,
+    icon: @Composable () -> Unit,
     label: String,
     isSelected: Boolean,
     action: () -> Unit,
@@ -147,16 +170,11 @@ private fun DrawerButton(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Image(
-                    imageVector = icon,
-                    contentDescription = null, // decorative
-                    colorFilter = ColorFilter.tint(textIconColor),
-                    alpha = imageAlpha
-                )
+                icon()
                 Spacer(Modifier.width(16.dp))
                 Text(
                     text = label,
-                    style = MaterialTheme.typography.body2,
+                    style = MaterialTheme.typography.button,
                     color = textIconColor
                 )
             }

@@ -9,12 +9,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import lab.justonebyte.moneysubuu.model.Transaction
-import lab.justonebyte.moneysubuu.model.TransactionType
 
 
 @Composable
 fun HomeContent(
-    goToPieChart:(type:Int, tab:Int, date:String)->Unit,
     homeUiState: HomeUiState,
     collectBalanceOfDay:(day:String)->Unit,
     balanceType: BalanceType,
@@ -31,21 +29,18 @@ fun HomeContent(
                 currentBalance = homeUiState.currentBalance,
                 incomeBalance = homeUiState.incomeBalance,
                 expenseBalance = homeUiState.expenseBalance,
-                collectBalaceOfDay = {
-                    collectBalanceOfDay(it)
-                },
                 selectedDay = homeUiState.selectedDay,
                 selectedMonth = homeUiState.selectedMonth,
                 selectedYear = homeUiState.selectedYear,
                 balanceType = balanceType,
-                onMonthPicked = {
-                    onMonthPicked(it)
+                onDatePicked = { date->
+                    collectBalanceOfDay(date)
                 },
-                onYearPicked = {
-                    onYearPicked(it)
+                onMonthPicked = { month->
+                    onMonthPicked(month)
                 },
-                goToPiechart ={ type, tab, date ->
-                    goToPieChart(type,tab,date)
+                onYearPicked = { year->
+                    onYearPicked(year)
                 },
                 onTypeChanged = onTypeChanged
             )

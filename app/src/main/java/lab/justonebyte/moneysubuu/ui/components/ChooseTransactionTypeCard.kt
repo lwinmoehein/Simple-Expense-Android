@@ -19,24 +19,28 @@ import androidx.compose.ui.window.Dialog
 import lab.justonebyte.moneysubuu.ui.home.*
 import lab.justonebyte.moneysubuu.ui.theme.SuBuuShapes
 import lab.justonebyte.moneysubuu.utils.getCurrentMonth
-import lab.justonebyte.moneysubuu.utils.getToday
+import lab.justonebyte.moneysubuu.utils.getCurrentDate
+import lab.justonebyte.moneysubuu.utils.getCurrentYear
 import java.util.*
 
 @Composable
 fun ChooseTransactionTypeCard(
     modifier: Modifier = Modifier,
-    collectBalaceOfDay: (day: String) -> Unit,
     selectedDay: String,
     selectedMonth: String,
     selectedYear: String,
     balanceType: BalanceType,
+    onDatePicked: (day: String) -> Unit,
     onMonthPicked: (month:String) -> Unit,
     onYearPicked: (year:String) -> Unit,
     onTypeChanged: (type: BalanceType) -> Unit
 ){
     val mContext = LocalContext.current
-    val currentDay = getToday()
+
+    val currentDay = getCurrentDate()
     val currentMonth = getCurrentMonth()
+    val currentYear = getCurrentYear()
+
     val calendar = Calendar.getInstance()
     val currentBalanceType = remember {
         mutableStateOf(BalanceType.MONTHLY)
@@ -53,12 +57,18 @@ fun ChooseTransactionTypeCard(
     val isMonthPickerShown = remember { mutableStateOf(false) }
     val mDate = remember { mutableStateOf(selectedDay) }
 
+    val chosenDateString = when(balanceType){
+        BalanceType.DAILY-> if(selectedDay==currentDay) "Today" else selectedDay
+        BalanceType.MONTHLY->if(selectedMonth==currentMonth) "This month" else selectedMonth
+        BalanceType.YEARLY->if(selectedYear==currentYear) "This year" else selectedYear
+        else->"Total" }
+
 
     val mDatePickerDialog = DatePickerDialog(
         mContext,
         { _: DatePicker, mYear: Int, mMonth: Int, mDayOfMonth: Int ->
             mDate.value = "$mYear-${if(mMonth+1>=10) mMonth+1 else "0"+(mMonth+1)}-${if(mDayOfMonth<10) "0"+mDayOfMonth else mDayOfMonth}"
-            collectBalaceOfDay(mDate.value)
+            onDatePicked(mDate.value)
         }, mYear, mMonth-1, mDay
     )
 
@@ -116,7 +126,14 @@ fun ChooseTransactionTypeCard(
                 horizontalAlignment = Alignment.Start,
             ) {
                 Text(text = "Show Data By : ",modifier= Modifier.absolutePadding(bottom = 5.dp))
-                Text(text = "Select Day : ")
+                if(balanceType!=BalanceType.TOTAL){
+                    Text(text = "Select"+ when (balanceType) {
+                        BalanceType.DAILY -> " day :"
+                        BalanceType.MONTHLY -> " month :"
+                        BalanceType.YEARLY -> " year :"
+                        else->{}
+                    })
+                }
             }
             Column(
                 verticalArrangement = Arrangement.Center,
@@ -127,7 +144,7 @@ fun ChooseTransactionTypeCard(
                     modifier = Modifier
                         .fillMaxWidth()
                         .absolutePadding(bottom = 5.dp),
-                    label = "Select Day :",
+                    label = "Select",
                     options = balanceTypeOptions,
                     onItemSelected = {
                         currentBalanceType.value = it.value as BalanceType
@@ -142,23 +159,21 @@ fun ChooseTransactionTypeCard(
                 )
 
 
-                Text(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clickable {
-                            when (balanceType) {
-                                BalanceType.DAILY -> mDatePickerDialog.show()
-                                BalanceType.MONTHLY -> isMonthPickerShown.value = true
-                                BalanceType.YEARLY -> isMonthPickerShown.value = true
-                                else->{}
-                            }
-                        },
-                    text =  when(balanceType){
-                        BalanceType.DAILY-> if(mDate.value==currentDay) "Today" else ""+mDate.value
-                        BalanceType.MONTHLY->if(selectedMonth==currentMonth) "This Month" else selectedMonth
-                        BalanceType.YEARLY->" $selectedYear"
-                        else->"Total" }
-                )
+                if(balanceType!=BalanceType.TOTAL){
+                    Text(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable {
+                                when (balanceType) {
+                                    BalanceType.DAILY -> mDatePickerDialog.show()
+                                    BalanceType.MONTHLY -> isMonthPickerShown.value = true
+                                    BalanceType.YEARLY -> isMonthPickerShown.value = true
+                                    else->{}
+                                }
+                            },
+                        text =  chosenDateString
+                    )
+                }
             }
         }
     }

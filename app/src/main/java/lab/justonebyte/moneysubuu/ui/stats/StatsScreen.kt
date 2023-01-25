@@ -1,21 +1,25 @@
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material.Divider
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Scaffold
-import androidx.compose.material.rememberScaffoldState
+import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import lab.justonebyte.moneysubuu.model.Transaction
 import lab.justonebyte.moneysubuu.model.TransactionType
+import lab.justonebyte.moneysubuu.ui.components.AppOption
 import lab.justonebyte.moneysubuu.ui.components.ChooseTransactionTypeCard
+import lab.justonebyte.moneysubuu.ui.components.OptionItem
+import lab.justonebyte.moneysubuu.ui.detail.CustomPieChartWithData
 import lab.justonebyte.moneysubuu.ui.detail.randomColor
-import lab.justonebyte.moneysubuu.ui.home.BalanceType
-import lab.justonebyte.moneysubuu.ui.home.SectionTitle
+import lab.justonebyte.moneysubuu.ui.home.*
 import lab.justonebyte.moneysubuu.ui.stats.StatsViewModel
+import lab.justonebyte.moneysubuu.utils.getCurrentDate
+import lab.justonebyte.moneysubuu.utils.getCurrentMonth
+import lab.justonebyte.moneysubuu.utils.getCurrentYear
 import me.bytebeats.views.charts.bar.BarChart
 import me.bytebeats.views.charts.bar.BarChartData
 import me.bytebeats.views.charts.bar.render.bar.SimpleBarDrawer
@@ -23,6 +27,7 @@ import me.bytebeats.views.charts.bar.render.label.SimpleLabelDrawer
 import me.bytebeats.views.charts.bar.render.xaxis.SimpleXAxisDrawer
 import me.bytebeats.views.charts.bar.render.yaxis.SimpleYAxisDrawer
 import me.bytebeats.views.charts.simpleChartAnimation
+import java.security.cert.PKIXRevocationChecker.Option
 
 
 @Composable
@@ -34,38 +39,35 @@ fun StatsScreen(goBack:()->Unit) {
 
     val balanceType = remember{ mutableStateOf(BalanceType.MONTHLY) }
 
+    val chosenDateString = when(balanceType.value){
+        BalanceType.DAILY-> if(statsUiState.selectedDay== getCurrentDate()) "Today" else statsUiState.selectedDay
+        BalanceType.MONTHLY->if(statsUiState.selectedMonth== getCurrentMonth()) "This month" else statsUiState.selectedMonth
+        BalanceType.YEARLY->if(statsUiState.selectedYear== getCurrentYear()) "This year" else statsUiState.selectedYear
+        else->"Total" }
+
+    val transactionTypeOptions = listOf<OptionItem>(OptionItem("Expense",TransactionType.Expense),OptionItem("Income",TransactionType.Income))
+    val selectedTransactionType = remember { mutableStateOf<TransactionType>(TransactionType.Expense) }
 
     Scaffold(
         scaffoldState = scaffoldState,
         topBar = {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .absolutePadding(right = 20.dp, left = 20.dp),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-
-            }
         }
     ) {
-        LazyColumn(modifier = Modifier
+        Column(modifier = Modifier
             .padding(10.dp)
             .padding(it)) {
 
-
-            item {
                 ChooseTransactionTypeCard(
-                    modifier = Modifier.absolutePadding(bottom = 50.dp),
-                    collectBalaceOfDay = {
-                       statsViewModel.collectDailyBalance(it)
+                    modifier = Modifier.absolutePadding(bottom = 30.dp),
+                    onDatePicked = { date ->
+                       statsViewModel.collectDailyBalance(date)
                     },
                     balanceType =  balanceType.value,
-                    onMonthPicked = {
-                         statsViewModel.collectMonthlyBalance(it)
+                    onMonthPicked = { month->
+                         statsViewModel.collectMonthlyBalance(month)
                     },
-                    onYearPicked = {
-                                   statsViewModel.collectYearlyBalance(it)
+                    onYearPicked = { year->
+                        statsViewModel.collectYearlyBalance(year)
                     },
                     onTypeChanged = { type->
                         balanceType.value = type
@@ -80,29 +82,33 @@ fun StatsScreen(goBack:()->Unit) {
                     selectedMonth = statsUiState.selectedMonth,
                     selectedDay = statsUiState.selectedDay
                 )
-            }
 
-            item {
                 Column(
+                    Modifier.absolutePadding(bottom = 20.dp)
                 ) {
-                    Row() {
-                            SectionTitle(title = "Your income for")
+                    Row(
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier.fillMaxWidth().absolutePadding(bottom = 20.dp)
+                    ) {
+                            SectionTitle(title = "Your ${if(selectedTransactionType.value==TransactionType.Expense) transactionTypeOptions[0].name else transactionTypeOptions[1].name} for $chosenDateString")
+                            AppOption(
+                                modifier = Modifier
+                                    .defaultMinSize(minWidth = 100.dp).absolutePadding(top = 10.dp, bottom = 5.dp, right = 10.dp),
+                                label = "Select",
+                                options = transactionTypeOptions,
+                                onItemSelected = {
+                                   selectedTransactionType.value = it.value as TransactionType
+                                },
+                                selectedOption = when(selectedTransactionType.value){
+                                    TransactionType.Expense->transactionTypeOptions[0]
+                                    else->transactionTypeOptions[1]
+                                }
+                            )
                     }
-                    Divider(modifier = Modifier.absolutePadding(bottom = 5.dp))
-                    CustomBarChart(transactions.filter { it.type==TransactionType.Income })
+                    CustomPieChartWithData(modifier =Modifier.fillMaxHeight() , transactions = transactions.filter { it.type==(if(selectedTransactionType.value==TransactionType.Expense) TransactionType.Expense else TransactionType.Income) })
                 }
-            }
 
-            item {
-                Column(
-                ) {
-                    Row() {
-                            SectionTitle(title = "Your expense for")
-                    }
-                    Divider(modifier = Modifier.absolutePadding(bottom = 5.dp))
-                    CustomBarChart(transactions.filter { it.type==TransactionType.Expense })
-                }
-            }
         }
     }
 }
@@ -127,17 +133,17 @@ fun CustomBarChart(transactions:List<Transaction>){
             ),
             // Optional properties.
             modifier = Modifier
-                .height(300.dp)
-                .padding(20.dp),
+                .height(250.dp)
+                .absolutePadding(top = 20.dp, left = 20.dp, right = 20.dp),
             animation = simpleChartAnimation(),
             barDrawer = SimpleBarDrawer(),
             xAxisDrawer = SimpleXAxisDrawer(
-                axisLineThickness = 3.dp,
-                axisLineColor = MaterialTheme.colors.primary
+                axisLineThickness = 2.dp,
+                axisLineColor = MaterialTheme.colors.onSurface
             ),
             yAxisDrawer = SimpleYAxisDrawer(
-                axisLineThickness = 3.dp,
-                axisLineColor = MaterialTheme.colors.primary,
+                axisLineThickness = 2.dp,
+                axisLineColor = MaterialTheme.colors.onSurface,
                 drawLabelEvery = 1000,
                 labelValueFormatter = {
                     val yLabel = (it.toInt()/1000)*1000
@@ -149,5 +155,7 @@ fun CustomBarChart(transactions:List<Transaction>){
                 drawLocation = SimpleLabelDrawer.DrawLocation.Outside
             )
         )
+    }else{
+        NoData(modifier = Modifier.defaultMinSize(minHeight = 200.dp),"No Data.")
     }
 }

@@ -1,5 +1,6 @@
 package lab.justonebyte.moneysubuu.ui
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
@@ -11,12 +12,14 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.insets.ProvideWindowInsets
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import kotlinx.coroutines.launch
+import lab.justonebyte.moneysubuu.R
 import lab.justonebyte.moneysubuu.ui.theme.MoneySuBuuTheme
 import lab.justonebyte.moneysubuu.ui.theme.primaryVariant
 
@@ -59,7 +62,10 @@ fun SuBuuApp(
                                 coroutineScope.launch { scaffoldState.drawerState.open() }
                             }
                         }) {
-                            Icon(imageVector = Icons.Filled.Menu, contentDescription = "open menu", tint = MaterialTheme.colors.onPrimary)
+                            Image(
+                                painterResource(id = R.drawable.ic_round_menu_24),
+                                contentDescription = null
+                            )
                         }
                     }
                 },
