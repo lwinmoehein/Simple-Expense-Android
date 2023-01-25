@@ -40,14 +40,11 @@ fun CustomPieChartWithData(
           verticalArrangement = Arrangement.Center,
           horizontalAlignment = Alignment.CenterHorizontally
       ) {
-          Column(horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center) {
+          Row(horizontalArrangement = Arrangement.Center, verticalAlignment = Alignment.CenterVertically) {
               Row(modifier= Modifier
-                  .fillMaxWidth()
+                  .width(150.dp)
                   .height(150.dp)){
                   PieChart(
-                      modifier = Modifier
-                          .fillMaxWidth()
-                      ,
                       pieChartData = PieChartData(
                           slices = incomePieSlices.map{it.second}
                       ),
@@ -56,16 +53,16 @@ fun CustomPieChartWithData(
                       sliceDrawer = SimpleSliceDrawer(100f)
                   )
               }
-              Row(horizontalArrangement = Arrangement.Center) {
+              Row(horizontalArrangement = Arrangement.Center, modifier = Modifier.absolutePadding(left = 20.dp)) {
                   Text(text = "Total : ", style = MaterialTheme.typography.h6)
-                  Text(text = incomePieSlices.sumOf { it.second.value.toInt() }.toString()+" Kyats", style = MaterialTheme.typography.h6, color = MaterialTheme.colors.primary)
+                  Text(text = incomePieSlices.sumOf { it.second.value.toInt() }.toString()+" kyats", style = MaterialTheme.typography.h6, color = MaterialTheme.colors.primary)
               }
           }
           LazyColumn(
               modifier = Modifier
                   .fillMaxWidth()
                   .absolutePadding(top = 10.dp)
-                  .wrapContentHeight(),
+                  .fillMaxHeight(),
               horizontalAlignment = Alignment.CenterHorizontally,
               content = {
                   items(incomePieSlices){
@@ -85,7 +82,7 @@ fun CustomPieChartWithData(
                                       .width(10.dp)
                                       .height(10.dp)
                                       .background(it.second.color))
-                                  Text(text = it.first.name+" = " + it.second.value.toInt())
+                                  Text(text = it.first.name+" = " + it.second.value.toInt() + " kyats")
                               }
                           }
                       }
