@@ -61,8 +61,7 @@ fun CustomPieChartWithData(
           LazyColumn(
               modifier = Modifier
                   .fillMaxWidth()
-                  .absolutePadding(top = 10.dp)
-                  .fillMaxHeight(),
+                  .absolutePadding(top = 10.dp),
               horizontalAlignment = Alignment.CenterHorizontally,
               content = {
                   items(incomePieSlices){
@@ -72,17 +71,20 @@ fun CustomPieChartWithData(
                           ) {
                               Row(
                                   verticalAlignment = Alignment.CenterVertically,
-                                  horizontalArrangement = Arrangement.Start,
+                                  horizontalArrangement = Arrangement.SpaceBetween,
                                   modifier = Modifier
                                       .padding(10.dp)
                                       .fillMaxWidth()
                               ){
-                                  Spacer(modifier = Modifier
-                                      .absolutePadding(right = 4.dp)
-                                      .width(10.dp)
-                                      .height(10.dp)
-                                      .background(it.second.color))
-                                  Text(text = it.first.name+" = " + it.second.value.toInt() + " kyats")
+                                  Row(verticalAlignment = Alignment.CenterVertically) {
+                                      Spacer(modifier = Modifier
+                                          .absolutePadding(right = 4.dp)
+                                          .width(10.dp)
+                                          .height(10.dp)
+                                          .background(it.second.color))
+                                      Text(text = it.first.name)
+                                  }
+                                  Text(text =  "${it.second.value.toInt()} kyats", style = MaterialTheme.typography.subtitle1)
                               }
                           }
                       }
