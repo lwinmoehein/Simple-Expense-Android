@@ -7,11 +7,11 @@
     <string name="kyat">ကျပ်</string>
     <string name="dollar">ဒေါ်လာ</string>
     <string name="select_currency">ငွေကြေးကိုရွေးပါ</string>
-    <string name="select_balance">ဘယ်လိုစုပြီးပြ</string>
+    <string name="select_balance">ဒေတာကိုစုပြခြင်း</string>
     <string name="incorrect_category_data">အမျိုးအစားနာမည်အား မှန်ကန်စွာထည့်ပါ။</string>
-    <string name="remove_category_success">Category removed successfully.</string>
-    <string name="add_category_success">New category added successfully.</string>
-    <string name="update_category_success">Category name updated successfully.</string>
+    <string name="remove_category_success">အမျိုးအစားကိုဖျက်လိုက်ပါပြီ။</string>
+    <string name="add_category_success">အမျိုးအစားအသစ်အားထည့်လိုက်ပါပြီ။</string>
+    <string name="update_category_success">အမျိုးအစားနာမည်ကိုပြင်လိုက်ပါပြီ။</string>
 
     <string name="daily">နေ့စဥ်</string>
     <string name="monthly">လစဥ်</string>
