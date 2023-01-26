@@ -1,5 +1,6 @@
 package lab.justonebyte.moneysubuu.ui.home
 
+import android.annotation.SuppressLint
 import android.util.Log
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -18,6 +19,7 @@ import lab.justonebyte.moneysubuu.ui.components.SuBuuSnackBar
 import lab.justonebyte.moneysubuu.ui.components.SuBuuSnackBarHost
 
 
+@SuppressLint("UnrememberedMutableState")
 @OptIn(ExperimentalMaterialApi::class, com.google.accompanist.pager.ExperimentalPagerApi::class)
 @Composable
 fun HomeScreen(){
@@ -27,8 +29,6 @@ fun HomeScreen(){
         bottomSheetState = BottomSheetState(BottomSheetValue.Collapsed)
     )
     val coroutineScope = rememberCoroutineScope()
-    val balanceType = remember{ mutableStateOf<BalanceType>(BalanceType.MONTHLY)}
-
     val currentTransaction = remember {
         mutableStateOf<Transaction?>(null)
     }
@@ -189,8 +189,9 @@ fun HomeScreen(){
         Card {
             HomeContent(
                 homeUiState = homeUiState,
-                collectBalanceOfDay = { homeViewModel.collectDailyBalance(it) },
-                balanceType =  balanceType.value,
+                collectBalanceOfDay = {
+                    homeViewModel.collectDailyBalance(it)
+                                      },
                 onMonthPicked = {
                     homeViewModel.collectMonthlyBalance(it)
                 },
@@ -201,7 +202,6 @@ fun HomeScreen(){
                     currentTransaction.value = it
                 },
                 onTypeChanged = { type->
-                    balanceType.value = type
                     when(type){
                         BalanceType.DAILY->homeViewModel.collectDailyBalance()
                         BalanceType.MONTHLY->homeViewModel.collectMonthlyBalance()

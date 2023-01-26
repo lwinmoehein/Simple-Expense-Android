@@ -1,6 +1,8 @@
 package lab.justonebyte.moneysubuu.ui.components
 
+import android.annotation.SuppressLint
 import android.app.DatePickerDialog
+import android.util.Log
 import android.widget.DatePicker
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -14,6 +16,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import lab.justonebyte.moneysubuu.model.BalanceType
@@ -24,6 +27,7 @@ import lab.justonebyte.moneysubuu.utils.getCurrentDate
 import lab.justonebyte.moneysubuu.utils.getCurrentYear
 import java.util.*
 
+@SuppressLint("UnrememberedMutableState")
 @Composable
 fun ChooseTransactionTypeCard(
     modifier: Modifier = Modifier,
@@ -43,9 +47,8 @@ fun ChooseTransactionTypeCard(
     val currentYear = getCurrentYear()
 
     val calendar = Calendar.getInstance()
-    val currentBalanceType = remember {
-        mutableStateOf<BalanceType>(BalanceType.MONTHLY)
-    }
+    val currentBalanceType = mutableStateOf(balanceType)
+
     //for date picker
     val mYear by remember(selectedDay) { mutableStateOf(selectedDay.split('-')[0].toInt()) }
     val mMonth by remember(selectedDay){ mutableStateOf(selectedDay.split('-')[1].toInt()) }
@@ -79,6 +82,7 @@ fun ChooseTransactionTypeCard(
         OptionItem("Yearly", BalanceType.YEARLY),
         OptionItem("Total", BalanceType.TOTAL)
     )
+
 
     if(isMonthPickerShown.value){
         Dialog(onDismissRequest = { isMonthPickerShown.value=false }) {
@@ -151,7 +155,7 @@ fun ChooseTransactionTypeCard(
                         currentBalanceType.value = it.value as BalanceType
                         onTypeChanged(currentBalanceType.value)
                     },
-                    selectedOption = when(balanceType){
+                    selectedOption = when(currentBalanceType.value){
                         BalanceType.DAILY->balanceTypeOptions[0]
                         BalanceType.MONTHLY->balanceTypeOptions[1]
                         BalanceType.YEARLY->balanceTypeOptions[2]
@@ -169,7 +173,7 @@ fun ChooseTransactionTypeCard(
                                     BalanceType.DAILY -> mDatePickerDialog.show()
                                     BalanceType.MONTHLY -> isMonthPickerShown.value = true
                                     BalanceType.YEARLY -> isMonthPickerShown.value = true
-                                    else->{}
+                                    else -> {}
                                 }
                             },
                         text =  chosenDateString

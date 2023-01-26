@@ -16,7 +16,6 @@ import lab.justonebyte.moneysubuu.model.Transaction
 fun HomeContent(
     homeUiState: HomeUiState,
     collectBalanceOfDay:(day:String)->Unit,
-    balanceType: BalanceType,
     onMonthPicked:(month:String)->Unit,
     onYearPicked:(year:String)->Unit,
     onTransactionClick:(t: Transaction)->Unit,
@@ -33,7 +32,7 @@ fun HomeContent(
                 selectedDay = homeUiState.selectedDay,
                 selectedMonth = homeUiState.selectedMonth,
                 selectedYear = homeUiState.selectedYear,
-                balanceType = balanceType,
+                balanceType = homeUiState.currentBalanceType,
                 onDatePicked = { date->
                     collectBalanceOfDay(date)
                 },
