@@ -1,5 +1,6 @@
 package lab.justonebyte.moneysubuu.ui.components
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Row
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -10,6 +11,7 @@ import androidx.compose.ui.Modifier
 
 data class OptionItem(val name:String,val value:Any)
 
+@SuppressLint("UnrememberedMutableState")
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun AppOption(
@@ -21,9 +23,8 @@ fun AppOption(
 ) {
 
 
-    var selectedItem by remember {
-        mutableStateOf(selectedOption)
-    }
+    var selectedItem = mutableStateOf(selectedOption)
+
 
     var expanded by remember {
         mutableStateOf(false)
@@ -40,7 +41,7 @@ fun AppOption(
 
         // text field
         Row() {
-            Text(text = selectedItem.name )
+            Text(text = selectedItem.value.name )
             Icon(if(expanded) Icons.Filled.KeyboardArrowUp else Icons.Default.KeyboardArrowDown,"drop")
         }
 
@@ -52,9 +53,9 @@ fun AppOption(
             options.forEach { selectedOption ->
                 // menu item
                 DropdownMenuItem(onClick = {
-                    selectedItem = selectedOption
+                    selectedItem.value = selectedOption
                     expanded = false
-                    onItemSelected(selectedItem)
+                    onItemSelected(selectedItem.value)
                 }) {
                     Text(text = selectedOption.name, style = MaterialTheme.typography.button)
                 }

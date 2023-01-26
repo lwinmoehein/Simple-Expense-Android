@@ -9,7 +9,9 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import lab.justonebyte.moneysubuu.data.CategoryRepository
+import lab.justonebyte.moneysubuu.data.SettingPrefRepository
 import lab.justonebyte.moneysubuu.data.TransactionRepository
+import lab.justonebyte.moneysubuu.model.BalanceType
 import lab.justonebyte.moneysubuu.model.Transaction
 import lab.justonebyte.moneysubuu.model.TransactionCategory
 import lab.justonebyte.moneysubuu.model.TransactionType
@@ -25,6 +27,7 @@ data class HomeUiState(
     val incomeBalance:Int,
     val expenseBalance:Int,
     val totalBalance:Int,
+    val currentBalanceType:BalanceType = BalanceType.MONTHLY,
     val categories:List<TransactionCategory>  = emptyList(),
     val transactions:List<Transaction> = emptyList(),
     val currentSnackBar : SnackBarType? = null,
@@ -38,7 +41,8 @@ data class HomeUiState(
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val transactionRepository: TransactionRepository,
-    private val categoryRepository: CategoryRepository
+    private val categoryRepository: CategoryRepository,
+    private val settingsRepository: SettingPrefRepository
 ):ViewModel()
 {
     private val _viewModelUiState  = MutableStateFlow(
@@ -49,25 +53,43 @@ class HomeViewModel @Inject constructor(
         get() =  _viewModelUiState
 
     init {
-       // collectDailyBalance()
-        //collectYearlyBalance()
-        collectMonthlyBalance()
         viewModelScope.launch {
             launch {
                 collectCategories()
             }
+            launch {
+                collectBalanceTypeFromSetting()
+            }
         }
     }
     fun collectTotalBalance(){
+        _viewModelUiState.update {
+            it.copy(currentBalanceType = BalanceType.TOTAL)
+        }
         viewModelScope.launch {
             transactionRepository.getTotalTransactions().collect{ transactions->
                 bindBalanceData(transactions)
             }
         }
     }
+    private suspend fun collectBalanceTypeFromSetting(){
+        settingsRepository.defaultBalanceType.collect{
+            bindTransactionsFromBalanceType(BalanceType.getFromValue(it))
+        }
+    }
+     private fun bindTransactionsFromBalanceType(balanceType: BalanceType){
+         viewModelScope.launch {
+             when(balanceType){
+                 BalanceType.DAILY->collectDailyBalance()
+                 BalanceType.MONTHLY->collectMonthlyBalance()
+                 BalanceType.YEARLY->collectYearlyBalance()
+                 else->collectTotalBalance()
+             }
+         }
+     }
      fun collectDailyBalance(dateValue:String = viewModelUiState.value.selectedDay){
         _viewModelUiState.update {
-            it.copy(selectedDay = dateValue)
+            it.copy(selectedDay = dateValue, currentBalanceType = BalanceType.DAILY)
         }
 
         viewModelScope.launch {
@@ -89,7 +111,7 @@ class HomeViewModel @Inject constructor(
 
      fun collectMonthlyBalance(dateValue:String=  viewModelUiState.value.selectedMonth){
          _viewModelUiState.update {
-             it.copy(selectedMonth = dateValue)
+             it.copy(selectedMonth = dateValue, currentBalanceType = BalanceType.MONTHLY)
          }
         viewModelScope.launch {
             transactionRepository.getMonthlyTransactions(dateValue).collect{ transactions->
@@ -100,7 +122,7 @@ class HomeViewModel @Inject constructor(
 
      fun collectYearlyBalance(dateValue:String= viewModelUiState.value.selectedYear){
          _viewModelUiState.update {
-             it.copy(selectedYear = dateValue)
+             it.copy(selectedYear = dateValue, currentBalanceType = BalanceType.YEARLY)
          }
         viewModelScope.launch {
             transactionRepository.getYearlyTransactions(dateValue).collect{ transactions->
@@ -150,6 +172,7 @@ class HomeViewModel @Inject constructor(
                     created_timestamp = System.currentTimeMillis()
                 )
             )
+
         }
     }
     fun updateTransaction(transactionId:Int?,transactionCategory: TransactionCategory,amount:Int,type:Int,date:String){
