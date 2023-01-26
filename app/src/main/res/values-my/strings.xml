@@ -13,6 +13,7 @@
     <string name="remove_category_success">အမျိုးအစားကိုဖျက်လိုက်ပါပြီ။</string>
     <string name="add_category_success">အမျိုးအစားအသစ်အားထည့်လိုက်ပါပြီ။</string>
     <string name="update_category_success">အမျိုးအစားနာမည်ကိုပြင်လိုက်ပါပြီ။</string>
+    <string name="lang_change_success">ဘာသာစကားပြောင်းလိုက်ပါပြီ။</string>
 
     <string name="daily">နေ့စဥ်</string>
     <string name="monthly">လစဥ်</string>

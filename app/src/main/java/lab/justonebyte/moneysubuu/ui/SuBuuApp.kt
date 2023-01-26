@@ -25,8 +25,7 @@ import lab.justonebyte.moneysubuu.ui.theme.primaryVariant
 
 val appContentPadding = 20.dp
 @Composable
-fun SuBuuApp(
-) {
+fun SuBuuApp() {
     MoneySuBuuTheme {
         ProvideWindowInsets {
             val systemUiController = rememberSystemUiController()
@@ -56,6 +55,7 @@ fun SuBuuApp(
 
                     ) {
                         IconButton(onClick = {
+
                             if(scaffoldState.drawerState.isOpen){
                                 coroutineScope.launch { scaffoldState.drawerState.close() }
                             }else{
@@ -84,7 +84,7 @@ fun SuBuuApp(
                 SuBuuNavGraph(
                     paddings = it,
                     navController = navController,
-                    scaffoldState = scaffoldState
+                    scaffoldState = scaffoldState,
                 )
             }
         }

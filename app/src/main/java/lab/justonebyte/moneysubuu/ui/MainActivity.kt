@@ -1,5 +1,6 @@
 package lab.justonebyte.moneysubuu.ui
 
+import android.content.Context
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -10,6 +11,7 @@ import androidx.core.view.WindowCompat
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.HiltAndroidApp
 import lab.justonebyte.moneysubuu.ui.theme.MoneySuBuuTheme
+import lab.justonebyte.moneysubuu.utils.LocaleHelper
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -20,6 +22,11 @@ class MainActivity : ComponentActivity() {
         setContent {
             SuBuuApp()
         }
+    }
+
+    override fun attachBaseContext(base: Context) {
+        LocaleHelper().setLocale(base, LocaleHelper().getLanguage(base))
+        super.attachBaseContext(LocaleHelper().onAttach(base))
     }
 }
 

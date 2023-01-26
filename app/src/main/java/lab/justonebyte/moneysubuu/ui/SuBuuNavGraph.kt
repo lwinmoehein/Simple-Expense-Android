@@ -2,6 +2,7 @@ package lab.justonebyte.moneysubuu.ui
 
 import StatsScreen
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ScaffoldState
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.*
@@ -24,12 +25,13 @@ object MainDestinations {
     const val CATEGORY_ROUTE = "category"
 }
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun SuBuuNavGraph(
     paddings: PaddingValues,
     navController: NavHostController = rememberNavController(),
     scaffoldState: ScaffoldState = rememberScaffoldState(),
-    startDestination: String = MainDestinations.HOME_ROUTE
+    startDestination: String = MainDestinations.HOME_ROUTE,
 ) {
     val coroutineScope = rememberCoroutineScope()
     val openDrawer: () -> Unit = { coroutineScope.launch { scaffoldState.drawerState.open() } }
