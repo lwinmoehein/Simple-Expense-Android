@@ -11,6 +11,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import lab.justonebyte.moneysubuu.data.CategoryRepository
 import lab.justonebyte.moneysubuu.data.SettingPrefRepository
+import lab.justonebyte.moneysubuu.model.AppLocale
 import lab.justonebyte.moneysubuu.model.BalanceType
 import lab.justonebyte.moneysubuu.model.Currency
 import lab.justonebyte.moneysubuu.model.TransactionCategory
@@ -20,6 +21,7 @@ import javax.inject.Inject
 data class SettingUiState(
     val selectedCurrency: Currency = Currency.Kyat,
     val defaultBalanceType: BalanceType = BalanceType.MONTHLY,
+    val defaultLanguage:AppLocale = AppLocale.English,
     val currentSnackBar : SnackBarType? = null
 )
 
@@ -38,6 +40,7 @@ class SettingsViewModel @Inject constructor(
         viewModelScope.launch {
             launch { collectSelectedCurrency() }
             launch { collectDefaultBalanceType() }
+            launch { collectLanguage() }
         }
     }
     private suspend fun collectSelectedCurrency(){
@@ -45,6 +48,15 @@ class SettingsViewModel @Inject constructor(
             _viewModelUiState.update { uiState->
                 uiState.copy(
                     selectedCurrency = Currency.getFromValue(it)
+                )
+            }
+        }
+    }
+    private suspend fun collectLanguage(){
+        settingRepository.selectedLocale.collect{
+            _viewModelUiState.update { uiState->
+                uiState.copy(
+                    defaultLanguage = AppLocale.getFromValue(it)
                 )
             }
         }
@@ -68,6 +80,11 @@ class SettingsViewModel @Inject constructor(
     fun updateCurrency(currency: Currency){
         viewModelScope.launch {
             settingRepository.updateSelectedCurrency(currency.value)
+        }
+    }
+    fun updateLocale(appLocale: AppLocale){
+        viewModelScope.launch {
+            settingRepository.updateLocale(appLocale.value)
         }
     }
     fun updateDefaultBalanceType(balanceType: BalanceType){
