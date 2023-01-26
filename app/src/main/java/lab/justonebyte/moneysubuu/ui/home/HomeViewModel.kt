@@ -11,10 +11,7 @@ import kotlinx.coroutines.launch
 import lab.justonebyte.moneysubuu.data.CategoryRepository
 import lab.justonebyte.moneysubuu.data.SettingPrefRepository
 import lab.justonebyte.moneysubuu.data.TransactionRepository
-import lab.justonebyte.moneysubuu.model.BalanceType
-import lab.justonebyte.moneysubuu.model.Transaction
-import lab.justonebyte.moneysubuu.model.TransactionCategory
-import lab.justonebyte.moneysubuu.model.TransactionType
+import lab.justonebyte.moneysubuu.model.*
 import lab.justonebyte.moneysubuu.ui.components.SnackBarType
 import lab.justonebyte.moneysubuu.utils.dateFormatter
 import lab.justonebyte.moneysubuu.utils.monthFormatter
@@ -28,6 +25,7 @@ data class HomeUiState(
     val expenseBalance:Int,
     val totalBalance:Int,
     val currentBalanceType:BalanceType = BalanceType.MONTHLY,
+    val currentCurrency: Currency = Currency.Kyat,
     val categories:List<TransactionCategory>  = emptyList(),
     val transactions:List<Transaction> = emptyList(),
     val currentSnackBar : SnackBarType? = null,
@@ -60,6 +58,9 @@ class HomeViewModel @Inject constructor(
             launch {
                 collectBalanceTypeFromSetting()
             }
+            launch {
+                collectCurrencyFromSetting()
+            }
         }
     }
     fun collectTotalBalance(){
@@ -75,6 +76,13 @@ class HomeViewModel @Inject constructor(
     private suspend fun collectBalanceTypeFromSetting(){
         settingsRepository.defaultBalanceType.collect{
             bindTransactionsFromBalanceType(BalanceType.getFromValue(it))
+        }
+    }
+    private suspend fun collectCurrencyFromSetting(){
+        settingsRepository.selectedCurrency.collect{
+            _viewModelUiState.update { homeUiState ->
+                homeUiState.copy(currentCurrency = Currency.getFromValue(it))
+            }
         }
     }
      private fun bindTransactionsFromBalanceType(balanceType: BalanceType){

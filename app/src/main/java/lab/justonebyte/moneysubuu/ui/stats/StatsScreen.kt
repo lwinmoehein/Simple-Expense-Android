@@ -1,3 +1,4 @@
+import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.runtime.*
@@ -27,6 +28,7 @@ import me.bytebeats.views.charts.bar.render.yaxis.SimpleYAxisDrawer
 import me.bytebeats.views.charts.simpleChartAnimation
 
 
+@SuppressLint("UnrememberedMutableState")
 @Composable
 fun StatsScreen(goBack:()->Unit) {
     val scaffoldState = rememberScaffoldState()
@@ -34,7 +36,7 @@ fun StatsScreen(goBack:()->Unit) {
     val statsUiState by statsViewModel.viewModelUiState.collectAsState()
     val transactions = statsUiState.transactions
 
-    val balanceType = remember{ mutableStateOf<BalanceType>(BalanceType.MONTHLY) }
+    val balanceType = mutableStateOf(statsUiState.currentBalanceType)
 
     val chosenDateString = when(balanceType.value){
         BalanceType.DAILY-> if(statsUiState.selectedDay== getCurrentDate()) "Today" else statsUiState.selectedDay
@@ -42,8 +44,8 @@ fun StatsScreen(goBack:()->Unit) {
         BalanceType.YEARLY->if(statsUiState.selectedYear== getCurrentYear()) "This year" else statsUiState.selectedYear
         else->"Total" }
 
-    val transactionTypeOptions = listOf<OptionItem>(OptionItem("Expense",TransactionType.Expense),OptionItem("Income",TransactionType.Income))
-    val selectedTransactionType = remember { mutableStateOf<TransactionType>(TransactionType.Expense) }
+    val transactionTypeOptions = listOf(OptionItem("Expense",TransactionType.Expense),OptionItem("Income",TransactionType.Income))
+    val selectedTransactionType = remember { mutableStateOf(TransactionType.Expense) }
 
     Scaffold(
         scaffoldState = scaffoldState,
@@ -103,7 +105,10 @@ fun StatsScreen(goBack:()->Unit) {
                                 }
                             )
                     }
-                    CustomPieChartWithData(modifier =Modifier.fillMaxHeight() , transactions = transactions.filter { it.type==(if(selectedTransactionType.value==TransactionType.Expense) TransactionType.Expense else TransactionType.Income) })
+                    CustomPieChartWithData(
+                        modifier = Modifier.fillMaxHeight() ,
+                        currency = statsUiState.currentCurrency,
+                        transactions = transactions.filter { it.type==(if(selectedTransactionType.value==TransactionType.Expense) TransactionType.Expense else TransactionType.Income) })
                 }
 
         }

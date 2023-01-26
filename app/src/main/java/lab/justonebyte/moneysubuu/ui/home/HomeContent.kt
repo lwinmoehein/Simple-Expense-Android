@@ -26,6 +26,7 @@ fun HomeContent(
         Column(Modifier.padding(it)) {
             Spacer(modifier = Modifier.height(30.dp))
             BalanceCard(
+                currency = homeUiState.currentCurrency,
                 currentBalance = homeUiState.currentBalance,
                 incomeBalance = homeUiState.incomeBalance,
                 expenseBalance = homeUiState.expenseBalance,
@@ -47,6 +48,7 @@ fun HomeContent(
             SectionTitle(title = "History")
             TransactionsCard(
                 transactions = homeUiState.transactions,
+                currency = homeUiState.currentCurrency,
                 onTransactionClick = {
                     onTransactionClick(it)
                 }

@@ -10,9 +10,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import lab.justonebyte.moneysubuu.model.BalanceType
+import lab.justonebyte.moneysubuu.model.Currency
 import lab.justonebyte.moneysubuu.ui.components.ChooseTransactionTypeCard
 import lab.justonebyte.moneysubuu.ui.theme.Red900
 import lab.justonebyte.moneysubuu.ui.theme.SuBuuShapes
@@ -23,6 +25,7 @@ import lab.justonebyte.moneysubuu.ui.theme.positiveColor
 @Composable
 fun BalanceCard(
     modifier: Modifier = Modifier,
+    currency: Currency,
     currentBalance: Int,
     incomeBalance:Int,
     expenseBalance:Int,
@@ -73,18 +76,24 @@ fun BalanceCard(
                      Column(horizontalAlignment = Alignment.Start, verticalArrangement = Arrangement.Center) {
                          Text(
                              text = "Balance  : ",
-                             modifier = Modifier.weight(1f).wrapContentHeight(align = CenterVertically),
+                             modifier = Modifier
+                                 .weight(1f)
+                                 .wrapContentHeight(align = CenterVertically),
                              color = if(currentBalance>0) MaterialTheme.colors.primaryVariant else Red900,
                              )
                          Text(
                              text = "Income  : ",
-                             modifier = Modifier.weight(1f).wrapContentHeight(align = CenterVertically),
+                             modifier = Modifier
+                                 .weight(1f)
+                                 .wrapContentHeight(align = CenterVertically),
                              color = positiveColor
 
                              )
                          Text(
                              text = "Expense : ",
-                             modifier = Modifier.weight(1f).wrapContentHeight(align = CenterVertically),
+                             modifier = Modifier
+                                 .weight(1f)
+                                 .wrapContentHeight(align = CenterVertically),
                              color = negativeColor
 
                          )
@@ -97,7 +106,10 @@ fun BalanceCard(
                               fontWeight = FontWeight.ExtraBold,
                               color = if(currentBalance>0) MaterialTheme.colors.primaryVariant else Red900,
                           )
-                          Text(text = " Ks",color = if(currentBalance>0) MaterialTheme.colors.primaryVariant else Red900,)
+                          Text(
+                              text = " " + stringResource(id = currency.name),
+                              color = if (currentBalance > 0) MaterialTheme.colors.primaryVariant else Red900
+                          )
                       }
                       Row(horizontalArrangement = Arrangement.Start, verticalAlignment = Alignment.CenterVertically, modifier = Modifier.weight(1f)) {
 
@@ -106,7 +118,7 @@ fun BalanceCard(
                               style = MaterialTheme.typography.h6,
                               color = positiveColor
                           )
-                          Text(text = " Ks", color = positiveColor)
+                          Text(text =  " " + stringResource(id = currency.name), color = positiveColor)
 
 
                       }
@@ -116,7 +128,7 @@ fun BalanceCard(
                               style = MaterialTheme.typography.h6,
                               color = negativeColor
                           )
-                          Text(text = " Ks", color = negativeColor)
+                          Text(text =  " " + stringResource(id = currency.name), color = negativeColor)
 
                       }
 
