@@ -7,6 +7,7 @@
     <string name="kyat">ကျပ်</string>
     <string name="dollar">ဒေါ်လာ</string>
     <string name="select_currency">ငွေကြေးကိုရွေးပါ</string>
+    <string name="select_lang">ဘာသာစကားရွေးပါ</string>
     <string name="select_balance">ဒေတာကိုစုပြခြင်း</string>
     <string name="incorrect_category_data">အမျိုးအစားနာမည်အား မှန်ကန်စွာထည့်ပါ။</string>
     <string name="remove_category_success">အမျိုးအစားကိုဖျက်လိုက်ပါပြီ။</string>

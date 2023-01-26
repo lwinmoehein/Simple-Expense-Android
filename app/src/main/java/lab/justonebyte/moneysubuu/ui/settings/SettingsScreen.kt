@@ -10,6 +10,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import lab.justonebyte.moneysubuu.R
+import lab.justonebyte.moneysubuu.model.AppLocale
 import lab.justonebyte.moneysubuu.model.BalanceType
 import lab.justonebyte.moneysubuu.model.Currency
 import lab.justonebyte.moneysubuu.ui.appContentPadding
@@ -26,6 +27,7 @@ fun SettingsScreen(
 
     val settingCurrencies = listOf<SettingItem>(Currency.Kyat,Currency.Dollar)
     val settingBalanceTypes = listOf<SettingItem>(BalanceType.DAILY,BalanceType.MONTHLY,BalanceType.YEARLY,BalanceType.TOTAL)
+    val appLanguages = listOf(AppLocale.English,AppLocale.Myanmar)
 
     Column (){
         Column {
@@ -35,11 +37,11 @@ fun SettingsScreen(
             ) {
                 SettingMenu(
                     modifier = Modifier.fillMaxWidth(),
-                    settingItemLabel =  R.string.select_currency,
-                    currentChosentMenuLabel = settingsUiState.selectedCurrency.name,
-                    menuItems = settingCurrencies,
+                    settingItemLabel =  R.string.select_lang,
+                    currentChosentMenuLabel = settingsUiState.defaultLanguage.name,
+                    menuItems = appLanguages,
                     onMenuItemChosen = {
-                        settingsViewModel.updateCurrency(it as Currency)
+                        settingsViewModel.updateLocale(it as AppLocale)
                     }
                 )
             }
