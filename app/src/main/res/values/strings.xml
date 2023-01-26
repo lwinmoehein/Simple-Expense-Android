@@ -13,6 +13,7 @@
     <string name="add_category_success">New category added successfully.</string>
     <string name="update_category_success">Category name updated successfully.</string>
     <string name="remove_category_success">Category removed successfully.</string>
+    <string name="lang_change_success">Language changed successfully.</string>
 
     <string name="daily">Daily</string>
     <string name="monthly">Monthly</string>

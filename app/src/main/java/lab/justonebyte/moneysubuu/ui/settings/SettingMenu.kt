@@ -1,5 +1,6 @@
 package lab.justonebyte.moneysubuu.ui.settings
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
@@ -13,15 +14,17 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 
+@SuppressLint("UnrememberedMutableState")
 @Composable
 fun SettingMenu(
     modifier: Modifier = Modifier,
     settingItemLabel:Int,
     currentChosentMenuLabel:Int,
     menuItems:List<SettingItem>,
-    onMenuItemChosen:(chosenMenuItem: SettingItem)->Unit
+    onMenuItemChosen:(chosenMenuItem: SettingItem)->Unit,
+    isOpen:Boolean = false
 ) {
-    var isMenuOpen by remember { mutableStateOf(false)}
+    var isMenuOpen = mutableStateOf(isOpen)
     Card(
         modifier = modifier) {
         Row(
@@ -45,23 +48,23 @@ fun SettingMenu(
 
                 Row(
                     modifier= Modifier
-                        .clickable { isMenuOpen = true }) {
+                        .clickable { isMenuOpen.value = true }) {
                     Text(
                         text = stringResource(id = currentChosentMenuLabel),
                         textAlign = TextAlign.Start
                     )
-                    Icon(if(isMenuOpen) Icons.Filled.KeyboardArrowUp else Icons.Default.ArrowDropDown ,"")
+                    Icon(if(isMenuOpen.value) Icons.Filled.KeyboardArrowUp else Icons.Default.ArrowDropDown ,"")
                 }
 
                 DropdownMenu(
                     modifier = Modifier.weight(1f),
-                    expanded = isMenuOpen ,
-                    onDismissRequest = {isMenuOpen =false}
+                    expanded = isMenuOpen.value ,
+                    onDismissRequest = {isMenuOpen.value =false}
                 ) {
                     menuItems.forEach {
                         DropdownMenuItem(
                             onClick = {
-                                isMenuOpen = false
+                                isMenuOpen.value = false
                                 onMenuItemChosen(it)
                             },
                             modifier = Modifier.height(30.dp).fillMaxWidth()

@@ -15,7 +15,8 @@ enum class SnackBarType{
     INCORRECT_CATEGORY_DATA,
     ADD_CATEGORY_SUCCESS,
     UPDATE_CATEGORY_SUCCESS,
-    REMOVE_CATEGORY_SUCCESS
+    REMOVE_CATEGORY_SUCCESS,
+    LANG_CHANGE_SUCCESS
 }
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
@@ -32,6 +33,7 @@ fun SuBuuSnackBar(
             SnackBarType.ADD_CATEGORY_SUCCESS-> stringResource(id = R.string.add_category_success)
             SnackBarType.UPDATE_CATEGORY_SUCCESS-> stringResource(id = R.string.update_category_success)
             SnackBarType.REMOVE_CATEGORY_SUCCESS-> stringResource(id = R.string.remove_category_success)
+            SnackBarType.LANG_CHANGE_SUCCESS-> stringResource(id = R.string.lang_change_success)
             else -> stringResource(id = R.string.incorrect_data)
         }
 
