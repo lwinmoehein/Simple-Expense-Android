@@ -11,7 +11,9 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import lab.justonebyte.moneysubuu.model.Currency
 import lab.justonebyte.moneysubuu.model.Transaction
 import lab.justonebyte.moneysubuu.ui.theme.*
 import me.bytebeats.views.charts.pie.PieChart
@@ -26,6 +28,7 @@ fun randomColor() = listOf(
 @Composable
 fun CustomPieChartWithData(
     modifier: Modifier=Modifier,
+    currency: Currency,
     transactions:List<Transaction>,
 
 ){
@@ -55,7 +58,9 @@ fun CustomPieChartWithData(
               }
               Row(horizontalArrangement = Arrangement.Center, modifier = Modifier.absolutePadding(left = 20.dp)) {
                   Text(text = "Total : ", style = MaterialTheme.typography.h6)
-                  Text(text = incomePieSlices.sumOf { it.second.value.toInt() }.toString()+" kyats", style = MaterialTheme.typography.h6, color = MaterialTheme.colors.primary)
+                  Text(
+                      text = incomePieSlices.sumOf { it.second.value.toInt() }.toString()+" "+ stringResource(id = currency.name),
+                      style = MaterialTheme.typography.h6, color = MaterialTheme.colors.primary)
               }
           }
           LazyColumn(
@@ -84,7 +89,7 @@ fun CustomPieChartWithData(
                                           .background(it.second.color))
                                       Text(text = it.first.name)
                                   }
-                                  Text(text =  "${it.second.value.toInt()} kyats", style = MaterialTheme.typography.subtitle1)
+                                  Text(text =  "${it.second.value.toInt()}"+" "+ stringResource(id = currency.name), style = MaterialTheme.typography.subtitle1)
                               }
                           }
                       }

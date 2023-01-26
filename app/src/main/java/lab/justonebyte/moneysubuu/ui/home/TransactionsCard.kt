@@ -8,7 +8,9 @@ import androidx.compose.material.Card
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import lab.justonebyte.moneysubuu.model.Currency
 import lab.justonebyte.moneysubuu.model.Transaction
 import lab.justonebyte.moneysubuu.ui.theme.*
 import lab.justonebyte.moneysubuu.utils.dateFormatter
@@ -17,6 +19,7 @@ import lab.justonebyte.moneysubuu.utils.dateFormatter
 fun TransactionsCard(
     modifier:Modifier = Modifier,
     transactions:List<Transaction> = emptyList(),
+    currency: Currency,
     onTransactionClick:(transaction:Transaction)->Unit
 ){
     Card(
@@ -33,14 +36,14 @@ fun TransactionsCard(
         }
         LazyColumn(){
             items(transactions){
-                TransactionItem(transaction = it, onTransactionClick = {onTransactionClick(it)})
+                TransactionItem(transaction = it,currency = currency, onTransactionClick = {onTransactionClick(it)})
             }
         }
     }
 
 }
 @Composable
-fun TransactionItem(transaction:Transaction,modifier: Modifier=Modifier ,onTransactionClick: (transaction: Transaction) -> Unit){
+fun TransactionItem(transaction:Transaction,modifier: Modifier=Modifier,currency: Currency,onTransactionClick: (transaction: Transaction) -> Unit){
     Row(
         modifier = modifier
             .padding(10.dp)
@@ -48,7 +51,7 @@ fun TransactionItem(transaction:Transaction,modifier: Modifier=Modifier ,onTrans
     ) {
         Text(text = transaction.category.name,modifier = Modifier.weight(1f))
         Text(
-            text =if (transaction.type.value==1) transaction.amount.toString() else "-"+transaction.amount.toString(),
+            text =(if (transaction.type.value==1) transaction.amount.toString() else "-"+transaction.amount.toString() )+" " + stringResource(id = currency.name),
             modifier = Modifier.weight(1f),
             color = if(transaction.type.value==1) positiveColor else negativeColor
         )
