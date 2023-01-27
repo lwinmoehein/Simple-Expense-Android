@@ -69,7 +69,6 @@ fun CategoryTabs(
         Modifier.absolutePadding(top = 20.dp)
     ) {
         TabRow(
-            backgroundColor = MaterialTheme.colors.primary,
             modifier = Modifier
                 .absolutePadding(left = 10.dp, right = 10.dp)
                 .clip(RoundedCornerShape(5.dp)),
@@ -80,14 +79,14 @@ fun CategoryTabs(
                         pagerState,
                         tabPositions
                     ),
-                    color = MaterialTheme.colors.secondary,
-                    height = 4.dp
+                    color = MaterialTheme.colors.primary,
+                    height = 2.dp
                 )
             }) {
             tabs.forEachIndexed { index, tab ->
                 Tab(
-                    selectedContentColor = MaterialTheme.colors.secondary,
-                    unselectedContentColor = MaterialTheme.colors.onPrimary,
+//                    selectedContentColor = MaterialTheme.colors.onPrimary,
+//                    unselectedContentColor = MaterialTheme.colors.onPrimary,
                     selected = false,
                     onClick = {
                         currentTab.value = tab
@@ -327,10 +326,10 @@ fun CategoryItem(
             Column(
                 Modifier
                     .fillMaxWidth()
-                    .padding(10.dp), verticalArrangement = Arrangement.Center) {
+                    .padding(8.dp), verticalArrangement = Arrangement.Center) {
                 Text(text = category.name)
             }
         }
-    Divider(Modifier.height(10.dp), color = Color.Transparent)
+    Divider(Modifier.height(3.dp), color = Color.Transparent)
 
 }
