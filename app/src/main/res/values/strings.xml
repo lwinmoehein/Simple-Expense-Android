@@ -88,4 +88,6 @@
 
     <string name="sys_setting">System settings</string>
     <string name="feat_setting">Feature settings</string>
+    <string name="no_data">No data found.</string>
+
 </resources>

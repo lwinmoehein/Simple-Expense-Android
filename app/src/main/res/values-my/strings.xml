@@ -84,4 +84,6 @@
 
     <string name="sys_setting">စနစ်ဆက်တင်များ</string>
     <string name="feat_setting">လုပ်ဆောင်ချက်ဆက်တင်များ</string>
+    <string name="no_data">ဘာမျှမရှိပါ။</string>
+
 </resources>
