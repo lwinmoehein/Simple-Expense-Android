@@ -4,8 +4,10 @@ import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import lab.justonebyte.moneysubuu.R
 import lab.justonebyte.moneysubuu.model.BalanceType
 import lab.justonebyte.moneysubuu.model.Transaction
 import lab.justonebyte.moneysubuu.model.TransactionType
@@ -39,12 +41,12 @@ fun StatsScreen(goBack:()->Unit) {
     val balanceType = mutableStateOf(statsUiState.currentBalanceType)
 
     val chosenDateString = when(balanceType.value){
-        BalanceType.DAILY-> if(statsUiState.selectedDay== getCurrentDate()) "Today" else statsUiState.selectedDay
-        BalanceType.MONTHLY->if(statsUiState.selectedMonth== getCurrentMonth()) "This month" else statsUiState.selectedMonth
-        BalanceType.YEARLY->if(statsUiState.selectedYear== getCurrentYear()) "This year" else statsUiState.selectedYear
-        else->"Total" }
+        BalanceType.DAILY-> if(statsUiState.selectedDay== getCurrentDate()) stringResource(id = R.string.this_day) else statsUiState.selectedDay+" "+stringResource(id = R.string.day)
+        BalanceType.MONTHLY->if(statsUiState.selectedMonth== getCurrentMonth()) stringResource(id = R.string.this_month) else statsUiState.selectedMonth+" "+stringResource(id = R.string.month)
+        BalanceType.YEARLY->if(statsUiState.selectedYear== getCurrentYear()) stringResource(id = R.string.this_year) else statsUiState.selectedYear+" "+stringResource(id = R.string.year)
+        else->stringResource(id = R.string.total) }
 
-    val transactionTypeOptions = listOf(OptionItem("Expense",TransactionType.Expense),OptionItem("Income",TransactionType.Income))
+    val transactionTypeOptions = listOf(OptionItem(R.string.expense,TransactionType.Expense),OptionItem(R.string.income,TransactionType.Income))
     val selectedTransactionType = remember { mutableStateOf(TransactionType.Expense) }
 
     Scaffold(
@@ -88,12 +90,15 @@ fun StatsScreen(goBack:()->Unit) {
                     Row(
                         horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier.fillMaxWidth().absolutePadding(bottom = 20.dp)
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .absolutePadding(bottom = 20.dp)
                     ) {
-                            SectionTitle(title = "Your ${if(selectedTransactionType.value==TransactionType.Expense) transactionTypeOptions[0].name else transactionTypeOptions[1].name} for $chosenDateString")
+                            SectionTitle(title = "$chosenDateString ${if(selectedTransactionType.value==TransactionType.Expense) stringResource(transactionTypeOptions[0].name) else stringResource(transactionTypeOptions[1].name)}")
                             AppOption(
                                 modifier = Modifier
-                                    .defaultMinSize(minWidth = 100.dp).absolutePadding(top = 10.dp, bottom = 5.dp, right = 10.dp),
+                                    .defaultMinSize(minWidth = 100.dp)
+                                    .absolutePadding(top = 10.dp, bottom = 5.dp, right = 10.dp),
                                 label = "Select",
                                 options = transactionTypeOptions,
                                 onItemSelected = {

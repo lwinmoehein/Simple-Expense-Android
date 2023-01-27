@@ -26,6 +26,7 @@ import lab.justonebyte.moneysubuu.utils.getCurrentMonth
 import lab.justonebyte.moneysubuu.utils.getCurrentDate
 import lab.justonebyte.moneysubuu.utils.getCurrentYear
 import java.util.*
+import lab.justonebyte.moneysubuu.R
 
 @SuppressLint("UnrememberedMutableState")
 @Composable
@@ -62,10 +63,10 @@ fun ChooseTransactionTypeCard(
     val mDate = remember { mutableStateOf(selectedDay) }
 
     val chosenDateString = when(balanceType){
-        BalanceType.DAILY-> if(selectedDay==currentDay) "Today" else selectedDay
-        BalanceType.MONTHLY->if(selectedMonth==currentMonth) "This month" else selectedMonth
-        BalanceType.YEARLY->if(selectedYear==currentYear) "This year" else selectedYear
-        else->"Total" }
+        BalanceType.DAILY-> if(selectedDay==currentDay) stringResource(id = R.string.this_day) else selectedDay
+        BalanceType.MONTHLY->if(selectedMonth==currentMonth) stringResource(id = R.string.this_month) else selectedMonth
+        BalanceType.YEARLY->if(selectedYear==currentYear) stringResource(id = R.string.this_year) else selectedYear
+        else->stringResource(id = R.string.total) }
 
 
     val mDatePickerDialog = DatePickerDialog(
@@ -77,10 +78,10 @@ fun ChooseTransactionTypeCard(
     )
 
     val balanceTypeOptions = listOf(
-        OptionItem("Daily", BalanceType.DAILY),
-        OptionItem("Monthly", BalanceType.MONTHLY),
-        OptionItem("Yearly", BalanceType.YEARLY),
-        OptionItem("Total", BalanceType.TOTAL)
+        OptionItem(R.string.daily, BalanceType.DAILY),
+        OptionItem(R.string.monthly, BalanceType.MONTHLY),
+        OptionItem(R.string.yearly, BalanceType.YEARLY),
+        OptionItem(R.string.total, BalanceType.TOTAL)
     )
 
 
@@ -110,7 +111,7 @@ fun ChooseTransactionTypeCard(
     }
 
 
-    SectionTitle(title = "Choose Type")
+    SectionTitle(title = stringResource(id = R.string.choose_data))
 
     Card(
         shape = SuBuuShapes.small,
@@ -129,18 +130,22 @@ fun ChooseTransactionTypeCard(
             Column(
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.Start,
+                modifier = Modifier.weight(1f)
             ) {
-                Text(text = "Show Data By : ",modifier= Modifier.absolutePadding(bottom = 5.dp))
+                Text(text = stringResource(id = R.string.show_data_by),modifier= Modifier.fillMaxWidth().absolutePadding(bottom = 5.dp))
                 if(balanceType!= BalanceType.TOTAL){
-                    Text(text = "Select"+ when (balanceType) {
-                        BalanceType.DAILY -> " day :"
-                        BalanceType.MONTHLY -> " month :"
-                        BalanceType.YEARLY -> " year :"
-                        else->{}
-                    })
+                    Text(
+                        modifier = Modifier.fillMaxWidth(),
+                        text = ""+when (balanceType) {
+                        BalanceType.DAILY -> "${stringResource(R.string.select_date)} : "
+                        BalanceType.MONTHLY -> "${stringResource(R.string.select_month)} : "
+                        BalanceType.YEARLY -> "${stringResource(R.string.select_year)} : "
+                        else->{} }
+                    )
                 }
             }
             Column(
+                modifier = Modifier.weight(1f),
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.Start,
             ) {

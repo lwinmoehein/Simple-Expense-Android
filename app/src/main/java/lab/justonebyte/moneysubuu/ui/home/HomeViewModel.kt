@@ -118,11 +118,14 @@ class HomeViewModel @Inject constructor(
     }
 
      fun collectMonthlyBalance(dateValue:String=  viewModelUiState.value.selectedMonth){
+         Log.i("trans:month", dateValue)
+
          _viewModelUiState.update {
              it.copy(selectedMonth = dateValue, currentBalanceType = BalanceType.MONTHLY)
          }
         viewModelScope.launch {
             transactionRepository.getMonthlyTransactions(dateValue).collect{ transactions->
+                Log.i("trans:",transactions.size.toString())
                 bindBalanceData(transactions)
             }
         }

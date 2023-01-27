@@ -20,4 +20,27 @@
     <string name="yearly">Yearly</string>
     <string name="total">Total</string>
 
+    <string name="day">day</string>
+    <string name="month">month</string>
+    <string name="year">year</string>
+
+    <string name="select_month">Select month</string>
+    <string name="select_year">Select year</string>
+    <string name="select_date">Select day</string>
+
+    <string name="choose_data">Choose how to show data</string>
+    <string name="income">Income</string>
+    <string name="expense">Expense</string>
+
+    <string name="your_expense">\'s expense data</string>
+    <string name="your_income">\'s income data</string>
+
+    <string name="show_data_by">Show data by :</string>
+    <string name="this_year">This year</string>
+    <string name="this_month">This month</string>
+    <string name="this_day">This day</string>
+
+    <string name="numbers">T</string>
+
+
 </resources>
