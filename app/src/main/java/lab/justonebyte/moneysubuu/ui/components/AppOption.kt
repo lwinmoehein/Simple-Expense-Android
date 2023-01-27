@@ -8,8 +8,9 @@ import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 
-data class OptionItem(val name:String,val value:Any)
+data class OptionItem(val name:Int,val value:Any)
 
 @SuppressLint("UnrememberedMutableState")
 @OptIn(ExperimentalMaterialApi::class)
@@ -41,7 +42,7 @@ fun AppOption(
 
         // text field
         Row() {
-            Text(text = selectedItem.value.name )
+            Text(text = stringResource(id = selectedItem.value.name) )
             Icon(if(expanded) Icons.Filled.KeyboardArrowUp else Icons.Default.KeyboardArrowDown,"drop")
         }
 
@@ -57,7 +58,7 @@ fun AppOption(
                     expanded = false
                     onItemSelected(selectedItem.value)
                 }) {
-                    Text(text = selectedOption.name, style = MaterialTheme.typography.button)
+                    Text(text = stringResource(id = selectedOption.name), style = MaterialTheme.typography.button)
                 }
             }
         }

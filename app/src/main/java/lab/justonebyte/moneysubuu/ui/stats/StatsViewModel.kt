@@ -63,6 +63,7 @@ class StatsViewModel @Inject constructor(
         }
         viewModelScope.launch {
             transactionRepository.getTotalTransactions().collect{ transactions->
+                Log.i("stats:trans",transactions.size.toString())
                 bindBalanceData(transactions)
             }
         }

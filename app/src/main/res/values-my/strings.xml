@@ -19,4 +19,25 @@
     <string name="monthly">လစဥ်</string>
     <string name="yearly">နှစ်စဥ်</string>
     <string name="total">စုစုပေါင်း</string>
+    <string name="day">နေ့</string>
+    <string name="month">လ</string>
+    <string name="year">နှစ်</string>
+
+    <string name="select_month">ဘယ်လစာကြည့်မည်</string>
+    <string name="select_year">ဘယ်နှစ်စာကြည့်မည်</string>
+    <string name="select_date">ဘယ်နေ့စာကြည့်မည်</string>
+
+    <string name="choose_data">ဒေတာကိုဘယ်လိုပြသင့်လဲရွေးပါ</string>
+    <string name="income">၀င်ငွေ</string>
+    <string name="expense">ထွက်ငွေ</string>
+
+    <string name="your_expense">အတွက်ထွက်ငွေ</string>
+    <string name="your_income">အတွက်၀င်ငွေ</string>
+
+    <string name="show_data_by">ဒေတာကိုစုပြမယ် : </string>
+    <string name="this_year">ယခုနှစ်</string>
+    <string name="this_month">ယခုလ</string>
+    <string name="this_day">ယနေ့</string>
+    <string name="numbers"></string>
+
 </resources>

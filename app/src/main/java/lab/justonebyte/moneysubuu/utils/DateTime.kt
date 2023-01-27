@@ -6,29 +6,29 @@ import java.util.*
 
 @SuppressLint("SimpleDateFormat")
 fun dateFormatter(milliseconds: Long): String {
-    return SimpleDateFormat("yyyy-MM-dd").format(Date(milliseconds)).toString()
+    return SimpleDateFormat("yyyy-MM-dd",Locale.ENGLISH).format(Date(milliseconds)).toString()
 }
 @SuppressLint("SimpleDateFormat")
 fun weekFormatter(milliseconds: Long): String {
-    return SimpleDateFormat("ww").format(Date(milliseconds)).toString()
+    return SimpleDateFormat("ww",Locale.ENGLISH).format(Date(milliseconds)).toString()
 }
 @SuppressLint("SimpleDateFormat")
 fun monthFormatter(milliseconds: Long): String {
-    return SimpleDateFormat("yyyy-MM").format(Date(milliseconds)).toString()
+    return SimpleDateFormat("yyyy-MM",Locale.ENGLISH).format(Date(milliseconds)).toString()
 }
 @SuppressLint("SimpleDateFormat")
 fun yearFormatter(milliseconds: Long): String {
-    return SimpleDateFormat("yyyy").format(Date(milliseconds)).toString()
+    return SimpleDateFormat("yyyy",Locale.ENGLISH).format(Date(milliseconds)).toString()
 }
 fun getCurrentDate():String{
-    val sdf = SimpleDateFormat("yyyy-MM-dd")
+    val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH)
     return sdf.format(Date())
 }
 fun getCurrentMonth():String{
-    val sdf = SimpleDateFormat("yyyy-MM")
+    val sdf = SimpleDateFormat("yyyy-MM", Locale.ENGLISH)
     return sdf.format(Date())
 }
 fun getCurrentYear():String{
-    val sdf = SimpleDateFormat("yyyy")
+    val sdf = SimpleDateFormat("yyyy", Locale.ENGLISH)
     return sdf.format(Date())
 }
