@@ -20,6 +20,7 @@ import lab.justonebyte.moneysubuu.ui.theme.Red900
 import lab.justonebyte.moneysubuu.ui.theme.SuBuuShapes
 import lab.justonebyte.moneysubuu.ui.theme.negativeColor
 import lab.justonebyte.moneysubuu.ui.theme.positiveColor
+import lab.justonebyte.moneysubuu.R
 
 
 @Composable
@@ -57,7 +58,7 @@ fun BalanceCard(
             onTypeChanged = onTypeChanged
         )
 
-        SectionTitle(title = "Balances",modifier = Modifier.absolutePadding(top = 15.dp))
+        SectionTitle(title = stringResource(id = R.string.balance),modifier = Modifier.absolutePadding(top = 15.dp))
         Card(
             shape = SuBuuShapes.small,
             elevation = 2.dp,
@@ -75,26 +76,26 @@ fun BalanceCard(
               ) {
                      Column(horizontalAlignment = Alignment.Start, verticalArrangement = Arrangement.Center) {
                          Text(
-                             text = "Balance  : ",
+                             text = stringResource(id = R.string.current_balance),
                              modifier = Modifier
                                  .weight(1f)
                                  .wrapContentHeight(align = CenterVertically),
-                             color = if(currentBalance>0) MaterialTheme.colors.primaryVariant else Red900,
+//                             color = if(currentBalance>0) MaterialTheme.colors.primaryVariant else Red900,
                              )
                          Text(
-                             text = "Income  : ",
+                             text =  stringResource(id = R.string.income_balance),
                              modifier = Modifier
                                  .weight(1f)
                                  .wrapContentHeight(align = CenterVertically),
-                             color = positiveColor
+//                             color = positiveColor
 
                              )
                          Text(
-                             text = "Expense : ",
+                             text = stringResource(id = R.string.expense_balance),
                              modifier = Modifier
                                  .weight(1f)
                                  .wrapContentHeight(align = CenterVertically),
-                             color = negativeColor
+//                             color = negativeColor
 
                          )
                      }

@@ -12,8 +12,9 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import kotlinx.coroutines.launch
+import lab.justonebyte.moneysubuu.R
 
 
 @Composable
@@ -35,7 +36,7 @@ fun NewTransactionButton(
                 .padding(0.dp)
                 .background(MaterialTheme.colors.primary)
         ) {
-            Text(text = "Add New Record", style = MaterialTheme.typography.button, color = MaterialTheme.colors.onPrimary)
+            Text(text = stringResource(id = R.string.add_new_record), style = MaterialTheme.typography.button, color = MaterialTheme.colors.onPrimary)
             Icon(
                 modifier = Modifier
                     .width(30.dp)

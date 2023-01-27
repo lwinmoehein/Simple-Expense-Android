@@ -7,7 +7,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import lab.justonebyte.moneysubuu.R
 import lab.justonebyte.moneysubuu.model.BalanceType
 import lab.justonebyte.moneysubuu.model.Transaction
 
@@ -45,7 +47,7 @@ fun HomeContent(
                 },
                 onTypeChanged = onTypeChanged
             )
-            SectionTitle(title = "History")
+            SectionTitle(title = stringResource(id = R.string.history))
             TransactionsCard(
                 transactions = homeUiState.transactions,
                 currency = homeUiState.currentCurrency,

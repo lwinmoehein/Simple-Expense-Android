@@ -12,6 +12,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import lab.justonebyte.moneysubuu.R
@@ -60,7 +61,7 @@ fun SettingsScreen(
     ) {
         Column (){
             Column {
-                SectionTitle(title = "App Settings")
+                SectionTitle(title = stringResource(id = R.string.sys_setting))
                 Row(
                     Modifier.absolutePadding(left = 10.dp, right = 10.dp)
                 ) {
@@ -77,22 +78,10 @@ fun SettingsScreen(
                         isOpen = isLangMenuOpen.value
                     )
                 }
-                Row(
-                    Modifier.absolutePadding(left = 10.dp, right = 10.dp, top = 5.dp)
-                ) {
-                    SettingMenu(
-                        modifier = Modifier.fillMaxWidth(),
-                        settingItemLabel =  R.string.select_balance,
-                        currentChosentMenuLabel = settingsUiState.defaultBalanceType.name,
-                        menuItems = settingBalanceTypes,
-                        onMenuItemChosen = {
-                            settingsViewModel.updateDefaultBalanceType(it as BalanceType)
-                        }
-                    )
-                }
+
             }
             Column {
-                SectionTitle(title = "Feature Settings")
+                SectionTitle(title = stringResource(id = R.string.feat_setting))
                 Row(
                     Modifier.absolutePadding(left = 10.dp, right = 10.dp)
                 ) {

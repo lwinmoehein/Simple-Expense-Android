@@ -19,9 +19,11 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
+import lab.justonebyte.moneysubuu.R
 import lab.justonebyte.moneysubuu.model.Transaction
 import lab.justonebyte.moneysubuu.model.TransactionCategory
 import lab.justonebyte.moneysubuu.model.TransactionType
@@ -95,10 +97,10 @@ fun AddTransactionSheetContent(
     if (isAddTransactionConfirmDialogOpen.value) {
         GeneralDialog(
             dialogState = isAddTransactionConfirmDialogOpen,
-            title = "Are you sure?",
-            positiveBtnText = "Confirm",
-            negativeBtnText = "Cancel",
-            message = "Are you sure adding this record to your money database?",
+            title = stringResource(R.string.r_u_sure),
+            positiveBtnText = stringResource(id = R.string.confirm),
+            negativeBtnText = stringResource(id = R.string.cancel),
+            message = stringResource(id = if(isEditMode) R.string.r_u_sure_tran_edit else R.string.r_u_sure_tran_add),
             onPositiveBtnClicked = {
                 isAddTransactionConfirmDialogOpen.value = false
                 val category = currentCategory.value
@@ -150,7 +152,12 @@ fun AddTransactionSheetContent(
                 .height(30.dp)
         ) {
             Column(verticalArrangement = Arrangement.Center, modifier = Modifier.fillMaxHeight()) {
-                Text(text = if(isEditMode) "Edit transaction" else "Add New Transaction", style = MaterialTheme.typography.subtitle1)
+                Text(
+                    text = if(isEditMode) if(currentType.value==2) stringResource(id = R.string.edit_expense_title) else stringResource(id = R.string.edit_income_title)  else (if(currentType.value==2) stringResource(
+                        id = R.string.add_expense_title
+                    ) else stringResource(id = R.string.add_income_title)),
+                    style = MaterialTheme.typography.subtitle1
+                )
             }
             IconButton(onClick = { onCloseBottomSheet() }) {
                 Icon(imageVector = Icons.Filled.Close, contentDescription = "close sheet")
@@ -167,8 +174,10 @@ fun AddTransactionSheetContent(
 
             ) {
                 Text(
-                    "Amount in Kyat: ",
-                    modifier = Modifier.weight(1f).absolutePadding(top = 10.dp, bottom = 10.dp),
+                    stringResource(id = R.string.enter_amount),
+                    modifier = Modifier
+                        .weight(1f)
+                        .absolutePadding(top = 10.dp, bottom = 10.dp),
                     style = MaterialTheme.typography.subtitle2
                 )
 
@@ -181,7 +190,7 @@ fun AddTransactionSheetContent(
                     onValueChange = {
                         currentAmount.value = it.text
                     },
-                    placeholder = "Enter amount",
+                    placeholder = stringResource(id = R.string.eg_amount),
                     keyboardType = KeyboardType.Number,
                     textColor = categoryColor,
                     hideKeyboard = !isBottomSheetOpened,
@@ -213,7 +222,7 @@ fun AddTransactionSheetContent(
                     horizontalArrangement = Arrangement.Center
                 ) {
                     Text(
-                        text = "Date : ",
+                        text =  stringResource(id = R.string.enter_date),
                         style = MaterialTheme.typography.subtitle2,
                         modifier = Modifier.weight(1f)
                     )
@@ -239,7 +248,7 @@ fun AddTransactionSheetContent(
                     .absolutePadding(top = 20.dp, bottom = 20.dp)
                     .clip(RoundedCornerShape(10.dp))
             ) {
-                Text(text = "Cancel", style = MaterialTheme.typography.button, color = categoryColor)
+                Text(text = stringResource(id = R.string.cancel), style = MaterialTheme.typography.button, color = categoryColor)
             }
             Button(
                 colors = ButtonDefaults.buttonColors(backgroundColor = categoryColor),
@@ -250,7 +259,7 @@ fun AddTransactionSheetContent(
                     .absolutePadding(top = 20.dp, bottom = 20.dp)
                     .clip(RoundedCornerShape(10.dp))
             ) {
-                Text(text = if(isEditMode) "Confirm Edit" else "Confirm", style = MaterialTheme.typography.button, color = MaterialTheme.colors.onPrimary)
+                Text(text = if(isEditMode) stringResource(id = R.string.confirm_edit) else stringResource(id = R.string.confirm), style = MaterialTheme.typography.button, color = MaterialTheme.colors.onPrimary)
             }
         }
     }

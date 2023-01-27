@@ -14,10 +14,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.accompanist.pager.*
 import kotlinx.coroutines.launch
+import lab.justonebyte.moneysubuu.R
 import lab.justonebyte.moneysubuu.model.TransactionCategory
 import lab.justonebyte.moneysubuu.model.TransactionType
 import lab.justonebyte.moneysubuu.ui.components.*
@@ -26,9 +28,9 @@ import lab.justonebyte.moneysubuu.ui.theme.negativeColor
 import lab.justonebyte.moneysubuu.ui.theme.positiveColor
 import lab.justonebyte.moneysubuu.ui.theme.primary
 
-sealed class CategoryTab(val index:Int,val title:String){
-    object  Income:CategoryTab(1,"Income")
-    object Expense:CategoryTab(2,"Expense")
+sealed class CategoryTab(val index:Int,val title:Int){
+    object  Income:CategoryTab(1,R.string.income)
+    object Expense:CategoryTab(2,R.string.expense)
 }
 val tabs = listOf(
     CategoryTab.Income,CategoryTab.Expense
@@ -92,7 +94,7 @@ fun CategoryTabs(
                         onTabChanged(currentTab.value);
                         coroutineScope.launch { pagerState.animateScrollToPage(index) }
                     },
-                    text = { Text(text = tab.title) }
+                    text = { Text(text = stringResource(id = tab.title)) }
                 )
             }
         }
@@ -172,7 +174,7 @@ fun CategoryTabItem(
 
     AddNameInputDialog(
         initialValue = currentEditingCategory.value?.name?:"",
-        title = if(type==TransactionType.Income) "Enter income category name :" else "Enter expense category name :",
+        title = if(type==TransactionType.Income) stringResource(id = R.string.enter_in_category) else stringResource(R.string.enter_ex_category),
         isShown =  isReusableInputDialogShown.value,
         dialogColor = if(type==TransactionType.Income) positiveColor else negativeColor,
         onDialogDismiss = {
@@ -225,7 +227,7 @@ fun CategoryTabItem(
                             .padding(0.dp)
                             .background(if (type == TransactionType.Income) positiveColor else negativeColor)
                     ) {
-                        Text(text =  if(type==TransactionType.Income) "Add New Income Category" else "Add New Expense Category", style = MaterialTheme.typography.button, color = MaterialTheme.colors.onPrimary)
+                        Text(text =  if(type==TransactionType.Income) stringResource(id = R.string.add_income_cat) else stringResource(R.string.add_expense_cat), style = MaterialTheme.typography.button, color = MaterialTheme.colors.onPrimary)
                         Icon(
                             modifier = Modifier
                                 .width(30.dp)
@@ -240,7 +242,9 @@ fun CategoryTabItem(
         },
         sheetContent = {
            Column(
-               modifier= Modifier.height(200.dp).padding(20.dp),
+               modifier= Modifier
+                   .height(200.dp)
+                   .padding(20.dp),
                verticalArrangement = Arrangement.Center,
                horizontalAlignment = Alignment.CenterHorizontally
            ) {
@@ -255,7 +259,7 @@ fun CategoryTabItem(
                         isReusableInputDialogShown.value = true
                    }
                ) {
-                   Text(text = "Edit Category",color=MaterialTheme.colors.onPrimary)
+                   Text(text = stringResource(id = R.string.edit_tran),color=MaterialTheme.colors.onPrimary)
                }
                Divider(Modifier.height(20.dp), color = Color.Transparent)
                TextButton(
@@ -269,17 +273,17 @@ fun CategoryTabItem(
                        currentEditingCategory.value?.let { removeCategory(it) }
                    }
                ) {
-                   Text(text = "Delete Category", color = MaterialTheme.colors.onPrimary)
+                   Text(text = stringResource(id = R.string.delete_tran), color = MaterialTheme.colors.onPrimary)
                }
            }
         }, sheetPeekHeight = 0.dp
 
     ) {
-        Text(text = if(type===TransactionType.Income) "Income Categories List :" else "Expense Categories List :", style = MaterialTheme.typography.h6, modifier = Modifier.absolutePadding(top = 30.dp, bottom = 20.dp))
+//        Text(text = if(type===TransactionType.Income) "Income Categories List :" else "Expense Categories List :", style = MaterialTheme.typography.h6, modifier = Modifier.absolutePadding(top = 30.dp, bottom = 20.dp))
 
         LazyColumn(
             verticalArrangement = Arrangement.Top,
-            modifier = Modifier.absolutePadding(left = 2.dp, right = 2.dp, bottom = 100.dp)
+            modifier = Modifier.absolutePadding(left = 2.dp, right = 2.dp, bottom = 100.dp, top = 20.dp)
         ) {
             items(categories){
                 CategoryItem(

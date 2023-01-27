@@ -40,4 +40,48 @@
     <string name="this_day">ယနေ့</string>
     <string name="numbers"></string>
 
+
+    <string name="home">မူလနေရာ</string>
+    <string name="charts">ဒေတာဇယား</string>
+    <string name="m_categories">အမျိုးအစားခန့်ခွဲ</string>
+    <string name="settings">ဆက်တင်</string>
+    <string name="balance">ငွေပမာဏများ</string>
+    <string name="history">ထည့်ခဲ့သည့်မှတ်တမ်းများ</string>
+
+
+    <string name="current_balance">လက်ထဲရှိငွေ :</string>
+    <string name="income_balance">တိုးလာသောငွေ :</string>
+    <string name="expense_balance">သုံးထားသောငွေ :</string>
+
+    <string name="add_new_record">အသစ်ထည့်မည်</string>
+    <string name="add_income">၀င်ငွေထည့်မည်</string>
+    <string name="add_expense">ထွက်ငွေထည့်မည်</string>
+
+    <string name="edit_tran">ပြင်မည်</string>
+    <string name="delete_tran">ဖျက်မည်</string>
+
+    <string name="add_expense_title">ထွက်ငွေအသစ်ထည့်ခြင်း</string>
+    <string name="add_income_title">၀င်ငွေအသစ်ထည့်ခြင်း</string>
+    <string name="edit_expense_title">ထွက်ငွေပြင်ဆင်ခြင်း</string>
+    <string name="edit_income_title">၀င်ငွေပြင်ဆင်ခြင်း</string>
+
+    <string name="enter_amount">ငွေပမာဏထည့်ပါ</string>
+    <string name="eg_amount">ဥပမာ ၂၀၀၀</string>
+    <string name="enter_category">အမျိုးအစားရွေးပါ</string>
+    <string name="enter_date">နေ့ရက်ရွေးပါ</string>
+
+    <string name="cancel">မလုပ်တော့ပါ</string>
+    <string name="confirm">သေချာပါပြီ</string>
+    <string name="confirm_edit">ပြင်မှာသေချာပါပြီ</string>
+    <string name="r_u_sure">သေချာပါသလား</string>
+    <string name="r_u_sure_tran_add">အသုံးစာရင်းထဲထည့်မှာသေချာပါသလား</string>
+    <string name="r_u_sure_tran_edit">အသုံးစာရင်းကိုပြင်မှာသေချာပါသလား</string>
+    <string name="enter_ex_category">ထွက်ငွေအမျိုးအစားရဲ့အမည်ရေးပါ</string>
+    <string name="enter_in_category">၀င်ငွေအမျိုးအစားရဲ့အမည်ရေးပါ</string>
+    <string name="add">အသစ်</string>
+    <string name="add_income_cat">၀င်ငွေအမျိုးအစားထည့်</string>
+    <string name="add_expense_cat">ထွက်ငွေအမျိုးအစားထည့်</string>
+
+    <string name="sys_setting">စနစ်ဆက်တင်များ</string>
+    <string name="feat_setting">လုပ်ဆောင်ချက်ဆက်တင်များ</string>
 </resources>

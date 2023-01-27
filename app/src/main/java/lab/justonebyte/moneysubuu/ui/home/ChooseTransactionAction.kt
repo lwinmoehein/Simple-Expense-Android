@@ -9,7 +9,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import lab.justonebyte.moneysubuu.R
 import lab.justonebyte.moneysubuu.ui.theme.Red300
 import lab.justonebyte.moneysubuu.ui.theme.primary
 
@@ -19,7 +21,9 @@ fun ChooseTransactionAction(
     onEditClick:()->Unit
 ){
     Column(
-        modifier= Modifier.height(200.dp).padding(20.dp),
+        modifier= Modifier
+            .height(200.dp)
+            .padding(20.dp),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -34,7 +38,7 @@ fun ChooseTransactionAction(
                 onEditClick()
             }
         ) {
-            Text(text = "Edit Transaction",color=MaterialTheme.colors.onPrimary)
+            Text(text = stringResource(id = R.string.edit_tran),color=MaterialTheme.colors.onPrimary)
         }
         Divider(Modifier.height(20.dp), color = Color.Transparent)
         TextButton(
@@ -48,7 +52,7 @@ fun ChooseTransactionAction(
                onDeleteClick()
             }
         ) {
-            Text(text = "Delete Transaction", color = MaterialTheme.colors.onPrimary)
+            Text(text = stringResource(id = R.string.delete_tran), color = MaterialTheme.colors.onPrimary)
         }
     }
 }
