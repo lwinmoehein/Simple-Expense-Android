@@ -19,10 +19,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
+import lab.justonebyte.moneysubuu.R
 import lab.justonebyte.moneysubuu.model.TransactionCategory
 import lab.justonebyte.moneysubuu.model.TransactionType
 import lab.justonebyte.moneysubuu.ui.category.AddNameInputDialog
@@ -44,7 +46,7 @@ fun AddCategoriesCard(
     val categoryColor = if(currentTransactionType==TransactionType.Income) positiveColor else negativeColor
 
     AddNameInputDialog(
-        title = if(currentTransactionType==TransactionType.Income) "Enter income category name :" else "Enter expense category name :",
+        title = if(currentTransactionType==TransactionType.Income) stringResource(id = R.string.enter_in_category) else stringResource(R.string.enter_ex_category),
         isShown = isAddCategoryDialogOpen.value,
         dialogColor = if(currentTransactionType==TransactionType.Income) positiveColor else negativeColor,
         onDialogDismiss = {
@@ -68,7 +70,7 @@ fun AddCategoriesCard(
             modifier = Modifier.padding(10.dp)
         ) {
             Row() {
-                Text(text = "Choose Category:", style = MaterialTheme.typography.subtitle2)
+                Text(text = stringResource(id = R.string.enter_category), style = MaterialTheme.typography.subtitle2)
             }
             LazyVerticalGrid(
                 horizontalArrangement = Arrangement.Center,
@@ -91,7 +93,7 @@ fun AddCategoriesCard(
                         ) {
                           Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.Center) {
                               Text(
-                                  text ="Add",
+                                  text = stringResource(id = R.string.add),
                                   textAlign = TextAlign.Center,
                                   modifier = Modifier.padding(10.dp),
                                   style = MaterialTheme.typography.button,

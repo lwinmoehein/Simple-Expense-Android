@@ -58,7 +58,7 @@ fun AppDrawer(
                     contentDescription = null,
                 )
             },
-            label = "Home",
+            label = stringResource(id = R.string.home),
             isSelected = currentRoute == MainDestinations.HOME_ROUTE,
             action = {
                 navigateToHome()
@@ -72,7 +72,7 @@ fun AppDrawer(
                     contentDescription = null,
                 )
             },
-            label = "Charts",
+            label = stringResource(id = R.string.charts),
             isSelected = currentRoute == MainDestinations.STATS_ROUTE,
             action = {
                 navigateToStats()
@@ -86,7 +86,7 @@ fun AppDrawer(
                     contentDescription = null,
                 )
             },
-            label = "Manage Categories",
+            label = stringResource(id = R.string.m_categories),
             isSelected = currentRoute == MainDestinations.CATEGORY_ROUTE,
             action = {
                 navigateToCategory()
@@ -100,7 +100,7 @@ fun AppDrawer(
                     contentDescription = null,
                 )
             },
-            label = "Settings",
+            label = stringResource(id = R.string.settings),
             isSelected = currentRoute == MainDestinations.SETTINGS_ROUTE,
             action = {
                 navigateToSettings()

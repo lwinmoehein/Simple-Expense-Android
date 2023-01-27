@@ -20,6 +20,7 @@ import me.bytebeats.views.charts.pie.PieChart
 import me.bytebeats.views.charts.pie.PieChartData
 import me.bytebeats.views.charts.pie.render.SimpleSliceDrawer
 import me.bytebeats.views.charts.simpleChartAnimation
+import lab.justonebyte.moneysubuu.R
 
 fun randomColor() = listOf(
     bar1,bar2,bar3,bar4,bar5,bar6,bar7,bar8,bar9,bar10,bar11,bar12,bar13,bar14,bar15,bar16,bar17,bar18,bar19,bar20
@@ -57,7 +58,7 @@ fun CustomPieChartWithData(
                   )
               }
               Row(horizontalArrangement = Arrangement.Center, modifier = Modifier.absolutePadding(left = 20.dp)) {
-                  Text(text = "Total : ", style = MaterialTheme.typography.h6)
+                  Text(text = stringResource(R.string.total)+" : ", style = MaterialTheme.typography.h6)
                   Text(
                       text = incomePieSlices.sumOf { it.second.value.toInt() }.toString()+" "+ stringResource(id = currency.name),
                       style = MaterialTheme.typography.h6, color = MaterialTheme.colors.primary)

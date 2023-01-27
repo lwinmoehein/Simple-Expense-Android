@@ -14,9 +14,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
+import lab.justonebyte.moneysubuu.R
 import lab.justonebyte.moneysubuu.ui.theme.primary
 
 @Composable
@@ -58,7 +60,8 @@ fun AddNameInputDialog(
                         .fillMaxWidth()
                         .heightIn(min = 40.dp)
                         .clip(RoundedCornerShape(5.dp))
-                        .border(2.dp,dialogColor).absolutePadding(left = 10.dp, right = 10.dp, top = 5.dp, bottom = 5.dp),
+                        .border(2.dp, dialogColor)
+                        .absolutePadding(left = 10.dp, right = 10.dp, top = 5.dp, bottom = 5.dp),
                     singleLine = true,
                     textStyle = MaterialTheme.typography.subtitle1,
                 )
@@ -75,7 +78,7 @@ fun AddNameInputDialog(
                             onDialogDismiss()
                         }
                     ) {
-                        Text(text = "Cancel", color = Color.Gray)
+                        Text(text = stringResource(id = R.string.cancel), color = Color.Gray)
                     }
                     Divider(modifier = Modifier.width(10.dp),color= Color.Transparent)
                     Button(
@@ -88,7 +91,7 @@ fun AddNameInputDialog(
                             nameInputValue.value = ""
                         }
                     ) {
-                        Text(text = "Add")
+                        Text(text = stringResource(id = R.string.confirm))
                     }
                 }
             }

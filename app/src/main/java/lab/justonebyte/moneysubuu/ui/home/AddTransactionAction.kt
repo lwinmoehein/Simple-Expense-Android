@@ -12,9 +12,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import lab.justonebyte.moneysubuu.ui.theme.negativeColor
 import lab.justonebyte.moneysubuu.ui.theme.positiveColor
+import lab.justonebyte.moneysubuu.R
 
 @Composable
 fun AddTransactionAction(
@@ -39,7 +41,7 @@ fun AddTransactionAction(
                onAddIncome()
             }
         ) {
-            Text(text = "Add Income",color=MaterialTheme.colors.onPrimary)
+            Text(text =  stringResource(id = R.string.add_income),color=MaterialTheme.colors.onPrimary)
         }
         Divider(Modifier.height(20.dp), color = Color.Transparent)
         TextButton(
@@ -53,7 +55,7 @@ fun AddTransactionAction(
                onAddExpense()
             }
         ) {
-            Text(text = "Add Expense", color = MaterialTheme.colors.onPrimary)
+            Text(text = stringResource(id = R.string.add_expense), color = MaterialTheme.colors.onPrimary)
         }
     }
 
