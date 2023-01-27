@@ -8,10 +8,14 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import lab.justonebyte.moneysubuu.R
 
 @Composable
-fun NoData(modifier: Modifier,text:String="No Data Found."){
-    Column(modifier = modifier.fillMaxWidth().fillMaxHeight(), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center) {
+fun NoData(modifier: Modifier,text:String= stringResource(id = R.string.no_data)){
+    Column(modifier = modifier
+        .fillMaxWidth()
+        .fillMaxHeight(), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center) {
         Text(text =text)
     }
 }
