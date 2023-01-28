@@ -6,21 +6,22 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.DialogProperties
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.google.accompanist.pager.ExperimentalPagerApi
 import kotlinx.coroutines.launch
 import lab.justonebyte.moneysubuu.model.BalanceType
 import lab.justonebyte.moneysubuu.model.Transaction
 import lab.justonebyte.moneysubuu.model.TransactionCategory
-import lab.justonebyte.moneysubuu.ui.components.GeneralDialog
-import lab.justonebyte.moneysubuu.ui.components.SnackBarType
-import lab.justonebyte.moneysubuu.ui.components.SuBuuSnackBar
-import lab.justonebyte.moneysubuu.ui.components.SuBuuSnackBarHost
+import lab.justonebyte.moneysubuu.ui.components.*
 
 
 @SuppressLint("UnrememberedMutableState")
-@OptIn(ExperimentalMaterialApi::class, com.google.accompanist.pager.ExperimentalPagerApi::class)
+@OptIn(ExperimentalMaterialApi::class, ExperimentalPagerApi::class, ExperimentalComposeUiApi::class)
 @Composable
 fun HomeScreen(){
     val homeViewModel = hiltViewModel<HomeViewModel>()
@@ -58,12 +59,13 @@ fun HomeScreen(){
 
 
     if (isDeleteTransactionDialogOpen.value) {
-        GeneralDialog(
-            dialogState = isDeleteTransactionDialogOpen,
+        AppAlertDialog(
             title = "Are you sure?",
             positiveBtnText = "Confirm",
             negativeBtnText = "Cancel",
-            message = "Are you sure to delete this transaction?",
+            content = {
+                      Text("Are you sure to delete this transaction?")
+            },
             onPositiveBtnClicked = {
                 currentTransaction.value?.let { homeViewModel.deleteTransaction(it) }
 
@@ -71,12 +73,40 @@ fun HomeScreen(){
             },
             onNegativeBtnClicked = {
                 clearStates()
-            }
+            },
+            properties = DialogProperties(usePlatformDefaultWidth = false)
         )
     }
 
 
     BottomSheetScaffold(
+                topBar = {
+                    TopAppBar(
+                        title = {
+                            Text(
+                                "X Money Tracker",
+                                maxLines = 1,
+                                overflow = TextOverflow.Ellipsis
+                            )
+                        },
+                        navigationIcon = {
+                            if(!bottomSheetScaffoldState.bottomSheetState.isAnimationRunning && bottomSheetScaffoldState.bottomSheetState.isCollapsed){
+                                NewTransactionButton(
+                                    onClick = {
+                                        coroutineScope.launch {
+                                            bottomSheetScaffoldState.bottomSheetState.expand()
+                                        }
+                                        clearStates()
+                                        isChooseAddTransactionTypeOpen.value = true
+                                    }
+                                )
+                            }
+                        },
+                        actions = {
+
+                        }
+                    )
+                },
         floatingActionButton = {
             if(!bottomSheetScaffoldState.bottomSheetState.isAnimationRunning && bottomSheetScaffoldState.bottomSheetState.isCollapsed){
                NewTransactionButton(

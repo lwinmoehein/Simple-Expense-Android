@@ -95,12 +95,13 @@ fun AddTransactionSheetContent(
     }
 
     if (isAddTransactionConfirmDialogOpen.value) {
-        GeneralDialog(
-            dialogState = isAddTransactionConfirmDialogOpen,
+        AppAlertDialog(
             title = stringResource(R.string.r_u_sure),
             positiveBtnText = stringResource(id = R.string.confirm),
             negativeBtnText = stringResource(id = R.string.cancel),
-            message = stringResource(id = if(isEditMode) R.string.r_u_sure_tran_edit else R.string.r_u_sure_tran_add),
+            content = {
+                      Text(stringResource(id = if(isEditMode) R.string.r_u_sure_tran_edit else R.string.r_u_sure_tran_add))
+            },
             onPositiveBtnClicked = {
                 isAddTransactionConfirmDialogOpen.value = false
                 val category = currentCategory.value

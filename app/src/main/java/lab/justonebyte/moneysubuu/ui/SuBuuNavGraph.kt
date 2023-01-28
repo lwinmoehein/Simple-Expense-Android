@@ -2,10 +2,12 @@ package lab.justonebyte.moneysubuu.ui
 
 import StatsScreen
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ScaffoldState
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.*
+import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -37,6 +39,7 @@ fun SuBuuNavGraph(
     val openDrawer: () -> Unit = { coroutineScope.launch { scaffoldState.drawerState.open() } }
 
     NavHost(
+        modifier = Modifier.padding(paddings) ,
         navController = navController,
         startDestination = startDestination,
     ) {

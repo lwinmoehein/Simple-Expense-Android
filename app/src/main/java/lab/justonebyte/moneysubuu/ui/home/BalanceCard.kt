@@ -1,9 +1,9 @@
 package lab.justonebyte.moneysubuu.ui.home
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.Card
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
+import androidx.compose.material3.Card
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -61,12 +61,10 @@ fun BalanceCard(
         SectionTitle(title = stringResource(id = R.string.balance),modifier = Modifier.absolutePadding(top = 15.dp))
         Card(
             shape = SuBuuShapes.small,
-            elevation = 2.dp,
             modifier = modifier
                 .wrapContentHeight()
                 .fillMaxWidth()
                 .padding(10.dp),
-            contentColor = MaterialTheme.colors.primary
         ) {
 
               Row(
@@ -103,33 +101,29 @@ fun BalanceCard(
                       Row(horizontalArrangement = Arrangement.Start, verticalAlignment = Alignment.CenterVertically, modifier = Modifier.weight(1f)) {
                           Text(
                               text = "$currentBalance",
-                              style = MaterialTheme.typography.h6,
-                              fontWeight = FontWeight.ExtraBold,
-                              color = if(currentBalance>0) MaterialTheme.colors.primaryVariant else Red900,
+                              style = MaterialTheme.typography.h6
                           )
                           Text(
-                              text = " " + stringResource(id = currency.name),
-                              color = if (currentBalance > 0) MaterialTheme.colors.primaryVariant else Red900
+                              text = " " + stringResource(id = currency.name)
+
                           )
                       }
                       Row(horizontalArrangement = Arrangement.Start, verticalAlignment = Alignment.CenterVertically, modifier = Modifier.weight(1f)) {
 
                           Text(
                               text = "$incomeBalance",
-                              style = MaterialTheme.typography.h6,
-                              color = positiveColor
+                              style = MaterialTheme.typography.h6
                           )
-                          Text(text =  " " + stringResource(id = currency.name), color = positiveColor)
+                          Text(text =  " " + stringResource(id = currency.name))
 
 
                       }
                       Row(horizontalArrangement = Arrangement.Start, verticalAlignment = Alignment.CenterVertically, modifier = Modifier.weight(1f)) {
                           Text(
                               text = "$expenseBalance",
-                              style = MaterialTheme.typography.h6,
-                              color = negativeColor
+                              style = MaterialTheme.typography.h6
                           )
-                          Text(text =  " " + stringResource(id = currency.name), color = negativeColor)
+                          Text(text =  " " + stringResource(id = currency.name))
 
                       }
 
