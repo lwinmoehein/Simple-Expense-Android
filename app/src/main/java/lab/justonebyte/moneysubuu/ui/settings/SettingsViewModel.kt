@@ -1,20 +1,16 @@
 package lab.justonebyte.moneysubuu.ui.settings
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import lab.justonebyte.moneysubuu.data.CategoryRepository
 import lab.justonebyte.moneysubuu.data.SettingPrefRepository
 import lab.justonebyte.moneysubuu.model.AppLocale
 import lab.justonebyte.moneysubuu.model.BalanceType
 import lab.justonebyte.moneysubuu.model.Currency
-import lab.justonebyte.moneysubuu.model.TransactionCategory
 import lab.justonebyte.moneysubuu.ui.components.SnackBarType
 import javax.inject.Inject
 
@@ -87,6 +83,7 @@ class SettingsViewModel @Inject constructor(
             settingRepository.updateLocale(appLocale.value)
         }
     }
+
     fun updateDefaultBalanceType(balanceType: BalanceType){
         viewModelScope.launch {
             settingRepository.updateBalanceType(balanceType.value)

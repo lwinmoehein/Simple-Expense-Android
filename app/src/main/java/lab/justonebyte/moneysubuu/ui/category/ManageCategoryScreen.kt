@@ -9,6 +9,15 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material3.*
+import androidx.compose.material3.Card
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Tab
+import androidx.compose.material3.TabRow
+import androidx.compose.material3.TabRowDefaults
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -74,14 +83,7 @@ fun CategoryTabs(
                 .clip(RoundedCornerShape(5.dp)),
             selectedTabIndex = tabIndex,
             indicator = { tabPositions -> // 3.
-                TabRowDefaults.Indicator(
-                    Modifier.pagerTabIndicatorOffset(
-                        pagerState,
-                        tabPositions
-                    ),
-                    color = MaterialTheme.colors.primary,
-                    height = 2.dp
-                )
+
             }) {
             tabs.forEachIndexed { index, tab ->
                 Tab(
@@ -162,7 +164,7 @@ fun CategoryTabItem(
     updateCategory:(transactionCategory:TransactionCategory,updatedName:String)->Unit,
     removeCategory:(transactionCategory:TransactionCategory)->Unit,
     type:TransactionType = TransactionType.Income,
-    bottomSheetScaffoldState:BottomSheetScaffoldState
+    bottomSheetScaffoldState: BottomSheetScaffoldState
 ){
 
     val categories =  uiState.categories.filter { it.transaction_type==type }
@@ -226,14 +228,13 @@ fun CategoryTabItem(
                             .padding(0.dp)
                             .background(if (type == TransactionType.Income) positiveColor else negativeColor)
                     ) {
-                        Text(text =  if(type==TransactionType.Income) stringResource(id = R.string.add_income_cat) else stringResource(R.string.add_expense_cat), style = MaterialTheme.typography.button, color = MaterialTheme.colors.onPrimary)
+                        Text(text =  if(type==TransactionType.Income) stringResource(id = R.string.add_income_cat) else stringResource(R.string.add_expense_cat))
                         Icon(
                             modifier = Modifier
                                 .width(30.dp)
                                 .height(30.dp)
                             ,
-                            imageVector = Icons.Filled.Add, contentDescription = "add category",
-                            tint = MaterialTheme.colors.onPrimary
+                            imageVector = Icons.Filled.Add, contentDescription = "add category"
                         )
                     }
                 }
@@ -258,7 +259,7 @@ fun CategoryTabItem(
                         isReusableInputDialogShown.value = true
                    }
                ) {
-                   Text(text = stringResource(id = R.string.edit_tran),color=MaterialTheme.colors.onPrimary)
+                   Text(text = stringResource(id = R.string.edit_tran))
                }
                Divider(Modifier.height(20.dp), color = Color.Transparent)
                TextButton(
@@ -272,7 +273,7 @@ fun CategoryTabItem(
                        currentEditingCategory.value?.let { removeCategory(it) }
                    }
                ) {
-                   Text(text = stringResource(id = R.string.delete_tran), color = MaterialTheme.colors.onPrimary)
+                   Text(text = stringResource(id = R.string.delete_tran))
                }
            }
         }, sheetPeekHeight = 0.dp

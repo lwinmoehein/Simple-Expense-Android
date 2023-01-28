@@ -1,19 +1,24 @@
 package lab.justonebyte.moneysubuu.ui.components
 
 import android.annotation.SuppressLint
-import androidx.compose.foundation.layout.Row
-import androidx.compose.material.*
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.*
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
+import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 
 data class OptionItem(val name:Int,val value:Any)
 
 @SuppressLint("UnrememberedMutableState")
-@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun AppOption(
     modifier: Modifier = Modifier,
@@ -22,44 +27,29 @@ fun AppOption(
     options:List<OptionItem>,
     selectedOption:OptionItem
 ) {
-
-
+    var expanded by remember { mutableStateOf(false) }
     var selectedItem = mutableStateOf(selectedOption)
 
-
-    var expanded by remember {
-        mutableStateOf(false)
-    }
-
-    // the box
-    ExposedDropdownMenuBox(
-        modifier=modifier,
-        expanded = expanded,
-        onExpandedChange = {
-            expanded = !expanded
+    Row(modifier = modifier) {
+        Row(Modifier.clickable { expanded = true }) {
+                Text(stringResource(id = selectedOption.name))
+                Icon(Icons.Default.ArrowDropDown, contentDescription = "Localized description")
         }
-    ) {
-
-        // text field
-        Row() {
-            Text(text = stringResource(id = selectedItem.value.name) )
-            Icon(if(expanded) Icons.Filled.KeyboardArrowUp else Icons.Default.KeyboardArrowDown,"drop")
-        }
-
-        // menu
-        ExposedDropdownMenu(
+        DropdownMenu(
             expanded = expanded,
             onDismissRequest = { expanded = false }
         ) {
+            Divider()
             options.forEach { selectedOption ->
-                // menu item
-                DropdownMenuItem(onClick = {
-                    selectedItem.value = selectedOption
-                    expanded = false
-                    onItemSelected(selectedItem.value)
-                }) {
-                    Text(text = stringResource(id = selectedOption.name), style = MaterialTheme.typography.button)
-                }
+                DropdownMenuItem(
+                    modifier = Modifier.padding(0.dp ),
+                    text = { Text(text = stringResource(id = selectedOption.name)) },
+                    onClick = {
+                        selectedItem.value = selectedOption
+                        expanded = false
+                        onItemSelected(selectedItem.value)
+                    })
+                Divider()
             }
         }
     }

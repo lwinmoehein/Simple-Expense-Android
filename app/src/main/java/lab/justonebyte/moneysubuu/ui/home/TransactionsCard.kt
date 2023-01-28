@@ -4,8 +4,8 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.Card
-import androidx.compose.material.Text
+import androidx.compose.material3.Card
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -27,9 +27,7 @@ fun TransactionsCard(
         modifier = modifier
             .fillMaxWidth()
             .fillMaxHeight()
-            .padding(10.dp)
-            .absolutePadding(bottom = 100.dp),
-        elevation = 3.dp
+            .padding(10.dp),
     ) {
         if(transactions.isEmpty()){
             NoData(modifier = Modifier)
@@ -52,8 +50,7 @@ fun TransactionItem(transaction:Transaction,modifier: Modifier=Modifier,currency
         Text(text = transaction.category.name,modifier = Modifier.weight(1f))
         Text(
             text =(if (transaction.type.value==1) transaction.amount.toString() else "-"+transaction.amount.toString() )+" " + stringResource(id = currency.name),
-            modifier = Modifier.weight(1f),
-            color = if(transaction.type.value==1) positiveColor else negativeColor
+            modifier = Modifier.weight(1f)
         )
         Text(text = transaction.created_at,modifier = Modifier.weight(1f))
     }

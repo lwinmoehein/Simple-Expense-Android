@@ -26,7 +26,6 @@ fun HomeContent(
 
     Scaffold {
         Column(Modifier.padding(it)) {
-            Spacer(modifier = Modifier.height(30.dp))
             BalanceCard(
                 currency = homeUiState.currentCurrency,
                 currentBalance = homeUiState.currentBalance,
