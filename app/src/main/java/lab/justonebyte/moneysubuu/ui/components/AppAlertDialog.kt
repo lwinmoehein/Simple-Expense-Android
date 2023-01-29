@@ -12,9 +12,9 @@ import androidx.compose.ui.window.DialogProperties
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun AppAlertDialog(
-    title: String,
-    positiveBtnText: String,
-    onPositiveBtnClicked: () -> Unit = {},
+    title: String?=null,
+    positiveBtnText: String? = null,
+    onPositiveBtnClicked: (() -> Unit)? = null,
     negativeBtnText: String? = null,
     onNegativeBtnClicked: (() -> Unit)? = null,
     properties: DialogProperties =  DialogProperties(usePlatformDefaultWidth = true),
@@ -24,21 +24,20 @@ fun AppAlertDialog(
         AlertDialog(
             modifier = if(properties.usePlatformDefaultWidth) Modifier.wrapContentSize() else Modifier.fillMaxSize(),
             onDismissRequest = {
-                // Dismiss the dialog when the user clicks outside the dialog or on the back
-                // button. If you want to disable that functionality, simply use an empty
-                // onDismissRequest.
                 if (onNegativeBtnClicked != null) {
                     onNegativeBtnClicked()
                 }
             },
             title = {
-                Text(text = title)
+                if (title != null) {
+                    Text(text = title)
+                }
             },
             text = {
                 content()
             },
             confirmButton = {
-                if(properties.usePlatformDefaultWidth){
+                if(positiveBtnText!=null && onPositiveBtnClicked!=null ){
                     TextButton(
                         onClick = {
                             onPositiveBtnClicked()
@@ -50,7 +49,7 @@ fun AppAlertDialog(
 
             },
             dismissButton = {
-                if(properties.usePlatformDefaultWidth){
+                if(onNegativeBtnClicked!=null && negativeBtnText!=null){
                     TextButton(
                         onClick = {
                             if (onNegativeBtnClicked != null) {

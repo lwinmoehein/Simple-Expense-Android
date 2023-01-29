@@ -3,10 +3,8 @@ package lab.justonebyte.moneysubuu.ui.home
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Divider
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
-import androidx.compose.material.TextButton
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -24,38 +22,23 @@ fun AddTransactionAction(
     onAddExpense:()->Unit
 ){
     Column(
-        modifier= Modifier
-            .height(200.dp)
-            .padding(20.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
+        verticalArrangement = Arrangement.Center,
+        modifier = Modifier.fillMaxWidth()
     ) {
         TextButton(
-            modifier = Modifier
-                .fillMaxWidth()
-                .clip(RoundedCornerShape(5.dp))
-                .padding(0.dp)
-                .background(positiveColor)
-            ,
             onClick = {
                onAddIncome()
             }
         ) {
-            Text(text =  stringResource(id = R.string.add_income),color=MaterialTheme.colors.onPrimary)
+            Text(text =  stringResource(id = R.string.add_income))
         }
-        Divider(Modifier.height(20.dp), color = Color.Transparent)
         TextButton(
-            modifier = Modifier
-                .fillMaxWidth()
-                .clip(RoundedCornerShape(5.dp))
-                .padding(0.dp)
-                .background(negativeColor)
-            ,
             onClick = {
                onAddExpense()
             }
         ) {
-            Text(text = stringResource(id = R.string.add_expense), color = MaterialTheme.colors.onPrimary)
+            Text(text = stringResource(id = R.string.add_expense))
         }
     }
 
