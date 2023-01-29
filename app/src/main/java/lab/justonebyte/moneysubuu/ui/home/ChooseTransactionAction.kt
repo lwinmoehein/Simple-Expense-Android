@@ -23,9 +23,7 @@ fun ChooseTransactionAction(
     onEditClick:()->Unit
 ){
     Column(
-        modifier= Modifier
-            .height(200.dp)
-            .padding(20.dp),
+        modifier = Modifier.fillMaxWidth(),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -37,12 +35,6 @@ fun ChooseTransactionAction(
             Text(text = stringResource(id = R.string.edit_tran))
         }
         TextButton(
-            modifier = Modifier
-                .fillMaxWidth()
-                .clip(RoundedCornerShape(5.dp))
-                .padding(0.dp)
-                .background(Red300)
-            ,
             onClick = {
                onDeleteClick()
             }

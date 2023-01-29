@@ -3,14 +3,17 @@ package lab.justonebyte.moneysubuu.ui.home
 import android.annotation.SuppressLint
 import android.util.Log
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Home
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
@@ -26,7 +29,8 @@ import lab.justonebyte.moneysubuu.ui.components.*
 
 
 @SuppressLint("UnrememberedMutableState", "UnusedMaterial3ScaffoldPaddingParameter")
-@OptIn(ExperimentalMaterialApi::class, ExperimentalPagerApi::class, ExperimentalComposeUiApi::class,
+@OptIn(
+    ExperimentalComposeUiApi::class,
     ExperimentalMaterial3Api::class
 )
 @Composable
@@ -42,6 +46,7 @@ fun HomeScreen(){
         currentTransaction.value?.type?.value ?: 1) }
 
     val isChooseAddTransactionTypeOpen =  remember { mutableStateOf(false)}
+    val isAddOrEditTransactionDialogOpen = remember { mutableStateOf(false)}
     val isSelectedTransactionEditMode = remember { mutableStateOf<Boolean?>(null) }
     val isDeleteTransactionDialogOpen = remember { mutableStateOf(false) }
     
@@ -49,6 +54,7 @@ fun HomeScreen(){
 
     fun clearStates(){
         println("clearing states:")
+        isAddOrEditTransactionDialogOpen.value = false
         isChooseAddTransactionTypeOpen.value = false
         isSelectedTransactionEditMode.value = null
         isDeleteTransactionDialogOpen.value = false
@@ -56,26 +62,33 @@ fun HomeScreen(){
         currentType.value = 1
     }
 
-    if (isDeleteTransactionDialogOpen.value) {
-        AppAlertDialog(
-            title = "Are you sure?",
-            positiveBtnText = "Confirm",
-            negativeBtnText = "Cancel",
-            content = {
-                      Text("Are you sure to delete this transaction?")
-            },
-            onPositiveBtnClicked = {
-                currentTransaction.value?.let { homeViewModel.deleteTransaction(it) }
+    DeleteTransactionDialog(
+        isOpen = isDeleteTransactionDialogOpen.value,
+        onCancelClick = { clearStates() },
+        onConfirmClick = {
+            currentTransaction.value?.let { homeViewModel.deleteTransaction(it) }
+            clearStates()
+        }
+    )
+    ChooseTransactionTypeDialog(
+        isOpen = isChooseAddTransactionTypeOpen.value,
+        onAddExpense = {
+            currentType.value = 2
+            isAddOrEditTransactionDialogOpen.value = true
+        },
+        onAddIncome =  {
+            currentType.value = 1
+            isAddOrEditTransactionDialogOpen.value = true
+        }
+    )
+    ChooseTransactionActionDialog(
+        isOpen = (currentTransaction.value!=null) && (isSelectedTransactionEditMode.value != true && !isDeleteTransactionDialogOpen.value),
+        onEdit = {  isSelectedTransactionEditMode.value = true  },
+        onDelete = { isDeleteTransactionDialogOpen.value = true }
+    )
 
-                clearStates()
-            },
-            onNegativeBtnClicked = {
-                clearStates()
-            },
-            properties = DialogProperties(usePlatformDefaultWidth = true)
-        )
-    }
-    if (isChooseAddTransactionTypeOpen.value) {
+
+    if (isChooseAddTransactionTypeOpen.value || currentTransaction.value!=null && !isDeleteTransactionDialogOpen.value) {
         AppAlertDialog(
             title = null,
             positiveBtnText =null,
@@ -83,26 +96,7 @@ fun HomeScreen(){
             content = {
 
                 Column() {
-                    if(isChooseAddTransactionTypeOpen.value && currentTransaction.value==null){
-                        AddTransactionAction(
-                            onAddIncome = {
-                                currentType.value = 1
-                            },
-                            onAddExpense = {
-                                currentType.value = 2
-                            }
-                        )
-                    }
-                    else if(currentTransaction.value!=null && isSelectedTransactionEditMode.value==null){
-                        ChooseTransactionAction(
-                            onDeleteClick = {
-                                isDeleteTransactionDialogOpen.value = true
-                            },
-                            onEditClick = {
-                                isSelectedTransactionEditMode.value = true
-                            }
-                        )
-                    }else{
+
                         Card(
                             Modifier.heightIn(min = 500.dp, max = 1000.dp),
                         ) {
@@ -157,7 +151,6 @@ fun HomeScreen(){
                                 isBottomSheetOpened = isChooseAddTransactionTypeOpen.value
                             )
                         }
-                    }
                 }
             },
             onPositiveBtnClicked = {
@@ -168,7 +161,11 @@ fun HomeScreen(){
             onNegativeBtnClicked = {
                 clearStates()
             },
-            properties = DialogProperties(usePlatformDefaultWidth = true)
+            properties = DialogProperties(
+                usePlatformDefaultWidth =!isAddOrEditTransactionDialogOpen.value &&
+                        ((isSelectedTransactionEditMode.value != true && !isDeleteTransactionDialogOpen.value) && currentTransaction.value!=null)
+
+            )
         )
     }
 
@@ -178,11 +175,14 @@ fun HomeScreen(){
                 topBar = {
                     TopAppBar(
                         title = {
-                            Text(
-                                "X Money Tracker",
-                                maxLines = 1,
-                                overflow = TextOverflow.Ellipsis
-                            )
+                            Row(verticalAlignment = Alignment.CenterVertically) {
+                                Icon(Icons.Filled.Home, contentDescription = "s")
+                                Text(
+                                    "X Money Tracker",
+                                    maxLines = 1,
+                                    overflow = TextOverflow.Ellipsis
+                                )
+                            }
                         },
                         navigationIcon = {
 
