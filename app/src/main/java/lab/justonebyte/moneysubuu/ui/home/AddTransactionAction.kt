@@ -3,6 +3,7 @@ package lab.justonebyte.moneysubuu.ui.home
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -26,14 +27,16 @@ fun AddTransactionAction(
         verticalArrangement = Arrangement.Center,
         modifier = Modifier.fillMaxWidth()
     ) {
-        TextButton(
+        Button(
+            modifier = Modifier.fillMaxWidth(),
             onClick = {
                onAddIncome()
             }
         ) {
             Text(text =  stringResource(id = R.string.add_income))
         }
-        TextButton(
+        Button(
+            modifier = Modifier.fillMaxWidth(),
             onClick = {
                onAddExpense()
             }
