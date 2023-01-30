@@ -53,7 +53,6 @@ fun HomeScreen(){
 
 
     fun clearStates(){
-        println("clearing states:")
         isAddOrEditTransactionDialogOpen.value = false
         isChooseAddTransactionTypeOpen.value = false
         isSelectedTransactionEditMode.value = null
@@ -88,7 +87,7 @@ fun HomeScreen(){
     )
 
 
-    if (isChooseAddTransactionTypeOpen.value || currentTransaction.value!=null && !isDeleteTransactionDialogOpen.value) {
+    if (isAddOrEditTransactionDialogOpen.value || isSelectedTransactionEditMode.value == true) {
         AppAlertDialog(
             title = null,
             positiveBtnText =null,
