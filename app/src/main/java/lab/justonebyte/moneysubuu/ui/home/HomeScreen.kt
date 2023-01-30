@@ -1,7 +1,6 @@
 package lab.justonebyte.moneysubuu.ui.home
 
 import android.annotation.SuppressLint
-import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.heightIn
@@ -58,6 +57,27 @@ fun HomeScreen(){
         currentTransaction.value = null
         currentType.value = 1
     }
+    fun onAddOrEditTransaction(type:Int,amount:Int,category:TransactionCategory,date:String){
+        if(currentTransaction.value==null) {
+            homeViewModel.addTransaction(
+                transactionCategory = category,
+                type = type,
+                amount = amount,
+                date = date
+            )
+        } else {
+            currentTransaction.value?.let {
+                homeViewModel.updateTransaction(
+                    transactionId = it.id,
+                    transactionCategory = category,
+                    type = type,
+                    amount = amount,
+                    date = date
+                )
+            }
+        }
+        clearStates()
+    }
 
     DeleteTransactionDialog(
         isOpen = isDeleteTransactionDialogOpen.value,
@@ -93,41 +113,17 @@ fun HomeScreen(){
             content = {
 
                 Column() {
-
                         Card(
                             Modifier.heightIn(min = 500.dp, max = 1000.dp),
                         ) {
-                            AddTransactionSheetContent(
+                            AddTransactionContent(
                                 currentType = currentType.value,
                                 currentTransaction = currentTransaction.value,
                                 categories =  homeUiState.categories,
                                 onConfirmTransactionForm = { type, amount, category,date->
-                                    Log.i("on confirm sheet",if(currentTransaction.value!=null) "yes" else "no")
-                                    if(currentTransaction.value==null) {
-                                        println("edit:transaction:add")
-
-                                        homeViewModel.addTransaction(
-                                            transactionCategory = category,
-                                            type = type,
-                                            amount = amount,
-                                            date = date
-                                        )
-                                    } else {
-                                        println("edit:transaction:update")
-                                        currentTransaction.value?.let {
-                                            homeViewModel.updateTransaction(
-                                                transactionId = it.id,
-                                                transactionCategory = category,
-                                                type = type,
-                                                amount = amount,
-                                                date = date
-                                            )
-                                        }
-                                    }
-                                    clearStates()
-
+                                    onAddOrEditTransaction(type,amount,category,date)
                                 },
-                                onCloseBottomSheet = {
+                                onCloseDialog = {
                                     clearStates()
                                     coroutineScope.launch {
                                     }
@@ -144,8 +140,7 @@ fun HomeScreen(){
                                             created_at = System.currentTimeMillis()
                                         )
                                     )
-                                },
-                                isBottomSheetOpened = isChooseAddTransactionTypeOpen.value
+                                }
                             )
                         }
                 }
