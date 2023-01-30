@@ -4,7 +4,6 @@ import android.app.Activity
 import android.app.DatePickerDialog
 import android.widget.DatePicker
 import androidx.activity.compose.BackHandler
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
@@ -36,39 +35,17 @@ import java.util.*
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
-fun AddTransactionSheetContent(
+fun AddTransactionContent(
     currentType: Int,
-    onCloseBottomSheet:()->Unit,
+    onCloseDialog:()->Unit,
     categories:List<TransactionCategory>,
     showIncorrectDataSnack:()->Unit,
     onConfirmTransactionForm:(type:Int,amount:Int,category: TransactionCategory,date:String)->Unit,
     onAddCategory:(categoryName:String,transactionType:TransactionType)->Unit,
-    currentTransaction:Transaction?,
-    isBottomSheetOpened:Boolean
+    currentTransaction:Transaction?
 ) {
     val mContext = LocalContext.current
     val localFocusManage = LocalFocusManager.current
-    val focusRequester = remember() {
-        FocusRequester()
-    }
-    val isAmountInputFocused = remember{ mutableStateOf(false)}
-
-    BackHandler(enabled = true) {
-        if (isAmountInputFocused.value) {
-            localFocusManage.clearFocus()
-            if(isBottomSheetOpened){
-                onCloseBottomSheet()
-            }
-        }else{
-           if(!isBottomSheetOpened){
-               (mContext as? Activity)?.finish()
-           }else{
-               onCloseBottomSheet()
-           }
-        }
-
-
-    }
 
     val mCalendar = Calendar.getInstance()
     mCalendar.time = Date()
@@ -120,7 +97,7 @@ fun AddTransactionSheetContent(
                             mDate.value.replace('/', '-'),
 
                             )
-                        onCloseBottomSheet()
+                        onCloseDialog()
                         clearTransactionForm()
                     }
                 }
@@ -160,7 +137,7 @@ fun AddTransactionSheetContent(
                     style = MaterialTheme.typography.subtitle1
                 )
             }
-            IconButton(onClick = { onCloseBottomSheet() }) {
+            IconButton(onClick = { onCloseDialog() }) {
                 Icon(imageVector = Icons.Filled.Close, contentDescription = "close sheet")
             }
         }
@@ -193,8 +170,7 @@ fun AddTransactionSheetContent(
                     },
                     placeholder = stringResource(id = R.string.eg_amount),
                     keyboardType = KeyboardType.Number,
-                    textColor = categoryColor,
-                    hideKeyboard = !isBottomSheetOpened,
+                    textColor = categoryColor
                 )
 
             }
@@ -242,7 +218,7 @@ fun AddTransactionSheetContent(
             modifier = Modifier.fillMaxWidth()
         ) {
             OutlinedButton(
-                onClick = { onCloseBottomSheet() },
+                onClick = { onCloseDialog() },
                 modifier = Modifier
                     .absolutePadding(left = 10.dp, right = 10.dp)
                     .weight(1f)
