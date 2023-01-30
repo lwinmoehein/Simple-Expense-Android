@@ -13,11 +13,13 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
 import androidx.hilt.navigation.compose.hiltViewModel
 import kotlinx.coroutines.launch
+import lab.justonebyte.moneysubuu.R
 import lab.justonebyte.moneysubuu.model.BalanceType
 import lab.justonebyte.moneysubuu.model.Transaction
 import lab.justonebyte.moneysubuu.model.TransactionCategory
@@ -107,15 +109,14 @@ fun HomeScreen(){
 
     if (isAddOrEditTransactionDialogOpen.value || isSelectedTransactionEditMode.value == true) {
         AppAlertDialog(
-            title = null,
+            title = if(isSelectedTransactionEditMode.value == true) if(currentType.value==2) stringResource(id = R.string.edit_expense_title) else stringResource(id = R.string.edit_income_title)  else (if(currentType.value==2) stringResource(
+                id = R.string.add_expense_title
+            ) else stringResource(id = R.string.add_income_title)),
             positiveBtnText =null,
             negativeBtnText = null,
             content = {
 
                 Column() {
-                        Card(
-                            Modifier.heightIn(min = 500.dp, max = 1000.dp),
-                        ) {
                             AddTransactionContent(
                                 currentType = currentType.value,
                                 currentTransaction = currentTransaction.value,
@@ -143,7 +144,6 @@ fun HomeScreen(){
                                 }
                             )
                         }
-                }
             },
             onPositiveBtnClicked = {
                 currentTransaction.value?.let { homeViewModel.deleteTransaction(it) }

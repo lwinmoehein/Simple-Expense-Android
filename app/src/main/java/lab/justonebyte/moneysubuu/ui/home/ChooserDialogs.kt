@@ -11,7 +11,7 @@ fun ChooseTransactionTypeDialog(
 ){
     if (isOpen) {
         AppAlertDialog(
-            title = null,
+            title = "What type of transaction?",
             positiveBtnText =null,
             negativeBtnText = null,
             content = {

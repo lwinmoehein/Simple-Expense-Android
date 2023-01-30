@@ -1,9 +1,7 @@
 package lab.justonebyte.moneysubuu.ui.components
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.wrapContentSize
-import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -38,7 +36,7 @@ fun AppAlertDialog(
             },
             confirmButton = {
                 if(positiveBtnText!=null && onPositiveBtnClicked!=null ){
-                    TextButton(
+                    Button(
                         onClick = {
                             onPositiveBtnClicked()
                         }
@@ -50,7 +48,7 @@ fun AppAlertDialog(
             },
             dismissButton = {
                 if(onNegativeBtnClicked!=null && negativeBtnText!=null){
-                    TextButton(
+                    OutlinedButton(
                         onClick = {
                             if (onNegativeBtnClicked != null) {
                                 onNegativeBtnClicked()
