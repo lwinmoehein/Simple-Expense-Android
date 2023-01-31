@@ -190,7 +190,7 @@ fun AddTransactionContent(
             horizontalArrangement = Arrangement.End,
             modifier = Modifier.fillMaxWidth()
         ) {
-            OutlinedButton(
+            TextButton(
                 modifier = Modifier.absolutePadding(left = 10.dp, right = 10.dp),
                 onClick = { onCloseDialog() }
             ) {
