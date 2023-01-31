@@ -2,9 +2,12 @@ package lab.justonebyte.moneysubuu.ui.home
 
 import android.app.DatePickerDialog
 import android.widget.DatePicker
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -13,7 +16,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
@@ -28,7 +33,7 @@ import lab.justonebyte.moneysubuu.utils.dateFormatter
 import java.util.*
 
 
-@OptIn(ExperimentalComposeUiApi::class)
+@OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun AddTransactionContent(
     currentType: Int,
@@ -125,27 +130,33 @@ fun AddTransactionContent(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .absolutePadding(left = 10.dp, right = 10.dp)
-
             ) {
-                Text(
-                    stringResource(id = R.string.enter_amount),
-                    modifier = Modifier
-                        .weight(1f)
-                        .absolutePadding(top = 10.dp, bottom = 10.dp)
-                )
+//                Text(
+//                    stringResource(id = R.string.enter_amount),
+//                    modifier = Modifier
+//                        .weight(1f)
+//                        .absolutePadding(top = 10.dp, bottom = 10.dp)
+//                )
 
-                TextInputFieldOne(
-                    background = Color.Transparent,
-                    textFieldValue = remember { mutableStateOf(TextFieldValue(currentAmount.value)) },
-                    modifier = Modifier
-                        .weight(1f)
-                        .padding(0.dp) ,
-                    onValueChange = {
-                        currentAmount.value = it.text
-                    },
-                    placeholder = stringResource(id = R.string.eg_amount),
-                    keyboardType = KeyboardType.Number
+                TextField(
+                    shape = MaterialTheme.shapes.small,
+                    singleLine = true,
+                    leadingIcon = {
+                         Image(painterResource(id = R.drawable.ic_baseline_attach_money_24), contentDescription ="" )
+                    } ,
+                    modifier = Modifier.fillMaxWidth(),
+                    value = currentAmount.value,
+                    onValueChange = { currentAmount.value = it },
+                    label = { Text(stringResource(id = R.string.enter_amount)) },
+                    keyboardOptions = KeyboardOptions(
+                        keyboardType = KeyboardType.Number
+                    ),
+                    colors = TextFieldDefaults.textFieldColors(
+                        disabledTextColor = Color.Transparent,
+                        focusedIndicatorColor = Color.Transparent,
+                        unfocusedIndicatorColor = Color.Transparent,
+                        disabledIndicatorColor = Color.Transparent
+                    )
                 )
 
             }

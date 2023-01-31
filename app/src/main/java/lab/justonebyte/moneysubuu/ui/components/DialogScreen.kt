@@ -21,9 +21,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.google.accompanist.insets.navigationBarsWithImePadding
-import com.google.accompanist.insets.statusBarsPadding
-import lab.justonebyte.moneysubuu.ui.theme.MoneySuBuuTheme
 
 
 @Composable
@@ -60,21 +57,7 @@ fun DialogScreen() {
     }
 }
 
-@Preview
-@Composable
-fun DialogScreenSkeletonPreview() {
-    MoneySuBuuTheme() {
-        DialogScreenSkeleton()
-    }
-}
 
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
-@Composable
-fun DialogScreenSkeletonPreviewDark() {
-    MoneySuBuuTheme() {
-        DialogScreenSkeleton()
-    }
-}
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
