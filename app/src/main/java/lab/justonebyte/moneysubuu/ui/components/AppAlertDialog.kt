@@ -1,10 +1,13 @@
 package lab.justonebyte.moneysubuu.ui.components
+import androidx.compose.foundation.layout.absolutePadding
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
 
 @OptIn(ExperimentalComposeUiApi::class)
@@ -20,7 +23,7 @@ fun AppAlertDialog(
 ){
 
         AlertDialog(
-            modifier = if(properties.usePlatformDefaultWidth) Modifier.wrapContentSize() else Modifier.fillMaxSize(),
+            modifier = if(properties.usePlatformDefaultWidth) Modifier.fillMaxWidth() else Modifier.fillMaxSize(),
             onDismissRequest = {
                 if (onNegativeBtnClicked != null) {
                     onNegativeBtnClicked()
@@ -48,7 +51,7 @@ fun AppAlertDialog(
             },
             dismissButton = {
                 if(onNegativeBtnClicked!=null && negativeBtnText!=null){
-                    OutlinedButton(
+                    TextButton(
                         onClick = {
                             if (onNegativeBtnClicked != null) {
                                 onNegativeBtnClicked()

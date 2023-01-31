@@ -1,5 +1,6 @@
 package lab.justonebyte.moneysubuu.ui.home
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -7,10 +8,7 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material3.Card
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -24,6 +22,7 @@ import lab.justonebyte.moneysubuu.R
 import lab.justonebyte.moneysubuu.model.TransactionCategory
 import lab.justonebyte.moneysubuu.model.TransactionType
 import lab.justonebyte.moneysubuu.ui.category.AddNameInputDialog
+import lab.justonebyte.moneysubuu.ui.theme.primary
 
 
 @Composable
@@ -60,8 +59,18 @@ fun AddCategoriesCard(
         Column(
             modifier = Modifier.padding(10.dp)
         ) {
-            Row() {
+            Row(modifier = Modifier.fillMaxWidth(),horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
                 Text(text = stringResource(id = R.string.enter_category))
+                TextButton(onClick = {
+                    isAddCategoryDialogOpen.value = true
+                }) {
+                    Text(
+                        text = stringResource(id = R.string.add),
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.padding(10.dp)
+                    )
+                    Icon(imageVector = Icons.Default.Add, contentDescription = "add category")
+                }
             }
             LazyVerticalGrid(
                 horizontalArrangement = Arrangement.Center,
@@ -73,26 +82,7 @@ fun AddCategoriesCard(
                     top = 16.dp,
                 ),
                 content = {
-                    item {
-                        Card(
-                            modifier = Modifier
-                                .padding(2.dp)
-                                .fillMaxWidth()
-                                .clickable {
-                                    isAddCategoryDialogOpen.value = true
-                                },
-                        ) {
-                          Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.Center) {
-                              Text(
-                                  text = stringResource(id = R.string.add),
-                                  textAlign = TextAlign.Center,
-                                  modifier = Modifier.padding(10.dp)
-                              )
-                              Icon(imageVector = Icons.Default.Add, contentDescription = "add category")
 
-                          }
-                        }
-                    }
                     items(filteredCategories.size) { index ->
                         val isSelected = currentCategory?.let { (it.id==filteredCategories[index].id) }
 
@@ -103,12 +93,17 @@ fun AddCategoriesCard(
                                 .clickable {
                                     onCategoryChosen(filteredCategories[index])
                                 },
-                        ) {
-                            Text(
-                                text = filteredCategories[index].name,
-                                textAlign = TextAlign.Center,
-                                modifier = Modifier.padding(10.dp)
+                            colors =  CardDefaults.cardColors(
+                                containerColor = if(isSelected==true) MaterialTheme.colorScheme.primary else  MaterialTheme.colorScheme.surface,
                             )
+                        ) {
+
+                                Text(
+                                    text = filteredCategories[index].name,
+                                    textAlign = TextAlign.Center,
+                                    modifier = Modifier.padding(10.dp),
+                                )
+
                         }
                     }
                 }
