@@ -28,23 +28,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
-import lab.justonebyte.moneysubuu.ui.theme.MoneySuBuuTheme
 
-@Preview
-@Composable
-fun GeneralDialogPreview() {
-    MoneySuBuuTheme() {
-        GeneralDialog(
-            dialogState = remember { mutableStateOf(true) },
-            title = "Are you sure?",
-            message = "This cannot be undone.",
-            positiveBtnText = "Yes",
-            onPositiveBtnClicked = {},
-            negativeBtnText = "No",
-            onNegativeBtnClicked = {}
-        )
-    }
-}
 
 @Composable
 fun GeneralDialog(
@@ -85,20 +69,7 @@ fun GeneralDialog(
     }
 }
 
-@Preview
-@Composable
-fun GeneralDialogSkeletonPreview() {
-    MoneySuBuuTheme() {
-        GeneralDialogSkeleton(
-            title = "Are you sure?",
-            message = "This cannot be undone.",
-            positiveBtnText = "Yes",
-            onPositiveBtnClicked = {},
-            negativeBtnText = "No",
-            onNegativeBtnClicked = {}
-        )
-    }
-}
+
 
 @Composable
 fun GeneralDialogSkeleton(

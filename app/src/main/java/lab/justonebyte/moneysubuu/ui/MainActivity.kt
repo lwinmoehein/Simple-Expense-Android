@@ -9,8 +9,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.view.WindowCompat
 import dagger.hilt.android.AndroidEntryPoint
-import dagger.hilt.android.HiltAndroidApp
-import lab.justonebyte.moneysubuu.ui.theme.MoneySuBuuTheme
 import lab.justonebyte.moneysubuu.utils.LocaleHelper
 
 @AndroidEntryPoint
@@ -35,10 +33,3 @@ fun Greeting(name: String) {
     Text(text = "Hello $name!")
 }
 
-@Preview(showBackground = true)
-@Composable
-fun DefaultPreview() {
-    MoneySuBuuTheme {
-        Greeting("Android")
-    }
-}

@@ -90,7 +90,7 @@ fun HomeScreen(){
         }
     )
     ChooseTransactionTypeDialog(
-        isOpen = isChooseAddTransactionTypeOpen.value,
+        isOpen = isChooseAddTransactionTypeOpen.value && !isAddOrEditTransactionDialogOpen.value,
         onAddExpense = {
             currentType.value = 2
             isAddOrEditTransactionDialogOpen.value = true
