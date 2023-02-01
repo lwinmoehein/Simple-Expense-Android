@@ -5,7 +5,8 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.*
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -28,13 +29,12 @@ import lab.justonebyte.moneysubuu.ui.home.SectionTitle
 import lab.justonebyte.moneysubuu.utils.LocaleHelper
 
 
-@OptIn(ExperimentalMaterialApi::class)
-@SuppressLint("UnrememberedMutableState")
+@OptIn(ExperimentalMaterial3Api::class)
+@SuppressLint("UnrememberedMutableState", "UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun SettingsScreen(
     openDrawer:()->Unit,
-    context: Context = LocalContext.current,
-    bottomSheetScaffoldState:BottomSheetScaffoldState = rememberBottomSheetScaffoldState()
+    context: Context = LocalContext.current
 ){
     val settingsViewModel = hiltViewModel<SettingsViewModel>()
     val settingsUiState by settingsViewModel.viewModelUiState.collectAsState()
@@ -52,15 +52,7 @@ fun SettingsScreen(
     }
 
 
-    BottomSheetScaffold(
-        scaffoldState = bottomSheetScaffoldState,
-        snackbarHost =  { SuBuuSnackBarHost(hostState = it) },
-        sheetContent = {
-
-        },
-        sheetPeekHeight = 0.dp,
-        contentColor = Color.Red
-
+    Scaffold(
     ) {
         Column (){
             Column {
@@ -114,9 +106,9 @@ fun SettingsScreen(
             }
         }
     }
-    SuBuuSnackBar(
-        onDismissSnackBar = { settingsViewModel.clearSnackBar() },
-        scaffoldState = bottomSheetScaffoldState,
-        snackBarType = settingsUiState.currentSnackBar,
-    )
+//    SuBuuSnackBar(
+//        onDismissSnackBar = { settingsViewModel.clearSnackBar() },
+//        scaffoldState = bottomSheetScaffoldState,
+//        snackBarType = settingsUiState.currentSnackBar,
+//    )
 }
