@@ -1,5 +1,4 @@
 package lab.justonebyte.moneysubuu.ui.category
-
 import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -10,12 +9,9 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.*
-import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
-import androidx.compose.material3.TabRowDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.*
@@ -154,8 +150,8 @@ fun ManageCategoryScreen(
 
 }
 
-@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
-@OptIn(ExperimentalMaterialApi::class)
+@SuppressLint("UnusedMaterialScaffoldPaddingParameter", "UnusedMaterial3ScaffoldPaddingParameter")
+@OptIn(ExperimentalMaterialApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun CategoryTabItem(
     uiState: CategoryUiState,
@@ -208,11 +204,9 @@ fun CategoryTabItem(
         }
     )
 
-    BottomSheetScaffold(
-        scaffoldState = bottomSheetScaffoldState,
-        snackbarHost =  { SuBuuSnackBarHost(hostState = it) },
+    Scaffold(
         floatingActionButton = {
-            if(!bottomSheetScaffoldState.bottomSheetState.isAnimationRunning && bottomSheetScaffoldState.bottomSheetState.isCollapsed){
+            if (!bottomSheetScaffoldState.bottomSheetState.isAnimationRunning && bottomSheetScaffoldState.bottomSheetState.isCollapsed) {
                 Box(
                     modifier = Modifier
                         .absolutePadding(bottom = 100.dp, left = 30.dp)
@@ -228,84 +222,85 @@ fun CategoryTabItem(
                             .padding(0.dp)
                             .background(if (type == TransactionType.Income) positiveColor else negativeColor)
                     ) {
-                        Text(text =  if(type==TransactionType.Income) stringResource(id = R.string.add_income_cat) else stringResource(R.string.add_expense_cat))
+                        Text(
+                            text = if (type == TransactionType.Income) stringResource(id = R.string.add_income_cat) else stringResource(
+                                R.string.add_expense_cat
+                            )
+                        )
                         Icon(
                             modifier = Modifier
                                 .width(30.dp)
-                                .height(30.dp)
-                            ,
+                                .height(30.dp),
                             imageVector = Icons.Filled.Add, contentDescription = "add category"
                         )
                     }
                 }
             }
-        },
-        sheetContent = {
-           Column(
-               modifier= Modifier
-                   .height(200.dp)
-                   .padding(20.dp),
-               verticalArrangement = Arrangement.Center,
-               horizontalAlignment = Alignment.CenterHorizontally
-           ) {
-               TextButton(
-                   modifier = Modifier
-                       .fillMaxWidth()
-                       .clip(RoundedCornerShape(5.dp))
-                       .padding(0.dp)
-                       .background(primary)
-                   ,
-                   onClick = {
-                        isReusableInputDialogShown.value = true
-                   }
-               ) {
-                   Text(text = stringResource(id = R.string.edit_tran))
-               }
-               Divider(Modifier.height(20.dp), color = Color.Transparent)
-               TextButton(
-                   modifier = Modifier
-                       .fillMaxWidth()
-                       .clip(RoundedCornerShape(5.dp))
-                       .padding(0.dp)
-                       .background(Red300)
-                   ,
-                   onClick = {
-                       currentEditingCategory.value?.let { removeCategory(it) }
-                   }
-               ) {
-                   Text(text = stringResource(id = R.string.delete_tran))
-               }
-           }
-        }, sheetPeekHeight = 0.dp
+        }) {
 
-    ) {
+    }
+
 //        Text(text = if(type===TransactionType.Income) "Income Categories List :" else "Expense Categories List :", style = MaterialTheme.typography.h6, modifier = Modifier.absolutePadding(top = 30.dp, bottom = 20.dp))
 
-        LazyColumn(
-            verticalArrangement = Arrangement.Top,
-            modifier = Modifier.absolutePadding(left = 2.dp, right = 2.dp, bottom = 100.dp, top = 20.dp)
-        ) {
-            items(categories){
-                CategoryItem(
-                    category = it,
-                    itemColor =  if(type==TransactionType.Income) positiveColor else negativeColor,
-                    onClick = {
-                        coroutineScope.launch {
-                            currentEditingCategory.value = it
-                            bottomSheetScaffoldState.bottomSheetState.expand()
-                        }
-                    }
-                )
-            }
-        }
-    }
-    SuBuuSnackBar(
-        onDismissSnackBar = { clearSnackBar() },
-        scaffoldState = bottomSheetScaffoldState,
-        snackBarType = uiState.currentSnackBar,
-    )
 
-}
+    }
+//    LazyColumn(
+//        verticalArrangement = Arrangement.Top,
+//        modifier = Modifier.absolutePadding(left = 2.dp, right = 2.dp, bottom = 100.dp, top = 20.dp)
+//    ) {
+//        items(categories){
+//            CategoryItem(
+//                category = it,
+//                itemColor =  if(type==TransactionType.Income) positiveColor else negativeColor,
+//                onClick = {
+//                    coroutineScope.launch {
+//                        currentEditingCategory.value = it
+//                        bottomSheetScaffoldState.bottomSheetState.expand()
+//                    }
+//                }
+//            )
+//        }
+//    }
+//    Column(
+//        modifier= Modifier
+//            .height(200.dp)
+//            .padding(20.dp),
+//        verticalArrangement = Arrangement.Center,
+//        horizontalAlignment = Alignment.CenterHorizontally
+//    ) {
+//        TextButton(
+//            modifier = Modifier
+//                .fillMaxWidth()
+//                .clip(RoundedCornerShape(5.dp))
+//                .padding(0.dp)
+//                .background(primary)
+//            ,
+//            onClick = {
+//                isReusableInputDialogShown.value = true
+//            }
+//        ) {
+//            Text(text = stringResource(id = R.string.edit_tran))
+//        }
+//        Divider(Modifier.height(20.dp), color = Color.Transparent)
+//        TextButton(
+//            modifier = Modifier
+//                .fillMaxWidth()
+//                .clip(RoundedCornerShape(5.dp))
+//                .padding(0.dp)
+//                .background(Red300)
+//            ,
+//            onClick = {
+//                currentEditingCategory.value?.let { removeCategory(it) }
+//            }
+//        ) {
+//            Text(text = stringResource(id = R.string.delete_tran))
+//        }
+//    }
+//    SuBuuSnackBar(
+//        onDismissSnackBar = { clearSnackBar() },
+//        scaffoldState = bottomSheetScaffoldState,
+//        snackBarType = uiState.currentSnackBar,
+//    )
 
 
 @OptIn(ExperimentalMaterialApi::class)
