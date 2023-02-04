@@ -1,3 +1,5 @@
+package lab.justonebyte.moneysubuu.ui.stats
+
 import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -16,10 +18,14 @@ import lab.justonebyte.moneysubuu.ui.components.ChooseTransactionTypeCard
 import lab.justonebyte.moneysubuu.ui.components.OptionItem
 import lab.justonebyte.moneysubuu.ui.detail.CustomPieChartWithData
 import lab.justonebyte.moneysubuu.ui.home.*
-import lab.justonebyte.moneysubuu.ui.stats.StatsViewModel
 import lab.justonebyte.moneysubuu.utils.getCurrentDate
 import lab.justonebyte.moneysubuu.utils.getCurrentMonth
 import lab.justonebyte.moneysubuu.utils.getCurrentYear
+
+sealed class TransactionTypeOption(override val name:Int ,override  val value:Any) : OptionItem {
+    object INCOME: TransactionTypeOption(R.string.income,TransactionType.Income)
+    object EXPENSE: TransactionTypeOption(R.string.expense,TransactionType.Expense)
+}
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -38,7 +44,10 @@ fun StatsScreen(goBack:()->Unit) {
         BalanceType.YEARLY->if(statsUiState.selectedYear== getCurrentYear()) stringResource(id = R.string.this_year) else statsUiState.selectedYear+" "+stringResource(id = R.string.year)
         else->stringResource(id = R.string.total) }
 
-    val transactionTypeOptions = listOf(OptionItem(R.string.expense,TransactionType.Expense),OptionItem(R.string.income,TransactionType.Income))
+    val transactionTypeOptions = listOf<OptionItem>(
+        TransactionTypeOption.INCOME,
+        TransactionTypeOption.EXPENSE
+    )
     val selectedTransactionType = remember { mutableStateOf(TransactionType.Expense) }
 
     Scaffold(

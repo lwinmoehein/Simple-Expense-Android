@@ -28,6 +28,13 @@ import lab.justonebyte.moneysubuu.utils.getCurrentYear
 import java.util.*
 import lab.justonebyte.moneysubuu.R
 
+sealed class BalanceTypeOption( override val name:Int,override val value:Any): OptionItem {
+    object DAILY: BalanceTypeOption(R.string.daily, BalanceType.DAILY)
+    object MONTHLY: BalanceTypeOption(R.string.monthly, BalanceType.MONTHLY)
+    object YEARLY:BalanceTypeOption(R.string.yearly, BalanceType.YEARLY)
+    object TOTAL:BalanceTypeOption(R.string.total, BalanceType.TOTAL)
+}
+
 @SuppressLint("UnrememberedMutableState")
 @Composable
 fun ChooseTransactionTypeCard(
@@ -78,10 +85,7 @@ fun ChooseTransactionTypeCard(
     )
 
     val balanceTypeOptions = listOf(
-        OptionItem(R.string.daily, BalanceType.DAILY),
-        OptionItem(R.string.monthly, BalanceType.MONTHLY),
-        OptionItem(R.string.yearly, BalanceType.YEARLY),
-        OptionItem(R.string.total, BalanceType.TOTAL)
+       BalanceTypeOption.DAILY,BalanceTypeOption.MONTHLY,BalanceTypeOption.YEARLY,BalanceTypeOption.TOTAL
     )
 
 

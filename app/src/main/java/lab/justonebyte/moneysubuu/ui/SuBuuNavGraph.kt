@@ -1,6 +1,6 @@
 package lab.justonebyte.moneysubuu.ui
 
-import StatsScreen
+import lab.justonebyte.moneysubuu.ui.stats.StatsScreen
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.ExperimentalMaterialApi
