@@ -22,6 +22,7 @@ import lab.justonebyte.moneysubuu.model.AppLocale
 import lab.justonebyte.moneysubuu.model.BalanceType
 import lab.justonebyte.moneysubuu.model.Currency
 import lab.justonebyte.moneysubuu.ui.MainActivity
+import lab.justonebyte.moneysubuu.ui.components.OptionItem
 import lab.justonebyte.moneysubuu.ui.components.SnackBarType
 import lab.justonebyte.moneysubuu.ui.components.SuBuuSnackBar
 import lab.justonebyte.moneysubuu.ui.components.SuBuuSnackBarHost
@@ -39,10 +40,9 @@ fun SettingsScreen(
     val settingsViewModel = hiltViewModel<SettingsViewModel>()
     val settingsUiState by settingsViewModel.viewModelUiState.collectAsState()
 
-    val settingCurrencies = listOf<SettingItem>(Currency.Kyat,Currency.Dollar)
-    val settingBalanceTypes = listOf<SettingItem>(BalanceType.DAILY,BalanceType.MONTHLY,BalanceType.YEARLY,BalanceType.TOTAL)
+    val settingCurrencies = listOf<OptionItem>(Currency.Kyat,Currency.Dollar)
+    val settingBalanceTypes = listOf<OptionItem>(BalanceType.DAILY,BalanceType.MONTHLY,BalanceType.YEARLY,BalanceType.TOTAL)
     val appLanguages = listOf(AppLocale.English,AppLocale.Myanmar)
-    val isLangMenuOpen = mutableStateOf(false)
 
     fun changeLocale(localeString: String){
         LocaleHelper().setLocale(context, localeString)
@@ -63,14 +63,12 @@ fun SettingsScreen(
                     SettingMenu(
                         modifier = Modifier.fillMaxWidth(),
                         settingItemLabel =  R.string.select_lang,
-                        currentChosentMenuLabel = settingsUiState.defaultLanguage.name,
+                        selectedOption = settingsUiState.defaultLanguage,
                         menuItems = appLanguages,
                         onMenuItemChosen = {
-                            isLangMenuOpen.value = false
                             settingsViewModel.updateLocale(it as AppLocale)
                             changeLocale(it.value)
-                        },
-                        isOpen = isLangMenuOpen.value
+                        }
                     )
                 }
 
@@ -83,7 +81,7 @@ fun SettingsScreen(
                     SettingMenu(
                         modifier = Modifier.fillMaxWidth(),
                         settingItemLabel =  R.string.select_currency,
-                        currentChosentMenuLabel = settingsUiState.selectedCurrency.name,
+                        selectedOption = settingsUiState.selectedCurrency,
                         menuItems = settingCurrencies,
                         onMenuItemChosen = {
                             settingsViewModel.updateCurrency(it as Currency)
@@ -96,7 +94,7 @@ fun SettingsScreen(
                     SettingMenu(
                         modifier = Modifier.fillMaxWidth(),
                         settingItemLabel =  R.string.select_balance,
-                        currentChosentMenuLabel = settingsUiState.defaultBalanceType.name,
+                        selectedOption = settingsUiState.defaultBalanceType,
                         menuItems = settingBalanceTypes,
                         onMenuItemChosen = {
                             settingsViewModel.updateDefaultBalanceType(it as BalanceType)

@@ -13,18 +13,19 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import lab.justonebyte.moneysubuu.model.TransactionType
+import lab.justonebyte.moneysubuu.ui.components.AppOption
+import lab.justonebyte.moneysubuu.ui.components.OptionItem
 
 @SuppressLint("UnrememberedMutableState")
 @Composable
 fun SettingMenu(
     modifier: Modifier = Modifier,
     settingItemLabel:Int,
-    currentChosentMenuLabel:Int,
-    menuItems:List<SettingItem>,
-    onMenuItemChosen:(chosenMenuItem: SettingItem)->Unit,
-    isOpen:Boolean = false
+    selectedOption:OptionItem,
+    menuItems:List<OptionItem>,
+    onMenuItemChosen:(chosenMenuItem: OptionItem)->Unit,
 ) {
-    var isMenuOpen = mutableStateOf(isOpen)
     Card(
         modifier = modifier) {
         Row(
@@ -45,38 +46,17 @@ fun SettingMenu(
             Column(
                 verticalArrangement = Arrangement.Center
             ) {
-
-                Row(
-                    modifier= Modifier
-                        .clickable { isMenuOpen.value = true }) {
-                    Text(
-                        text = stringResource(id = currentChosentMenuLabel),
-                        textAlign = TextAlign.Start
-                    )
-                    Icon(if(isMenuOpen.value) Icons.Filled.KeyboardArrowUp else Icons.Default.ArrowDropDown ,"")
-                }
-
-                DropdownMenu(
-                    modifier = Modifier.weight(1f),
-                    expanded = isMenuOpen.value ,
-                    onDismissRequest = {isMenuOpen.value =false}
-                ) {
-                    menuItems.forEach {
-                        DropdownMenuItem(
-                            onClick = {
-                                isMenuOpen.value = false
-                                onMenuItemChosen(it)
-                            },
-                            modifier = Modifier.height(30.dp).fillMaxWidth()
-                        ) {
-                            Text(
-                                text = stringResource(id = it.name),
-                                textAlign = TextAlign.Start,
-                                modifier = Modifier.fillMaxWidth()
-                            )
-                        }
-                    }
-                }
+                AppOption(
+                    modifier = Modifier
+                        .defaultMinSize(minWidth = 100.dp)
+                        .absolutePadding(top = 10.dp, bottom = 5.dp, right = 10.dp),
+                    label = "Select",
+                    options = menuItems,
+                    onItemSelected = {
+                        onMenuItemChosen(it)
+                    },
+                    selectedOption = selectedOption
+                )
             }
         }
 
