@@ -31,7 +31,7 @@ fun AppAlertDialog(
             },
             title = {
                 if (title != null) {
-                    Text(text = title)
+                    Text(text = title, style = MaterialTheme.typography.titleMedium)
                 }
             },
             text = {
