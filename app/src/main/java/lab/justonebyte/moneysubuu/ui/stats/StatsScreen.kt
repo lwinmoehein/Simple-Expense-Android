@@ -110,33 +110,31 @@ fun StatsScreen(goBack:()->Unit) {
                 )
 
                 Column(
-                    Modifier.absolutePadding(bottom = 20.dp)
+                    Modifier.padding(20.dp)
                 ) {
                     Row(
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.Start,
                         modifier = Modifier
-                            .fillMaxWidth()
                             .absolutePadding(bottom = 20.dp)
                     ) {
-                            SectionTitle(title = "$chosenDateString ${if(selectedTransactionType.value==TransactionType.Expense) stringResource(transactionTypeOptions[0].name) else stringResource(transactionTypeOptions[1].name)}")
-                            AppOption(
-                                modifier = Modifier
-                                    .defaultMinSize(minWidth = 100.dp)
-                                    .absolutePadding(top = 10.dp, bottom = 5.dp, right = 10.dp),
-                                label = "Select",
-                                options = transactionTypeOptions,
-                                onItemSelected = {
-                                   selectedTransactionType.value = it.value as TransactionType
-                                },
-                                selectedOption = when(selectedTransactionType.value){
-                                    TransactionType.Expense->transactionTypeOptions[0]
-                                    else->transactionTypeOptions[1]
-                                }
-                            )
+                            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End){
+                                AppOption(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .absolutePadding(top = 10.dp, bottom = 5.dp, right = 10.dp),
+                                    label = "Select",
+                                    options = transactionTypeOptions,
+                                    onItemSelected = {
+                                        selectedTransactionType.value = it.value as TransactionType
+                                    },
+                                    selectedOption = when(selectedTransactionType.value){
+                                        TransactionType.Income->transactionTypeOptions[0]
+                                        else->transactionTypeOptions[1]
+                                    }
+                                )
+                            }
                     }
                     CustomPieChartWithData(
-                        modifier = Modifier.fillMaxHeight() ,
                         currency = statsUiState.currentCurrency,
                         transactions = transactions.filter { it.type==(if(selectedTransactionType.value==TransactionType.Expense) TransactionType.Expense else TransactionType.Income) })
                 }

@@ -1,9 +1,8 @@
 package lab.justonebyte.moneysubuu.ui.home
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
 import androidx.compose.material3.Card
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterVertically
@@ -73,7 +72,6 @@ fun BalanceCard(
                       Row(horizontalArrangement = Arrangement.Start, verticalAlignment = Alignment.CenterVertically, modifier = Modifier.weight(1f)) {
                           Text(
                               text = "$currentBalance",
-                              style = MaterialTheme.typography.h6
                           )
                           Text(
                               text = " " + stringResource(id = currency.name)
@@ -84,7 +82,6 @@ fun BalanceCard(
 
                           Text(
                               text = "$incomeBalance",
-                              style = MaterialTheme.typography.h6
                           )
                           Text(text =  " " + stringResource(id = currency.name))
 
@@ -93,7 +90,6 @@ fun BalanceCard(
                       Row(horizontalArrangement = Arrangement.Start, verticalAlignment = Alignment.CenterVertically, modifier = Modifier.weight(1f)) {
                           Text(
                               text = "$expenseBalance",
-                              style = MaterialTheme.typography.h6
                           )
                           Text(text =  " " + stringResource(id = currency.name))
 

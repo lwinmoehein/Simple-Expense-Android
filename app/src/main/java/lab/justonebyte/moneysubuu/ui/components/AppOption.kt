@@ -8,6 +8,7 @@ import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 
@@ -29,25 +30,29 @@ fun AppOption(
     var selectedItem = mutableStateOf(selectedOption)
 
     Row(modifier = modifier) {
-        Row(Modifier.clickable { expanded = true }) {
-                Text(stringResource(id = selectedOption.name))
-                Icon(Icons.Default.ArrowDropDown, contentDescription = "Localized description")
+//        Row(Modifier.clickable { expanded = true }) {
+//                Text(stringResource(id = selectedOption.name))
+//                Icon(Icons.Default.ArrowDropDown, contentDescription = "Localized description")
+//        }
+        OutlinedButton(onClick = { expanded = true }, modifier = modifier) {
+            Text(stringResource(id = selectedOption.name))
+            Icon(Icons.Default.ArrowDropDown, contentDescription = "Localized description")
         }
         DropdownMenu(
+            modifier = Modifier.padding(0.dp),
             expanded = expanded,
-            onDismissRequest = { expanded = false }
+            onDismissRequest = { expanded = false },
         ) {
-            Divider()
             options.forEach { selectedOption ->
-                DropdownMenuItem(
-                    modifier = Modifier.padding(0.dp ),
-                    text = { Text(text = stringResource(id = selectedOption.name)) },
-                    onClick = {
-                        selectedItem.value = selectedOption
-                        expanded = false
-                        onItemSelected(selectedItem.value)
-                    })
-                Divider()
+                   DropdownMenuItem(
+                       modifier = Modifier.padding(0.dp ),
+                       text = { Text(text = stringResource(id = selectedOption.name),modifier = Modifier.padding(0.dp)) },
+                       onClick = {
+                           selectedItem.value = selectedOption
+                           expanded = false
+                           onItemSelected(selectedItem.value)
+                       })
+
             }
         }
     }
