@@ -2,10 +2,7 @@ package lab.justonebyte.moneysubuu.ui.home
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.material3.Card
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
+import androidx.compose.material3.*
 
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
@@ -23,9 +20,10 @@ fun MonthPicker(
     isMonthPicker:Boolean = true
 ){
     Card() {
-        Column() {
+        Column(
+            Modifier.padding(20.dp)
+        ) {
             Row(horizontalArrangement = Arrangement.Center, modifier = Modifier
-                .absolutePadding(left = 20.dp, right = 20.dp)
                 .fillMaxWidth()) {
                 NumberPicker(
                     modifier = Modifier.weight(1f),
@@ -49,7 +47,7 @@ fun MonthPicker(
                 }
             }
             Row(horizontalArrangement = Arrangement.End, modifier = Modifier.fillMaxWidth()) {
-                TextButton(onClick = { onConfirmPicker() }) {
+                Button(onClick = { onConfirmPicker() }) {
                     Text(text = "OK")
                 }
             }

@@ -1,10 +1,8 @@
 package lab.justonebyte.moneysubuu.ui.home
 
 import android.annotation.SuppressLint
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.heightIn
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Home
@@ -13,6 +11,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -23,8 +22,10 @@ import lab.justonebyte.moneysubuu.R
 import lab.justonebyte.moneysubuu.model.BalanceType
 import lab.justonebyte.moneysubuu.model.Transaction
 import lab.justonebyte.moneysubuu.model.TransactionCategory
-import lab.justonebyte.moneysubuu.ui.components.AppAlertDialog
-import lab.justonebyte.moneysubuu.ui.components.SnackBarType
+import lab.justonebyte.moneysubuu.ui.components.*
+import lab.justonebyte.moneysubuu.utils.getCurrentDate
+import lab.justonebyte.moneysubuu.utils.getCurrentMonth
+import lab.justonebyte.moneysubuu.utils.getCurrentYear
 
 
 @SuppressLint("UnrememberedMutableState", "UnusedMaterial3ScaffoldPaddingParameter")
@@ -48,7 +49,19 @@ fun HomeScreen(){
     val isAddOrEditTransactionDialogOpen = remember { mutableStateOf(false)}
     val isSelectedTransactionEditMode = remember { mutableStateOf<Boolean?>(null) }
     val isDeleteTransactionDialogOpen = remember { mutableStateOf(false) }
-    
+
+    val currentDay = getCurrentDate()
+    val currentMonth = getCurrentMonth()
+    val currentYear = getCurrentYear()
+    var currentHomeTabIndex: Int by remember { mutableStateOf(0) }
+    val homeTabs = listOf<OptionItem>(BalanceType.DAILY,BalanceType.MONTHLY,BalanceType.YEARLY,BalanceType.TOTAL)
+    val chosenDateString = when(homeUiState.currentBalanceType){
+        BalanceType.DAILY-> if(homeUiState.selectedDay==currentDay) stringResource(id = R.string.this_day) else homeUiState.selectedDay
+        BalanceType.MONTHLY->if(homeUiState.selectedMonth==currentMonth) stringResource(id = R.string.this_month) else homeUiState.selectedMonth
+        BalanceType.YEARLY->if(homeUiState.selectedYear==currentYear) stringResource(id = R.string.this_year) else homeUiState.selectedYear
+        else->stringResource(id = R.string.total) }
+
+
 
 
     fun clearStates(){
@@ -164,26 +177,44 @@ fun HomeScreen(){
 
 
     Scaffold(
-                topBar = {
-                    TopAppBar(
-                        title = {
-                            Row(verticalAlignment = Alignment.CenterVertically) {
+        topBar =  {
+                        Row(
+                            Modifier
+                                .fillMaxWidth()
+                                .padding(10.dp),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically
+
+                            ) {
                                 Icon(Icons.Filled.Home, contentDescription = "s")
                                 Text(
                                     "X Money Tracker",
                                     maxLines = 1,
-                                    overflow = TextOverflow.Ellipsis
+                                    overflow = TextOverflow.Ellipsis,
+                                    style = MaterialTheme.typography.titleLarge
                                 )
                             }
-                        },
-                        navigationIcon = {
-
-                        },
-                        actions = {
+                            TransactionTypePicker(
+                                onDatePicked = { date ->
+                                    homeViewModel.collectDailyBalance(date)
+                                },
+                                balanceType = homeUiState.currentBalanceType,
+                                onMonthPicked = { month ->
+                                    homeViewModel.collectMonthlyBalance(month)
+                                },
+                                onYearPicked = { year ->
+                                    homeViewModel.collectYearlyBalance(year)
+                                },
+                                selectedYear = homeUiState.selectedYear,
+                                selectedMonth = homeUiState.selectedMonth,
+                                selectedDay = homeUiState.selectedDay
+                            )
 
                         }
-                    )
-                },
+        },
         floatingActionButton = {
             FloatingActionButton(
                 onClick = {
@@ -198,6 +229,19 @@ fun HomeScreen(){
 
         ) {
         Card(Modifier.padding(it)){
+            Column {
+                ChooseTransactionTypeTab(
+                    balanceType =  homeUiState.currentBalanceType,
+                    onTypeChanged = { type->
+                        when(type){
+                            BalanceType.DAILY->homeViewModel.collectDailyBalance()
+                            BalanceType.MONTHLY->homeViewModel.collectMonthlyBalance()
+                            BalanceType.YEARLY->homeViewModel.collectYearlyBalance()
+                            else->homeViewModel.collectTotalBalance()
+                        }
+                    }
+                )
+           }
             HomeContent(
                 homeUiState = homeUiState,
                 collectBalanceOfDay = {
@@ -224,5 +268,4 @@ fun HomeScreen(){
         }
 
     }
-
 }

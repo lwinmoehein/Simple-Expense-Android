@@ -1,19 +1,21 @@
 package lab.justonebyte.moneysubuu.ui.home
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Scaffold
-import androidx.compose.runtime.Composable
+import androidx.compose.foundation.layout.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
+import androidx.compose.ui.text.style.TextOverflow
 import lab.justonebyte.moneysubuu.R
 import lab.justonebyte.moneysubuu.model.BalanceType
 import lab.justonebyte.moneysubuu.model.Transaction
+import lab.justonebyte.moneysubuu.ui.components.OptionItem
+import lab.justonebyte.moneysubuu.utils.getCurrentDate
+import lab.justonebyte.moneysubuu.utils.getCurrentMonth
+import lab.justonebyte.moneysubuu.utils.getCurrentYear
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -26,6 +28,9 @@ fun HomeContent(
     onTransactionClick:(t: Transaction)->Unit,
     onTypeChanged:(type: BalanceType)->Unit
 ){
+    val currentDay = getCurrentDate()
+    val currentMonth = getCurrentMonth()
+    val currentYear = getCurrentYear()
 
     Scaffold{
         Column(Modifier.padding(it)) {
@@ -33,21 +38,7 @@ fun HomeContent(
                 currency = homeUiState.currentCurrency,
                 currentBalance = homeUiState.currentBalance,
                 incomeBalance = homeUiState.incomeBalance,
-                expenseBalance = homeUiState.expenseBalance,
-                selectedDay = homeUiState.selectedDay,
-                selectedMonth = homeUiState.selectedMonth,
-                selectedYear = homeUiState.selectedYear,
-                balanceType = homeUiState.currentBalanceType,
-                onDatePicked = { date->
-                    collectBalanceOfDay(date)
-                },
-                onMonthPicked = { month->
-                    onMonthPicked(month)
-                },
-                onYearPicked = { year->
-                    onYearPicked(year)
-                },
-                onTypeChanged = onTypeChanged
+                expenseBalance = homeUiState.expenseBalance
             )
             SectionTitle(title = stringResource(id = R.string.history))
             TransactionsCard(

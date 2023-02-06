@@ -5,21 +5,14 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material3.Card
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import lab.justonebyte.moneysubuu.model.BalanceType
 import lab.justonebyte.moneysubuu.model.Currency
-import lab.justonebyte.moneysubuu.ui.components.ChooseTransactionTypeCard
-import lab.justonebyte.moneysubuu.ui.theme.Red900
 import lab.justonebyte.moneysubuu.ui.theme.SuBuuShapes
-import lab.justonebyte.moneysubuu.ui.theme.negativeColor
-import lab.justonebyte.moneysubuu.ui.theme.positiveColor
 import lab.justonebyte.moneysubuu.R
 
 
@@ -28,35 +21,14 @@ fun BalanceCard(
     modifier: Modifier = Modifier,
     currency: Currency,
     currentBalance: Int,
-    incomeBalance:Int,
-    expenseBalance:Int,
-    selectedDay:String,
-    selectedMonth:String,
-    selectedYear:String,
-    balanceType: BalanceType,
-    onDatePicked:(day:String)->Unit,
-    onMonthPicked:(month:String)->Unit,
-    onYearPicked:(year:String)->Unit,
-    onTypeChanged:(type: BalanceType)->Unit
+    incomeBalance: Int,
+    expenseBalance: Int
 ){
 
-
-    val mDate = remember { mutableStateOf(selectedDay) }
 
     Column(
             verticalArrangement = Arrangement.Center,
         ) {
-
-        ChooseTransactionTypeCard(
-            onDatePicked = onDatePicked,
-            selectedDay =  selectedDay,
-            selectedMonth = selectedMonth,
-            selectedYear = selectedYear,
-            balanceType = balanceType,
-            onMonthPicked = onMonthPicked,
-            onYearPicked = onYearPicked,
-            onTypeChanged = onTypeChanged
-        )
 
         SectionTitle(title = stringResource(id = R.string.balance),modifier = Modifier.absolutePadding(top = 15.dp))
         Card(
