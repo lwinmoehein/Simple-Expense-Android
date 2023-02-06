@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Card
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -43,29 +44,35 @@ fun CustomPieChartWithData(
           verticalArrangement = Arrangement.Center,
           horizontalAlignment = Alignment.CenterHorizontally
       ) {
-          Row(horizontalArrangement = Arrangement.Center, verticalAlignment = Alignment.CenterVertically) {
+          Row(verticalAlignment = Alignment.CenterVertically) {
               Row(modifier= Modifier
-                  .width(150.dp)
-                  .height(150.dp)){
+                  .weight(1f)
+                  .width(140.dp)
+                  .height(140.dp)){
                   PieChart(
                       pieChartData = PieChartData(
                           slices = incomePieSlices.map{it.second}
                       ),
                       // Optional properties.
                       animation = simpleChartAnimation(),
-                      sliceDrawer = SimpleSliceDrawer(100f)
+                      sliceDrawer = SimpleSliceDrawer(50f)
                   )
               }
-              Row(horizontalArrangement = Arrangement.Center, modifier = Modifier.absolutePadding(left = 20.dp)) {
-                  Text(text = stringResource(R.string.total)+" : ")
+              Row(horizontalArrangement = Arrangement.Center, modifier = Modifier.weight(1f).absolutePadding(left = 20.dp)) {
                   Text(
-                      text = incomePieSlices.sumOf { it.second.value.toInt() }.toString()+" "+ stringResource(id = currency.name))
+                      text = stringResource(R.string.total)+" : ",
+                      style = MaterialTheme.typography.titleSmall
+                  )
+                  Text(
+                      text = incomePieSlices.sumOf { it.second.value.toInt() }.toString()+" "+ stringResource(id = currency.name),
+                      style =  MaterialTheme.typography.titleMedium
+                  )
               }
           }
           LazyColumn(
               modifier = Modifier
                   .fillMaxWidth()
-                  .absolutePadding(top = 10.dp),
+                  .absolutePadding(top = 30.dp),
               horizontalAlignment = Alignment.CenterHorizontally,
               content = {
                   items(incomePieSlices){

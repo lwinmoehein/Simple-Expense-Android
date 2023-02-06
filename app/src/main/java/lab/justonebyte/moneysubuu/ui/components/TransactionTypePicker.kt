@@ -4,10 +4,7 @@ import android.annotation.SuppressLint
 import android.app.DatePickerDialog
 import android.widget.DatePicker
 import androidx.compose.foundation.clickable
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -116,7 +113,7 @@ fun TransactionTypePicker(
 //        text = chosenDateString,
 //        style = MaterialTheme.typography.titleSmall
 //    )
-    OutlinedButton(modifier = modifier, onClick = {
+    Button(modifier = modifier, onClick = {
         when (balanceType) {
             BalanceType.DAILY -> mDatePickerDialog.show()
             BalanceType.MONTHLY -> isMonthPickerShown.value = true

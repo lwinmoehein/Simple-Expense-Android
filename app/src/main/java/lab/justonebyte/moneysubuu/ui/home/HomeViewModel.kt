@@ -24,7 +24,7 @@ data class HomeUiState(
     val incomeBalance:Int,
     val expenseBalance:Int,
     val totalBalance:Int,
-    val currentBalanceType:BalanceType = BalanceType.MONTHLY,
+    val currentBalanceType:BalanceType = BalanceType.DAILY,
     val currentCurrency: Currency = Currency.Kyat,
     val categories:List<TransactionCategory>  = emptyList(),
     val transactions:List<Transaction> = emptyList(),
@@ -56,7 +56,7 @@ class HomeViewModel @Inject constructor(
                 collectCategories()
             }
             launch {
-                collectBalanceTypeFromSetting()
+                bindTransactionsFromBalanceType(_viewModelUiState.value.currentBalanceType)
             }
             launch {
                 collectCurrencyFromSetting()
