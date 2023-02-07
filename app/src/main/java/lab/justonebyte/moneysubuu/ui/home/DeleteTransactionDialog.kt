@@ -3,7 +3,9 @@ package lab.justonebyte.moneysubuu.ui.home
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.ExperimentalComposeUiApi
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.window.DialogProperties
+import lab.justonebyte.moneysubuu.R
 import lab.justonebyte.moneysubuu.ui.components.AppAlertDialog
 
 @OptIn(ExperimentalComposeUiApi::class)
@@ -15,11 +17,11 @@ fun DeleteTransactionDialog(
 ){
     if (isOpen) {
         AppAlertDialog(
-            title = "Are you sure?",
-            positiveBtnText = "Confirm",
-            negativeBtnText = "Cancel",
+            title = stringResource(id = R.string.r_u_sure ),
+            positiveBtnText = stringResource(id = R.string.confirm),
+            negativeBtnText = stringResource(id = R.string.cancel),
             content = {
-                Text("Are you sure to delete this transaction?")
+                Text(stringResource(id = R.string.r_u_sure_tran_delete))
             },
             onPositiveBtnClicked = {
                 onConfirmClick()
