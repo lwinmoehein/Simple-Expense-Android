@@ -21,6 +21,7 @@ import me.bytebeats.views.charts.pie.PieChartData
 import me.bytebeats.views.charts.pie.render.SimpleSliceDrawer
 import me.bytebeats.views.charts.simpleChartAnimation
 import lab.justonebyte.moneysubuu.R
+import lab.justonebyte.moneysubuu.ui.home.NoData
 
 fun randomColor() = listOf(
     bar1,bar2,bar3,bar4,bar5,bar6,bar7,bar8,bar9,bar10,bar11,bar12,bar13,bar14,bar15,bar16,bar17,bar18,bar19,bar20
@@ -38,69 +39,75 @@ fun CustomPieChartWithData(
         map.first to PieChartData.Slice((map.second ).toFloat(), randomColor())
     }
 
-      Column(
-          modifier = modifier
-              .fillMaxWidth(),
-          verticalArrangement = Arrangement.Center,
-          horizontalAlignment = Alignment.CenterHorizontally
-      ) {
-          Row(verticalAlignment = Alignment.CenterVertically) {
-              Row(modifier= Modifier
-                  .weight(1f)
-                  .width(140.dp)
-                  .height(140.dp)){
-                  PieChart(
-                      pieChartData = PieChartData(
-                          slices = incomePieSlices.map{it.second}
-                      ),
-                      // Optional properties.
-                      animation = simpleChartAnimation(),
-                      sliceDrawer = SimpleSliceDrawer(50f)
-                  )
-              }
-              Row(horizontalArrangement = Arrangement.Center, modifier = Modifier.weight(1f).absolutePadding(left = 20.dp)) {
-                  Text(
-                      text = stringResource(R.string.total)+" : ",
-                      style = MaterialTheme.typography.titleSmall
-                  )
-                  Text(
-                      text = incomePieSlices.sumOf { it.second.value.toInt() }.toString()+" "+ stringResource(id = currency.name),
-                      style =  MaterialTheme.typography.titleMedium
-                  )
-              }
-          }
-          LazyColumn(
-              modifier = Modifier
-                  .fillMaxWidth()
-                  .absolutePadding(top = 30.dp),
-              horizontalAlignment = Alignment.CenterHorizontally,
-              content = {
-                  items(incomePieSlices){
-                      Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
-                          Card(
-                              modifier = Modifier.absolutePadding(top=3.dp, bottom = 3.dp)
-                          ) {
-                              Row(
-                                  verticalAlignment = Alignment.CenterVertically,
-                                  horizontalArrangement = Arrangement.SpaceBetween,
-                                  modifier = Modifier
-                                      .padding(10.dp)
-                                      .fillMaxWidth()
-                              ){
-                                  Row(verticalAlignment = Alignment.CenterVertically) {
-                                      Spacer(modifier = Modifier
-                                          .absolutePadding(right = 4.dp)
-                                          .width(10.dp)
-                                          .height(10.dp)
-                                          .background(it.second.color))
-                                      Text(text = it.first.name)
-                                  }
-                                  Text(text =  "${it.second.value.toInt()}"+" "+ stringResource(id = currency.name))
-                              }
-                          }
-                      }
-                  }
-              }
-          )
-   }
+    if(incomePieSlices.size>0){
+        Column(
+            modifier = modifier
+                .fillMaxWidth(),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Row(modifier= Modifier
+                    .weight(1f)
+                    .width(140.dp)
+                    .height(140.dp)){
+                    PieChart(
+                        pieChartData = PieChartData(
+                            slices = incomePieSlices.map{it.second}
+                        ),
+                        // Optional properties.
+                        animation = simpleChartAnimation(),
+                        sliceDrawer = SimpleSliceDrawer(50f)
+                    )
+                }
+                Row(horizontalArrangement = Arrangement.Center, modifier = Modifier
+                    .weight(1f)
+                    .absolutePadding(left = 20.dp)) {
+                    Text(
+                        text = stringResource(R.string.total)+" : ",
+                        style = MaterialTheme.typography.titleSmall
+                    )
+                    Text(
+                        text = incomePieSlices.sumOf { it.second.value.toInt() }.toString()+" "+ stringResource(id = currency.name),
+                        style =  MaterialTheme.typography.titleMedium
+                    )
+                }
+            }
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .absolutePadding(top = 30.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                content = {
+                    items(incomePieSlices){
+                        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
+                            Card(
+                                modifier = Modifier.absolutePadding(top=3.dp, bottom = 3.dp)
+                            ) {
+                                Row(
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    horizontalArrangement = Arrangement.SpaceBetween,
+                                    modifier = Modifier
+                                        .padding(10.dp)
+                                        .fillMaxWidth()
+                                ){
+                                    Row(verticalAlignment = Alignment.CenterVertically) {
+                                        Spacer(modifier = Modifier
+                                            .absolutePadding(right = 4.dp)
+                                            .width(10.dp)
+                                            .height(10.dp)
+                                            .background(it.second.color))
+                                        Text(text = it.first.name)
+                                    }
+                                    Text(text =  "${it.second.value.toInt()}"+" "+ stringResource(id = currency.name))
+                                }
+                            }
+                        }
+                    }
+                }
+            )
+        }
+    }else{
+        NoData(modifier = Modifier.fillMaxSize())
+    }
 }
