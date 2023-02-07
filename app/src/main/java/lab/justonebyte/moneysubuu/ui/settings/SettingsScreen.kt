@@ -2,16 +2,21 @@ package lab.justonebyte.moneysubuu.ui.settings
 
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -25,6 +30,7 @@ import lab.justonebyte.moneysubuu.model.AppLocale
 import lab.justonebyte.moneysubuu.model.BalanceType
 import lab.justonebyte.moneysubuu.model.Currency
 import lab.justonebyte.moneysubuu.ui.MainActivity
+import lab.justonebyte.moneysubuu.ui.components.AppAlertDialog
 import lab.justonebyte.moneysubuu.ui.components.OptionItem
 import lab.justonebyte.moneysubuu.ui.components.TransactionTypePicker
 import lab.justonebyte.moneysubuu.ui.home.SectionTitle
@@ -43,6 +49,7 @@ fun SettingsScreen(
 
     val settingCurrencies = listOf<OptionItem>(Currency.Kyat,Currency.Dollar)
     val appLanguages = listOf(AppLocale.English,AppLocale.Myanmar)
+    val packageName = context.packageName
 
     fun changeLocale(localeString: String){
         LocaleHelper().setLocale(context, localeString)
@@ -50,6 +57,8 @@ fun SettingsScreen(
         context.finish()
         context.startActivity(i)
     }
+
+
 
 
     Scaffold(
@@ -99,10 +108,11 @@ fun SettingsScreen(
                             settingsViewModel.updateCurrency(it as Currency)
                         }
                     )
+                    Divider(Modifier.absolutePadding(bottom = 15.dp))
                 }
             }
                 Column(
-                    Modifier.absolutePadding(left = 10.dp, right = 10.dp)
+                    Modifier.absolutePadding(left = 10.dp, right = 10.dp, top = 5.dp)
                 ) {
                     SectionTitle(title = stringResource(id = R.string.sys_setting))
 
@@ -116,8 +126,60 @@ fun SettingsScreen(
                             changeLocale(it.value)
                         }
                     )
+                    Divider(Modifier.absolutePadding(bottom = 15.dp))
                 }
+//            SectionTitle(title = stringResource(id = R.string.other_apps), modifier = Modifier.absolutePadding(left = 10.dp, top = 15.dp))
+//            OtherApps(Modifier.absolutePadding(left = 15.dp, right = 15.dp))
+//            Divider(Modifier.absolutePadding(bottom = 15.dp,top=30.dp))
 
+            InfoSettingItem(
+                modifier = Modifier.fillMaxWidth(),
+                onClick = {
+                    try {
+                        context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=$packageName")))
+                    } catch (e: ActivityNotFoundException) {
+                        context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=$packageName")))
+                    } },
+                icon = { Icon(Icons.Filled.Star,"") },
+                title = stringResource(id = R.string.give_stars)
+            )
         }
     }
+}
+@Composable
+fun InfoSettingItem(onClick:()->Unit,modifier:Modifier = Modifier,icon: @Composable () -> Unit,title:String){
+    Card(modifier = modifier
+        .padding(5.dp)
+        .clickable { onClick() }){
+        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.Start, modifier = Modifier
+            .absolutePadding(left = 5.dp)
+            .defaultMinSize(minHeight = 40.dp)) {
+            icon()
+            Spacer(modifier = Modifier.width(5.dp))
+            Text(text = title)
+        }
+    }
+}
+@Composable
+fun OtherApps(modifier: Modifier = Modifier){
+    LazyVerticalGrid(
+        horizontalArrangement = Arrangement.Center,
+        userScrollEnabled = true,
+        modifier = modifier,
+        columns = GridCells.Fixed(2),
+        // content padding
+        contentPadding = PaddingValues(
+            top = 16.dp,
+        ),
+        content = {
+            item {
+                Row(Modifier.height(80.dp)) {
+                   Row(modifier = Modifier.fillMaxSize(), horizontalArrangement = Arrangement.Center, verticalAlignment = Alignment.CenterVertically) {
+                       Icon(Icons.Filled.Home, contentDescription = "", modifier = Modifier.fillMaxHeight())
+                       Text(text = "test this is a test ha ha", modifier = Modifier.absolutePadding(left = 10.dp))
+                   }
+                }
+            }
+        }
+    )
 }

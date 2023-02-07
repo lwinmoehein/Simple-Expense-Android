@@ -97,4 +97,7 @@
     <string name="feat_setting">Feature settings</string>
     <string name="no_data">No data found.</string>
 
+    <string name="give_stars">Rate this application</string>
+    <string name="other_apps">Other apps by developer</string>
+
 </resources>
