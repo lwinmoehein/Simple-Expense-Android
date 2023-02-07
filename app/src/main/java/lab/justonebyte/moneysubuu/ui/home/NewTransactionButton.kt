@@ -31,10 +31,8 @@ fun NewTransactionButton(
                onClick()
             },
             modifier = Modifier
-                .fillMaxWidth()
                 .clip(RoundedCornerShape(8.dp))
                 .padding(0.dp)
-                .background(MaterialTheme.colors.primary)
         ) {
             Text(text = stringResource(id = R.string.add_new_record), style = MaterialTheme.typography.button, color = MaterialTheme.colors.onPrimary)
             Icon(

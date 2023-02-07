@@ -3,7 +3,10 @@ package lab.justonebyte.moneysubuu.ui.home
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.*
+import androidx.compose.material3.Button
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -21,38 +24,25 @@ fun ChooseTransactionAction(
     onEditClick:()->Unit
 ){
     Column(
-        modifier= Modifier
-            .height(200.dp)
-            .padding(20.dp),
+        modifier = Modifier.fillMaxWidth(),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        TextButton(
-            modifier = Modifier
-                .fillMaxWidth()
-                .clip(RoundedCornerShape(5.dp))
-                .padding(0.dp)
-                .background(primary)
-            ,
+        Button(
+            modifier = Modifier.fillMaxWidth(),
             onClick = {
                 onEditClick()
             }
         ) {
-            Text(text = stringResource(id = R.string.edit_tran),color=MaterialTheme.colors.onPrimary)
+            Text(text = stringResource(id = R.string.edit_tran))
         }
-        Divider(Modifier.height(20.dp), color = Color.Transparent)
-        TextButton(
-            modifier = Modifier
-                .fillMaxWidth()
-                .clip(RoundedCornerShape(5.dp))
-                .padding(0.dp)
-                .background(Red300)
-            ,
+        Button(
+            modifier = Modifier.fillMaxWidth(),
             onClick = {
                onDeleteClick()
             }
         ) {
-            Text(text = stringResource(id = R.string.delete_tran), color = MaterialTheme.colors.onPrimary)
+            Text(text = stringResource(id = R.string.delete_tran))
         }
     }
 }

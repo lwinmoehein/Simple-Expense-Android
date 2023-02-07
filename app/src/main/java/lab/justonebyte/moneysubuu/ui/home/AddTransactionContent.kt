@@ -1,25 +1,24 @@
 package lab.justonebyte.moneysubuu.ui.home
 
-import android.app.Activity
 import android.app.DatePickerDialog
 import android.widget.DatePicker
-import androidx.activity.compose.BackHandler
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.*
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
@@ -34,41 +33,19 @@ import lab.justonebyte.moneysubuu.utils.dateFormatter
 import java.util.*
 
 
-@OptIn(ExperimentalComposeUiApi::class)
+@OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
 @Composable
-fun AddTransactionSheetContent(
+fun AddTransactionContent(
     currentType: Int,
-    onCloseBottomSheet:()->Unit,
+    onCloseDialog:()->Unit,
     categories:List<TransactionCategory>,
     showIncorrectDataSnack:()->Unit,
     onConfirmTransactionForm:(type:Int,amount:Int,category: TransactionCategory,date:String)->Unit,
     onAddCategory:(categoryName:String,transactionType:TransactionType)->Unit,
-    currentTransaction:Transaction?,
-    isBottomSheetOpened:Boolean
+    currentTransaction:Transaction?
 ) {
     val mContext = LocalContext.current
     val localFocusManage = LocalFocusManager.current
-    val focusRequester = remember() {
-        FocusRequester()
-    }
-    val isAmountInputFocused = remember{ mutableStateOf(false)}
-
-    BackHandler(enabled = true) {
-        if (isAmountInputFocused.value) {
-            localFocusManage.clearFocus()
-            if(isBottomSheetOpened){
-                onCloseBottomSheet()
-            }
-        }else{
-           if(!isBottomSheetOpened){
-               (mContext as? Activity)?.finish()
-           }else{
-               onCloseBottomSheet()
-           }
-        }
-
-
-    }
 
     val mCalendar = Calendar.getInstance()
     mCalendar.time = Date()
@@ -95,12 +72,13 @@ fun AddTransactionSheetContent(
     }
 
     if (isAddTransactionConfirmDialogOpen.value) {
-        GeneralDialog(
-            dialogState = isAddTransactionConfirmDialogOpen,
+        AppAlertDialog(
             title = stringResource(R.string.r_u_sure),
             positiveBtnText = stringResource(id = R.string.confirm),
             negativeBtnText = stringResource(id = R.string.cancel),
-            message = stringResource(id = if(isEditMode) R.string.r_u_sure_tran_edit else R.string.r_u_sure_tran_add),
+            content = {
+                      Text(stringResource(id = if(isEditMode) R.string.r_u_sure_tran_edit else R.string.r_u_sure_tran_add))
+            },
             onPositiveBtnClicked = {
                 isAddTransactionConfirmDialogOpen.value = false
                 val category = currentCategory.value
@@ -119,7 +97,7 @@ fun AddTransactionSheetContent(
                             mDate.value.replace('/', '-'),
 
                             )
-                        onCloseBottomSheet()
+                        onCloseDialog()
                         clearTransactionForm()
                     }
                 }
@@ -143,57 +121,42 @@ fun AddTransactionSheetContent(
     Column(
         Modifier
             .fillMaxSize()
-            .padding(appContentPadding)
     ) {
-        Row(
-            horizontalArrangement = Arrangement.SpaceBetween,
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(30.dp)
-        ) {
-            Column(verticalArrangement = Arrangement.Center, modifier = Modifier.fillMaxHeight()) {
-                Text(
-                    text = if(isEditMode) if(currentType.value==2) stringResource(id = R.string.edit_expense_title) else stringResource(id = R.string.edit_income_title)  else (if(currentType.value==2) stringResource(
-                        id = R.string.add_expense_title
-                    ) else stringResource(id = R.string.add_income_title)),
-                    style = MaterialTheme.typography.subtitle1
-                )
-            }
-            IconButton(onClick = { onCloseBottomSheet() }) {
-                Icon(imageVector = Icons.Filled.Close, contentDescription = "close sheet")
-            }
-        }
+
         Spacer(modifier = Modifier.height(20.dp))
-        Card(elevation = 8.dp) {
+        Column() {
             Row(
                 horizontalArrangement = Arrangement.Center,
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .absolutePadding(left = 10.dp, right = 10.dp)
-
             ) {
-                Text(
-                    stringResource(id = R.string.enter_amount),
-                    modifier = Modifier
-                        .weight(1f)
-                        .absolutePadding(top = 10.dp, bottom = 10.dp),
-                    style = MaterialTheme.typography.subtitle2
-                )
+//                Text(
+//                    stringResource(id = R.string.enter_amount),
+//                    modifier = Modifier
+//                        .weight(1f)
+//                        .absolutePadding(top = 10.dp, bottom = 10.dp)
+//                )
 
-                TextInputFieldOne(
-                    background = Color.Transparent,
-                    textFieldValue = remember { mutableStateOf(TextFieldValue(currentAmount.value)) },
-                    modifier = Modifier
-                        .weight(1f)
-                        .padding(0.dp) ,
-                    onValueChange = {
-                        currentAmount.value = it.text
-                    },
-                    placeholder = stringResource(id = R.string.eg_amount),
-                    keyboardType = KeyboardType.Number,
-                    textColor = categoryColor,
-                    hideKeyboard = !isBottomSheetOpened,
+                TextField(
+                    shape = MaterialTheme.shapes.small,
+                    singleLine = true,
+                    leadingIcon = {
+                         Image(painterResource(id = R.drawable.ic_baseline_attach_money_24), contentDescription ="" )
+                    } ,
+                    modifier = Modifier.fillMaxWidth(),
+                    value = currentAmount.value,
+                    onValueChange = { currentAmount.value = it },
+                    label = { Text(stringResource(id = R.string.enter_amount)) },
+                    keyboardOptions = KeyboardOptions(
+                        keyboardType = KeyboardType.Number
+                    ),
+                    colors = TextFieldDefaults.textFieldColors(
+                        disabledTextColor = Color.Transparent,
+                        focusedIndicatorColor = Color.Transparent,
+                        unfocusedIndicatorColor = Color.Transparent,
+                        disabledIndicatorColor = Color.Transparent
+                    )
                 )
 
             }
@@ -213,8 +176,7 @@ fun AddTransactionSheetContent(
             currentTransactionType = if (currentType.value == TransactionType.Income.value) TransactionType.Income else TransactionType.Expense
         )
         if(!isEditMode){
-            Card(
-                elevation = 8.dp
+            Column(
             ) {
                 Row(
                     modifier = Modifier.padding(12.dp),
@@ -223,43 +185,32 @@ fun AddTransactionSheetContent(
                 ) {
                     Text(
                         text =  stringResource(id = R.string.enter_date),
-                        style = MaterialTheme.typography.subtitle2,
                         modifier = Modifier.weight(1f)
                     )
                     TextButton(
                         onClick = { mDatePickerDialog.show() },
                         modifier = Modifier.weight(1f)
                     ) {
-                        Text(text = mDate.value, color = categoryColor)
+                        Text(text = mDate.value)
                     }
                     Spacer(modifier = Modifier.weight(1f))
                 }
             }
         }
         Row(
-            horizontalArrangement = Arrangement.SpaceBetween,
+            horizontalArrangement = Arrangement.End,
             modifier = Modifier.fillMaxWidth()
         ) {
-            OutlinedButton(
-                onClick = { onCloseBottomSheet() },
-                modifier = Modifier
-                    .absolutePadding(left = 10.dp, right = 10.dp)
-                    .weight(1f)
-                    .absolutePadding(top = 20.dp, bottom = 20.dp)
-                    .clip(RoundedCornerShape(10.dp))
+            TextButton(
+                modifier = Modifier.absolutePadding(left = 10.dp, right = 10.dp),
+                onClick = { onCloseDialog() }
             ) {
-                Text(text = stringResource(id = R.string.cancel), style = MaterialTheme.typography.button, color = categoryColor)
+                Text(text = stringResource(id = R.string.cancel))
             }
             Button(
-                colors = ButtonDefaults.buttonColors(backgroundColor = categoryColor),
-                onClick = { isAddTransactionConfirmDialogOpen.value = true },
-                modifier = Modifier
-                    .absolutePadding(left = 10.dp, right = 10.dp)
-                    .weight(1f)
-                    .absolutePadding(top = 20.dp, bottom = 20.dp)
-                    .clip(RoundedCornerShape(10.dp))
+                onClick = { isAddTransactionConfirmDialogOpen.value = true }
             ) {
-                Text(text = if(isEditMode) stringResource(id = R.string.confirm_edit) else stringResource(id = R.string.confirm), style = MaterialTheme.typography.button, color = MaterialTheme.colors.onPrimary)
+                Text(text = if(isEditMode) stringResource(id = R.string.confirm_edit) else stringResource(id = R.string.confirm))
             }
         }
     }

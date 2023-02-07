@@ -2,10 +2,8 @@ package lab.justonebyte.moneysubuu.ui.home
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.Card
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
-import androidx.compose.material.TextButton
+import androidx.compose.material3.*
+
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -22,9 +20,10 @@ fun MonthPicker(
     isMonthPicker:Boolean = true
 ){
     Card() {
-        Column() {
+        Column(
+            Modifier.padding(20.dp)
+        ) {
             Row(horizontalArrangement = Arrangement.Center, modifier = Modifier
-                .absolutePadding(left = 20.dp, right = 20.dp)
                 .fillMaxWidth()) {
                 NumberPicker(
                     modifier = Modifier.weight(1f),
@@ -32,7 +31,8 @@ fun MonthPicker(
                     range = 2020..Calendar.getInstance().get(Calendar.YEAR),
                     onValueChange = {
                         onYearSelected(it)
-                    }
+                    },
+                    dividersColor = MaterialTheme.colorScheme.primary
                 )
                 if(isMonthPicker){
                     NumberPicker(
@@ -41,13 +41,14 @@ fun MonthPicker(
                         range = 1..12,
                         onValueChange = {
                             onMonthSelected(it)
-                        }
+                        },
+                        dividersColor = MaterialTheme.colorScheme.primary
                     )
                 }
             }
             Row(horizontalArrangement = Arrangement.End, modifier = Modifier.fillMaxWidth()) {
-                TextButton(onClick = { onConfirmPicker() }) {
-                    Text(text = "OK", style = MaterialTheme.typography.button)
+                Button(onClick = { onConfirmPicker() }) {
+                    Text(text = "OK")
                 }
             }
         }

@@ -1,9 +1,10 @@
 package lab.justonebyte.moneysubuu.model
 
 import lab.justonebyte.moneysubuu.R
+import lab.justonebyte.moneysubuu.ui.components.OptionItem
 import lab.justonebyte.moneysubuu.ui.settings.SettingItem
 
-sealed class BalanceType(override val value:Int, override val name:Int): SettingItem {
+sealed class BalanceType(override val value:Int, override val name:Int): OptionItem {
     object DAILY: BalanceType(1, R.string.daily)
     object MONTHLY: BalanceType(2, R.string.monthly)
     object YEARLY: BalanceType(3, R.string.yearly)
