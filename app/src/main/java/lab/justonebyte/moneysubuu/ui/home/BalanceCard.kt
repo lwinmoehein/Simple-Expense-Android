@@ -29,7 +29,7 @@ fun BalanceCard(
             verticalArrangement = Arrangement.Center,
         ) {
 
-        SectionTitle(title = stringResource(id = R.string.balance),modifier = Modifier.absolutePadding(top = 15.dp))
+        SectionTitle(title = stringResource(id = R.string.balance),modifier = Modifier.absolutePadding(top = 15.dp, left = 10.dp, bottom = 5.dp, right = 10.dp))
         Card(
             shape = SuBuuShapes.small,
             modifier = modifier

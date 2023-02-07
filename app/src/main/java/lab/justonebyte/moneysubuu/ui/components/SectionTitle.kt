@@ -12,10 +12,10 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun SectionTitle(title:String,modifier: Modifier = Modifier){
     Row(
-        modifier = modifier.absolutePadding(top = 10.dp, bottom = 10.dp, left = 10.dp, right = 10.dp),
+        modifier = modifier,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Text(text = title, style = MaterialTheme.typography.titleSmall)
+        Text(text = title, style = MaterialTheme.typography.titleMedium)
     }
 
 }

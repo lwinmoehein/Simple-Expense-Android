@@ -1,19 +1,16 @@
 package lab.justonebyte.moneysubuu.ui.settings
 
 import android.annotation.SuppressLint
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowDropDown
-import androidx.compose.material.icons.filled.KeyboardArrowUp
+import androidx.compose.material3.Card
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import lab.justonebyte.moneysubuu.model.TransactionType
 import lab.justonebyte.moneysubuu.ui.components.AppOption
 import lab.justonebyte.moneysubuu.ui.components.OptionItem
 
@@ -26,30 +23,24 @@ fun SettingMenu(
     menuItems:List<OptionItem>,
     onMenuItemChosen:(chosenMenuItem: OptionItem)->Unit,
 ) {
-    Card(
-        modifier = modifier) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween,
             modifier = Modifier
-                .padding(8.dp)) {
+                .fillMaxWidth().padding(5.dp)) {
             Column(
                 verticalArrangement = Arrangement.Center
             ) {
-                Row() {
                     Text(
                         text = stringResource(id = settingItemLabel),
-                        textAlign = TextAlign.Start,style = MaterialTheme.typography.subtitle2
+                        textAlign = TextAlign.Start,
+                        style = MaterialTheme.typography.titleSmall
                     )
-                }
             }
             Column(
                 verticalArrangement = Arrangement.Center
             ) {
                 AppOption(
-                    modifier = Modifier
-                        .defaultMinSize(minWidth = 100.dp)
-                        .absolutePadding(top = 10.dp, bottom = 5.dp, right = 10.dp),
                     label = "Select",
                     options = menuItems,
                     onItemSelected = {
@@ -58,7 +49,6 @@ fun SettingMenu(
                     selectedOption = selectedOption
                 )
             }
-        }
 
     }
 }

@@ -5,16 +5,17 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import androidx.compose.foundation.layout.*
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Scaffold
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import lab.justonebyte.moneysubuu.R
@@ -23,9 +24,7 @@ import lab.justonebyte.moneysubuu.model.BalanceType
 import lab.justonebyte.moneysubuu.model.Currency
 import lab.justonebyte.moneysubuu.ui.MainActivity
 import lab.justonebyte.moneysubuu.ui.components.OptionItem
-import lab.justonebyte.moneysubuu.ui.components.SnackBarType
-import lab.justonebyte.moneysubuu.ui.components.SuBuuSnackBar
-import lab.justonebyte.moneysubuu.ui.components.SuBuuSnackBarHost
+import lab.justonebyte.moneysubuu.ui.components.TransactionTypePicker
 import lab.justonebyte.moneysubuu.ui.home.SectionTitle
 import lab.justonebyte.moneysubuu.utils.LocaleHelper
 
@@ -53,13 +52,29 @@ fun SettingsScreen(
 
 
     Scaffold(
+        topBar =  {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                   modifier = Modifier.fillMaxWidth()
+                    .padding(10.dp),
+            ) {
+                Icon(Icons.Filled.Home, contentDescription = "s")
+                Text(
+                    "Settings",
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                    style = MaterialTheme.typography.titleLarge
+                )
+            }
+        }
     ) {
-        Column (){
+        Column (Modifier.padding(it)){
             Column {
-                SectionTitle(title = stringResource(id = R.string.sys_setting))
-                Row(
+                Column(
                     Modifier.absolutePadding(left = 10.dp, right = 10.dp)
                 ) {
+                    SectionTitle(title = stringResource(id = R.string.sys_setting))
+
                     SettingMenu(
                         modifier = Modifier.fillMaxWidth(),
                         settingItemLabel =  R.string.select_lang,
@@ -74,10 +89,11 @@ fun SettingsScreen(
 
             }
             Column {
-                SectionTitle(title = stringResource(id = R.string.feat_setting))
-                Row(
+                Column(
                     Modifier.absolutePadding(left = 10.dp, right = 10.dp)
                 ) {
+                    SectionTitle(title = stringResource(id = R.string.feat_setting))
+
                     SettingMenu(
                         modifier = Modifier.fillMaxWidth(),
                         settingItemLabel =  R.string.select_currency,
@@ -85,19 +101,6 @@ fun SettingsScreen(
                         menuItems = settingCurrencies,
                         onMenuItemChosen = {
                             settingsViewModel.updateCurrency(it as Currency)
-                        }
-                    )
-                }
-                Row(
-                    Modifier.absolutePadding(left = 10.dp, right = 10.dp, top = 5.dp)
-                ) {
-                    SettingMenu(
-                        modifier = Modifier.fillMaxWidth(),
-                        settingItemLabel =  R.string.select_balance,
-                        selectedOption = settingsUiState.defaultBalanceType,
-                        menuItems = settingBalanceTypes,
-                        onMenuItemChosen = {
-                            settingsViewModel.updateDefaultBalanceType(it as BalanceType)
                         }
                     )
                 }
