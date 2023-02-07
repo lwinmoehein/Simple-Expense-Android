@@ -39,7 +39,7 @@ fun CustomPieChartWithData(
         map.first to PieChartData.Slice((map.second ).toFloat(), randomColor())
     }
 
-    if(incomePieSlices.size>0){
+    if(incomePieSlices.isNotEmpty()){
         Column(
             modifier = modifier
                 .fillMaxWidth(),

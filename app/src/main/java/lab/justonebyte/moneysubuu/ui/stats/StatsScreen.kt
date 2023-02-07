@@ -112,11 +112,12 @@ fun StatsScreen(goBack:()->Unit) {
                 Column(
                     Modifier.padding(20.dp)
                 ) {
-                    Row(
-                        horizontalArrangement = Arrangement.Start,
-                        modifier = Modifier
-                            .absolutePadding(bottom = 20.dp)
-                    ) {
+                    if(transactions.isNotEmpty()){
+                        Row(
+                            horizontalArrangement = Arrangement.Start,
+                            modifier = Modifier
+                                .absolutePadding(bottom = 20.dp)
+                        ) {
                             Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End){
                                 AppOption(
                                     modifier = Modifier
@@ -133,6 +134,7 @@ fun StatsScreen(goBack:()->Unit) {
                                     }
                                 )
                             }
+                        }
                     }
                     CustomPieChartWithData(
                         currency = statsUiState.currentCurrency,
