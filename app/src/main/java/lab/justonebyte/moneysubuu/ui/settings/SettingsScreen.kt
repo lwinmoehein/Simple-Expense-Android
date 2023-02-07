@@ -82,23 +82,8 @@ fun SettingsScreen(
         Column (
             Modifier
                 .padding(it)
-                .absolutePadding(top = 20.dp)){
-                Column(
-                    Modifier.absolutePadding(left = 10.dp, right = 10.dp)
-                ) {
-                    SectionTitle(title = stringResource(id = R.string.sys_setting))
-
-                    SettingMenu(
-                        modifier = Modifier.fillMaxWidth(),
-                        settingItemLabel =  R.string.select_lang,
-                        selectedOption = settingsUiState.defaultLanguage,
-                        menuItems = appLanguages,
-                        onMenuItemChosen = {
-                            settingsViewModel.updateLocale(it as AppLocale)
-                            changeLocale(it.value)
-                        }
-                    )
-                }
+                .absolutePadding(top = 20.dp)
+        ){
             Column {
                 Column(
                     Modifier.absolutePadding(left = 10.dp, right = 10.dp)
@@ -116,6 +101,23 @@ fun SettingsScreen(
                     )
                 }
             }
+                Column(
+                    Modifier.absolutePadding(left = 10.dp, right = 10.dp)
+                ) {
+                    SectionTitle(title = stringResource(id = R.string.sys_setting))
+
+                    SettingMenu(
+                        modifier = Modifier.fillMaxWidth(),
+                        settingItemLabel =  R.string.select_lang,
+                        selectedOption = settingsUiState.defaultLanguage,
+                        menuItems = appLanguages,
+                        onMenuItemChosen = {
+                            settingsViewModel.updateLocale(it as AppLocale)
+                            changeLocale(it.value)
+                        }
+                    )
+                }
+
         }
     }
 }
