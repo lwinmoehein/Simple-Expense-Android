@@ -78,13 +78,18 @@
     <string name="r_u_sure">Are you sure ?</string>
     <string name="r_u_sure_tran_add">Are you sure to record this transaction?</string>
     <string name="r_u_sure_tran_edit">Are you sure to edit this transaction?</string>
+    <string name="r_u_sure_cat_delete">Are you sure to delete this category?</string>
 
     <string name="enter_ex_category">Enter expense category name : </string>
     <string name="enter_in_category">Enter income category name :</string>
     <string name="add">Add</string>
 
-    <string name="add_income_cat">New Income Category</string>
-    <string name="add_expense_cat">New Expense Category</string>
+    <string name="add_income_cat">Income Category</string>
+    <string name="add_expense_cat">Expense Category</string>
+
+    <string name="delete_cat">Delete Category</string>
+    <string name="edit_cat">Edit Category</string>
+
 
     <string name="sys_setting">System settings</string>
     <string name="feat_setting">Feature settings</string>
