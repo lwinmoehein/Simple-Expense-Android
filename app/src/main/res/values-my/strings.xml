@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Money Su Buu</string>
+    <string name="app_name">Money Tracker</string>
     <string name="incorrect_data">ကျေးဇူးပြု၍အချက်အလက်မှန်ကန်စွာထည့်ပါ။</string>
     <string name="en">အင်္ဂလိပ်</string>
     <string name="my">မြန်မာ</string>
