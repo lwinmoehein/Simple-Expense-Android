@@ -1,17 +1,21 @@
 package lab.justonebyte.moneysubuu.ui.settings
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import lab.justonebyte.moneysubuu.data.SettingPrefRepository
 import lab.justonebyte.moneysubuu.model.AppLocale
+import lab.justonebyte.moneysubuu.model.AppsApi
 import lab.justonebyte.moneysubuu.model.BalanceType
 import lab.justonebyte.moneysubuu.model.Currency
 import lab.justonebyte.moneysubuu.ui.components.SnackBarType
+import lab.justonebyte.moneysubuu.utils.RetrofitHelper
 import javax.inject.Inject
 
 data class SettingUiState(
@@ -37,6 +41,17 @@ class SettingsViewModel @Inject constructor(
             launch { collectSelectedCurrency() }
             launch { collectDefaultBalanceType() }
             launch { collectLanguage() }
+            launch { getCompanionApps() }
+        }
+    }
+    private suspend fun getCompanionApps(){
+        val appsApi = RetrofitHelper.getInstance().create(AppsApi::class.java)
+        // launching a new coroutine
+        GlobalScope.launch {
+            val result = appsApi.getApps()
+            if (result != null)
+            // Checking the results
+                Log.d("lwin: ", result.body().toString())
         }
     }
     private suspend fun collectSelectedCurrency(){

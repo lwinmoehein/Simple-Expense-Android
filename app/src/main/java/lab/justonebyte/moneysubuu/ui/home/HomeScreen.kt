@@ -191,9 +191,8 @@ fun HomeScreen(){
                                   verticalAlignment = Alignment.CenterVertically
 
                               ) {
-                                  Icon(painterResource(id = R.drawable.ic_round_home_24), contentDescription = "s",Modifier.absolutePadding(right = 5.dp))
                                   Text(
-                                      stringResource(id = R.string.home),
+                                      stringResource(id = R.string.app_name),
                                       maxLines = 1,
                                       overflow = TextOverflow.Ellipsis,
                                       style = MaterialTheme.typography.titleLarge

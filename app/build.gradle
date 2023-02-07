@@ -97,5 +97,9 @@ dependencies {
     implementation("androidx.datastore:datastore:$datastore_version")
     implementation("androidx.datastore:datastore-preferences:$datastore_version")
 
+    //networking
+    implementation ("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation ("com.squareup.retrofit2:converter-gson:2.9.0")
+    implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.2")
 
 }
