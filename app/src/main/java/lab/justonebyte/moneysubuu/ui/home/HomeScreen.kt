@@ -12,6 +12,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -178,42 +179,45 @@ fun HomeScreen(){
 
     Scaffold(
         topBar =  {
-                        Row(
-                            Modifier
-                                .fillMaxWidth()
-                                .padding(10.dp),
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Row(
-                                verticalAlignment = Alignment.CenterVertically
+                      Column {
+                          Row(
+                              Modifier
+                                  .fillMaxWidth()
+                                  .padding(10.dp),
+                              horizontalArrangement = Arrangement.SpaceBetween,
+                              verticalAlignment = Alignment.CenterVertically
+                          ) {
+                              Row(
+                                  verticalAlignment = Alignment.CenterVertically
 
-                            ) {
-                                Icon(Icons.Filled.Home, contentDescription = "s")
-                                Text(
-                                    "X Money Tracker",
-                                    maxLines = 1,
-                                    overflow = TextOverflow.Ellipsis,
-                                    style = MaterialTheme.typography.titleLarge
-                                )
-                            }
-                            TransactionTypePicker(
-                                onDatePicked = { date ->
-                                    homeViewModel.collectDailyBalance(date)
-                                },
-                                balanceType = homeUiState.currentBalanceType,
-                                onMonthPicked = { month ->
-                                    homeViewModel.collectMonthlyBalance(month)
-                                },
-                                onYearPicked = { year ->
-                                    homeViewModel.collectYearlyBalance(year)
-                                },
-                                selectedYear = homeUiState.selectedYear,
-                                selectedMonth = homeUiState.selectedMonth,
-                                selectedDay = homeUiState.selectedDay
-                            )
+                              ) {
+                                  Icon(painterResource(id = R.drawable.ic_round_home_24), contentDescription = "s",Modifier.absolutePadding(right = 5.dp))
+                                  Text(
+                                      "X Money Tracker",
+                                      maxLines = 1,
+                                      overflow = TextOverflow.Ellipsis,
+                                      style = MaterialTheme.typography.titleLarge
+                                  )
+                              }
+                              TransactionTypePicker(
+                                  onDatePicked = { date ->
+                                      homeViewModel.collectDailyBalance(date)
+                                  },
+                                  balanceType = homeUiState.currentBalanceType,
+                                  onMonthPicked = { month ->
+                                      homeViewModel.collectMonthlyBalance(month)
+                                  },
+                                  onYearPicked = { year ->
+                                      homeViewModel.collectYearlyBalance(year)
+                                  },
+                                  selectedYear = homeUiState.selectedYear,
+                                  selectedMonth = homeUiState.selectedMonth,
+                                  selectedDay = homeUiState.selectedDay
+                              )
 
-                        }
+                          }
+                          Divider()
+                      }
         },
         floatingActionButton = {
             FloatingActionButton(

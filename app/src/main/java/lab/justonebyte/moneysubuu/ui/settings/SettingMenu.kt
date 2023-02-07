@@ -34,7 +34,7 @@ fun SettingMenu(
                     Text(
                         text = stringResource(id = settingItemLabel),
                         textAlign = TextAlign.Start,
-                        style = MaterialTheme.typography.titleSmall
+                        style = MaterialTheme.typography.labelLarge
                     )
             }
             Column(

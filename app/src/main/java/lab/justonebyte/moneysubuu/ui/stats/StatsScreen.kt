@@ -8,6 +8,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -55,42 +56,45 @@ fun StatsScreen(goBack:()->Unit) {
 
     Scaffold(
         topBar =  {
-            Row(
-                Modifier
-                    .fillMaxWidth()
-                    .padding(10.dp),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically
+           Column {
+               Row(
+                   Modifier
+                       .fillMaxWidth()
+                       .padding(10.dp),
+                   horizontalArrangement = Arrangement.SpaceBetween,
+                   verticalAlignment = Alignment.CenterVertically
+               ) {
+                   Row(
+                       verticalAlignment = Alignment.CenterVertically
 
-                ) {
-                    Icon(Icons.Filled.Home, contentDescription = "s")
-                    Text(
-                        "X Money Tracker",
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis,
-                        style = MaterialTheme.typography.titleLarge
-                    )
-                }
-                TransactionTypePicker(
-                    onDatePicked = { date ->
-                        statsViewModel.collectDailyBalance(date)
-                    },
-                    balanceType = statsUiState.currentBalanceType,
-                    onMonthPicked = { month ->
-                        statsViewModel.collectMonthlyBalance(month)
-                    },
-                    onYearPicked = { year ->
-                        statsViewModel.collectYearlyBalance(year)
-                    },
-                    selectedYear = statsUiState.selectedYear,
-                    selectedMonth = statsUiState.selectedMonth,
-                    selectedDay = statsUiState.selectedDay
-                )
+                   ) {
+                       Icon(painterResource(id = R.drawable.ic_round_pie_chart_24), contentDescription = "s",Modifier.absolutePadding(right = 5.dp))
+                       Text(
+                           stringResource(id = R.string.charts),
+                           maxLines = 1,
+                           overflow = TextOverflow.Ellipsis,
+                           style = MaterialTheme.typography.titleLarge
+                       )
+                   }
+                   TransactionTypePicker(
+                       onDatePicked = { date ->
+                           statsViewModel.collectDailyBalance(date)
+                       },
+                       balanceType = statsUiState.currentBalanceType,
+                       onMonthPicked = { month ->
+                           statsViewModel.collectMonthlyBalance(month)
+                       },
+                       onYearPicked = { year ->
+                           statsViewModel.collectYearlyBalance(year)
+                       },
+                       selectedYear = statsUiState.selectedYear,
+                       selectedMonth = statsUiState.selectedMonth,
+                       selectedDay = statsUiState.selectedDay
+                   )
 
-            }
+               }
+               Divider()
+           }
         }
     ) {
         Column(modifier = Modifier

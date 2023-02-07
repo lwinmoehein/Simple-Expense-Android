@@ -7,6 +7,7 @@ import android.content.Intent
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -14,6 +15,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -40,7 +42,6 @@ fun SettingsScreen(
     val settingsUiState by settingsViewModel.viewModelUiState.collectAsState()
 
     val settingCurrencies = listOf<OptionItem>(Currency.Kyat,Currency.Dollar)
-    val settingBalanceTypes = listOf<OptionItem>(BalanceType.DAILY,BalanceType.MONTHLY,BalanceType.YEARLY,BalanceType.TOTAL)
     val appLanguages = listOf(AppLocale.English,AppLocale.Myanmar)
 
     fun changeLocale(localeString: String){
@@ -52,24 +53,36 @@ fun SettingsScreen(
 
 
     Scaffold(
-        topBar =  {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                   modifier = Modifier.fillMaxWidth()
-                    .padding(10.dp),
-            ) {
-                Icon(Icons.Filled.Home, contentDescription = "s")
-                Text(
-                    "Settings",
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
-                    style = MaterialTheme.typography.titleLarge
-                )
-            }
+        topBar = {
+           Column {
+               Row(
+                   Modifier
+                       .fillMaxWidth()
+                       .padding(15.dp),
+                   horizontalArrangement = Arrangement.SpaceBetween,
+                   verticalAlignment = Alignment.CenterVertically
+               ) {
+                   Row(
+                       verticalAlignment = Alignment.CenterVertically
+
+                   ) {
+                       Icon(painterResource(id =R.drawable.ic_round_settings_24), contentDescription = "",Modifier.absolutePadding(right = 5.dp))
+                       Text(
+                           text= stringResource(id = R.string.settings),
+                           maxLines = 1,
+                           overflow = TextOverflow.Ellipsis,
+                           style = MaterialTheme.typography.titleLarge
+                       )
+                   }
+               }
+               Divider()
+           }
         }
     ) {
-        Column (Modifier.padding(it)){
-            Column {
+        Column (
+            Modifier
+                .padding(it)
+                .absolutePadding(top = 20.dp)){
                 Column(
                     Modifier.absolutePadding(left = 10.dp, right = 10.dp)
                 ) {
@@ -86,8 +99,6 @@ fun SettingsScreen(
                         }
                     )
                 }
-
-            }
             Column {
                 Column(
                     Modifier.absolutePadding(left = 10.dp, right = 10.dp)
@@ -107,9 +118,4 @@ fun SettingsScreen(
             }
         }
     }
-//    SuBuuSnackBar(
-//        onDismissSnackBar = { settingsViewModel.clearSnackBar() },
-//        scaffoldState = bottomSheetScaffoldState,
-//        snackBarType = settingsUiState.currentSnackBar,
-//    )
 }
