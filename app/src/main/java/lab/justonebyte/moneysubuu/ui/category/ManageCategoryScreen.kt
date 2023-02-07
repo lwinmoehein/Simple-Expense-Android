@@ -20,6 +20,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -143,43 +144,46 @@ fun ManageCategoryScreen(
 
     Scaffold(
         topBar =  {
-            Row(
-                Modifier
-                    .fillMaxWidth()
-                    .padding(10.dp),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically
+           Column {
+               Row(
+                   Modifier
+                       .fillMaxWidth()
+                       .padding(10.dp),
+                   horizontalArrangement = Arrangement.SpaceBetween,
+                   verticalAlignment = Alignment.CenterVertically
+               ) {
+                   Row(
+                       verticalAlignment = Alignment.CenterVertically
 
-                ) {
-                    Icon(Icons.Filled.Home, contentDescription = "s")
-                    Text(
-                        "X Money Tracker",
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis,
-                        style = MaterialTheme.typography.titleLarge
-                    )
-                }
-                if(currentCategoryTabIndex.value==0){
-                    OutlinedButton(onClick = {
-                        currentEditingCategory.value = null
-                        isReusableInputDialogShown.value = true
-                    }) {
-                        Text(text = stringResource(id = R.string.add_income_cat))
-                        Icon(imageVector = Icons.Filled.Add, contentDescription ="" )
-                    }
-                }else{
-                    OutlinedButton(onClick = {
-                        currentEditingCategory.value = null
-                        isReusableInputDialogShown.value = true
-                    }) {
-                        Text(text = stringResource(id = R.string.add_expense_cat))
-                        Icon(imageVector = Icons.Filled.Add, contentDescription ="" )
-                    }
-                }
-            }
+                   ) {
+                       Icon(painterResource(id = R.drawable.ic_round_category_24), contentDescription = "",Modifier.absolutePadding(right = 5.dp))
+                       Text(
+                           stringResource(id = R.string.m_categories),
+                           maxLines = 1,
+                           overflow = TextOverflow.Ellipsis,
+                           style = MaterialTheme.typography.titleLarge
+                       )
+                   }
+                   if(currentCategoryTabIndex.value==0){
+                       OutlinedButton(onClick = {
+                           currentEditingCategory.value = null
+                           isReusableInputDialogShown.value = true
+                       }) {
+                           Text(text = stringResource(id = R.string.add_income_cat))
+                           Icon(imageVector = Icons.Filled.Add, contentDescription ="" )
+                       }
+                   }else{
+                       OutlinedButton(onClick = {
+                           currentEditingCategory.value = null
+                           isReusableInputDialogShown.value = true
+                       }) {
+                           Text(text = stringResource(id = R.string.add_expense_cat))
+                           Icon(imageVector = Icons.Filled.Add, contentDescription ="" )
+                       }
+                   }
+               }
+               Divider()
+           }
         }
     ) {
          Column(Modifier.padding(it)) {

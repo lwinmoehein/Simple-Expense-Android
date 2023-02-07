@@ -29,76 +29,74 @@ fun BalanceCard(
             verticalArrangement = Arrangement.Center,
         ) {
 
-        SectionTitle(title = stringResource(id = R.string.balance),modifier = Modifier.absolutePadding(top = 15.dp, left = 10.dp, bottom = 5.dp, right = 10.dp))
-        Card(
-            shape = SuBuuShapes.small,
-            modifier = modifier
-                .wrapContentHeight()
-                .fillMaxWidth()
-                .padding(10.dp),
-        ) {
+            SectionTitle(title = stringResource(id = R.string.balance),modifier = Modifier.absolutePadding(top = 15.dp, left = 10.dp, bottom = 5.dp, right = 10.dp))
+            Card(
+                shape = SuBuuShapes.small,
+                modifier = modifier
+                    .wrapContentHeight()
+                    .fillMaxWidth()
+                    .padding(10.dp),
+            ) {
 
-              Row(
-                modifier = Modifier
-                    .height(120.dp)
-                    .padding(10.dp)
-              ) {
-                     Column(horizontalAlignment = Alignment.Start, verticalArrangement = Arrangement.Center) {
-                         Text(
-                             text = stringResource(id = R.string.current_balance),
-                             modifier = Modifier
-                                 .weight(1f)
-                                 .wrapContentHeight(align = CenterVertically),
-//                             color = if(currentBalance>0) MaterialTheme.colors.primaryVariant else Red900,
+                 if(currentBalance!=0){
+                     Row(
+                         modifier = Modifier
+                             .height(120.dp)
+                             .padding(10.dp)
+                     ) {
+                         Column(horizontalAlignment = Alignment.Start, verticalArrangement = Arrangement.Center) {
+                             Text(
+                                 text = stringResource(id = R.string.current_balance),
+                                 modifier = Modifier
+                                     .weight(1f)
+                                     .wrapContentHeight(align = CenterVertically),
                              )
-                         Text(
-                             text =  stringResource(id = R.string.income_balance),
-                             modifier = Modifier
-                                 .weight(1f)
-                                 .wrapContentHeight(align = CenterVertically),
-//                             color = positiveColor
+                             Text(
+                                 text =  stringResource(id = R.string.income_balance),
+                                 modifier = Modifier
+                                     .weight(1f)
+                                     .wrapContentHeight(align = CenterVertically),
 
+                                 )
+                             Text(
+                                 text = stringResource(id = R.string.expense_balance),
+                                 modifier = Modifier
+                                     .weight(1f)
+                                     .wrapContentHeight(align = CenterVertically),
                              )
-                         Text(
-                             text = stringResource(id = R.string.expense_balance),
-                             modifier = Modifier
-                                 .weight(1f)
-                                 .wrapContentHeight(align = CenterVertically),
-//                             color = negativeColor
+                         }
+                         Column(horizontalAlignment = Alignment.Start, verticalArrangement = Arrangement.Center) {
+                             Row(horizontalArrangement = Arrangement.Start, verticalAlignment = Alignment.CenterVertically, modifier = Modifier.weight(1f)) {
+                                 Text(
+                                     text = "$currentBalance",
+                                 )
+                                 Text(
+                                     text = " " + stringResource(id = currency.name)
 
-                         )
+                                 )
+                             }
+                             Row(horizontalArrangement = Arrangement.Start, verticalAlignment = Alignment.CenterVertically, modifier = Modifier.weight(1f)) {
+
+                                 Text(
+                                     text = "$incomeBalance",
+                                 )
+                                 Text(text =  " " + stringResource(id = currency.name))
+
+
+                             }
+                             Row(horizontalArrangement = Arrangement.Start, verticalAlignment = Alignment.CenterVertically, modifier = Modifier.weight(1f)) {
+                                 Text(
+                                     text = "$expenseBalance",
+                                 )
+                                 Text(text =  " " + stringResource(id = currency.name))
+
+                             }
+                         }
                      }
-                  Column(horizontalAlignment = Alignment.Start, verticalArrangement = Arrangement.Center) {
-                      Row(horizontalArrangement = Arrangement.Start, verticalAlignment = Alignment.CenterVertically, modifier = Modifier.weight(1f)) {
-                          Text(
-                              text = "$currentBalance",
-                          )
-                          Text(
-                              text = " " + stringResource(id = currency.name)
-
-                          )
-                      }
-                      Row(horizontalArrangement = Arrangement.Start, verticalAlignment = Alignment.CenterVertically, modifier = Modifier.weight(1f)) {
-
-                          Text(
-                              text = "$incomeBalance",
-                          )
-                          Text(text =  " " + stringResource(id = currency.name))
-
-
-                      }
-                      Row(horizontalArrangement = Arrangement.Start, verticalAlignment = Alignment.CenterVertically, modifier = Modifier.weight(1f)) {
-                          Text(
-                              text = "$expenseBalance",
-                          )
-                          Text(text =  " " + stringResource(id = currency.name))
-
-                      }
-
-
-                  }
-              }
-        }
+                 }else{
+                     NoData(modifier = Modifier.fillMaxWidth().height(100.dp),)
+                 }
+            }
         }
 
 }
