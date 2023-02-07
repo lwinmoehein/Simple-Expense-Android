@@ -93,6 +93,7 @@
     <string name="delete_cat">အမျိုးအစားကိုဖျက်မယ်</string>
     <string name="edit_cat">အမျိုးအစားကိုပြင်မယ်</string>
 
-
+    <string name="give_stars">ကြယ်တွေပေးမယ်</string>
+    <string name="other_apps">အခြားဆော့၀ဲလ်များ</string>
 
 </resources>
