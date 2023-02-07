@@ -193,7 +193,7 @@ fun HomeScreen(){
                               ) {
                                   Icon(painterResource(id = R.drawable.ic_round_home_24), contentDescription = "s",Modifier.absolutePadding(right = 5.dp))
                                   Text(
-                                      "X Money Tracker",
+                                      stringResource(id = R.string.home),
                                       maxLines = 1,
                                       overflow = TextOverflow.Ellipsis,
                                       style = MaterialTheme.typography.titleLarge
