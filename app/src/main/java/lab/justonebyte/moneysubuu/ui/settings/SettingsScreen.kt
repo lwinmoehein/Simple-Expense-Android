@@ -175,7 +175,13 @@ fun OtherApps(modifier: Modifier = Modifier,appList: AppList?,context: Context =
             items(appList.apps) { app ->
                 Log.i("package","p:"+app.id+",current:"+context.packageName)
               if(app.id!=context.packageName){
-                  Card(Modifier.padding(5.dp)) {
+                  Card(Modifier.padding(5.dp).clickable {
+                      try {
+                          context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=${app.id}")))
+                      } catch (e: ActivityNotFoundException) {
+                          context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=${app.id}")))
+                      }
+                  }) {
                       Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
                           Image(modifier= Modifier
                               .width(50.dp)
