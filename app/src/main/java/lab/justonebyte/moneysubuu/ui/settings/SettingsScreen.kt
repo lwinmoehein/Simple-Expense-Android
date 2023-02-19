@@ -130,6 +130,13 @@ fun SettingsScreen(
 //            SectionTitle(title = stringResource(id = R.string.other_apps), modifier = Modifier.absolutePadding(left = 10.dp, top = 15.dp))
 //            OtherApps(Modifier.absolutePadding(left = 15.dp, right = 15.dp))
 //            Divider(Modifier.absolutePadding(bottom = 15.dp,top=30.dp))
+
+            if(settingsUiState.companionApps!=null){
+                Column(Modifier.padding(10.dp)) {
+                    SectionTitle(title = stringResource(id = R.string.other_apps),modifier = Modifier.absolutePadding(bottom = 10.dp))
+                    OtherApps(appList = settingsUiState.companionApps)
+                }
+            }
             Divider(Modifier.absolutePadding(bottom = 15.dp, top = 15.dp))
 
             InfoSettingItem(
@@ -143,13 +150,6 @@ fun SettingsScreen(
                 icon = { Icon(Icons.Filled.Star,"") },
                 title = stringResource(id = R.string.give_stars)
             )
-
-            if(settingsUiState.companionApps!=null){
-                Column(Modifier.padding(10.dp)) {
-                    SectionTitle(title = stringResource(id = R.string.other_apps))
-                    OtherApps(appList = settingsUiState.companionApps)
-                }
-            }
         }
     }
 }
