@@ -10,10 +10,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import lab.justonebyte.moneysubuu.data.SettingPrefRepository
-import lab.justonebyte.moneysubuu.model.AppLocale
-import lab.justonebyte.moneysubuu.model.AppsApi
-import lab.justonebyte.moneysubuu.model.BalanceType
-import lab.justonebyte.moneysubuu.model.Currency
+import lab.justonebyte.moneysubuu.model.*
 import lab.justonebyte.moneysubuu.ui.components.SnackBarType
 import lab.justonebyte.moneysubuu.utils.RetrofitHelper
 import javax.inject.Inject
@@ -22,7 +19,8 @@ data class SettingUiState(
     val selectedCurrency: Currency = Currency.Kyat,
     val defaultBalanceType: BalanceType = BalanceType.MONTHLY,
     val defaultLanguage:AppLocale = AppLocale.English,
-    val currentSnackBar : SnackBarType? = null
+    val currentSnackBar : SnackBarType? = null,
+    val companionApps: AppList? = null
 )
 
 @HiltViewModel
@@ -49,9 +47,7 @@ class SettingsViewModel @Inject constructor(
         // launching a new coroutine
         GlobalScope.launch {
             val result = appsApi.getApps()
-            if (result != null)
-            // Checking the results
-                Log.d("lwin: ", result.body().toString())
+            _viewModelUiState.update { it.copy(companionApps = result.body()) }
         }
     }
     private suspend fun collectSelectedCurrency(){

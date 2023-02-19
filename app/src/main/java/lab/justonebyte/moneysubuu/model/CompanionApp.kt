@@ -5,7 +5,7 @@ data class AppList(
    val latestAppNumber:Int
 )
 data class App(
-    val id: Int,
+    val id: String,
     val name: String,
     val imageUrl: String,
     val playstoreUrl: String

@@ -6,17 +6,19 @@ import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.util.Log
+import android.widget.Space
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -25,14 +27,13 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import coil.compose.rememberAsyncImagePainter
 import lab.justonebyte.moneysubuu.R
+import lab.justonebyte.moneysubuu.model.AppList
 import lab.justonebyte.moneysubuu.model.AppLocale
-import lab.justonebyte.moneysubuu.model.BalanceType
 import lab.justonebyte.moneysubuu.model.Currency
 import lab.justonebyte.moneysubuu.ui.MainActivity
-import lab.justonebyte.moneysubuu.ui.components.AppAlertDialog
 import lab.justonebyte.moneysubuu.ui.components.OptionItem
-import lab.justonebyte.moneysubuu.ui.components.TransactionTypePicker
 import lab.justonebyte.moneysubuu.ui.home.SectionTitle
 import lab.justonebyte.moneysubuu.utils.LocaleHelper
 
@@ -108,7 +109,6 @@ fun SettingsScreen(
                             settingsViewModel.updateCurrency(it as Currency)
                         }
                     )
-                    Divider(Modifier.absolutePadding(bottom = 15.dp))
                 }
             }
                 Column(
@@ -126,11 +126,11 @@ fun SettingsScreen(
                             changeLocale(it.value)
                         }
                     )
-                    Divider(Modifier.absolutePadding(bottom = 15.dp))
                 }
 //            SectionTitle(title = stringResource(id = R.string.other_apps), modifier = Modifier.absolutePadding(left = 10.dp, top = 15.dp))
 //            OtherApps(Modifier.absolutePadding(left = 15.dp, right = 15.dp))
 //            Divider(Modifier.absolutePadding(bottom = 15.dp,top=30.dp))
+            Divider(Modifier.absolutePadding(bottom = 15.dp, top = 15.dp))
 
             InfoSettingItem(
                 modifier = Modifier.fillMaxWidth(),
@@ -143,6 +143,13 @@ fun SettingsScreen(
                 icon = { Icon(Icons.Filled.Star,"") },
                 title = stringResource(id = R.string.give_stars)
             )
+
+            if(settingsUiState.companionApps!=null){
+                Column(Modifier.padding(10.dp)) {
+                    SectionTitle(title = stringResource(id = R.string.other_apps))
+                    OtherApps(appList = settingsUiState.companionApps)
+                }
+            }
         }
     }
 }
@@ -161,25 +168,24 @@ fun InfoSettingItem(onClick:()->Unit,modifier:Modifier = Modifier,icon: @Composa
     }
 }
 @Composable
-fun OtherApps(modifier: Modifier = Modifier){
-    LazyVerticalGrid(
-        horizontalArrangement = Arrangement.Center,
-        userScrollEnabled = true,
-        modifier = modifier,
-        columns = GridCells.Fixed(2),
-        // content padding
-        contentPadding = PaddingValues(
-            top = 16.dp,
-        ),
-        content = {
-            item {
-                Row(Modifier.height(80.dp)) {
-                   Row(modifier = Modifier.fillMaxSize(), horizontalArrangement = Arrangement.Center, verticalAlignment = Alignment.CenterVertically) {
-                       Icon(Icons.Filled.Home, contentDescription = "", modifier = Modifier.fillMaxHeight())
-                       Text(text = "test this is a test ha ha", modifier = Modifier.absolutePadding(left = 10.dp))
-                   }
-                }
+fun OtherApps(modifier: Modifier = Modifier,appList: AppList?,context: Context = LocalContext.current){
+
+    LazyColumn {
+        if (appList != null) {
+            items(appList.apps) { app ->
+                Log.i("package","p:"+app.id+",current:"+context.packageName)
+              if(app.id!=context.packageName){
+                  Card(Modifier.padding(5.dp)) {
+                      Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+                          Image(modifier= Modifier
+                              .width(50.dp)
+                              .height(50.dp),painter =  rememberAsyncImagePainter(app.imageUrl), contentDescription = "")
+                          Spacer(modifier = Modifier.width(10.dp))
+                          Text(text = app.name)
+                      }
+                  }
+              }
             }
         }
-    )
+    }
 }
