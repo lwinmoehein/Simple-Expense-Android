@@ -44,7 +44,6 @@ import lab.justonebyte.moneysubuu.model.AppList
 import lab.justonebyte.moneysubuu.model.AppLocale
 import lab.justonebyte.moneysubuu.model.Currency
 import lab.justonebyte.moneysubuu.ui.MainActivity
-import lab.justonebyte.moneysubuu.ui.SignInActivity
 import lab.justonebyte.moneysubuu.ui.components.OptionItem
 import lab.justonebyte.moneysubuu.ui.home.SectionTitle
 import lab.justonebyte.moneysubuu.utils.LocaleHelper
@@ -156,12 +155,11 @@ fun SettingsScreen(
             InfoSettingItem(
                 modifier = Modifier.fillMaxWidth(),
                 onClick = {
-//                    try {
-//                        context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=$packageName")))
-//                    } catch (e: ActivityNotFoundException) {
-//                        context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=$packageName")))
-//                    }
-                    (context as Activity).startActivity(Intent(context, SignInActivity::class.java))
+                    try {
+                        context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=$packageName")))
+                    } catch (e: ActivityNotFoundException) {
+                        context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=$packageName")))
+                    }
                           },
                 icon = { Icon(Icons.Filled.Star,"") },
                 title = stringResource(id = R.string.give_stars)
