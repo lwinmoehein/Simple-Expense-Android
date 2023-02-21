@@ -16,9 +16,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -28,11 +26,14 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.rememberAsyncImagePainter
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import lab.justonebyte.moneysubuu.R
 import lab.justonebyte.moneysubuu.model.AppList
 import lab.justonebyte.moneysubuu.model.AppLocale
 import lab.justonebyte.moneysubuu.model.Currency
 import lab.justonebyte.moneysubuu.ui.MainActivity
+import lab.justonebyte.moneysubuu.ui.SignInActivity
 import lab.justonebyte.moneysubuu.ui.components.OptionItem
 import lab.justonebyte.moneysubuu.ui.home.SectionTitle
 import lab.justonebyte.moneysubuu.utils.LocaleHelper
@@ -95,6 +96,8 @@ fun SettingsScreen(
                 .absolutePadding(top = 20.dp)
         ){
             Column {
+                AuthenticatedUser()
+                Spacer(modifier = Modifier.height(20.dp))
                 Column(
                     Modifier.absolutePadding(left = 10.dp, right = 10.dp)
                 ) {
@@ -142,11 +145,13 @@ fun SettingsScreen(
             InfoSettingItem(
                 modifier = Modifier.fillMaxWidth(),
                 onClick = {
-                    try {
-                        context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=$packageName")))
-                    } catch (e: ActivityNotFoundException) {
-                        context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=$packageName")))
-                    } },
+//                    try {
+//                        context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=$packageName")))
+//                    } catch (e: ActivityNotFoundException) {
+//                        context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=$packageName")))
+//                    }
+                    (context as Activity).startActivity(Intent(context, SignInActivity::class.java))
+                          },
                 icon = { Icon(Icons.Filled.Star,"") },
                 title = stringResource(id = R.string.give_stars)
             )
@@ -168,6 +173,24 @@ fun InfoSettingItem(onClick:()->Unit,modifier:Modifier = Modifier,icon: @Composa
     }
 }
 @Composable
+fun AuthenticatedUser(modifier: Modifier=Modifier.absolutePadding(left = 10.dp, right = 10.dp)){
+   Card(modifier = modifier.fillMaxWidth()) {
+       Column(Modifier.absolutePadding(left = 10.dp, right = 10.dp, top = 20.dp, bottom = 20.dp)) {
+           var user by remember { mutableStateOf(Firebase.auth.currentUser) }
+           user.let {
+               Row(verticalAlignment = Alignment.CenterVertically) {
+                   Image(painter =  rememberAsyncImagePainter(user?.photoUrl), contentDescription = null )
+                   Spacer(modifier = Modifier.width(10.dp))
+                   user?.displayName?.let { it1 -> Column() {
+                       Text(text = "Logging in as :", style = MaterialTheme.typography.labelSmall)
+                       Text(text = it1, style = MaterialTheme.typography.labelLarge)
+                   } }
+               }
+           }
+       }
+   }
+}
+@Composable
 fun OtherApps(modifier: Modifier = Modifier,appList: AppList?,context: Context = LocalContext.current){
 
     LazyColumn {
@@ -175,13 +198,26 @@ fun OtherApps(modifier: Modifier = Modifier,appList: AppList?,context: Context =
             items(appList.apps) { app ->
                 Log.i("package","p:"+app.id+",current:"+context.packageName)
               if(app.id!=context.packageName){
-                  Card(Modifier.padding(5.dp).clickable {
-                      try {
-                          context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=${app.id}")))
-                      } catch (e: ActivityNotFoundException) {
-                          context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=${app.id}")))
-                      }
-                  }) {
+                  Card(
+                      Modifier
+                          .padding(5.dp)
+                          .clickable {
+                              try {
+                                  context.startActivity(
+                                      Intent(
+                                          Intent.ACTION_VIEW,
+                                          Uri.parse("market://details?id=${app.id}")
+                                      )
+                                  )
+                              } catch (e: ActivityNotFoundException) {
+                                  context.startActivity(
+                                      Intent(
+                                          Intent.ACTION_VIEW,
+                                          Uri.parse("https://play.google.com/store/apps/details?id=${app.id}")
+                                      )
+                                  )
+                              }
+                          }) {
                       Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
                           Image(modifier= Modifier
                               .width(50.dp)

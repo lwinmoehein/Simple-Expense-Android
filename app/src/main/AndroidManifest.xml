@@ -12,7 +12,7 @@
         android:roundIcon="@mipmap/ic_launcher"
         android:supportsRtl="true"
         android:theme="@style/Theme.MoneySuBuu">
-
+        <activity android:name=".ui.SignInActivity"/>
         <activity
             android:name=".ui.MainActivity"
             android:exported="true"

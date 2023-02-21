@@ -99,5 +99,6 @@
 
     <string name="give_stars">Rate this application</string>
     <string name="other_apps">Other apps by developer</string>
+    <string name="web_client_id" translatable="false">533565625186-sujbsu657r2l7bdddboe99i1k31c54q1.apps.googleusercontent.com</string>
 
 </resources>
