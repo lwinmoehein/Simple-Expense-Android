@@ -175,16 +175,31 @@ fun InfoSettingItem(onClick:()->Unit,modifier:Modifier = Modifier,icon: @Composa
 @Composable
 fun AuthenticatedUser(modifier: Modifier=Modifier.absolutePadding(left = 10.dp, right = 10.dp)){
    Card(modifier = modifier.fillMaxWidth()) {
-       Column(Modifier.absolutePadding(left = 10.dp, right = 10.dp, top = 20.dp, bottom = 20.dp)) {
+       Column(Modifier.absolutePadding(left = 10.dp, right = 10.dp, top = 10.dp, bottom = 10.dp)) {
            var user by remember { mutableStateOf(Firebase.auth.currentUser) }
-           user.let {
+           user?.let {
                Row(verticalAlignment = Alignment.CenterVertically) {
                    Image(painter =  rememberAsyncImagePainter(user?.photoUrl), contentDescription = null )
                    Spacer(modifier = Modifier.width(10.dp))
                    user?.displayName?.let { it1 -> Column() {
-                       Text(text = "Logging in as :", style = MaterialTheme.typography.labelSmall)
+                       Text(text = "Logged in :", style = MaterialTheme.typography.labelSmall)
                        Text(text = it1, style = MaterialTheme.typography.labelLarge)
                    } }
+               }
+           }
+           if(user==null){
+               Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.SpaceBetween) {
+                   Row(horizontalArrangement = Arrangement.Start, verticalAlignment = Alignment.CenterVertically) {
+                       Icon(imageVector = Icons.Filled.Info, contentDescription ="" )
+                       Spacer(modifier = Modifier.width(10.dp))
+                       Column() {
+                           Text(text = "Not logged in :", style = MaterialTheme.typography.labelSmall)
+                           Text(text = "Your data can be lost.", style = MaterialTheme.typography.labelLarge)
+                       }
+                   }
+                   OutlinedButton(onClick = { /*TODO*/ }) {
+                       Text(text = "Login")
+                   }
                }
            }
        }
