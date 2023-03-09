@@ -1,6 +1,7 @@
 package lab.justonebyte.moneysubuu.ui.settings
 
 import android.util.Log
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -9,7 +10,11 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import lab.justonebyte.moneysubuu.api.AuthService
+import lab.justonebyte.moneysubuu.api.CompanionAppService
+import lab.justonebyte.moneysubuu.api.TransactionService
 import lab.justonebyte.moneysubuu.data.SettingPrefRepository
+import lab.justonebyte.moneysubuu.data.TransactionRepository
 import lab.justonebyte.moneysubuu.model.*
 import lab.justonebyte.moneysubuu.ui.components.SnackBarType
 import lab.justonebyte.moneysubuu.utils.RetrofitHelper
@@ -25,13 +30,17 @@ data class SettingUiState(
 
 @HiltViewModel
 class SettingsViewModel @Inject constructor(
-    private val settingRepository: SettingPrefRepository
+    private val settingRepository: SettingPrefRepository,
+    private val transactionRepository: TransactionRepository
 ): ViewModel() {
+
     private val _viewModelUiState = MutableStateFlow(
         SettingUiState()
     )
     val viewModelUiState: StateFlow<SettingUiState>
         get() = _viewModelUiState
+
+    val totalTransactions = mutableStateOf(listOf<Transaction>())
 
 
     init {
@@ -39,15 +48,45 @@ class SettingsViewModel @Inject constructor(
             launch { collectSelectedCurrency() }
             launch { collectDefaultBalanceType() }
             launch { collectLanguage() }
-            launch { getCompanionApps() }
+//            launch { getCompanionApps() }
+            launch { getTransactions() }
+            launch { collectToken() }
+        }
+    }
+    private suspend fun getTransactions(){
+        transactionRepository.getTotalTransactions().collect{ transactions->
+          totalTransactions.value = transactions
         }
     }
     private suspend fun getCompanionApps(){
-        val appsApi = RetrofitHelper.getInstance().create(AppsApi::class.java)
-        // launching a new coroutine
+//        val companionAppService = RetrofitHelper.getInstance().create(AuthService::class.java)
+//        // launching a new coroutine
+//        GlobalScope.launch {
+//          try{
+//              val result = companionAppService.getAccessToken()
+//              result.body()?.let {
+//                  Log.i("access token:", it.data.token)
+//                  settingRepository.updateToken(it.data.token)
+//              }
+//          }catch (e:Exception){
+//
+//          }
+////            _viewModelUiState.update { it.copy(companionApps = result.body()) }
+//        }
+    }
+    suspend fun fetchAccessTokenByGoogleId(googleId:String){
+        Log.i("access token:fetch",googleId)
+        val companionAppService = RetrofitHelper.getInstance().create(AuthService::class.java)
         GlobalScope.launch {
-            val result = appsApi.getApps()
-            _viewModelUiState.update { it.copy(companionApps = result.body()) }
+            try{
+                val result = companionAppService.getAccessToken(googleId)
+                result.body()?.let {
+                    Log.i("access token:", it.data.token)
+                    settingRepository.updateToken(it.data.token)
+                }
+            }catch (e:Exception){
+                Log.i("access token fail","cannot fetch access token.")
+            }
         }
     }
     private suspend fun collectSelectedCurrency(){
@@ -57,6 +96,12 @@ class SettingsViewModel @Inject constructor(
                     selectedCurrency = Currency.getFromValue(it)
                 )
             }
+        }
+    }
+
+    private suspend fun collectToken(){
+        settingRepository.accessToken.collect{
+            Log.i("pref:token:",it)
         }
     }
     private suspend fun collectLanguage(){
@@ -109,5 +154,8 @@ class SettingsViewModel @Inject constructor(
         _viewModelUiState.update {
             it.copy(currentSnackBar = null)
         }
+    }
+    fun uploadTransactions(){
+        TransactionService.Network.uploadTransactions(totalTransactions.value)
     }
 }

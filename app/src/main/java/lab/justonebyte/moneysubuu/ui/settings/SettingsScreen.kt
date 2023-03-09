@@ -34,9 +34,11 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import com.google.firebase.auth.AuthResult
+import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import lab.justonebyte.moneysubuu.R
@@ -62,6 +64,7 @@ fun SettingsScreen(
     val settingCurrencies = listOf<OptionItem>(Currency.Kyat,Currency.Dollar)
     val appLanguages = listOf(AppLocale.English,AppLocale.Myanmar)
     val packageName = context.packageName
+    val coroutineScope = rememberCoroutineScope()
 
     fun changeLocale(localeString: String){
         LocaleHelper().setLocale(context, localeString)
@@ -106,7 +109,16 @@ fun SettingsScreen(
                 .absolutePadding(top = 20.dp)
         ){
             Column {
-                AuthenticatedUser()
+                AuthenticatedUser(
+                    uploadTransactions = {
+                                            settingsViewModel.uploadTransactions()
+                                         },
+                    fetchAndUpdateAccessToken = {
+                        coroutineScope.launch {
+                            settingsViewModel.fetchAccessTokenByGoogleId(it)
+                        }
+                    }
+                )
                 Spacer(modifier = Modifier.height(20.dp))
                 Column(
                     Modifier.absolutePadding(left = 10.dp, right = 10.dp)
@@ -185,7 +197,7 @@ fun InfoSettingItem(onClick:()->Unit,modifier:Modifier = Modifier,icon: @Composa
 
 @Composable
 private fun rememberFirebaseAuthLauncher(
-    onAuthComplete: (AuthResult) -> Unit,
+    onAuthComplete: (AuthResult,idToken:String) -> Unit,
     onAuthError: (ApiException) -> Unit
 ): ManagedActivityResultLauncher<Intent, ActivityResult> {
     val scope = rememberCoroutineScope()
@@ -193,13 +205,13 @@ private fun rememberFirebaseAuthLauncher(
         val task = GoogleSignIn.getSignedInAccountFromIntent(result.data)
         try {
             val account = task.getResult(ApiException::class.java)!!
-            Log.i("gcredential:","hi")
+            account.idToken?.let { Log.i("gcredential:", it) }
 
             val credential = GoogleAuthProvider.getCredential(account.idToken!!, null)
 
             scope.launch {
                 val authResult = Firebase.auth.signInWithCredential(credential).await()
-                onAuthComplete(authResult)
+                onAuthComplete(authResult, account.idToken!!)
             }
         } catch (e: ApiException) {
             onAuthError(e)
@@ -208,13 +220,21 @@ private fun rememberFirebaseAuthLauncher(
 }
 
 @Composable
-fun AuthenticatedUser(modifier: Modifier=Modifier.absolutePadding(left = 10.dp, right = 10.dp),context: Context = LocalContext.current) {
+fun AuthenticatedUser(
+    modifier: Modifier=Modifier.absolutePadding(left = 10.dp, right = 10.dp),
+    context: Context = LocalContext.current,
+    uploadTransactions:()->Unit,
+    fetchAndUpdateAccessToken:(googleId:String)->Unit
+) {
     val token = stringResource(R.string.web_client_id)
     var user by remember { mutableStateOf(Firebase.auth.currentUser) }
 
     val launcher = rememberFirebaseAuthLauncher(
-        onAuthComplete = { result ->
+        onAuthComplete = { result,idToken ->
             user = result.user
+            result.user?.let { fetchAndUpdateAccessToken(idToken) }
+
+//            uploadTransactions()
         },
         onAuthError = {
             user = null

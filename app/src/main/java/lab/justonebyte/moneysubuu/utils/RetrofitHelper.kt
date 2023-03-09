@@ -5,7 +5,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 object RetrofitHelper {
 
-    val baseUrl = "https://raw.githubusercontent.com/lwinmoehein/companion-apps/main/"
+    val baseUrl = "http://192.168.2.177:9000/api/"
 
     fun getInstance(): Retrofit {
         return Retrofit.Builder().baseUrl(baseUrl)
