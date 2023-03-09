@@ -6,6 +6,7 @@ import kotlinx.coroutines.flow.Flow
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.*
 import kotlinx.coroutines.flow.map
+import lab.justonebyte.moneysubuu.data.SettingPreferencesRepositoryImpl.PreferencesKeys.ACCESS_TOKEN
 import lab.justonebyte.moneysubuu.data.SettingPreferencesRepositoryImpl.PreferencesKeys.DEFAULT_BALANCE_TYPE
 import lab.justonebyte.moneysubuu.data.SettingPreferencesRepositoryImpl.PreferencesKeys.IS_FIRST_TIME
 import lab.justonebyte.moneysubuu.data.SettingPreferencesRepositoryImpl.PreferencesKeys.LOCALE
@@ -26,6 +27,7 @@ interface SettingPrefRepository {
     val defaultBalanceType: Flow<Int>
     val selectedCurrency: Flow<Int>
     val isAppIntroduced:Flow<Boolean>
+    val accessToken:Flow<String>
 
 
     suspend fun updateTheme(theme: Int)
@@ -33,6 +35,8 @@ interface SettingPrefRepository {
     suspend fun updateBalanceType(type:Int)
     suspend fun updateIsAppIntroduced(introduced:Boolean)
     suspend fun updateSelectedCurrency(currency:Int)
+    suspend fun updateToken(token: String)
+
 }
 
 class SettingPreferencesRepositoryImpl @Inject constructor
@@ -45,6 +49,7 @@ class SettingPreferencesRepositoryImpl @Inject constructor
         val LOCALE = stringPreferencesKey("locale")
         val DEFAULT_BALANCE_TYPE = intPreferencesKey("balance_type")
         val SELECTED_CURRENCY = intPreferencesKey("currency")
+        val ACCESS_TOKEN = stringPreferencesKey("token")
 
     }
 
@@ -53,6 +58,7 @@ class SettingPreferencesRepositoryImpl @Inject constructor
     override val isAppIntroduced: Flow<Boolean> = dataStore.data.map { it[IS_FIRST_TIME]?:true }
     override val defaultBalanceType: Flow<Int> = dataStore.data.map { it[DEFAULT_BALANCE_TYPE]?:BalanceType.MONTHLY.value }
     override val selectedCurrency: Flow<Int> = dataStore.data.map { it[SELECTED_CURRENCY]?:Currency.Kyat.value }
+    override val accessToken: Flow<String> = dataStore.data.map { it[ACCESS_TOKEN]?:"" }
 
     override suspend fun updateTheme(theme: Int) {
         dataStore.edit { preferences ->
@@ -81,6 +87,11 @@ class SettingPreferencesRepositoryImpl @Inject constructor
     override suspend fun updateSelectedCurrency(currency: Int) {
         dataStore.edit { preferences ->
             preferences[SELECTED_CURRENCY] = currency
+        }
+    }
+    override suspend fun updateToken(token:String) {
+        dataStore.edit { preferences ->
+            preferences[ACCESS_TOKEN] = token
         }
     }
 
