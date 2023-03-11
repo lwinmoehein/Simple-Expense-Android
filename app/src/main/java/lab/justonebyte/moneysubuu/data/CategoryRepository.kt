@@ -18,6 +18,7 @@ class  CategoryRepositoryImpl @Inject constructor(val categoryDao: CategoryDao) 
         return categoryDao.getCategories().map { list->list.map { TransactionCategory.Mapper.mapToDomain(it) } }
     }
 
+
     override suspend fun insert(transactionCategory: TransactionCategory) {
         return categoryDao.insert(TransactionCategory.Mapper.mapToEntity(transactionCategory))
     }
