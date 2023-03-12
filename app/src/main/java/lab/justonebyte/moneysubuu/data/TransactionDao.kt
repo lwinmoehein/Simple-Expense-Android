@@ -17,6 +17,7 @@ interface TransactionDao {
             "category_table.name as category_name,category_table.created_at as category_created_at" +
             " FROM transaction_table,category_table where category_table.id==transaction_table.category_id" +
             " and date(transaction_table.created_at)==:date" +
+            " and transaction_table.deleted_at is  null" +
             " order by created_timestamp desc")
     fun getTransactions(date:String): Flow<List<TransactionWithCategory>>
 
@@ -31,6 +32,7 @@ interface TransactionDao {
             "category_table.name as category_name,category_table.created_at as category_created_at" +
             " FROM transaction_table,category_table where category_table.id==transaction_table.category_id" +
             " and  strftime('%W', transaction_table.created_at)==:dateOfTheWeek" +
+            " and transaction_table.deleted_at is  null" +
             " order by created_timestamp desc")
     fun getTransactionsByWeek(dateOfTheWeek:String = weekFormatter(System.currentTimeMillis())): Flow<List<TransactionWithCategory>>
 
@@ -43,6 +45,7 @@ interface TransactionDao {
             "category_table.name as category_name,category_table.created_at as category_created_at" +
             " FROM transaction_table,category_table where category_table.id==transaction_table.category_id" +
             " and  strftime('%Y-%m', transaction_table.created_at)==:month" +
+            " and transaction_table.deleted_at is  null" +
             " order by created_timestamp desc")
     fun getTransactionsByMonth(month:String = monthFormatter(System.currentTimeMillis())): Flow<List<TransactionWithCategory>>
 
@@ -55,6 +58,7 @@ interface TransactionDao {
             "transaction_table.type as type,transaction_table.category_id as category_id," +
             "category_table.name as category_name,category_table.created_at as category_created_at" +
             " FROM transaction_table,category_table where category_table.id==transaction_table.category_id" +
+            " and transaction_table.deleted_at is null" +
             " and  strftime('%Y', transaction_table.created_at)==:year" +
             " order by created_timestamp desc")
     fun getTransactionsByYear(year:String = yearFormatter(System.currentTimeMillis())): Flow<List<TransactionWithCategory>>
@@ -67,7 +71,7 @@ interface TransactionDao {
             "transaction_table.created_timestamp as created_timestamp,"+
             "transaction_table.type as type,transaction_table.category_id as category_id," +
             "category_table.name as category_name,category_table.created_at as category_created_at" +
-            " FROM transaction_table,category_table where category_table.id==transaction_table.category_id" +
+            " FROM transaction_table,category_table where category_table.id==transaction_table.category_id and transaction_table.deleted_at is  null" +
             " order by created_timestamp desc")
     fun getTotalTransactions(): Flow<List<TransactionWithCategory>>
 

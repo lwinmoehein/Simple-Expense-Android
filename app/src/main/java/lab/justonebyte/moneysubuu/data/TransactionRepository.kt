@@ -3,6 +3,7 @@ package lab.justonebyte.moneysubuu.data
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import lab.justonebyte.moneysubuu.model.Transaction
+import java.sql.Timestamp
 import javax.inject.Inject
 
 interface TransactionRepository {
@@ -50,19 +51,28 @@ class TransactionRepositoryImpl @Inject constructor(val transactionDao: Transact
     }
 
     override suspend fun update(transaction: Transaction) {
-        val existingTransaction = transactionDao.get(1)
+        val existingTransaction = transaction.id?.let { transactionDao.get(it) }
 
         val transactionEntity = Transaction.Mapper.mapToEntity(transaction = transaction)
-        if(existingTransaction.version!! <= existingTransaction.latest_server_version!!){
-            transactionEntity.version = existingTransaction.version!! +1
-        }else{
-            transactionEntity.version = existingTransaction.version!!
+        if (existingTransaction != null) {
+            if(existingTransaction.version!! <= existingTransaction.latest_server_version!!){
+                transactionEntity.version = existingTransaction.version!! +1
+            }else{
+                transactionEntity.version = existingTransaction.version!!
+            }
         }
         transactionDao.update(transactionEntity = transactionEntity)
     }
 
     override suspend fun delete(transaction: Transaction) {
-        transaction.id?.let { transactionDao.delete(it) }
+        var existingTransaction = transaction.id?.let { transactionDao.get(it) }
+        if (existingTransaction != null) {
+            existingTransaction.deleted_at = System.currentTimeMillis()
+            transactionDao.update(transactionEntity = existingTransaction)
+        }
+
+
+//        transaction.id?.let { transactionDao.delete(it) }
     }
 
 }
