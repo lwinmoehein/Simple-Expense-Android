@@ -10,7 +10,7 @@ interface CategoryRepository {
     suspend fun insert(transactionCategory: TransactionCategory)
     suspend fun update(transactionCategory: TransactionCategory)
     suspend fun delete(id: Int)
-
+    suspend fun getUniqueIdsWithVersions():List<UniqueIdWithVersion>
 }
 class  CategoryRepositoryImpl @Inject constructor(val categoryDao: CategoryDao) : CategoryRepository{
     override fun getCategories(): Flow<List<TransactionCategory>> {
@@ -40,5 +40,9 @@ class  CategoryRepositoryImpl @Inject constructor(val categoryDao: CategoryDao) 
             existingCategory.deleted_at = System.currentTimeMillis()
             categoryDao.update(category = existingCategory)
         }
+    }
+
+    override suspend fun getUniqueIdsWithVersions(): List<UniqueIdWithVersion>{
+        return categoryDao.getUniqueIdsWithVersions()
     }
 }

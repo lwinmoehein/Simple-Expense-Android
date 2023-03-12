@@ -13,11 +13,17 @@ class UpdateDBWorker (
     override suspend fun doWork(): Result {
         val keys = inputData.getStringArray("keys")
         val values = inputData.getStringArray("values")
+        if (keys != null) {
+            Log.i("worker first:",keys.first())
+        }
+        if (values != null) {
+            Log.i("worker first:",values.first())
+        }
 
         val pairsList = (keys?.asList() ?: listOf() ) zip (values?.asList() ?: listOf() )
 
         if (keys != null) {
-            Log.i("worker:",pairsList.first().second)
+//            Log.i("worker:",pairsList.size)
         }
 
         return Result.success()

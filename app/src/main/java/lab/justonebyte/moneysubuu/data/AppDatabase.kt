@@ -10,6 +10,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import lab.justonebyte.moneysubuu.model.TransactionType
 import lab.justonebyte.moneysubuu.utils.dateFormatter
+import java.util.UUID
 
 
 // Annotates class to be a Room Database with a table (entity) of the Word class
@@ -53,13 +54,13 @@ public abstract class AppDatabase : RoomDatabase() {
         private suspend fun populateCategories(categoryDao: CategoryDao) {
            val dao = this.INSTANCE?.categoryDao()
            dao?.let {
-               it.insert(CategoryEntity(name = "Food", transaction_type = TransactionType.Expense.value, created_at =  System.currentTimeMillis()))
-               it.insert(CategoryEntity(name = "Transportation", transaction_type = TransactionType.Expense.value, created_at = System.currentTimeMillis()))
-               it.insert(CategoryEntity(name = "Family", transaction_type = TransactionType.Expense.value, created_at =  System.currentTimeMillis()))
-               it.insert(CategoryEntity(name = "Groceries", transaction_type = TransactionType.Income.value, created_at =  System.currentTimeMillis()))
-               it.insert(CategoryEntity(name = "Education", transaction_type = TransactionType.Income.value, created_at =  System.currentTimeMillis()))
-               it.insert(CategoryEntity(name = "Cafe",  transaction_type = TransactionType.Income.value,created_at = System.currentTimeMillis()))
-               it.insert(CategoryEntity(name = "Gifts", transaction_type = TransactionType.Income.value, created_at = System.currentTimeMillis()))
+               it.insert(CategoryEntity(name = "Food", unique_id = UUID.randomUUID().toString()+"_"+System.currentTimeMillis(), transaction_type = TransactionType.Expense.value, created_at =  System.currentTimeMillis()))
+               it.insert(CategoryEntity(name = "Transportation",unique_id = UUID.randomUUID().toString()+"_"+System.currentTimeMillis(), transaction_type = TransactionType.Expense.value, created_at = System.currentTimeMillis()))
+               it.insert(CategoryEntity(name = "Family",unique_id = UUID.randomUUID().toString()+"_"+System.currentTimeMillis(), transaction_type = TransactionType.Expense.value, created_at =  System.currentTimeMillis()))
+               it.insert(CategoryEntity(name = "Groceries",unique_id = UUID.randomUUID().toString()+"_"+System.currentTimeMillis(), transaction_type = TransactionType.Income.value, created_at =  System.currentTimeMillis()))
+               it.insert(CategoryEntity(name = "Education",unique_id = UUID.randomUUID().toString()+"_"+System.currentTimeMillis(), transaction_type = TransactionType.Income.value, created_at =  System.currentTimeMillis()))
+               it.insert(CategoryEntity(name = "Cafe",unique_id = UUID.randomUUID().toString()+"_"+System.currentTimeMillis(),  transaction_type = TransactionType.Income.value,created_at = System.currentTimeMillis()))
+               it.insert(CategoryEntity(name = "Gifts",unique_id = UUID.randomUUID().toString()+"_"+System.currentTimeMillis(), transaction_type = TransactionType.Income.value, created_at = System.currentTimeMillis()))
 
            }
         }
