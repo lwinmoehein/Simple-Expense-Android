@@ -16,4 +16,7 @@ interface CategoryDao {
 
     @Query("DELETE FROM category_table where id=:id")
     suspend fun delete(id: Int)
+
+    @Query("SELECT * FROM category_table where id=:id limit 1")
+    suspend fun get(id:Int): CategoryEntity
 }

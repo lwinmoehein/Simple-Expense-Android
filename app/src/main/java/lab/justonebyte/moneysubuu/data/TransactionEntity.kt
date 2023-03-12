@@ -15,6 +15,8 @@ class TransactionEntity(
     @ColumnInfo(name = "created_at") val created_at:String,
     @ColumnInfo(name = "created_timestamp") val created_timestamp:Long,
     @ColumnInfo(name = "version") val version:Int?=1,
+    @ColumnInfo(name = "latest_server_version") val latest_server_version:Int?=1,
+
     )
 
 data class TransactionWithCategory(
@@ -26,4 +28,14 @@ data class TransactionWithCategory(
    val category_created_at:Long,
    val created_at:String,
    val created_timestamp: Long
+)
+data class TransactionWithoutCategory(
+    val id:Int,
+    val unique_id: String,
+    val amount: Int,
+    val type: Int,
+    val category_id:Int,
+    val created_at:String,
+    val created_timestamp: Long,
+    val version:Int
 )

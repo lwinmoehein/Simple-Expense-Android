@@ -3,6 +3,7 @@ package lab.justonebyte.moneysubuu.model
 import lab.justonebyte.moneysubuu.data.CategoryEntity
 import lab.justonebyte.moneysubuu.data.TransactionEntity
 import lab.justonebyte.moneysubuu.data.TransactionWithCategory
+import java.util.*
 
 data class TransactionCategory(
 
@@ -25,6 +26,7 @@ data class TransactionCategory(
         fun mapToEntity(transactionCategory: TransactionCategory): CategoryEntity {
             if(transactionCategory.id==0){
                 return CategoryEntity(
+                    unique_id =  UUID.randomUUID().toString()+"_"+transactionCategory.created_at,
                     name = transactionCategory.name,
                     created_at = transactionCategory.created_at,
                     transaction_type = transactionCategory.transaction_type.value

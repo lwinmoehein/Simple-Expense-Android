@@ -1,9 +1,11 @@
 package lab.justonebyte.moneysubuu.data
 
+import android.util.Log
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.count
 import kotlinx.coroutines.flow.map
 import lab.justonebyte.moneysubuu.model.Transaction
+import okhttp3.internal.notifyAll
 import javax.inject.Inject
 
 interface TransactionRepository {
@@ -58,4 +60,5 @@ class TransactionRepositoryImpl @Inject constructor(val transactionDao: Transact
     override suspend fun delete(transaction: Transaction) {
         transaction.id?.let { transactionDao.delete(it) }
     }
+
 }

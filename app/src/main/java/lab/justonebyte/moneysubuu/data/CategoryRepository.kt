@@ -24,8 +24,14 @@ class  CategoryRepositoryImpl @Inject constructor(val categoryDao: CategoryDao) 
     }
 
     override suspend fun update(transactionCategory: TransactionCategory) {
+        val existingCategory = categoryDao.get(1)
+
         val categoryEntity = TransactionCategory.Mapper.mapToEntity(transactionCategory)
-        Log.i("entity:",categoryEntity.id.toString())
+        if(existingCategory.version!! <= existingCategory.latest_server_version!!){
+            categoryEntity.version = existingCategory.version!! +1
+        }else{
+            categoryEntity.version = existingCategory.version!!
+        }
         categoryDao.update(categoryEntity)
     }
 

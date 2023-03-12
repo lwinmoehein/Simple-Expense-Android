@@ -73,8 +73,6 @@ interface TransactionDao {
 
 
 
-
-
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insert(transactionEntity: TransactionEntity):Long
 

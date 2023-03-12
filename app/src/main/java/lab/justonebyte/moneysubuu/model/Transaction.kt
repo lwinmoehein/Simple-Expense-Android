@@ -46,11 +46,13 @@ data class Transaction(
         fun mapToEntity(transaction:Transaction):TransactionEntity{
             return TransactionEntity(
                 id = transaction.id,
+                unique_id=  UUID.randomUUID().toString()+"_"+transaction.created_timestamp ,
                 amount = transaction.amount,
                 type = transaction.type.value,
                 category_id=transaction.category.id,
                 created_at = transaction.created_at,
-                created_timestamp = transaction.created_timestamp
+                created_timestamp = transaction.created_timestamp,
+                version = 1
             )
         }
         fun mapToDTO(transaction: Transaction):TransactionDTO{
@@ -64,5 +66,6 @@ data class Transaction(
                 created_timestamp = transaction.created_timestamp
             )
         }
+
     }
 }

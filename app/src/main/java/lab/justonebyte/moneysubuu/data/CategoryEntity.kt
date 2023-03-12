@@ -12,5 +12,7 @@ class CategoryEntity(
     @ColumnInfo(name = "name") val name: String,
     @ColumnInfo(name = "transaction_type") val transaction_type:Int,
     @ColumnInfo(name="created_at") val created_at:Long,
-    @ColumnInfo(name = "version") val version:Int?=1,
+    @ColumnInfo(name = "version") var version:Int?=1,
+    @ColumnInfo(name = "latest_server_version") val latest_server_version:Int?=1,
+
     )
