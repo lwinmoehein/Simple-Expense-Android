@@ -70,9 +70,6 @@ class TransactionRepositoryImpl @Inject constructor(val transactionDao: Transact
             existingTransaction.deleted_at = System.currentTimeMillis()
             transactionDao.update(transactionEntity = existingTransaction)
         }
-
-
-//        transaction.id?.let { transactionDao.delete(it) }
     }
 
 }

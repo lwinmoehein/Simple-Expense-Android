@@ -1,6 +1,5 @@
 package lab.justonebyte.moneysubuu.data
 
-import android.util.Log
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import lab.justonebyte.moneysubuu.model.TransactionCategory
@@ -24,7 +23,7 @@ class  CategoryRepositoryImpl @Inject constructor(val categoryDao: CategoryDao) 
     }
 
     override suspend fun update(transactionCategory: TransactionCategory) {
-        val existingCategory = categoryDao.get(1)
+        val existingCategory = categoryDao.get(transactionCategory.id)
 
         val categoryEntity = TransactionCategory.Mapper.mapToEntity(transactionCategory)
         if(existingCategory.version!! <= existingCategory.latest_server_version!!){
@@ -36,6 +35,10 @@ class  CategoryRepositoryImpl @Inject constructor(val categoryDao: CategoryDao) 
     }
 
     override suspend fun delete(id: Int) {
-        categoryDao.delete(id)
+        var existingCategory = categoryDao.get(id)
+        if (existingCategory != null) {
+            existingCategory.deleted_at = System.currentTimeMillis()
+            categoryDao.update(category = existingCategory)
+        }
     }
 }
