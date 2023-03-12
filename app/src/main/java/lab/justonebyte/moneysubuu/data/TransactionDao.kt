@@ -84,4 +84,7 @@ interface TransactionDao {
 
     @Query("DELETE FROM transaction_table where id=:id")
     suspend fun delete(id: Int)
+
+    @Query("SELECT * FROM transaction_table where id=:id limit 1")
+    suspend fun get(id:Int): TransactionEntity
 }

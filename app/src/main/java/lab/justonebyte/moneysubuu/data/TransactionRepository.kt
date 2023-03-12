@@ -1,11 +1,8 @@
 package lab.justonebyte.moneysubuu.data
 
-import android.util.Log
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.count
 import kotlinx.coroutines.flow.map
 import lab.justonebyte.moneysubuu.model.Transaction
-import okhttp3.internal.notifyAll
 import javax.inject.Inject
 
 interface TransactionRepository {
@@ -53,7 +50,14 @@ class TransactionRepositoryImpl @Inject constructor(val transactionDao: Transact
     }
 
     override suspend fun update(transaction: Transaction) {
+        val existingTransaction = transactionDao.get(1)
+
         val transactionEntity = Transaction.Mapper.mapToEntity(transaction = transaction)
+        if(existingTransaction.version!! <= existingTransaction.latest_server_version!!){
+            transactionEntity.version = existingTransaction.version!! +1
+        }else{
+            transactionEntity.version = existingTransaction.version!!
+        }
         transactionDao.update(transactionEntity = transactionEntity)
     }
 

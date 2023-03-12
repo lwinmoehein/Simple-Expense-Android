@@ -14,7 +14,7 @@ class TransactionEntity(
     @ColumnInfo(name = "category_id")val category_id:Int,
     @ColumnInfo(name = "created_at") val created_at:String,
     @ColumnInfo(name = "created_timestamp") val created_timestamp:Long,
-    @ColumnInfo(name = "version") val version:Int?=1,
+    @ColumnInfo(name = "version") var version:Int?=1,
     @ColumnInfo(name = "latest_server_version") val latest_server_version:Int?=1,
 
     )
