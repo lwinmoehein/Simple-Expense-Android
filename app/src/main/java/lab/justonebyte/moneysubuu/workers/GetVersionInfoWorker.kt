@@ -5,16 +5,11 @@ import android.util.Log
 import androidx.work.CoroutineWorker
 import androidx.work.Data
 import androidx.work.WorkerParameters
-import androidx.work.workDataOf
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.launch
 import lab.justonebyte.moneysubuu.api.ObjectPostData
 import lab.justonebyte.moneysubuu.api.ObjectService
-import lab.justonebyte.moneysubuu.data.AppDatabase
-import lab.justonebyte.moneysubuu.data.CategoryDao
-import lab.justonebyte.moneysubuu.data.CategoryRepositoryImpl
-import lab.justonebyte.moneysubuu.model.ServerCategory
+import lab.justonebyte.moneysubuu.data.*
 import lab.justonebyte.moneysubuu.utils.RetrofitHelper
 
 class GetVersionInfoWorker (
@@ -29,14 +24,19 @@ class GetVersionInfoWorker (
         val categoryDao: CategoryDao =
             AppDatabase.getDatabase(applicationContext,scope).categoryDao()
         val categoryRepository = CategoryRepositoryImpl(categoryDao)
+        val transactionDao: TransactionDao =
+            AppDatabase.getDatabase(applicationContext,scope).transactionDao()
+        val transactionRepository = TransactionRepositoryImpl(transactionDao)
 
         Log.i("work manager:","versions working")
 
-            val versions = categoryRepository.getUniqueIdsWithVersions()
+        val categoryVersions = categoryRepository.getUniqueIdsWithVersions()
+        val transactionVersions = transactionRepository.getUniqueIdsWithVersions()
 
-            val objectService = RetrofitHelper.getInstance().create(ObjectService::class.java)
 
-            val result = objectService.getChangedCategories(ObjectPostData(versions=versions))
+        val objectService = RetrofitHelper.getInstance().create(ObjectService::class.java)
+
+            val result = objectService.getChangedCategories(ObjectPostData(table_name = "categories",versions=categoryVersions))
 
             Log.i("work manager:v_result",result.message())
 

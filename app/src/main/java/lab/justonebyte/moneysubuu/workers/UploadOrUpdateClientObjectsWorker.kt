@@ -24,9 +24,6 @@ class UploadOrUpdateClientObjectsWorker (
 )  : CoroutineWorker(context, workerParams) {
 
     private val scope =  CoroutineScope(SupervisorJob())
-    private var allCategories = listOf<ServerCategory>()
-    private var allTransactions = listOf<ServerTransaction>()
-
 
     override suspend fun doWork(): Result {
         val categoryDao: CategoryDao =
@@ -40,21 +37,6 @@ class UploadOrUpdateClientObjectsWorker (
         val objectService = RetrofitHelper.getInstance().create(ObjectService::class.java)
 
 
-        Log.i("work manager:","update or new working")
-
-            scope.launch {
-                categoryRepository.getServerCategories().collect{
-                    allCategories = it
-                    Log.i("work manager:all_cats",allCategories.size.toString())
-                }
-            }
-            scope.launch {
-                transactionRepository.getServerTransactions().collect{
-                    allTransactions = it
-                    Log.i("work manager:all_trans",allTransactions.size.toString())
-                }
-            }
-
             val newClientIds = inputData.getStringArray(KEY_NEW_CLIENTS_IDS)
             val tableName = inputData.getString(KEY_TABLE_NAME)
 
@@ -66,13 +48,12 @@ class UploadOrUpdateClientObjectsWorker (
             if(newClientIds==null) return Result.success()
 
             val transactionsToUpload = when(tableName){
-                "transactions"->allTransactions.filter { transaction->newClientIds.contains(transaction.unique_id) }
-                else -> allCategories.filter { category->newClientIds.contains(category.unique_id) }
+                "transactions"-> transactionRepository.getServerTransactions().filter { transaction->newClientIds.contains(transaction.unique_id) }
+                else -> categoryRepository.getServerCategories().filter { category->newClientIds.contains(category.unique_id) }
             }
 
             Log.i("work manager:to_upload",transactionsToUpload.size.toString())
 
-            scope.launch {
                 when(tableName){
                     "transactions"->objectService.uploadNewOrUpdateTransactions(
                         UploadTransactionBatch(objects = transactionsToUpload as List<ServerTransaction>)
@@ -81,7 +62,7 @@ class UploadOrUpdateClientObjectsWorker (
                         UploadCategoryBatch(objects = transactionsToUpload as List<ServerCategory>)
                     )
                 }
-            }
+
 
         return Result.success()
     }

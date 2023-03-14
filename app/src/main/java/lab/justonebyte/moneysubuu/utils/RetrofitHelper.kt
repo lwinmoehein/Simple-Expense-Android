@@ -11,7 +11,7 @@ import java.io.IOException
 class AuthInterceptor(private val token: String) : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
         val request = chain.request().newBuilder()
-            .addHeader("Authorization", "Bearer 3|vfjuSzFH6sLKri6fMJIdnvgeuq6or45fjui7ZSU7")
+            .addHeader("Authorization", "Bearer 1|hkNhJOjXPd8rO36rvTcaHcesaJOkyLlY29xhUU9d")
             .build()
         return chain.proceed(request)
     }

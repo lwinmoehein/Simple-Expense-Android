@@ -8,7 +8,7 @@ import javax.inject.Inject
 
 interface CategoryRepository {
     fun getCategories(): Flow<List<TransactionCategory>>
-    fun getServerCategories(): Flow<List<ServerCategory>>
+    fun getServerCategories(): List<ServerCategory>
     suspend fun insert(transactionCategory: TransactionCategory)
     suspend fun update(transactionCategory: TransactionCategory)
     suspend fun delete(id: Int)
@@ -19,8 +19,8 @@ class  CategoryRepositoryImpl @Inject constructor(val categoryDao: CategoryDao) 
         return categoryDao.getCategories().map { list->list.map { TransactionCategory.Mapper.mapToDomain(it) } }
     }
 
-    override fun getServerCategories(): Flow<List<ServerCategory>> {
-        return categoryDao.getCategories().map { list->list.map { TransactionCategory.Mapper.mapToServer(it) } }
+    override fun getServerCategories(): List<ServerCategory> {
+        return categoryDao.getAll()
     }
 
 

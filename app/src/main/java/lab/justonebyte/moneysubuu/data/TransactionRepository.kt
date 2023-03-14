@@ -15,7 +15,9 @@ interface TransactionRepository {
     fun getMonthlyTransactions(month:String): Flow<List<Transaction>>
     fun getYearlyTransactions(year:String): Flow<List<Transaction>>
     fun getTotalTransactions(): Flow<List<Transaction>>
-    fun getServerTransactions(): Flow<List<ServerTransaction>>
+    fun getServerTransactions(): List<ServerTransaction>
+    suspend fun getUniqueIdsWithVersions():List<UniqueIdWithVersion>
+
 
 
     suspend fun insert(transaction: Transaction)
@@ -50,8 +52,12 @@ class TransactionRepositoryImpl @Inject constructor(val transactionDao: Transact
         return transactionEntities.map { list -> list.map { Transaction.Mapper.mapToDomain(it) } }
     }
 
-    override fun getServerTransactions(): Flow<List<ServerTransaction>> {
-        return transactionDao.getAllTransactions().map { list->list.map { Transaction.Mapper.mapToServer(it) } }
+    override fun getServerTransactions(): List<ServerTransaction> {
+        return transactionDao.getAllTransactions()
+    }
+
+    override suspend fun getUniqueIdsWithVersions(): List<UniqueIdWithVersion> {
+        return transactionDao.getUniqueIdsWithVersions()
     }
 
     override suspend fun insert(transaction: Transaction)  {

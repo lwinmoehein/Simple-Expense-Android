@@ -2,6 +2,7 @@ package lab.justonebyte.moneysubuu.data
 
 import androidx.room.*
 import kotlinx.coroutines.flow.Flow
+import lab.justonebyte.moneysubuu.model.ServerTransaction
 import lab.justonebyte.moneysubuu.utils.dateFormatter
 import lab.justonebyte.moneysubuu.utils.monthFormatter
 import lab.justonebyte.moneysubuu.utils.weekFormatter
@@ -76,7 +77,7 @@ interface TransactionDao {
     fun getTotalTransactions(): Flow<List<TransactionWithCategory>>
 
     @Query("SELECT * FROM transaction_table")
-    fun getAllTransactions():Flow<List<TransactionEntity>>
+    fun getAllTransactions():List<ServerTransaction>
 
 
 
@@ -94,4 +95,7 @@ interface TransactionDao {
 
     @Query("SELECT * FROM transaction_table where id=:id limit 1")
     suspend fun get(id:Int): TransactionEntity
+
+    @Query("SELECT unique_id,version from transaction_table")
+    suspend fun getUniqueIdsWithVersions(): List<UniqueIdWithVersion>
 }
