@@ -75,6 +75,9 @@ interface TransactionDao {
             " order by created_timestamp desc")
     fun getTotalTransactions(): Flow<List<TransactionWithCategory>>
 
+    @Query("SELECT * FROM transaction_table")
+    fun getAllTransactions():Flow<List<TransactionEntity>>
+
 
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)

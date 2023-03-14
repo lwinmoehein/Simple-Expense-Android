@@ -1,5 +1,6 @@
 package lab.justonebyte.moneysubuu.model
 
+import io.grpc.Server
 import lab.justonebyte.moneysubuu.data.CategoryEntity
 import lab.justonebyte.moneysubuu.data.TransactionEntity
 import lab.justonebyte.moneysubuu.data.TransactionWithCategory
@@ -21,6 +22,14 @@ data class TransactionCategory(
                 name = categoryEntity.name,
                 transaction_type = mapTransactionType(categoryEntity.transaction_type),
                 created_at = categoryEntity.created_at
+            )
+        }
+        fun mapToServer(categoryEntity: CategoryEntity):ServerCategory{
+            return ServerCategory(
+                unique_id= categoryEntity.unique_id!!,
+                name = categoryEntity.name,
+                transaction_type = categoryEntity.transaction_type,
+                version = categoryEntity.version!!
             )
         }
         fun mapToEntity(transactionCategory: TransactionCategory): CategoryEntity {

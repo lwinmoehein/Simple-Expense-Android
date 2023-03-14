@@ -2,7 +2,10 @@ package lab.justonebyte.moneysubuu.data
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import lab.justonebyte.moneysubuu.model.ServerCategory
+import lab.justonebyte.moneysubuu.model.ServerTransaction
 import lab.justonebyte.moneysubuu.model.Transaction
+import lab.justonebyte.moneysubuu.model.TransactionCategory
 import java.sql.Timestamp
 import javax.inject.Inject
 
@@ -12,6 +15,8 @@ interface TransactionRepository {
     fun getMonthlyTransactions(month:String): Flow<List<Transaction>>
     fun getYearlyTransactions(year:String): Flow<List<Transaction>>
     fun getTotalTransactions(): Flow<List<Transaction>>
+    fun getServerTransactions(): Flow<List<ServerTransaction>>
+
 
     suspend fun insert(transaction: Transaction)
     suspend fun update(transaction: Transaction)
@@ -43,6 +48,10 @@ class TransactionRepositoryImpl @Inject constructor(val transactionDao: Transact
     override fun getTotalTransactions(): Flow<List<Transaction>> {
         val transactionEntities = transactionDao.getTotalTransactions()
         return transactionEntities.map { list -> list.map { Transaction.Mapper.mapToDomain(it) } }
+    }
+
+    override fun getServerTransactions(): Flow<List<ServerTransaction>> {
+        return transactionDao.getAllTransactions().map { list->list.map { Transaction.Mapper.mapToServer(it) } }
     }
 
     override suspend fun insert(transaction: Transaction)  {

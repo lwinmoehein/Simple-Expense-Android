@@ -2,7 +2,6 @@ package lab.justonebyte.moneysubuu.ui
 
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.material.Text
@@ -14,14 +13,20 @@ import androidx.work.*
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import lab.justonebyte.moneysubuu.data.CategoryRepository
+import lab.justonebyte.moneysubuu.model.ServerCategory
 import lab.justonebyte.moneysubuu.utils.LocaleHelper
-import lab.justonebyte.moneysubuu.workers.UpdateDBWorker
+import lab.justonebyte.moneysubuu.workers.GetVersionInfoWorker
+import lab.justonebyte.moneysubuu.workers.UploadOrUpdateClientObjectsWorker
 import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     @Inject
     lateinit var categoryRepository: CategoryRepository
+
+    var allCategories:List<ServerCategory> = listOf()
+    private val workManager = WorkManager.getInstance(application)
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,28 +36,28 @@ class MainActivity : ComponentActivity() {
             SuBuuApp()
         }
 
-                  lifecycleScope.launch {
-                      val uniqueIdsWithVersions = categoryRepository.getUniqueIdsWithVersions()
-                      if(uniqueIdsWithVersions.size>0) {
-                          val pairs = uniqueIdsWithVersions.map { it.uniqueId to (it.version ?: 1) }
-                          val inputData = Data.Builder().apply {
-                              putStringArray("keys", pairs.map { it.first }.toTypedArray())
-                              putIntArray("values", pairs.map { it.second }.toIntArray())
-                          }.build()
+        lifecycleScope.launch {
 
+            val workRequest = OneTimeWorkRequestBuilder<GetVersionInfoWorker>()
+                .build()
 
+            WorkManager.getInstance(applicationContext)
+                .enqueue(workRequest)
 
-                          val workRequest = OneTimeWorkRequestBuilder<UpdateDBWorker>()
-                              .setInputData(inputData)
-                              .build()
+            var continuation = workManager
+                .beginWith(OneTimeWorkRequest
+                    .from(GetVersionInfoWorker::class.java))
 
-                          WorkManager.getInstance(applicationContext)
-                              .enqueue(workRequest)
-                      }
-                  }
+            // Add WorkRequest to blur the image
+            val blurRequest = OneTimeWorkRequest.Builder(UploadOrUpdateClientObjectsWorker::class.java)
+                .build()
 
+            continuation = continuation.then(blurRequest)
 
+            // Actually start the work
+            continuation.enqueue()
 
+        }
     }
 
     override fun attachBaseContext(base: Context) {

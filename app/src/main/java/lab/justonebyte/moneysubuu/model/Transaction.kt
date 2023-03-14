@@ -1,5 +1,6 @@
 package lab.justonebyte.moneysubuu.model
 
+import lab.justonebyte.moneysubuu.data.CategoryEntity
 import lab.justonebyte.moneysubuu.data.TransactionEntity
 import lab.justonebyte.moneysubuu.data.TransactionWithCategory
 import lab.justonebyte.moneysubuu.utils.dateFormatter
@@ -43,6 +44,16 @@ data class Transaction(
                 created_timestamp = transactionEntity.created_timestamp
             )
         }
+        fun mapToServer(transactionEntity: TransactionEntity):ServerTransaction{
+            return ServerTransaction(
+                unique_id= transactionEntity.unique_id!!,
+                amount = transactionEntity.amount,
+                category_id = transactionEntity.unique_id!!,
+                version = transactionEntity.version!!,
+                note = transactionEntity.note ?: "",
+                type = transactionEntity.type
+            )
+        }
         fun mapToEntity(transaction:Transaction):TransactionEntity{
             return TransactionEntity(
                 id = transaction.id,
@@ -52,7 +63,8 @@ data class Transaction(
                 category_id=transaction.category.id,
                 created_at = transaction.created_at,
                 created_timestamp = transaction.created_timestamp,
-                version = 1
+                version = 1,
+                note = ""
             )
         }
         fun mapToDTO(transaction: Transaction):TransactionDTO{
