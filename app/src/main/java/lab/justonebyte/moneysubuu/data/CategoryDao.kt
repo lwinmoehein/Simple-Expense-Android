@@ -10,7 +10,7 @@ interface CategoryDao {
     @Query("SELECT * FROM category_table where category_table.deleted_at is null ORDER BY created_at DESC")
     fun getCategories(): Flow<List<CategoryEntity>>
 
-    @Query("SELECT * FROM category_table where category_table.deleted_at")
+    @Query("SELECT * FROM category_table")
      fun getAll(): List<ServerCategory>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)

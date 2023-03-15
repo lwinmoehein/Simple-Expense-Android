@@ -33,6 +33,8 @@ class UploadOrUpdateClientObjectsWorker (
 
         val categoryRepository = CategoryRepositoryImpl(categoryDao)
         val transactionRepository = TransactionRepositoryImpl(transactionDao)
+        val allServerTransactions =  transactionRepository.getServerTransactions()
+        val allServerCategories =  categoryRepository.getServerCategories()
 
         val objectService = RetrofitHelper.getInstance().create(ObjectService::class.java)
 
@@ -47,9 +49,12 @@ class UploadOrUpdateClientObjectsWorker (
 
             if(newClientIds==null) return Result.success()
 
+           Log.i("work manager:","trans size:"+allServerTransactions.size.toString())
+           Log.i("work manager:","cats size:"+allServerCategories.size.toString())
+
             val transactionsToUpload = when(tableName){
-                "transactions"-> transactionRepository.getServerTransactions().filter { transaction->newClientIds.contains(transaction.unique_id) }
-                else -> categoryRepository.getServerCategories().filter { category->newClientIds.contains(category.unique_id) }
+                "transactions"-> allServerTransactions.filter { transaction->newClientIds.contains(transaction.unique_id) }
+                else ->  allServerCategories.filter { category->newClientIds.contains(category.unique_id) }
             }
 
             Log.i("work manager:to_upload",transactionsToUpload.size.toString())
