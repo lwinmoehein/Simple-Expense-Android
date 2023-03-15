@@ -42,9 +42,11 @@ class GetVersionInfoWorker (
 
             Log.i("work manager:v_result",result.message())
 
-            result.body()?.let {
+            result.body()?.let { it ->
+                val combinedUpdateAndNewIds = it.data.new_client_object_ids+it.data.objects_to_update_server.map {id-> id.uniqueId }
+                Log.i("work manager:","combined:"+combinedUpdateAndNewIds.size)
                 val inputData = Data.Builder().putStringArray(KEY_NEW_CLIENTS_IDS,
-                    it.data.new_client_object_ids.toTypedArray()
+                    combinedUpdateAndNewIds.toTypedArray()
                 ).putString(KEY_TABLE_NAME,tableName).build()
                 return Result.success(inputData)
             }

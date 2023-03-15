@@ -37,6 +37,8 @@ class  CategoryRepositoryImpl @Inject constructor(val categoryDao: CategoryDao) 
         }else{
             categoryEntity.version = existingCategory.version!!
         }
+        categoryEntity.unique_id = existingCategory.unique_id
+
         categoryDao.update(categoryEntity)
     }
 
