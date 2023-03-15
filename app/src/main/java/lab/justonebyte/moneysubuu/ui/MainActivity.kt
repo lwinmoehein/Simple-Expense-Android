@@ -16,8 +16,10 @@ import lab.justonebyte.moneysubuu.data.CategoryRepository
 import lab.justonebyte.moneysubuu.model.ServerCategory
 import lab.justonebyte.moneysubuu.utils.LocaleHelper
 import lab.justonebyte.moneysubuu.workers.GetVersionInfoWorker
+import lab.justonebyte.moneysubuu.workers.KEY_TABLE_NAME
 import lab.justonebyte.moneysubuu.workers.UploadOrUpdateClientObjectsWorker
 import javax.inject.Inject
+
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -39,6 +41,7 @@ class MainActivity : ComponentActivity() {
         lifecycleScope.launch {
 
             val workRequest = OneTimeWorkRequestBuilder<GetVersionInfoWorker>()
+                .setInputData(Data.Builder().putString(KEY_TABLE_NAME,"categories").build())
                 .build()
 
             WorkManager.getInstance(applicationContext)
