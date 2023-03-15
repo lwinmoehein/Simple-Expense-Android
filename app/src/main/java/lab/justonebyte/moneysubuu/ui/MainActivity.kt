@@ -39,28 +39,26 @@ class MainActivity : ComponentActivity() {
         }
 
         lifecycleScope.launch {
-
-            val workRequest = OneTimeWorkRequestBuilder<GetVersionInfoWorker>()
-                .setInputData(Data.Builder().putString(KEY_TABLE_NAME,"categories").build())
-                .build()
-
-            WorkManager.getInstance(applicationContext)
-                .enqueue(workRequest)
-
-            var continuation = workManager
-                .beginWith(OneTimeWorkRequest
-                    .from(GetVersionInfoWorker::class.java))
-
-            // Add WorkRequest to blur the image
-            val blurRequest = OneTimeWorkRequest.Builder(UploadOrUpdateClientObjectsWorker::class.java)
-                .build()
-
-            continuation = continuation.then(blurRequest)
-
-            // Actually start the work
-            continuation.enqueue()
-
+            runVersionSync("categories")
+            runVersionSync("transactions")
         }
+    }
+    suspend fun runVersionSync(tableName:String){
+        var continuation = workManager
+            .beginWith(
+                OneTimeWorkRequest.Builder(GetVersionInfoWorker::class.java)
+                    .setInputData(Data.Builder().putString(KEY_TABLE_NAME,tableName).build())
+                    .build()
+            )
+
+        // Add WorkRequest to blur the image
+        val blurRequest = OneTimeWorkRequest.Builder(UploadOrUpdateClientObjectsWorker::class.java)
+            .build()
+
+        continuation = continuation.then(blurRequest)
+
+        // Actually start the work
+        continuation.enqueue()
     }
 
     override fun attachBaseContext(base: Context) {

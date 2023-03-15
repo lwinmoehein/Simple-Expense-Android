@@ -30,7 +30,7 @@ class GetVersionInfoWorker (
 
         val tableName = inputData.getString(KEY_TABLE_NAME)
 
-        Log.i("work manager:","versions working")
+        Log.i("work manager:","versions:t_"+tableName)
 
         val categoryVersions = categoryRepository.getUniqueIdsWithVersions()
         val transactionVersions = transactionRepository.getUniqueIdsWithVersions()
