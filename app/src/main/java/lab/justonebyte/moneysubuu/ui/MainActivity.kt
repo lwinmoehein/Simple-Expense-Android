@@ -40,10 +40,12 @@ class MainActivity : ComponentActivity() {
 
         lifecycleScope.launch {
             runVersionSync("categories")
+        }
+        lifecycleScope.launch{
             runVersionSync("transactions")
         }
     }
-    suspend fun runVersionSync(tableName:String){
+    fun runVersionSync(tableName:String){
         var continuation = workManager
             .beginWith(
                 OneTimeWorkRequest.Builder(GetVersionInfoWorker::class.java)

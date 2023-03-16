@@ -13,7 +13,7 @@ import retrofit2.http.Path
 
 
 data class CategoryServerDTO(
-    val uniqueId:String,
+    val unique_id:String,
     val name:String,
     val photo_url:String?,
     val deleted_at:String?,

@@ -43,7 +43,7 @@ class UploadOrUpdateClientObjectsWorker (
             val tableName = inputData.getString(KEY_TABLE_NAME)
 
         if (newClientIds != null) {
-            Log.i("work manager:","ids:"+newClientIds.size.toString())
+            Log.i("work manager:","ids:"+newClientIds.last())
         }
         Log.i("work manager:","table:"+tableName)
 
@@ -52,19 +52,19 @@ class UploadOrUpdateClientObjectsWorker (
            Log.i("work manager:","trans size:"+allServerTransactions.size.toString())
            Log.i("work manager:","cats size:"+allServerCategories.size.toString())
 
-            val transactionsToUpload = when(tableName){
+            val objectsToUpload = when(tableName){
                 "transactions"-> allServerTransactions.filter { transaction->newClientIds.contains(transaction.unique_id) }
                 else ->  allServerCategories.filter { category->newClientIds.contains(category.unique_id) }
             }
 
-            Log.i("work manager:to_upload",transactionsToUpload.size.toString())
+            Log.i("work manager:to_upload",objectsToUpload.size.toString())
 
                 when(tableName){
                     "transactions"->objectService.uploadNewOrUpdateTransactions(
-                        UploadTransactionBatch(objects = transactionsToUpload as List<ServerTransaction>)
+                        UploadTransactionBatch(objects = objectsToUpload as List<ServerTransaction>)
                     )
                     else ->objectService.uploadNewOrUpdateCategories(
-                        UploadCategoryBatch(objects = transactionsToUpload as List<ServerCategory>)
+                        UploadCategoryBatch(objects = objectsToUpload as List<ServerCategory>)
                     )
                 }
 
