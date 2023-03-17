@@ -79,7 +79,7 @@ fun AddTransactionContent(
             onPositiveBtnClicked = {
                 isAddTransactionConfirmDialogOpen.value = false
                 val category = currentCategory.value
-                val isValidCategorySelected =if(category==null) false else !categories.filter { it.transaction_type.value == currentType.value && it.id== category.id  }.isEmpty()
+                val isValidCategorySelected =if(category==null) false else !categories.filter { it.transaction_type.value == currentType.value && it.unique_id== category.unique_id  }.isEmpty()
                 val amount =
                     if (currentAmount.value.isEmpty()) 0 else currentAmount.value.toInt()
 

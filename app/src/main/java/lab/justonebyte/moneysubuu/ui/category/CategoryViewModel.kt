@@ -52,10 +52,9 @@ class CategoryViewModel @Inject constructor(
     fun updateCategory(transactinCategory:TransactionCategory,name:String){
         val category = TransactionCategory(
             name = name,
-            id = transactinCategory.id,
+            unique_id = transactinCategory.unique_id,
             transaction_type = transactinCategory.transaction_type,
             created_at = transactinCategory.created_at,
-            unique_id = transactinCategory.unique_id
         )
         viewModelScope.launch {
             categoryRepository.update(transactionCategory = category)
@@ -63,7 +62,7 @@ class CategoryViewModel @Inject constructor(
     }
     fun removeCategory(transactinCategory:TransactionCategory){
         viewModelScope.launch {
-            categoryRepository.delete(id = transactinCategory.id)
+            categoryRepository.delete(id = transactinCategory.unique_id)
         }
     }
 

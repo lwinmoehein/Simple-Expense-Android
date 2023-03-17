@@ -131,7 +131,6 @@ fun ManageCategoryScreen(
             if(currentEditingCategory.value==null){
                 val category = TransactionCategory(
                     unique_id = UUID.randomUUID().toString(),
-                    id = 0,
                     name = it,
                     transaction_type = if(currentCategoryTabIndex.value==0) TransactionType.Income else TransactionType.Expense,
                     created_at =  getCurrentGlobalTime()

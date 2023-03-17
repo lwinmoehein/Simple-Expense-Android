@@ -84,7 +84,7 @@ fun AddCategoriesCard(
                 content = {
 
                     items(filteredCategories.size) { index ->
-                        val isSelected = currentCategory?.let { (it.id==filteredCategories[index].id) }
+                        val isSelected = currentCategory?.let { (it.unique_id==filteredCategories[index].unique_id) }
 
                         Card(
                             modifier = Modifier

@@ -17,6 +17,7 @@ import lab.justonebyte.moneysubuu.utils.dateFormatter
 import lab.justonebyte.moneysubuu.utils.monthFormatter
 import lab.justonebyte.moneysubuu.utils.weekFormatter
 import lab.justonebyte.moneysubuu.utils.yearFormatter
+import java.util.UUID
 import javax.inject.Inject
 
 data class HomeUiState(
@@ -176,6 +177,7 @@ class HomeViewModel @Inject constructor(
         viewModelScope.launch {
             transactionRepository.insert(
                 Transaction(
+                    unique_id = UUID.randomUUID().toString(),
                     amount = amount,
                     type = if(type==1) TransactionType.Income else TransactionType.Expense,
                     category = transactionCategory,
@@ -185,12 +187,12 @@ class HomeViewModel @Inject constructor(
 
         }
     }
-    fun updateTransaction(transactionId:Int?,transactionCategory: TransactionCategory,amount:Int,type:Int,date:String){
+    fun updateTransaction(transactionId:String,transactionCategory: TransactionCategory,amount:Int,type:Int,date:String){
         Log.i("update tran",(transactionId?:1).toString()+":"+amount.toString())
         viewModelScope.launch {
             transactionRepository.update(
                 Transaction(
-                    id = transactionId,
+                    unique_id = transactionId,
                     amount = amount,
                     type = if(type==1) TransactionType.Income else TransactionType.Expense,
                     category = transactionCategory,
@@ -201,7 +203,6 @@ class HomeViewModel @Inject constructor(
     }
 
     fun deleteTransaction(transaction: Transaction){
-        Log.i("delete tran", transaction.id.toString())
 
         viewModelScope.launch {
             transactionRepository.delete(transaction)

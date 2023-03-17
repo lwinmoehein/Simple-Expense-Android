@@ -18,7 +18,7 @@ interface CategoryRepository {
     fun getServerCategories(): List<ServerCategory>
     suspend fun insert(transactionCategory: TransactionCategory)
     suspend fun update(transactionCategory: TransactionCategory)
-    suspend fun delete(id: Int)
+    suspend fun delete(id: String)
     suspend fun getUniqueIdsWithVersions():List<UniqueIdWithVersion>
 }
 class  CategoryRepositoryImpl @Inject constructor(val categoryDao: CategoryDao) : CategoryRepository{
@@ -37,7 +37,7 @@ class  CategoryRepositoryImpl @Inject constructor(val categoryDao: CategoryDao) 
     }
 
     override suspend fun update(transactionCategory: TransactionCategory) {
-        val existingCategory = categoryDao.get(transactionCategory.id)
+        val existingCategory = categoryDao.get(transactionCategory.unique_id)
 
         val categoryEntity = TransactionCategory.Mapper.mapToEntity(transactionCategory)
         if(existingCategory.version!! <= existingCategory.latest_server_version!!){
@@ -50,7 +50,7 @@ class  CategoryRepositoryImpl @Inject constructor(val categoryDao: CategoryDao) 
         categoryDao.update(categoryEntity)
     }
 
-    override suspend fun delete(id: Int) {
+    override suspend fun delete(id: String) {
         var existingCategory = categoryDao.get(id)
         if (existingCategory != null) {
             existingCategory.deleted_at = getCurrentGlobalTime()

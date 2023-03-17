@@ -5,8 +5,6 @@ import lab.justonebyte.moneysubuu.data.CategoryEntity
 import java.util.*
 
 data class TransactionCategory(
-
-    val id:Int,
     val unique_id:String,
     val name:String,
     val transaction_type:TransactionType,
@@ -16,8 +14,7 @@ data class TransactionCategory(
     object  Mapper {
         fun mapToDomain(categoryEntity: CategoryEntity):TransactionCategory{
             return TransactionCategory(
-                id = categoryEntity.id?:0,
-                unique_id = categoryEntity.unique_id?:"",
+                unique_id = categoryEntity.unique_id,
                 name = categoryEntity.name,
                 transaction_type = mapTransactionType(categoryEntity.transaction_type),
                 created_at = categoryEntity.created_at
@@ -25,20 +22,12 @@ data class TransactionCategory(
         }
 
         fun mapToEntity(transactionCategory: TransactionCategory): CategoryEntity {
-            if(transactionCategory.id==0){
                 return CategoryEntity(
                     unique_id =  UUID.randomUUID().toString()+"_"+transactionCategory.created_at,
                     name = transactionCategory.name,
                     created_at = transactionCategory.created_at,
                     transaction_type = transactionCategory.transaction_type.value
                 )
-            }
-            return CategoryEntity(
-                id = transactionCategory.id,
-                name = transactionCategory.name,
-                created_at = transactionCategory.created_at,
-                transaction_type = transactionCategory.transaction_type.value
-            )
         }
         fun mapTransactionType(type:Int) = if(type==TransactionType.Income.value) TransactionType.Income else TransactionType.Expense
     }

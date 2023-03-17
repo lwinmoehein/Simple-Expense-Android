@@ -6,9 +6,8 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "transaction_table")
 class TransactionEntity(
-    @PrimaryKey(autoGenerate = true)
-    @ColumnInfo(name = "id") val id:Int?=null,
-    @ColumnInfo(name = "unique_id") val unique_id:String?="",
+    @PrimaryKey()
+    @ColumnInfo(name = "unique_id") val unique_id:String,
     @ColumnInfo(name = "amount") val amount: Int,
     @ColumnInfo(name = "type") val type: Int,
     @ColumnInfo(name = "category_id")val category_id:String,
@@ -17,12 +16,10 @@ class TransactionEntity(
     @ColumnInfo(name = "latest_server_version") val latest_server_version:Int?=1,
     @ColumnInfo(name = "deleted_at") var deleted_at:String?=null,
     @ColumnInfo(name = "note") val note: String?,
-
-
-    )
+)
 
 data class TransactionWithCategory(
-   val id:Int,
+   val unique_id: String,
    val amount: Int,
    val type: Int,
    val category_id:String,

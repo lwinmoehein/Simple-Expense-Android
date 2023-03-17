@@ -86,7 +86,7 @@ fun HomeScreen(){
         } else {
             currentTransaction.value?.let {
                 homeViewModel.updateTransaction(
-                    transactionId = it.id,
+                    transactionId = it.unique_id,
                     transactionCategory = category,
                     type = type,
                     amount = amount,
@@ -152,7 +152,6 @@ fun HomeScreen(){
                                     homeViewModel.addCategory(
                                         TransactionCategory(
                                             unique_id = UUID.randomUUID().toString(),
-                                            id = 0,
                                             transaction_type = type,
                                             name = name,
                                             created_at = getCurrentGlobalTime()

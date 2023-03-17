@@ -69,7 +69,7 @@ class TransactionRepositoryImpl @Inject constructor(val transactionDao: Transact
     }
 
     override suspend fun update(transaction: Transaction) {
-        val existingTransaction = transaction.id?.let { transactionDao.get(it) }
+        val existingTransaction = transactionDao.get(transaction.unique_id)
 
         val transactionEntity = Transaction.Mapper.mapToEntity(transaction = transaction)
         if (existingTransaction != null) {
@@ -83,7 +83,7 @@ class TransactionRepositoryImpl @Inject constructor(val transactionDao: Transact
     }
 
     override suspend fun delete(transaction: Transaction) {
-        var existingTransaction = transaction.id?.let { transactionDao.get(it) }
+        var existingTransaction = transactionDao.get(transaction.unique_id)
         if (existingTransaction != null) {
             existingTransaction.version = existingTransaction.version!!+1
             existingTransaction.deleted_at = getCurrentGlobalTime()

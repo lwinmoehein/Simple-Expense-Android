@@ -19,11 +19,11 @@ interface CategoryDao {
     @Update
     suspend fun update(category: CategoryEntity)
 
-    @Query("DELETE FROM category_table where id=:id")
-    suspend fun delete(id: Int)
+    @Query("DELETE FROM category_table where unique_id=:id")
+    suspend fun delete(id: String)
 
-    @Query("SELECT * FROM category_table where id=:id limit 1")
-    suspend fun get(id:Int): CategoryEntity
+    @Query("SELECT * FROM category_table where unique_id=:id limit 1")
+    suspend fun get(id:String): CategoryEntity
 
     @Query("SELECT unique_id,version from category_table")
     suspend fun getUniqueIdsWithVersions(): List<UniqueIdWithVersion>
