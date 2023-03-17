@@ -12,7 +12,6 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import lab.justonebyte.moneysubuu.api.AuthService
 import lab.justonebyte.moneysubuu.api.CompanionAppService
-import lab.justonebyte.moneysubuu.api.TransactionService
 import lab.justonebyte.moneysubuu.data.SettingPrefRepository
 import lab.justonebyte.moneysubuu.data.TransactionRepository
 import lab.justonebyte.moneysubuu.model.*
@@ -155,7 +154,5 @@ class SettingsViewModel @Inject constructor(
             it.copy(currentSnackBar = null)
         }
     }
-    fun uploadTransactions(){
-        TransactionService.Network.uploadTransactions(totalTransactions.value)
-    }
+
 }

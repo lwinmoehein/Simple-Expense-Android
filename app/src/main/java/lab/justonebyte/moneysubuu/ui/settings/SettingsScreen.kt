@@ -111,7 +111,7 @@ fun SettingsScreen(
             Column {
                 AuthenticatedUser(
                     uploadTransactions = {
-                                            settingsViewModel.uploadTransactions()
+
                                          },
                     fetchAndUpdateAccessToken = {
                         coroutineScope.launch {
