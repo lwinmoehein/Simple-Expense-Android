@@ -6,7 +6,9 @@ import lab.justonebyte.moneysubuu.model.ServerCategory
 import lab.justonebyte.moneysubuu.model.ServerTransaction
 import lab.justonebyte.moneysubuu.model.Transaction
 import lab.justonebyte.moneysubuu.model.TransactionCategory
+import lab.justonebyte.moneysubuu.utils.getCurrentGlobalTime
 import java.sql.Timestamp
+import java.text.SimpleDateFormat
 import javax.inject.Inject
 
 interface TransactionRepository {
@@ -26,6 +28,7 @@ interface TransactionRepository {
 
 }
 class TransactionRepositoryImpl @Inject constructor(val transactionDao: TransactionDao):TransactionRepository {
+
     override fun getDailyTransactions(day:String): Flow<List<Transaction>> {
         val transactionEntities = transactionDao.getTransactions(day)
         return transactionEntities.map { list -> list.map { Transaction.Mapper.mapToDomain(it) } }
@@ -82,7 +85,8 @@ class TransactionRepositoryImpl @Inject constructor(val transactionDao: Transact
     override suspend fun delete(transaction: Transaction) {
         var existingTransaction = transaction.id?.let { transactionDao.get(it) }
         if (existingTransaction != null) {
-            existingTransaction.deleted_at = System.currentTimeMillis()
+            existingTransaction.version = existingTransaction.version!!+1
+            existingTransaction.deleted_at = getCurrentGlobalTime()
             transactionDao.update(transactionEntity = existingTransaction)
         }
     }

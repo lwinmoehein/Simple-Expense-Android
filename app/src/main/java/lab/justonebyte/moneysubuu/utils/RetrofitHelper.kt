@@ -19,7 +19,7 @@ class AuthInterceptor(private val token: String) : Interceptor {
 
 object RetrofitHelper {
 
-    val baseUrl = "http://192.168.1.8:9000/api/"
+    val baseUrl = "http://192.168.2.177:9000/api/"
 
 
     fun getInstance(): Retrofit {

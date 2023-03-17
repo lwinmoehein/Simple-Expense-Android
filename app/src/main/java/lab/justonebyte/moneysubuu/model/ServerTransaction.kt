@@ -6,5 +6,6 @@ data class ServerTransaction(
     val note:String,
     val category_id:String,
     val version:Int,
-    val type:Int
+    val type:Int,
+    val created_at:String
 )

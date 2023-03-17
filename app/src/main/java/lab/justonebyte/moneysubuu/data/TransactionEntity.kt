@@ -13,10 +13,9 @@ class TransactionEntity(
     @ColumnInfo(name = "type") val type: Int,
     @ColumnInfo(name = "category_id")val category_id:Int,
     @ColumnInfo(name = "created_at") val created_at:String,
-    @ColumnInfo(name = "created_timestamp") val created_timestamp:Long,
     @ColumnInfo(name = "version") var version:Int?=1,
     @ColumnInfo(name = "latest_server_version") val latest_server_version:Int?=1,
-    @ColumnInfo(name = "deleted_at") var deleted_at:Long?=null,
+    @ColumnInfo(name = "deleted_at") var deleted_at:String?=null,
     @ColumnInfo(name = "note") val note: String?,
 
 
@@ -28,17 +27,6 @@ data class TransactionWithCategory(
    val type: Int,
    val category_id:Int,
    val category_name:String,
-   val category_created_at:Long,
+   val category_created_at:String,
    val created_at:String,
-   val created_timestamp: Long
-)
-data class TransactionWithoutCategory(
-    val id:Int,
-    val unique_id: String,
-    val amount: Int,
-    val type: Int,
-    val category_id:Int,
-    val created_at:String,
-    val created_timestamp: Long,
-    val version:Int
 )

@@ -16,8 +16,7 @@ data class TransactionDTO(
     val amount:Int,
     val type:Int,
     val category_id:Int,
-    val created_at:String,
-    val created_timestamp:Long
+    val created_at:String
 )
 
 data class Transaction(
@@ -25,8 +24,7 @@ data class Transaction(
         val amount:Int,
         val type: TransactionType,
         val category: TransactionCategory,
-        val created_at:String,
-        val created_timestamp:Long
+        val created_at:String
     ){
     object  Mapper {
         fun mapToDomain(transactionEntity: TransactionWithCategory):Transaction{
@@ -40,8 +38,7 @@ data class Transaction(
                     transaction_type = TransactionCategory.Mapper.mapTransactionType(transactionEntity.type),
                     created_at = transactionEntity.category_created_at
                 ),
-                created_at = transactionEntity.created_at,
-                created_timestamp = transactionEntity.created_timestamp
+                created_at = transactionEntity.created_at
             )
         }
         fun mapToServer(transactionEntity: TransactionEntity):ServerTransaction{
@@ -51,18 +48,18 @@ data class Transaction(
                 category_id = transactionEntity.unique_id!!,
                 version = transactionEntity.version!!,
                 note = transactionEntity.note ?: "",
-                type = transactionEntity.type
+                type = transactionEntity.type,
+                created_at = transactionEntity.created_at
             )
         }
         fun mapToEntity(transaction:Transaction):TransactionEntity{
             return TransactionEntity(
                 id = transaction.id,
-                unique_id=  UUID.randomUUID().toString()+"_"+transaction.created_timestamp ,
+                unique_id=  UUID.randomUUID().toString()+"_"+transaction.id,
                 amount = transaction.amount,
                 type = transaction.type.value,
                 category_id=transaction.category.id,
                 created_at = transaction.created_at,
-                created_timestamp = transaction.created_timestamp,
                 version = 1,
                 note = ""
             )
@@ -70,12 +67,11 @@ data class Transaction(
         fun mapToDTO(transaction: Transaction):TransactionDTO{
             return TransactionDTO(
                 id = transaction.id,
-                global_id =  UUID.randomUUID().toString()+"_"+transaction.created_timestamp,
+                global_id =  UUID.randomUUID().toString()+"_"+transaction.id,
                 amount = transaction.amount,
                 type = transaction.type.value,
                 category_id=transaction.category.id,
-                created_at = transaction.created_at,
-                created_timestamp = transaction.created_timestamp
+                created_at = transaction.created_at
             )
         }
 

@@ -4,6 +4,9 @@ import android.annotation.SuppressLint
 import java.text.SimpleDateFormat
 import java.util.*
 
+
+val globalTimestampFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSSSS'Z'")
+
 @SuppressLint("SimpleDateFormat")
 fun dateFormatter(milliseconds: Long): String {
     return SimpleDateFormat("yyyy-MM-dd",Locale.ENGLISH).format(Date(milliseconds)).toString()
@@ -31,4 +34,8 @@ fun getCurrentMonth():String{
 fun getCurrentYear():String{
     val sdf = SimpleDateFormat("yyyy", Locale.ENGLISH)
     return sdf.format(Date())
+}
+fun getCurrentGlobalTime():String{
+    val currentDateTime = Date()
+    return globalTimestampFormat.format(currentDateTime)
 }

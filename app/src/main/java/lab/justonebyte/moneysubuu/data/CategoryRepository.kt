@@ -1,9 +1,16 @@
 package lab.justonebyte.moneysubuu.data
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import lab.justonebyte.moneysubuu.model.ServerCategory
 import lab.justonebyte.moneysubuu.model.TransactionCategory
+import lab.justonebyte.moneysubuu.utils.getCurrentGlobalTime
+import java.text.SimpleDateFormat
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
+import java.util.*
 import javax.inject.Inject
 
 interface CategoryRepository {
@@ -15,6 +22,7 @@ interface CategoryRepository {
     suspend fun getUniqueIdsWithVersions():List<UniqueIdWithVersion>
 }
 class  CategoryRepositoryImpl @Inject constructor(val categoryDao: CategoryDao) : CategoryRepository{
+
     override fun getCategories(): Flow<List<TransactionCategory>> {
         return categoryDao.getCategories().map { list->list.map { TransactionCategory.Mapper.mapToDomain(it) } }
     }
@@ -45,7 +53,8 @@ class  CategoryRepositoryImpl @Inject constructor(val categoryDao: CategoryDao) 
     override suspend fun delete(id: Int) {
         var existingCategory = categoryDao.get(id)
         if (existingCategory != null) {
-            existingCategory.deleted_at = System.currentTimeMillis()
+            existingCategory.deleted_at = getCurrentGlobalTime()
+            existingCategory.version = existingCategory.version!!+1;
             categoryDao.update(category = existingCategory)
         }
     }
