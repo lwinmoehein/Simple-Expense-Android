@@ -69,6 +69,9 @@
     <string name="enter_amount">Enter Amount</string>
     <string name="enter_category">Choose Category</string>
     <string name="enter_date">Select Date </string>
+    <string name="enter_note">Enter Note </string>
+    <string name="enter_note_label">Enter your note here ( optional )</string>
+
     <string name="eg_amount">eg. 2000</string>
 
     <string name="cancel">Cancel</string>

@@ -75,13 +75,20 @@ fun HomeScreen(){
         currentTransaction.value = null
         currentType.value = 1
     }
-    fun onAddOrEditTransaction(type:Int,amount:Int,category:TransactionCategory,date:String){
+    fun onAddOrEditTransaction(
+        type:Int,
+        amount:Int,
+        category:TransactionCategory,
+        date:String,
+        note:String?
+    ){
         if(currentTransaction.value==null) {
             homeViewModel.addTransaction(
                 transactionCategory = category,
                 type = type,
                 amount = amount,
-                date = date
+                date = date,
+                note = note
             )
         } else {
             currentTransaction.value?.let {
@@ -90,7 +97,8 @@ fun HomeScreen(){
                     transactionCategory = category,
                     type = type,
                     amount = amount,
-                    date = date
+                    date = date,
+                    note = note
                 )
             }
         }
@@ -137,8 +145,8 @@ fun HomeScreen(){
                                 currentType = currentType.value,
                                 currentTransaction = currentTransaction.value,
                                 categories =  homeUiState.categories,
-                                onConfirmTransactionForm = { type, amount, category,date->
-                                    onAddOrEditTransaction(type,amount,category,date)
+                                onConfirmTransactionForm = { type, amount, category,date,note->
+                                    onAddOrEditTransaction(type,amount,category,date,note)
                                 },
                                 onCloseDialog = {
                                     clearStates()

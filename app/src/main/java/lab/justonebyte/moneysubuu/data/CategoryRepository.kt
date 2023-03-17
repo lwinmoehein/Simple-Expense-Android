@@ -17,6 +17,7 @@ interface CategoryRepository {
     fun getCategories(): Flow<List<TransactionCategory>>
     fun getServerCategories(): List<ServerCategory>
     suspend fun insert(transactionCategory: TransactionCategory)
+    suspend fun insertAll(transactions: List<ServerCategory>)
     suspend fun update(transactionCategory: TransactionCategory)
     suspend fun delete(id: String)
     suspend fun getUniqueIdsWithVersions():List<UniqueIdWithVersion>
@@ -34,6 +35,9 @@ class  CategoryRepositoryImpl @Inject constructor(val categoryDao: CategoryDao) 
 
     override suspend fun insert(transactionCategory: TransactionCategory) {
         return categoryDao.insert(TransactionCategory.Mapper.mapToEntity(transactionCategory))
+    }
+    override suspend fun insertAll(categoriesList:List<ServerCategory>) {
+        return categoryDao.insertAll(categoriesList.map { TransactionCategory.Mapper.mapToEntityFromServer(it) })
     }
 
     override suspend fun update(transactionCategory: TransactionCategory) {

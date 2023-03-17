@@ -7,20 +7,15 @@ enum class TransactionType(val value:Int){
     Income(1),
     Expense(2)
 }
-data class TransactionDTO(
-    val unique_id: String,
-    val amount:Int,
-    val type:Int,
-    val category_id:String,
-    val created_at:String
-)
+
 
 data class Transaction(
         val unique_id:String,
         val amount:Int,
         val type: TransactionType,
         val category: TransactionCategory,
-        val created_at:String
+        val created_at:String,
+        val note:String?
     ){
     object  Mapper {
         fun mapToDomain(transactionEntity: TransactionWithCategory):Transaction{
@@ -34,19 +29,8 @@ data class Transaction(
                     created_at = transactionEntity.category_created_at,
                     unique_id = transactionEntity.category_id
                 ),
-                created_at = transactionEntity.created_at
-            )
-        }
-        fun mapToServer(transactionEntity: TransactionEntity):ServerTransaction{
-            return ServerTransaction(
-                unique_id= transactionEntity.unique_id!!,
-                amount = transactionEntity.amount,
-                category_id = transactionEntity.unique_id!!,
-                version = transactionEntity.version!!,
-                note = transactionEntity.note ?: "",
-                type = transactionEntity.type,
                 created_at = transactionEntity.created_at,
-                deleted_at = transactionEntity.deleted_at
+                note = transactionEntity.note
             )
         }
         fun mapToEntity(transaction:Transaction):TransactionEntity{
@@ -57,16 +41,19 @@ data class Transaction(
                 category_id=transaction.category.unique_id,
                 created_at = transaction.created_at,
                 version = 1,
-                note = ""
+                note = transaction.note
             )
         }
-        fun mapToDTO(transaction: Transaction):TransactionDTO{
-            return TransactionDTO(
-                unique_id =  transaction.unique_id,
+        fun mapToEntityFromServer(transaction:ServerTransaction):TransactionEntity{
+            return TransactionEntity(
+                unique_id=  transaction.unique_id,
                 amount = transaction.amount,
-                type = transaction.type.value,
-                category_id=transaction.category.unique_id,
-                created_at = transaction.created_at
+                type = transaction.type,
+                category_id=transaction.category_id,
+                created_at = transaction.created_at,
+                deleted_at = transaction.deleted_at,
+                version = transaction.version,
+                note = transaction.note
             )
         }
 

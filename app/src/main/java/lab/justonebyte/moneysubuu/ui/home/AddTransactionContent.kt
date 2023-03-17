@@ -1,6 +1,7 @@
 package lab.justonebyte.moneysubuu.ui.home
 
 import android.app.DatePickerDialog
+import android.util.Log
 import android.widget.DatePicker
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
@@ -37,7 +38,7 @@ fun AddTransactionContent(
     onCloseDialog:()->Unit,
     categories:List<TransactionCategory>,
     showIncorrectDataSnack:()->Unit,
-    onConfirmTransactionForm:(type:Int,amount:Int,category: TransactionCategory,date:String)->Unit,
+    onConfirmTransactionForm:(type:Int,amount:Int,category: TransactionCategory,date:String,note:String?)->Unit,
     onAddCategory:(categoryName:String,transactionType:TransactionType)->Unit,
     currentTransaction:Transaction?
 ) {
@@ -52,6 +53,7 @@ fun AddTransactionContent(
 
     val currentType = remember(currentTransaction) { mutableStateOf(currentTransaction?.type?.value ?: currentType) }
     val currentAmount = remember(currentTransaction) { mutableStateOf(currentTransaction?.amount?.toString() ?: "") }
+    val note = remember(currentTransaction) { mutableStateOf(currentTransaction?.note ?: "") }
     val currentCategory = remember(currentTransaction) { mutableStateOf(currentTransaction?.category) }
     val mDate = remember (currentTransaction){ mutableStateOf(currentTransaction?.created_at ?: dateFormatter(System.currentTimeMillis())) }
     val isEditMode = currentTransaction != null
@@ -80,7 +82,7 @@ fun AddTransactionContent(
                 val isValidCategorySelected =if(category==null) false else !categories.filter { it.transaction_type.value == currentType.value && it.unique_id== category.unique_id  }.isEmpty()
                 val amount =
                     if (currentAmount.value.isEmpty()) 0 else currentAmount.value.toInt()
-
+                Log.i("note:incompose",note.value)
                 if (!isValidCategorySelected || amount <= 0) {
                     showIncorrectDataSnack()
                 } else {
@@ -90,7 +92,7 @@ fun AddTransactionContent(
                             amount,
                             it,
                             mDate.value.replace('/', '-'),
-
+                             note.value
                             )
                         onCloseDialog()
                         clearTransactionForm()
@@ -185,6 +187,32 @@ fun AddTransactionContent(
                     Spacer(modifier = Modifier.weight(1f))
                 }
             }
+        }
+        Row(
+            modifier = Modifier.padding(12.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Center
+        ) {
+            Text(
+                text =  stringResource(id = R.string.enter_note),
+                modifier = Modifier.weight(1f)
+            )
+            TextField(
+                modifier = Modifier.weight(2f),
+                shape = MaterialTheme.shapes.small,
+                singleLine = false,
+                value = note.value,
+                onValueChange = { note.value = it },
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Text
+                ),
+                colors = TextFieldDefaults.textFieldColors(
+                    disabledTextColor = Color.Transparent,
+                    focusedIndicatorColor = Color.Transparent,
+                    unfocusedIndicatorColor = Color.Transparent,
+                    disabledIndicatorColor = Color.Transparent
+                )
+            )
         }
         Row(
             horizontalArrangement = Arrangement.End,

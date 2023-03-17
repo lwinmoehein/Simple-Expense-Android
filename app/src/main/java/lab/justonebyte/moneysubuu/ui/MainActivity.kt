@@ -15,9 +15,7 @@ import kotlinx.coroutines.launch
 import lab.justonebyte.moneysubuu.data.CategoryRepository
 import lab.justonebyte.moneysubuu.model.ServerCategory
 import lab.justonebyte.moneysubuu.utils.LocaleHelper
-import lab.justonebyte.moneysubuu.workers.GetVersionInfoWorker
-import lab.justonebyte.moneysubuu.workers.KEY_TABLE_NAME
-import lab.justonebyte.moneysubuu.workers.UploadOrUpdateClientObjectsWorker
+import lab.justonebyte.moneysubuu.workers.*
 import javax.inject.Inject
 
 
@@ -46,21 +44,16 @@ class MainActivity : ComponentActivity() {
         }
     }
     fun runVersionSync(tableName:String){
-        var continuation = workManager
-            .beginWith(
-                OneTimeWorkRequest.Builder(GetVersionInfoWorker::class.java)
-                    .setInputData(Data.Builder().putString(KEY_TABLE_NAME,tableName).build())
-                    .build()
-            )
-
-        // Add WorkRequest to blur the image
-        val blurRequest = OneTimeWorkRequest.Builder(UploadOrUpdateClientObjectsWorker::class.java)
+        val versionInfoWorker =   OneTimeWorkRequest.Builder(GetVersionInfoWorker::class.java)
+            .setInputData(Data.Builder().putString(KEY_TABLE_NAME,tableName).build())
             .build()
 
-        continuation = continuation.then(blurRequest)
+        val updateClientRequest = OneTimeWorkRequest.Builder(UpdateServerObjectsWorker::class.java)
+            .build()
+        val updateServerRequest = OneTimeWorkRequest.Builder(UploadOrUpdateClientObjectsWorker::class.java)
+            .build()
 
-        // Actually start the work
-        continuation.enqueue()
+        workManager.beginWith(versionInfoWorker).then(updateServerRequest).then(updateClientRequest).enqueue()
     }
 
     override fun attachBaseContext(base: Context) {

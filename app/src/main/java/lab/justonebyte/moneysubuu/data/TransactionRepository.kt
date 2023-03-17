@@ -21,7 +21,7 @@ interface TransactionRepository {
     suspend fun getUniqueIdsWithVersions():List<UniqueIdWithVersion>
 
 
-
+    suspend fun insertAll(transactions: List<ServerTransaction>)
     suspend fun insert(transaction: Transaction)
     suspend fun update(transaction: Transaction)
     suspend fun delete(transaction: Transaction)
@@ -61,6 +61,10 @@ class TransactionRepositoryImpl @Inject constructor(val transactionDao: Transact
 
     override suspend fun getUniqueIdsWithVersions(): List<UniqueIdWithVersion> {
         return transactionDao.getUniqueIdsWithVersions()
+    }
+
+    override suspend fun insertAll(transactions: List<ServerTransaction>) {
+        return transactionDao.insertAll(transactions.map { Transaction.Mapper.mapToEntityFromServer(it) })
     }
 
     override suspend fun insert(transaction: Transaction)  {

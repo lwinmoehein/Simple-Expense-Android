@@ -5,6 +5,7 @@ import android.util.Log
 import androidx.work.CoroutineWorker
 import androidx.work.Data
 import androidx.work.WorkerParameters
+import com.google.gson.Gson
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
 import lab.justonebyte.moneysubuu.api.ObjectPostData
@@ -44,10 +45,14 @@ class GetVersionInfoWorker (
 
             result.body()?.let { it ->
                 val combinedUpdateAndNewIds = it.data.new_client_object_ids+it.data.objects_to_update_server.map {id-> id.unique_id }
-                Log.i("work manager:","combined:"+combinedUpdateAndNewIds.size)
+
+                val gson = Gson()
+                val newServersList = gson.toJson(it.data.new_server_objects)
+
+
                 val inputData = Data.Builder().putStringArray(KEY_NEW_CLIENTS_IDS,
                     combinedUpdateAndNewIds.toTypedArray()
-                 ).putString(KEY_TABLE_NAME,tableName).build()
+                 ).putString(KEY_TABLE_NAME,tableName).putString(KEY_SERVER_OBJECTS,newServersList).build()
                 return Result.success(inputData)
             }
 

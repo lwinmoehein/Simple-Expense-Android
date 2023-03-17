@@ -1,6 +1,5 @@
 package lab.justonebyte.moneysubuu.model
 
-import androidx.compose.ui.util.unpackInt1
 import lab.justonebyte.moneysubuu.data.CategoryEntity
 import java.util.*
 
@@ -28,6 +27,16 @@ data class TransactionCategory(
                     created_at = transactionCategory.created_at,
                     transaction_type = transactionCategory.transaction_type.value
                 )
+        }
+        fun mapToEntityFromServer(transactionCategory: ServerCategory): CategoryEntity {
+            return CategoryEntity(
+                unique_id =  UUID.randomUUID().toString()+"_"+transactionCategory.created_at,
+                name = transactionCategory.name,
+                created_at = transactionCategory.created_at,
+                deleted_at = transactionCategory.deleted_at,
+                version = transactionCategory.version,
+                transaction_type = transactionCategory.transaction_type
+            )
         }
         fun mapTransactionType(type:Int) = if(type==TransactionType.Income.value) TransactionType.Income else TransactionType.Expense
     }

@@ -173,22 +173,38 @@ class HomeViewModel @Inject constructor(
             it.copy(currentSnackBar = null)
         }
     }
-    fun addTransaction(transactionCategory: TransactionCategory,amount:Int,type:Int,date:String){
+    fun addTransaction(
+        transactionCategory: TransactionCategory,
+        amount:Int,
+        type:Int,
+        date:String,
+        note:String?
+    ){
+        if (note != null) {
+            Log.i("note:",note)
+        }
         viewModelScope.launch {
             transactionRepository.insert(
                 Transaction(
                     unique_id = UUID.randomUUID().toString(),
                     amount = amount,
-                    type = if(type==1) TransactionType.Income else TransactionType.Expense,
+                    type = if(type==TransactionType.Income.value) TransactionType.Income else TransactionType.Expense,
                     category = transactionCategory,
-                    created_at = date
+                    created_at = date,
+                    note = note
                 )
             )
 
         }
     }
-    fun updateTransaction(transactionId:String,transactionCategory: TransactionCategory,amount:Int,type:Int,date:String){
-        Log.i("update tran",(transactionId?:1).toString()+":"+amount.toString())
+    fun updateTransaction(
+        transactionId:String,
+        transactionCategory: TransactionCategory,
+        amount:Int,
+        type:Int,
+        date:String,
+        note:String?
+    ){
         viewModelScope.launch {
             transactionRepository.update(
                 Transaction(
@@ -196,7 +212,8 @@ class HomeViewModel @Inject constructor(
                     amount = amount,
                     type = if(type==1) TransactionType.Income else TransactionType.Expense,
                     category = transactionCategory,
-                    created_at = date
+                    created_at = date,
+                    note = note
                 )
             )
         }
