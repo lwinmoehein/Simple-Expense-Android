@@ -1,11 +1,13 @@
 package lab.justonebyte.moneysubuu.model
 
+import androidx.compose.ui.util.unpackInt1
 import lab.justonebyte.moneysubuu.data.CategoryEntity
 import java.util.*
 
 data class TransactionCategory(
 
     val id:Int,
+    val unique_id:String,
     val name:String,
     val transaction_type:TransactionType,
     val created_at:String,
@@ -15,6 +17,7 @@ data class TransactionCategory(
         fun mapToDomain(categoryEntity: CategoryEntity):TransactionCategory{
             return TransactionCategory(
                 id = categoryEntity.id?:0,
+                unique_id = categoryEntity.unique_id?:"",
                 name = categoryEntity.name,
                 transaction_type = mapTransactionType(categoryEntity.transaction_type),
                 created_at = categoryEntity.created_at

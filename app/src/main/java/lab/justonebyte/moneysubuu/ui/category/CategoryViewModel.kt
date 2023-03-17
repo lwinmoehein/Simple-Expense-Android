@@ -54,7 +54,8 @@ class CategoryViewModel @Inject constructor(
             name = name,
             id = transactinCategory.id,
             transaction_type = transactinCategory.transaction_type,
-            created_at = transactinCategory.created_at
+            created_at = transactinCategory.created_at,
+            unique_id = transactinCategory.unique_id
         )
         viewModelScope.launch {
             categoryRepository.update(transactionCategory = category)

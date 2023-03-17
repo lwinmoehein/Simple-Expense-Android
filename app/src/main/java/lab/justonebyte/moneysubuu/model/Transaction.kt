@@ -33,10 +33,11 @@ data class Transaction(
                 amount = transactionEntity.amount,
                 type = if(transactionEntity.type==1) TransactionType.Income else TransactionType.Expense,
                 category = TransactionCategory(
-                    id = transactionEntity.category_id,
+                    id = 0,
                     name = transactionEntity.category_name,
                     transaction_type = TransactionCategory.Mapper.mapTransactionType(transactionEntity.type),
-                    created_at = transactionEntity.category_created_at
+                    created_at = transactionEntity.category_created_at,
+                    unique_id = transactionEntity.category_id
                 ),
                 created_at = transactionEntity.created_at
             )
@@ -58,7 +59,7 @@ data class Transaction(
                 unique_id=  UUID.randomUUID().toString()+"_"+transaction.id,
                 amount = transaction.amount,
                 type = transaction.type.value,
-                category_id=transaction.category.id,
+                category_id=transaction.category.unique_id,
                 created_at = transaction.created_at,
                 version = 1,
                 note = ""

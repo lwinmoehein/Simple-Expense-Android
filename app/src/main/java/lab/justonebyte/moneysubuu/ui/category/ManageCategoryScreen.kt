@@ -34,6 +34,8 @@ import lab.justonebyte.moneysubuu.ui.components.*
 import lab.justonebyte.moneysubuu.ui.home.ChooseTransactionTypeDialog
 import lab.justonebyte.moneysubuu.ui.theme.negativeColor
 import lab.justonebyte.moneysubuu.ui.theme.positiveColor
+import lab.justonebyte.moneysubuu.utils.getCurrentGlobalTime
+import java.util.UUID
 
 sealed class CategoryTab(val index:Int,val title:Int){
     object  Income:CategoryTab(0,R.string.income)
@@ -128,10 +130,11 @@ fun ManageCategoryScreen(
 
             if(currentEditingCategory.value==null){
                 val category = TransactionCategory(
+                    unique_id = UUID.randomUUID().toString(),
                     id = 0,
                     name = it,
                     transaction_type = if(currentCategoryTabIndex.value==0) TransactionType.Income else TransactionType.Expense,
-                    created_at =  System.currentTimeMillis()
+                    created_at =  getCurrentGlobalTime()
                 )
                 categoryViewModel.addCategory(category)
             }else{

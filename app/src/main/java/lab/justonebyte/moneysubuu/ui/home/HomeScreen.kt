@@ -25,8 +25,10 @@ import lab.justonebyte.moneysubuu.model.Transaction
 import lab.justonebyte.moneysubuu.model.TransactionCategory
 import lab.justonebyte.moneysubuu.ui.components.*
 import lab.justonebyte.moneysubuu.utils.getCurrentDate
+import lab.justonebyte.moneysubuu.utils.getCurrentGlobalTime
 import lab.justonebyte.moneysubuu.utils.getCurrentMonth
 import lab.justonebyte.moneysubuu.utils.getCurrentYear
+import java.util.UUID
 
 
 @SuppressLint("UnrememberedMutableState", "UnusedMaterial3ScaffoldPaddingParameter")
@@ -149,10 +151,11 @@ fun HomeScreen(){
                                 onAddCategory = { name,type->
                                     homeViewModel.addCategory(
                                         TransactionCategory(
+                                            unique_id = UUID.randomUUID().toString(),
                                             id = 0,
                                             transaction_type = type,
                                             name = name,
-                                            created_at = System.currentTimeMillis()
+                                            created_at = getCurrentGlobalTime()
                                         )
                                     )
                                 }
