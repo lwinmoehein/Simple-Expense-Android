@@ -13,7 +13,6 @@ class TransactionEntity(
     @ColumnInfo(name = "category_id")val category_id:String,
     @ColumnInfo(name = "created_at") val created_at:String,
     @ColumnInfo(name = "version") var version:Int?=1,
-    @ColumnInfo(name = "latest_server_version") val latest_server_version:Int?=1,
     @ColumnInfo(name = "deleted_at") var deleted_at:String?=null,
     @ColumnInfo(name = "note") val note: String?,
 )

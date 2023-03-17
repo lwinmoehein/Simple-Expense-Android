@@ -30,7 +30,7 @@ import lab.justonebyte.moneysubuu.utils.dateFormatter
 import java.util.*
 
 
-@OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddTransactionContent(
     currentType: Int,
@@ -50,7 +50,6 @@ fun AddTransactionContent(
     val mMonth: Int = mCalendar.get(Calendar.MONTH)
     val mDay: Int = mCalendar.get(Calendar.DAY_OF_MONTH)
 
-    //initialize form variables
     val currentType = remember(currentTransaction) { mutableStateOf(currentTransaction?.type?.value ?: currentType) }
     val currentAmount = remember(currentTransaction) { mutableStateOf(currentTransaction?.amount?.toString() ?: "") }
     val currentCategory = remember(currentTransaction) { mutableStateOf(currentTransaction?.category) }
@@ -58,7 +57,6 @@ fun AddTransactionContent(
     val isEditMode = currentTransaction != null
 
     val isAddTransactionConfirmDialogOpen = remember { mutableStateOf(false) }
-    val categoryColor = if(currentType.value==1) positiveColor else negativeColor
 
     fun clearTransactionForm() {
         currentAmount.value = ""
@@ -128,12 +126,6 @@ fun AddTransactionContent(
                 modifier = Modifier
                     .fillMaxWidth()
             ) {
-//                Text(
-//                    stringResource(id = R.string.enter_amount),
-//                    modifier = Modifier
-//                        .weight(1f)
-//                        .absolutePadding(top = 10.dp, bottom = 10.dp)
-//                )
 
                 TextField(
                     shape = MaterialTheme.shapes.small,

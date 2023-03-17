@@ -73,13 +73,10 @@ class TransactionRepositoryImpl @Inject constructor(val transactionDao: Transact
 
         val transactionEntity = Transaction.Mapper.mapToEntity(transaction = transaction)
         if (existingTransaction != null) {
-            if(existingTransaction.version!! <= existingTransaction.latest_server_version!!){
-                transactionEntity.version = existingTransaction.version!! +1
-            }else{
-                transactionEntity.version = existingTransaction.version!!
-            }
+            transactionEntity.version = existingTransaction.version!! +1
+            transactionDao.update(transactionEntity = transactionEntity)
+
         }
-        transactionDao.update(transactionEntity = transactionEntity)
     }
 
     override suspend fun delete(transaction: Transaction) {

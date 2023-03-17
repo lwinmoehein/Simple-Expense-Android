@@ -45,7 +45,8 @@ data class Transaction(
                 version = transactionEntity.version!!,
                 note = transactionEntity.note ?: "",
                 type = transactionEntity.type,
-                created_at = transactionEntity.created_at
+                created_at = transactionEntity.created_at,
+                deleted_at = transactionEntity.deleted_at
             )
         }
         fun mapToEntity(transaction:Transaction):TransactionEntity{

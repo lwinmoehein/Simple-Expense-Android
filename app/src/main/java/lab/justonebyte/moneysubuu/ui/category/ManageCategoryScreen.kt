@@ -78,7 +78,7 @@ fun ManageCategoryScreen(
     val isChooseCategoryActionDialogOpen = remember { mutableStateOf(false) }
     val isConfirmDeleteCategoryDialogShown = remember { mutableStateOf(false) }
 
-    val categories =  categoryUiState.categories.filter { it.transaction_type==if(currentCategoryTabIndex.value==0) TransactionType.Expense else TransactionType.Income }
+    val categories =  categoryUiState.categories.filter { it.transaction_type==if(currentCategoryTabIndex.value==0) TransactionType.Income else TransactionType.Expense }
 
 
     fun clearDialogs(){
@@ -132,7 +132,7 @@ fun ManageCategoryScreen(
                 val category = TransactionCategory(
                     unique_id = UUID.randomUUID().toString(),
                     name = it,
-                    transaction_type = if(currentCategoryTabIndex.value==0) TransactionType.Expense else TransactionType.Income,
+                    transaction_type = if(currentCategoryTabIndex.value==0) TransactionType.Income else TransactionType.Expense,
                     created_at =  getCurrentGlobalTime()
                 )
                 categoryViewModel.addCategory(category)
