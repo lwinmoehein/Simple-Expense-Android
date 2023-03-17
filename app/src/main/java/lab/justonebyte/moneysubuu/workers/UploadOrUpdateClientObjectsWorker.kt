@@ -41,10 +41,10 @@ class UploadOrUpdateClientObjectsWorker (
 
             val newClientIds = inputData.getStringArray(KEY_NEW_CLIENTS_IDS)
             val tableName = inputData.getString(KEY_TABLE_NAME)
-
         if (newClientIds != null) {
-            Log.i("work manager:","ids:"+newClientIds.last())
+            if(newClientIds.size<=0) Result.success()
         }
+
         Log.i("work manager:","table:"+tableName)
 
             if(newClientIds==null) return Result.success()

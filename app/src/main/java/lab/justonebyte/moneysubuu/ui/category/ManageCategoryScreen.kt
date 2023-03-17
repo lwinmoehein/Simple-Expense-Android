@@ -132,7 +132,7 @@ fun ManageCategoryScreen(
                 val category = TransactionCategory(
                     unique_id = UUID.randomUUID().toString(),
                     name = it,
-                    transaction_type = if(currentCategoryTabIndex.value==0) TransactionType.Income else TransactionType.Expense,
+                    transaction_type = if(currentCategoryTabIndex.value==0) TransactionType.Expense else TransactionType.Income,
                     created_at =  getCurrentGlobalTime()
                 )
                 categoryViewModel.addCategory(category)

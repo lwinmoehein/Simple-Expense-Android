@@ -5,7 +5,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 
-val globalTimestampFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSSSS'Z'")
+val globalTimestampFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
 
 @SuppressLint("SimpleDateFormat")
 fun dateFormatter(milliseconds: Long): String {
