@@ -50,10 +50,19 @@ class MainActivity : ComponentActivity() {
 
         val updateClientRequest = OneTimeWorkRequest.Builder(UpdateServerObjectsWorker::class.java)
             .build()
+
+
+
         val updateServerRequest = OneTimeWorkRequest.Builder(UploadOrUpdateClientObjectsWorker::class.java)
+            .setInputMerger(ArrayCreatingInputMerger::class.java)
             .build()
 
-        workManager.beginWith(versionInfoWorker).then(updateServerRequest).then(updateClientRequest).enqueue()
+
+        val chainWorkRequest = WorkManager.getInstance(applicationContext)
+            .beginUniqueWork(tableName,ExistingWorkPolicy.REPLACE, versionInfoWorker)
+            .then(listOf(updateClientRequest,updateServerRequest))
+            .enqueue()
+
     }
 
     override fun attachBaseContext(base: Context) {

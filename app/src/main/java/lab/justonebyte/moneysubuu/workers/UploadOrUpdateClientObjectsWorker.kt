@@ -26,6 +26,8 @@ class UploadOrUpdateClientObjectsWorker (
     private val scope =  CoroutineScope(SupervisorJob())
 
     override suspend fun doWork(): Result {
+        Log.i("work:","client objects")
+
         val categoryDao: CategoryDao =
             AppDatabase.getDatabase(applicationContext,scope).categoryDao()
         val transactionDao: TransactionDao =
@@ -42,7 +44,7 @@ class UploadOrUpdateClientObjectsWorker (
             val newClientIds = inputData.getStringArray(KEY_NEW_CLIENTS_IDS)
             val tableName = inputData.getString(KEY_TABLE_NAME)
         if (newClientIds != null) {
-            if(newClientIds.size<=0) Result.success()
+            if(newClientIds.isEmpty()) Result.success()
         }
 
         Log.i("work manager:","table:"+tableName)

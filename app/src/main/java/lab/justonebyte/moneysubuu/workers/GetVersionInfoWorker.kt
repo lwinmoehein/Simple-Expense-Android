@@ -22,6 +22,8 @@ class GetVersionInfoWorker (
 
 
     override suspend fun doWork(): Result {
+        Log.i("work:","version objects")
+
         val categoryDao: CategoryDao =
             AppDatabase.getDatabase(applicationContext,scope).categoryDao()
         val categoryRepository = CategoryRepositoryImpl(categoryDao)
@@ -37,7 +39,7 @@ class GetVersionInfoWorker (
         val transactionVersions = transactionRepository.getUniqueIdsWithVersions()
 
 
-        val objectService = RetrofitHelper.getInstance().create(ObjectService::class.java)
+           val objectService = RetrofitHelper.getInstance().create(ObjectService::class.java)
 
             val result = objectService.getChangedCategories(ObjectPostData(table_name = tableName,versions= if(tableName=="categories") categoryVersions else transactionVersions))
 

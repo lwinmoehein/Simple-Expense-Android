@@ -1,6 +1,7 @@
 package lab.justonebyte.moneysubuu.workers
 
 import android.content.Context
+import android.util.Log
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import com.google.gson.Gson
@@ -22,6 +23,7 @@ class UpdateServerObjectsWorker (
     private val scope =  CoroutineScope(SupervisorJob())
 
     override suspend fun doWork(): Result {
+        Log.i("work:","server objects")
         val categoryDao: CategoryDao =
             AppDatabase.getDatabase(applicationContext,scope).categoryDao()
         val transactionDao: TransactionDao =
@@ -35,14 +37,15 @@ class UpdateServerObjectsWorker (
             val tableName = inputData.getString(KEY_TABLE_NAME)
 
             val gson = Gson()
-            val listType = object : TypeToken<List<Any>>() {}.type
-            val objectsList = gson.fromJson<List<Any>>(newServerObjectsString, listType)
+            val listType = object : TypeToken<List<ServerCategory>>() {}.type
+            val objectsList = gson.fromJson<List<ServerCategory>>(newServerObjectsString, listType)
+
+            Log.i("objs:",objectsList.size.toString())
 
 
 
-            if (objectsList != null) {
-                if(objectsList.isEmpty()) Result.success()
-            }
+            if(objectsList.isNullOrEmpty()) Result.success()
+
 
 
 
@@ -50,7 +53,7 @@ class UpdateServerObjectsWorker (
              scope.launch {
                  when(tableName){
                      "transactions"-> transactionRepository.insertAll(objectsList as List<ServerTransaction>)
-                     else -> categoryRepository.insertAll(objectsList as List<ServerCategory>)
+                     else -> categoryRepository.insertAll(objectsList)
                  }
              }
 

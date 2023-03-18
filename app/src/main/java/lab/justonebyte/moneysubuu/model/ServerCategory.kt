@@ -6,5 +6,8 @@ data class ServerCategory(
     val version:Int,
     val transaction_type:Int,
     val deleted_at:String?,
-    val created_at:String
+    val created_at:String,
+    val updated_at:String?,
+    val photo_url:String?
 )
+
