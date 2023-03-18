@@ -12,27 +12,29 @@ import retrofit2.http.POST
 import retrofit2.http.Path
 
 
-data class CategoryServerDTO(
-    val unique_id:String,
-    val name:String,
-    val photo_url:String?,
-    val deleted_at:String?,
-    val created_at:String,
-    val updated_at:String,
-    val version:Int
-    )
-data class ObjectVersionData(
-    val new_server_objects:List<CategoryServerDTO>,
-    val objects_to_update_client:List<CategoryServerDTO>,
-    val objects_to_update_server:List<CategoryServerDTO>,
+
+data class CategoryVersionData(
+    val new_server_objects:List<ServerCategory>,
+    val objects_to_update_client:List<ServerCategory>,
+    val objects_to_update_server:List<ServerCategory>,
     val new_client_object_ids:List<String>
 )
 
-data class ChangeObjectResponse(
-  val data:ObjectVersionData
+data class CategoryVersionResponse(
+  val data:CategoryVersionData
+)
+
+data class TransactionVersionData(
+    val new_server_objects:List<ServerTransaction>,
+    val objects_to_update_client:List<ServerTransaction>,
+    val objects_to_update_server:List<ServerTransaction>,
+    val new_client_object_ids:List<String>
+)
+
+data class TransactionVersionResponse(
+    val data:TransactionVersionData
 )
 data class ObjectPostData(
-    @SerializedName("table_name") val table_name: String?="categories",
     @SerializedName("versions") val versions: List<UniqueIdWithVersion>,
 )
 data class UploadCategoryBatch(
@@ -47,8 +49,11 @@ interface ObjectService {
     @GET("get-access-token/{idToken}" )
     suspend fun getAccessToken(@Path("idToken") idToken: String) : Response<AuthResponse>
 
-    @POST("changed-objects" )
-    suspend fun getChangedCategories(@Body objectData: ObjectPostData) : Response<ChangeObjectResponse>
+    @POST("categories/changes" )
+    suspend fun getChangedCategories(@Body objectData: ObjectPostData) : Response<CategoryVersionResponse>
+
+    @POST("transactions/changes" )
+    suspend fun getChangedTransactions(@Body objectData: ObjectPostData) : Response<TransactionVersionResponse>
 
     @POST("batch-objects" )
     suspend fun uploadNewOrUpdateCategories(@Body batchData: UploadCategoryBatch):Response<String>

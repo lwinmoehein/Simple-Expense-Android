@@ -40,14 +40,8 @@ class UpdateServerObjectsWorker (
             val listType = object : TypeToken<List<ServerCategory>>() {}.type
             val objectsList = gson.fromJson<List<ServerCategory>>(newServerObjectsString, listType)
 
-            Log.i("objs:",objectsList.size.toString())
-
-
 
             if(objectsList.isNullOrEmpty()) Result.success()
-
-
-
 
 
              scope.launch {

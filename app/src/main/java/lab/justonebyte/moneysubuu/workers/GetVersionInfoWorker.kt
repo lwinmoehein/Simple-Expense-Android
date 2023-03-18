@@ -22,8 +22,6 @@ class GetVersionInfoWorker (
 
 
     override suspend fun doWork(): Result {
-        Log.i("work:","version objects")
-
         val categoryDao: CategoryDao =
             AppDatabase.getDatabase(applicationContext,scope).categoryDao()
         val categoryRepository = CategoryRepositoryImpl(categoryDao)
@@ -33,30 +31,43 @@ class GetVersionInfoWorker (
 
         val tableName = inputData.getString(KEY_TABLE_NAME)
 
-        Log.i("work manager:","versions:t_"+tableName)
 
         val categoryVersions = categoryRepository.getUniqueIdsWithVersions()
         val transactionVersions = transactionRepository.getUniqueIdsWithVersions()
 
 
-           val objectService = RetrofitHelper.getInstance().create(ObjectService::class.java)
+        val objectService = RetrofitHelper.getInstance().create(ObjectService::class.java)
 
-            val result = objectService.getChangedCategories(ObjectPostData(table_name = tableName,versions= if(tableName=="categories") categoryVersions else transactionVersions))
+        if(tableName=="categories"){
+            val result = objectService.getChangedCategories(ObjectPostData(versions=categoryVersions))
 
-            Log.i("work manager:v_result",result.message())
-
-            result.body()?.let { it ->
+            result?.body()?.let { it ->
                 val combinedUpdateAndNewIds = it.data.new_client_object_ids+it.data.objects_to_update_server.map {id-> id.unique_id }
 
                 val gson = Gson()
                 val newServersList = gson.toJson(it.data.new_server_objects)
 
+                val inputData = Data.Builder().putStringArray(KEY_NEW_CLIENTS_IDS,
+                    combinedUpdateAndNewIds.toTypedArray()
+                ).putString(KEY_TABLE_NAME,tableName).putString(KEY_SERVER_OBJECTS,newServersList).build()
+                return Result.success(inputData)
+            }
+        }else{
+            val result = objectService.getChangedTransactions(ObjectPostData(versions= transactionVersions))
+
+            result?.body()?.let { it ->
+                val combinedUpdateAndNewIds = it.data.new_client_object_ids+it.data.objects_to_update_server.map {id-> id.unique_id }
+
+                val gson = Gson()
+                val newServersList = gson.toJson(it.data.new_server_objects)
 
                 val inputData = Data.Builder().putStringArray(KEY_NEW_CLIENTS_IDS,
                     combinedUpdateAndNewIds.toTypedArray()
-                 ).putString(KEY_TABLE_NAME,tableName).putString(KEY_SERVER_OBJECTS,newServersList).build()
+                ).putString(KEY_TABLE_NAME,tableName).putString(KEY_SERVER_OBJECTS,newServersList).build()
                 return Result.success(inputData)
             }
+        }
+
 
 
         return Result.success()

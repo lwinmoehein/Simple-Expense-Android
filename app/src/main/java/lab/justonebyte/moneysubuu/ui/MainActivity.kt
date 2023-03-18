@@ -60,7 +60,7 @@ class MainActivity : ComponentActivity() {
 
         val chainWorkRequest = WorkManager.getInstance(applicationContext)
             .beginUniqueWork(tableName,ExistingWorkPolicy.REPLACE, versionInfoWorker)
-            .then(listOf(updateClientRequest,updateServerRequest))
+            .then(listOf(updateServerRequest,updateClientRequest))
             .enqueue()
 
     }
