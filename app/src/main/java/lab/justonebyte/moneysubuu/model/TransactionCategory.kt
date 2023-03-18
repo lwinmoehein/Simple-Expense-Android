@@ -25,12 +25,13 @@ data class TransactionCategory(
                     unique_id =  UUID.randomUUID().toString()+"_"+transactionCategory.created_at,
                     name = transactionCategory.name,
                     created_at = transactionCategory.created_at,
-                    transaction_type = transactionCategory.transaction_type.value
+                    transaction_type = transactionCategory.transaction_type.value,
+
                 )
         }
         fun mapToEntityFromServer(transactionCategory: ServerCategory): CategoryEntity {
             return CategoryEntity(
-                unique_id =  UUID.randomUUID().toString()+"_"+transactionCategory.created_at,
+                unique_id =  transactionCategory.unique_id,
                 name = transactionCategory.name,
                 created_at = transactionCategory.created_at,
                 deleted_at = transactionCategory.deleted_at,
