@@ -14,4 +14,6 @@ class CategoryEntity(
     @ColumnInfo(name = "version") var version:Int?=1,
     @ColumnInfo(name = "latest_server_version") val latest_server_version:Int?=1,
     @ColumnInfo(name = "deleted_at") var deleted_at:String?=null,
-)
+    @ColumnInfo(name = "updated_at") var updated_at:String,
+
+    )

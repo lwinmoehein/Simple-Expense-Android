@@ -89,6 +89,6 @@ interface TransactionDao {
     @Query("SELECT * FROM transaction_table where unique_id=:id limit 1")
     suspend fun get(id:String): TransactionEntity
 
-    @Query("SELECT unique_id,version from transaction_table")
+    @Query("SELECT unique_id,version,updated_at from transaction_table")
     suspend fun getUniqueIdsWithVersions(): List<UniqueIdWithVersion>
 }

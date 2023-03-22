@@ -8,5 +8,6 @@ data class ServerTransaction(
     val version:Int,
     val type:Int,
     val created_at:String,
+    val updated_at:String,
     val deleted_at:String?
 )

@@ -15,7 +15,8 @@ class TransactionEntity(
     @ColumnInfo(name = "version") var version:Int?=1,
     @ColumnInfo(name = "deleted_at") var deleted_at:String?=null,
     @ColumnInfo(name = "note") val note: String?,
-)
+    @ColumnInfo(name = "updated_at") var updated_at:String
+    )
 
 data class TransactionWithCategory(
    val unique_id: String,

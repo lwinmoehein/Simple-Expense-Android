@@ -4,7 +4,7 @@ import androidx.room.*
 import kotlinx.coroutines.flow.Flow
 import lab.justonebyte.moneysubuu.model.ServerCategory
 
-data class UniqueIdWithVersion(val unique_id:String?,val version:Int?)
+data class UniqueIdWithVersion(val unique_id:String?,val version:Int?,val updated_at:String)
 @Dao
 interface CategoryDao {
     @Query("SELECT * FROM category_table where category_table.deleted_at is null ORDER BY created_at DESC")
@@ -28,6 +28,6 @@ interface CategoryDao {
     @Query("SELECT * FROM category_table where unique_id=:id limit 1")
     suspend fun get(id:String): CategoryEntity
 
-    @Query("SELECT unique_id,version from category_table")
+    @Query("SELECT unique_id,version,updated_at from category_table")
     suspend fun getUniqueIdsWithVersions(): List<UniqueIdWithVersion>
 }
