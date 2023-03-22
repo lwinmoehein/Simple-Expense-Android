@@ -37,8 +37,8 @@ class UpdateServerObjectsWorker (
             val tableName = inputData.getString(KEY_TABLE_NAME)
 
             val gson = Gson()
-            val listType = object : TypeToken<List<Any>>() {}.type
-            val objectsList = gson.fromJson<List<Any>>(newServerObjectsString, listType)
+            val listType = object : TypeToken<List<ServerCategory>>() {}.type
+            val objectsList = gson.fromJson<List<ServerCategory>>(newServerObjectsString, listType)
 
 
             if(objectsList.isNullOrEmpty()) return Result.success()
@@ -46,8 +46,8 @@ class UpdateServerObjectsWorker (
 
              scope.launch {
                  when(tableName){
-                     "transactions"-> transactionRepository.insertAll(objectsList as List<ServerTransaction>)
-                     else -> categoryRepository.insertAll(objectsList as List<ServerCategory>)
+//                     "transactions"-> transactionRepository.insertAll(objectsList)
+                     else -> categoryRepository.insertAll(objectsList)
                  }
              }
 
