@@ -15,7 +15,8 @@ data class Transaction(
         val type: TransactionType,
         val category: TransactionCategory,
         val created_at:String,
-        val note:String?
+        val note:String?,
+        val updated_at:String
     ){
     object  Mapper {
         fun mapToDomain(transactionEntity: TransactionWithCategory):Transaction{
@@ -27,10 +28,12 @@ data class Transaction(
                     name = transactionEntity.category_name,
                     transaction_type = TransactionCategory.Mapper.mapTransactionType(transactionEntity.type),
                     created_at = transactionEntity.category_created_at,
-                    unique_id = transactionEntity.category_id
+                    unique_id = transactionEntity.category_id,
+                    updated_at = transactionEntity.category_updated_at
                 ),
                 created_at = transactionEntity.created_at,
-                note = transactionEntity.note
+                note = transactionEntity.note,
+                updated_at = transactionEntity.updated_at
             )
         }
         fun mapToEntity(transaction:Transaction):TransactionEntity{
@@ -41,7 +44,8 @@ data class Transaction(
                 category_id=transaction.category.unique_id,
                 created_at = transaction.created_at,
                 version = 1,
-                note = transaction.note
+                note = transaction.note,
+                updated_at = transaction.updated_at
             )
         }
         fun mapToEntityFromServer(transaction:ServerTransaction):TransactionEntity{
@@ -53,7 +57,8 @@ data class Transaction(
                 created_at = transaction.created_at,
                 deleted_at = transaction.deleted_at,
                 version = transaction.version,
-                note = transaction.note
+                note = transaction.note,
+                updated_at = transaction.updated_at
             )
         }
 

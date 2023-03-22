@@ -11,6 +11,7 @@ import kotlinx.coroutines.launch
 import lab.justonebyte.moneysubuu.data.CategoryRepository
 import lab.justonebyte.moneysubuu.model.TransactionCategory
 import lab.justonebyte.moneysubuu.ui.components.SnackBarType
+import lab.justonebyte.moneysubuu.utils.getCurrentGlobalTime
 import javax.inject.Inject
 
 
@@ -55,6 +56,7 @@ class CategoryViewModel @Inject constructor(
             unique_id = transactinCategory.unique_id,
             transaction_type = transactinCategory.transaction_type,
             created_at = transactinCategory.created_at,
+            updated_at = getCurrentGlobalTime()
         )
         viewModelScope.launch {
             categoryRepository.update(transactionCategory = category)

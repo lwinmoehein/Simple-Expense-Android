@@ -25,6 +25,8 @@ data class TransactionWithCategory(
    val category_id:String,
    val category_name:String,
    val category_created_at:String,
+   val category_updated_at:String,
    val created_at:String,
-   val note:String?
+   val note:String?,
+   val updated_at: String
 )

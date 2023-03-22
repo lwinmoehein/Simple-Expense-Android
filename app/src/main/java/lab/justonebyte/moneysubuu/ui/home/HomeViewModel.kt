@@ -13,10 +13,7 @@ import lab.justonebyte.moneysubuu.data.SettingPrefRepository
 import lab.justonebyte.moneysubuu.data.TransactionRepository
 import lab.justonebyte.moneysubuu.model.*
 import lab.justonebyte.moneysubuu.ui.components.SnackBarType
-import lab.justonebyte.moneysubuu.utils.dateFormatter
-import lab.justonebyte.moneysubuu.utils.monthFormatter
-import lab.justonebyte.moneysubuu.utils.weekFormatter
-import lab.justonebyte.moneysubuu.utils.yearFormatter
+import lab.justonebyte.moneysubuu.utils.*
 import java.util.UUID
 import javax.inject.Inject
 
@@ -191,7 +188,8 @@ class HomeViewModel @Inject constructor(
                     type = if(type==TransactionType.Income.value) TransactionType.Income else TransactionType.Expense,
                     category = transactionCategory,
                     created_at = date,
-                    note = note
+                    note = note,
+                    updated_at = getCurrentGlobalTime()
                 )
             )
 
@@ -213,7 +211,8 @@ class HomeViewModel @Inject constructor(
                     type = if(type==1) TransactionType.Income else TransactionType.Expense,
                     category = transactionCategory,
                     created_at = date,
-                    note = note
+                    note = note,
+                    updated_at = getCurrentGlobalTime()
                 )
             )
         }

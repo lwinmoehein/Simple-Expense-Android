@@ -14,6 +14,8 @@ interface TransactionDao {
     @Query("SELECT transaction_table.unique_id as unique_id, transaction_table.amount as amount,transaction_table.created_at as created_at," +
             "transaction_table.type as type,transaction_table.category_id as category_id," +
             "transaction_table.note as note,"+
+            "transaction_table.updated_at as updated_at,"+
+            "category_table.updated_at as category_updated_at,"+
             "category_table.name as category_name,category_table.created_at as category_created_at" +
             " FROM transaction_table,category_table where category_table.unique_id==transaction_table.category_id" +
             " and date(transaction_table.created_at)==:date" +
@@ -26,6 +28,8 @@ interface TransactionDao {
 
     @Query("SELECT transaction_table.unique_id as unique_id,  transaction_table.amount as amount,transaction_table.created_at as created_at," +
             "transaction_table.note as note,"+
+            "transaction_table.updated_at as updated_at,"+
+            "category_table.updated_at as category_updated_at,"+
             "transaction_table.type as type,transaction_table.category_id as category_id," +
             "category_table.name as category_name,category_table.created_at as category_created_at" +
             " FROM transaction_table,category_table where category_table.unique_id==transaction_table.category_id" +
@@ -37,6 +41,8 @@ interface TransactionDao {
 
     @Query("SELECT  transaction_table.unique_id as unique_id, transaction_table.amount as amount,transaction_table.created_at as created_at," +
             "transaction_table.note as note,"+
+            "transaction_table.updated_at as updated_at,"+
+            "category_table.updated_at as category_updated_at,"+
             "transaction_table.type as type,transaction_table.category_id as category_id," +
             "category_table.name as category_name,category_table.created_at as category_created_at" +
             " FROM transaction_table,category_table where category_table.unique_id==transaction_table.category_id" +
@@ -49,6 +55,8 @@ interface TransactionDao {
 
     @Query("SELECT transaction_table.unique_id as unique_id, transaction_table.amount as amount,transaction_table.created_at as created_at," +
             "transaction_table.note as note,"+
+            "transaction_table.updated_at as updated_at,"+
+            "category_table.updated_at as category_updated_at,"+
             "transaction_table.type as type,transaction_table.category_id as category_id," +
             "category_table.name as category_name,category_table.created_at as category_created_at" +
             " FROM transaction_table,category_table where category_table.unique_id==transaction_table.category_id" +
@@ -61,6 +69,8 @@ interface TransactionDao {
 
     @Query("SELECT transaction_table.unique_id as unique_id, transaction_table.amount as amount,transaction_table.created_at as created_at," +
             "transaction_table.note as note,"+
+            "transaction_table.updated_at as updated_at,"+
+            "category_table.updated_at as category_updated_at,"+
             "transaction_table.type as type,transaction_table.category_id as category_id," +
             "category_table.name as category_name,category_table.created_at as category_created_at" +
             " FROM transaction_table,category_table where category_table.unique_id==transaction_table.category_id and transaction_table.deleted_at is  null" )

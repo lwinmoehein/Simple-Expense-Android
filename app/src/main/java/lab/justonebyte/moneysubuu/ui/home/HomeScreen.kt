@@ -162,7 +162,8 @@ fun HomeScreen(){
                                             unique_id = UUID.randomUUID().toString(),
                                             transaction_type = type,
                                             name = name,
-                                            created_at = getCurrentGlobalTime()
+                                            created_at = getCurrentGlobalTime(),
+                                            updated_at = getCurrentGlobalTime()
                                         )
                                     )
                                 }

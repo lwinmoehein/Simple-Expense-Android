@@ -133,7 +133,8 @@ fun ManageCategoryScreen(
                     unique_id = UUID.randomUUID().toString(),
                     name = it,
                     transaction_type = if(currentCategoryTabIndex.value==0) TransactionType.Income else TransactionType.Expense,
-                    created_at =  getCurrentGlobalTime()
+                    created_at =  getCurrentGlobalTime(),
+                    updated_at = getCurrentGlobalTime()
                 )
                 categoryViewModel.addCategory(category)
             }else{
