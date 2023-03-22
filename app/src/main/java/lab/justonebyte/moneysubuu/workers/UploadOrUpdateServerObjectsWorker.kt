@@ -41,7 +41,7 @@ class UpdateServerObjectsWorker (
             val objectsList = gson.fromJson<List<ServerCategory>>(newServerObjectsString, listType)
 
 
-            if(objectsList.isNullOrEmpty()) Result.success()
+            if(objectsList.isNullOrEmpty()) return Result.success()
 
 
              scope.launch {
