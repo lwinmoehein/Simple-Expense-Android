@@ -159,7 +159,7 @@ fun HomeScreen(){
                                 onAddCategory = { name,type->
                                     homeViewModel.addCategory(
                                         TransactionCategory(
-                                            unique_id = UUID.randomUUID().toString(),
+                                            unique_id = UUID.randomUUID().toString()+"_"+System.currentTimeMillis(),
                                             transaction_type = type,
                                             name = name,
                                             created_at = getCurrentGlobalTime(),

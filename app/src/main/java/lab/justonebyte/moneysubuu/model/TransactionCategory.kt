@@ -25,7 +25,7 @@ data class TransactionCategory(
 
         fun mapToEntity(transactionCategory: TransactionCategory): CategoryEntity {
                 return CategoryEntity(
-                    unique_id =  UUID.randomUUID().toString()+"_"+transactionCategory.created_at,
+                    unique_id =  UUID.randomUUID().toString()+"_"+System.currentTimeMillis(),
                     name = transactionCategory.name,
                     created_at = transactionCategory.created_at,
                     transaction_type = transactionCategory.transaction_type.value,
