@@ -45,7 +45,7 @@ class GetVersionInfoWorker (
                 val combinedUpdateAndNewIds = it.data.new_client_object_ids+it.data.objects_to_update_server.map {id-> id.unique_id }
 
                 val gson = Gson()
-                val newServersList = gson.toJson(it.data.new_server_objects)
+                val newServersList = gson.toJson(it.data.new_server_objects+it.data.objects_to_update_client)
 
                 val inputData = Data.Builder().putStringArray(KEY_NEW_CLIENTS_IDS,
                     combinedUpdateAndNewIds.toTypedArray()
@@ -59,7 +59,7 @@ class GetVersionInfoWorker (
                 val combinedUpdateAndNewIds = it.data.new_client_object_ids+it.data.objects_to_update_server.map {id-> id.unique_id }
 
                 val gson = Gson()
-                val newServersList = gson.toJson(it.data.new_server_objects)
+                val newServersList = gson.toJson(it.data.new_server_objects+it.data.objects_to_update_client)
 
                 val inputData = Data.Builder().putStringArray(KEY_NEW_CLIENTS_IDS,
                     combinedUpdateAndNewIds.toTypedArray()
