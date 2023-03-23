@@ -46,6 +46,7 @@ class  CategoryRepositoryImpl @Inject constructor(val categoryDao: CategoryDao) 
         val categoryEntity = TransactionCategory.Mapper.mapToEntity(transactionCategory)
         if(existingCategory.version!! <= existingCategory.latest_server_version!!){
             categoryEntity.version = existingCategory.version!! +1
+            categoryEntity.updated_at = getCurrentGlobalTime()
         }else{
             categoryEntity.version = existingCategory.version!!
         }
@@ -59,6 +60,8 @@ class  CategoryRepositoryImpl @Inject constructor(val categoryDao: CategoryDao) 
         if (existingCategory != null) {
             existingCategory.deleted_at = getCurrentGlobalTime()
             existingCategory.version = existingCategory.version!!+1;
+            existingCategory.updated_at = getCurrentGlobalTime()
+
             categoryDao.update(category = existingCategory)
         }
     }

@@ -78,6 +78,8 @@ class TransactionRepositoryImpl @Inject constructor(val transactionDao: Transact
         val transactionEntity = Transaction.Mapper.mapToEntity(transaction = transaction)
         if (existingTransaction != null) {
             transactionEntity.version = existingTransaction.version!! +1
+            transactionEntity.updated_at = getCurrentGlobalTime()
+
             transactionDao.update(transactionEntity = transactionEntity)
 
         }
@@ -87,6 +89,7 @@ class TransactionRepositoryImpl @Inject constructor(val transactionDao: Transact
         var existingTransaction = transactionDao.get(transaction.unique_id)
         if (existingTransaction != null) {
             existingTransaction.version = existingTransaction.version!!+1
+            existingTransaction.updated_at = getCurrentGlobalTime()
             existingTransaction.deleted_at = getCurrentGlobalTime()
             transactionDao.update(transactionEntity = existingTransaction)
         }
