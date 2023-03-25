@@ -1,5 +1,6 @@
 package lab.justonebyte.moneysubuu.di
 
+import android.app.Application
 import android.content.Context
 import androidx.room.Room
 import dagger.Binds
@@ -32,5 +33,8 @@ object AppModule {
     @Provides
     fun provideCategoryDao(db: AppDatabase): CategoryDao = db.categoryDao()
 
-
+    @Provides
+    fun provideContext(application: Application): Context {
+        return application.applicationContext
+    }
 }

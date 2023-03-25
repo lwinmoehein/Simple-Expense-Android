@@ -1,9 +1,11 @@
 package lab.justonebyte.moneysubuu.ui.home
 
+import android.content.Context
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
@@ -14,6 +16,7 @@ import lab.justonebyte.moneysubuu.data.TransactionRepository
 import lab.justonebyte.moneysubuu.model.*
 import lab.justonebyte.moneysubuu.ui.components.SnackBarType
 import lab.justonebyte.moneysubuu.utils.*
+import lab.justonebyte.moneysubuu.workers.runVersionSync
 import java.util.UUID
 import javax.inject.Inject
 
@@ -38,7 +41,8 @@ data class HomeUiState(
 class HomeViewModel @Inject constructor(
     private val transactionRepository: TransactionRepository,
     private val categoryRepository: CategoryRepository,
-    private val settingsRepository: SettingPrefRepository
+    private val settingsRepository: SettingPrefRepository,
+    @ApplicationContext private val application: Context
 ):ViewModel()
 {
     private val _viewModelUiState  = MutableStateFlow(
@@ -192,6 +196,7 @@ class HomeViewModel @Inject constructor(
                     updated_at = getCurrentGlobalTime()
                 )
             )
+            runVersionSync(application,"transactions")
 
         }
     }
@@ -215,6 +220,7 @@ class HomeViewModel @Inject constructor(
                     updated_at = getCurrentGlobalTime()
                 )
             )
+            runVersionSync(application,"transactions")
         }
     }
 
@@ -222,12 +228,14 @@ class HomeViewModel @Inject constructor(
 
         viewModelScope.launch {
             transactionRepository.delete(transaction)
+            runVersionSync(application,"transactions")
         }
     }
 
     fun addCategory(transactinCategory:TransactionCategory){
         viewModelScope.launch {
             categoryRepository.insert(transactionCategory = transactinCategory)
+            runVersionSync(application,"categories")
         }
     }
 }

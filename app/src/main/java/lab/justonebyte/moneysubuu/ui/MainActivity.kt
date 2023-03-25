@@ -37,10 +37,10 @@ class MainActivity : ComponentActivity() {
         }
 
         lifecycleScope.launch {
-            runVersionSync(application,applicationContext,"categories")
+            runVersionSync(application,"categories")
         }
         lifecycleScope.launch{
-            runVersionSync(application,applicationContext,"transactions")
+            runVersionSync(application,"transactions")
         }
     }
 

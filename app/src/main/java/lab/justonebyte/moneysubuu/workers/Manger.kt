@@ -7,8 +7,7 @@ import androidx.work.ExistingWorkPolicy
 import androidx.work.OneTimeWorkRequest
 import androidx.work.WorkManager
 
-fun runVersionSync(application:Application,applicationContext:Context,tableName:String){
-    val workManager = WorkManager.getInstance(application)
+fun runVersionSync(applicationContext:Context,tableName:String){
 
     val versionInfoWorker =   OneTimeWorkRequest.Builder(GetVersionInfoWorker::class.java)
         .setInputData(Data.Builder().putString(KEY_TABLE_NAME,tableName).build())
