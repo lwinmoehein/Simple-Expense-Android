@@ -25,6 +25,7 @@ interface TransactionRepository {
     suspend fun insert(transaction: Transaction)
     suspend fun update(transaction: Transaction)
     suspend fun delete(transaction: Transaction)
+    suspend fun deleteAll()
 
 }
 class TransactionRepositoryImpl @Inject constructor(val transactionDao: TransactionDao):TransactionRepository {
@@ -93,6 +94,10 @@ class TransactionRepositoryImpl @Inject constructor(val transactionDao: Transact
             existingTransaction.deleted_at = getCurrentGlobalTime()
             transactionDao.update(transactionEntity = existingTransaction)
         }
+    }
+
+    override suspend fun deleteAll() {
+        transactionDao.deleteAll()
     }
 
 }

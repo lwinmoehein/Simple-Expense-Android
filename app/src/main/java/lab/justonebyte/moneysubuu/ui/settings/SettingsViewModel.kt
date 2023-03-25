@@ -1,10 +1,12 @@
 package lab.justonebyte.moneysubuu.ui.settings
 
+import android.content.Context
 import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -12,11 +14,13 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import lab.justonebyte.moneysubuu.api.AuthService
 import lab.justonebyte.moneysubuu.api.CompanionAppService
+import lab.justonebyte.moneysubuu.data.CategoryRepository
 import lab.justonebyte.moneysubuu.data.SettingPrefRepository
 import lab.justonebyte.moneysubuu.data.TransactionRepository
 import lab.justonebyte.moneysubuu.model.*
 import lab.justonebyte.moneysubuu.ui.components.SnackBarType
 import lab.justonebyte.moneysubuu.utils.RetrofitHelper
+import lab.justonebyte.moneysubuu.workers.runVersionSync
 import javax.inject.Inject
 
 data class SettingUiState(
@@ -30,7 +34,9 @@ data class SettingUiState(
 @HiltViewModel
 class SettingsViewModel @Inject constructor(
     private val settingRepository: SettingPrefRepository,
-    private val transactionRepository: TransactionRepository
+    private val transactionRepository: TransactionRepository,
+    private val categoryRepository: CategoryRepository,
+    @ApplicationContext private val application: Context
 ): ViewModel() {
 
     private val _viewModelUiState = MutableStateFlow(
@@ -82,6 +88,8 @@ class SettingsViewModel @Inject constructor(
                 result.body()?.let {
                     Log.i("access token:", it.data.token)
                     settingRepository.updateToken(it.data.token)
+                    runVersionSync(application,"categories",it.data.token)
+                    runVersionSync(application,"categories",it.data.token)
                 }
             }catch (e:Exception){
                 Log.i("access token fail","cannot fetch access token.")
@@ -136,6 +144,14 @@ class SettingsViewModel @Inject constructor(
     fun updateLocale(appLocale: AppLocale){
         viewModelScope.launch {
             settingRepository.updateLocale(appLocale.value)
+        }
+    }
+
+    suspend fun logOut(){
+        viewModelScope.launch {
+            transactionRepository.deleteAll()
+            categoryRepository.deleteAll()
+            settingRepository.updateToken("")
         }
     }
 

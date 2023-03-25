@@ -13,6 +13,11 @@ interface CategoryDao {
     @Query("SELECT * FROM category_table")
      fun getAll(): List<ServerCategory>
 
+
+    @Query("DELETE FROM category_table")
+    suspend fun deleteAll()
+
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(category: CategoryEntity)
 

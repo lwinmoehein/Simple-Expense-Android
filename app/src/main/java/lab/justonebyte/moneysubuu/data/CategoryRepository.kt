@@ -20,6 +20,7 @@ interface CategoryRepository {
     suspend fun insertAll(transactions: List<ServerCategory>)
     suspend fun update(transactionCategory: TransactionCategory)
     suspend fun delete(id: String)
+    suspend fun deleteAll()
     suspend fun getUniqueIdsWithVersions():List<UniqueIdWithVersion>
 }
 class  CategoryRepositoryImpl @Inject constructor(val categoryDao: CategoryDao) : CategoryRepository{
@@ -64,6 +65,10 @@ class  CategoryRepositoryImpl @Inject constructor(val categoryDao: CategoryDao) 
 
             categoryDao.update(category = existingCategory)
         }
+    }
+
+    override suspend fun deleteAll() {
+       categoryDao.deleteAll()
     }
 
     override suspend fun getUniqueIdsWithVersions(): List<UniqueIdWithVersion>{
