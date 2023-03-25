@@ -41,13 +41,20 @@ class UploadOrUpdateClientObjectsWorker (
         val objectService = RetrofitHelper.getInstance().create(ObjectService::class.java)
 
 
-            val newClientIds = inputData.getStringArray(KEY_NEW_CLIENTS_IDS)
-            val tableName = inputData.getString(KEY_TABLE_NAME)
+        val tableName = inputData.getString(KEY_VERSION_TABLE)
+        val newClientIds = inputData.getStringArray(KEY_NEW_CLIENTS_IDS)
+
+
+        if (tableName != null) {
+            Log.i("update: server:",tableName)
+        }else{
+            Log.i("update: server:","null")
+        }
+
         if (newClientIds != null) {
             if(newClientIds.isEmpty()) Result.success()
         }
 
-        Log.i("work manager:","table:"+tableName)
 
             if(newClientIds==null) return Result.success()
 
@@ -71,7 +78,7 @@ class UploadOrUpdateClientObjectsWorker (
                 }
 
 
-        return Result.success()
+        return Result.success(inputData)
     }
 }
 

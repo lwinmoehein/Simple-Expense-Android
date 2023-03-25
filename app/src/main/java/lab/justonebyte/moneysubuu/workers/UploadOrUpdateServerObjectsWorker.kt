@@ -34,7 +34,13 @@ class UpdateServerObjectsWorker (
 
 
             val newServerObjectsString = inputData.getString(KEY_SERVER_OBJECTS)
-            val tableName = inputData.getString(KEY_TABLE_NAME)
+            val tableName = inputData.getString(KEY_VERSION_TABLE)
+
+        if (tableName != null) {
+            Log.i("update: mobile:",tableName)
+        }else{
+            Log.i("update: mobile:","null")
+        }
 
             if(tableName=="transactions"){
                 val gson = Gson()
@@ -48,7 +54,7 @@ class UpdateServerObjectsWorker (
                 scope.launch {
                    transactionRepository.insertAll(objectsList)
                 }
-                return Result.success()
+                return Result.success(inputData)
             }else{
                 val gson = Gson()
                 val listType = object : TypeToken<List<ServerCategory>>() {}.type
@@ -61,7 +67,7 @@ class UpdateServerObjectsWorker (
                 scope.launch {
                     categoryRepository.insertAll(objectsList)
                 }
-                return Result.success()
+                return Result.success(inputData)
             }
 
     }

@@ -54,7 +54,6 @@ class MainActivity : ComponentActivity() {
 
 
         val updateServerRequest = OneTimeWorkRequest.Builder(UploadOrUpdateClientObjectsWorker::class.java)
-            .setInputMerger(ArrayCreatingInputMerger::class.java)
             .build()
 
 

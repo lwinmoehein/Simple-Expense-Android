@@ -13,6 +13,7 @@ import lab.justonebyte.moneysubuu.api.ObjectService
 import lab.justonebyte.moneysubuu.data.*
 import lab.justonebyte.moneysubuu.utils.RetrofitHelper
 
+val KEY_VERSION_TABLE="version_table_name"
 class GetVersionInfoWorker (
     context: Context,
     workerParams: WorkerParameters
@@ -49,7 +50,7 @@ class GetVersionInfoWorker (
 
                 val inputData = Data.Builder().putStringArray(KEY_NEW_CLIENTS_IDS,
                     combinedUpdateAndNewIds.toTypedArray()
-                ).putString(KEY_TABLE_NAME,tableName).putString(KEY_SERVER_OBJECTS,newServersList).build()
+                ).putString(KEY_VERSION_TABLE,tableName).putString(KEY_SERVER_OBJECTS,newServersList).build()
                 return Result.success(inputData)
             }
         }else{
@@ -63,7 +64,7 @@ class GetVersionInfoWorker (
 
                 val inputData = Data.Builder().putStringArray(KEY_NEW_CLIENTS_IDS,
                     combinedUpdateAndNewIds.toTypedArray()
-                ).putString(KEY_TABLE_NAME,tableName).putString(KEY_SERVER_OBJECTS,newServersList).build()
+                ).putString(KEY_VERSION_TABLE,tableName).putString(KEY_SERVER_OBJECTS,newServersList).build()
                 return Result.success(inputData)
             }
         }
