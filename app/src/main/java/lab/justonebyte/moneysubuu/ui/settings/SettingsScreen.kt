@@ -268,6 +268,7 @@ fun AuthenticatedUser(
                     }
                     Button(onClick = {
                         Firebase.auth.signOut()
+                        GoogleSignIn.getClient(context, GoogleSignInOptions.DEFAULT_SIGN_IN).signOut()
                         user = null
                         logOutUser()
                     }) {
