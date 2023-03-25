@@ -75,7 +75,7 @@ class SettingsViewModel @Inject constructor(
     }
     suspend fun fetchAccessTokenByGoogleId(googleId:String){
         Log.i("access token:fetch",googleId)
-        val companionAppService = RetrofitHelper.getInstance().create(AuthService::class.java)
+        val companionAppService = RetrofitHelper.getInstance("").create(AuthService::class.java)
         GlobalScope.launch {
             try{
                 val result = companionAppService.getAccessToken(googleId)

@@ -31,13 +31,14 @@ class GetVersionInfoWorker (
         val transactionRepository = TransactionRepositoryImpl(transactionDao)
 
         val tableName = inputData.getString(KEY_TABLE_NAME)
+        val token = inputData.getString(TOKEN)?:""
 
 
         val categoryVersions = categoryRepository.getUniqueIdsWithVersions()
         val transactionVersions = transactionRepository.getUniqueIdsWithVersions()
 
 
-        val objectService = RetrofitHelper.getInstance().create(ObjectService::class.java)
+        val objectService = RetrofitHelper.getInstance(token).create(ObjectService::class.java)
 
         if(tableName=="categories"){
             val result = objectService.getChangedCategories(ObjectPostData(versions=categoryVersions))
@@ -50,7 +51,7 @@ class GetVersionInfoWorker (
 
                 val inputData = Data.Builder().putStringArray(KEY_NEW_CLIENTS_IDS,
                     combinedUpdateAndNewIds.toTypedArray()
-                ).putString(KEY_VERSION_TABLE,tableName).putString(KEY_SERVER_OBJECTS,newServersList).build()
+                ).putString(KEY_VERSION_TABLE,tableName).putString(TOKEN,token).putString(KEY_SERVER_OBJECTS,newServersList).build()
                 return Result.success(inputData)
             }
         }else{
@@ -62,7 +63,7 @@ class GetVersionInfoWorker (
                 val gson = Gson()
                 val newServersList = gson.toJson(it.data.new_server_objects+it.data.objects_to_update_client)
 
-                val inputData = Data.Builder().putStringArray(KEY_NEW_CLIENTS_IDS,
+                val inputData = Data.Builder().putString(TOKEN,token).putStringArray(KEY_NEW_CLIENTS_IDS,
                     combinedUpdateAndNewIds.toTypedArray()
                 ).putString(KEY_VERSION_TABLE,tableName).putString(KEY_SERVER_OBJECTS,newServersList).build()
                 return Result.success(inputData)

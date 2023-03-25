@@ -17,6 +17,7 @@ import lab.justonebyte.moneysubuu.utils.RetrofitHelper
 
 val KEY_NEW_CLIENTS_IDS = "new_client_ids"
 val KEY_TABLE_NAME = "table_name"
+val TOKEN = "token"
 
 class UploadOrUpdateClientObjectsWorker (
     context: Context,
@@ -26,7 +27,10 @@ class UploadOrUpdateClientObjectsWorker (
     private val scope =  CoroutineScope(SupervisorJob())
 
     override suspend fun doWork(): Result {
-        Log.i("update:","to upload to server")
+        val tableName = inputData.getString(KEY_VERSION_TABLE)
+        val newClientIds = inputData.getStringArray(KEY_NEW_CLIENTS_IDS)
+        val token = inputData.getString(TOKEN)?:""
+
 
         val categoryDao: CategoryDao =
             AppDatabase.getDatabase(applicationContext,scope).categoryDao()
@@ -38,11 +42,7 @@ class UploadOrUpdateClientObjectsWorker (
         val allServerTransactions =  transactionRepository.getServerTransactions()
         val allServerCategories =  categoryRepository.getServerCategories()
 
-        val objectService = RetrofitHelper.getInstance().create(ObjectService::class.java)
-
-
-        val tableName = inputData.getString(KEY_VERSION_TABLE)
-        val newClientIds = inputData.getStringArray(KEY_NEW_CLIENTS_IDS)
+        val objectService = RetrofitHelper.getInstance(token).create(ObjectService::class.java)
 
 
         if (tableName != null) {

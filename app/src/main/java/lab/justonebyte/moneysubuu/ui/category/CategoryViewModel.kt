@@ -3,6 +3,7 @@ package lab.justonebyte.moneysubuu.ui.category
 import android.app.Application
 import android.content.Context
 import android.util.Log
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -12,6 +13,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import lab.justonebyte.moneysubuu.data.CategoryRepository
+import lab.justonebyte.moneysubuu.data.SettingPrefRepository
 import lab.justonebyte.moneysubuu.model.TransactionCategory
 import lab.justonebyte.moneysubuu.ui.components.SnackBarType
 import lab.justonebyte.moneysubuu.utils.getCurrentGlobalTime
@@ -28,19 +30,31 @@ data class CategoryUiState(
 class CategoryViewModel @Inject constructor(
     private val categoryRepository: CategoryRepository,
     @ApplicationContext private val application: Context,
-): ViewModel() {
+    private val settingsRepository: SettingPrefRepository
+    ): ViewModel() {
     private val _viewModelUiState = MutableStateFlow(
         CategoryUiState()
     )
     val viewModelUiState: StateFlow<CategoryUiState>
         get() = _viewModelUiState
 
+    private val token = mutableStateOf("")
+
 
     init {
         viewModelScope.launch {
             launch {
+                collectToken()
+            }
+            launch {
                 collectCategories()
             }
+        }
+    }
+
+    private suspend fun collectToken() {
+        settingsRepository.accessToken.collect{
+            token.value = it
         }
     }
 
@@ -53,7 +67,7 @@ class CategoryViewModel @Inject constructor(
         Log.i("addCategory:",transactinCategory.name)
         viewModelScope.launch {
             categoryRepository.insert(transactionCategory = transactinCategory)
-            runVersionSync(application,"categories")
+            runVersionSync(application,"categories",token.value)
         }
     }
     fun updateCategory(transactinCategory:TransactionCategory,name:String){
@@ -66,13 +80,13 @@ class CategoryViewModel @Inject constructor(
         )
         viewModelScope.launch {
             categoryRepository.update(transactionCategory = category)
-            runVersionSync(application,"categories")
+            runVersionSync(application,"categories",token.value)
         }
     }
     fun removeCategory(transactinCategory:TransactionCategory){
         viewModelScope.launch {
             categoryRepository.delete(id = transactinCategory.unique_id)
-            runVersionSync(application,"categories")
+            runVersionSync(application,"categories",token.value)
 
         }
     }

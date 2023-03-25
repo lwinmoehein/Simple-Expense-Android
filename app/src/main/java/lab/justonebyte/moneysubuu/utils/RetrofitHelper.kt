@@ -11,7 +11,7 @@ import java.io.IOException
 class AuthInterceptor(private val token: String) : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
         val request = chain.request().newBuilder()
-            .addHeader("Authorization", "Bearer 1|hkNhJOjXPd8rO36rvTcaHcesaJOkyLlY29xhUU9d")
+            .addHeader("Authorization", "Bearer $token")
             .build()
         return chain.proceed(request)
     }
@@ -19,20 +19,18 @@ class AuthInterceptor(private val token: String) : Interceptor {
 
 object RetrofitHelper {
 
-    val baseUrl = "http://192.168.1.8:9000/api/"
+    val baseUrl = "http://192.168.100.112:9000/api/"
 
 
-    fun getInstance(): Retrofit {
+    fun getInstance(token:String): Retrofit {
 
         val okHttpClient = OkHttpClient.Builder()
-            .addInterceptor(AuthInterceptor("your_token_here"))
+            .addInterceptor(AuthInterceptor(token))
             .build()
 
         return Retrofit.Builder().baseUrl(baseUrl)
             .addConverterFactory(GsonConverterFactory.create())
             .client(okHttpClient)
-            // we need to add converter factory to
-            // convert JSON object to Java object
             .build()
     }
 }

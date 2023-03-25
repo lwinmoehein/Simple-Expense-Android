@@ -2,15 +2,17 @@ package lab.justonebyte.moneysubuu.workers
 
 import android.app.Application
 import android.content.Context
+import android.util.Log
 import androidx.work.Data
 import androidx.work.ExistingWorkPolicy
 import androidx.work.OneTimeWorkRequest
 import androidx.work.WorkManager
 
-fun runVersionSync(applicationContext:Context,tableName:String){
+fun runVersionSync(applicationContext:Context,tableName:String,token:String){
+    Log.i("sync:token:",token)
 
     val versionInfoWorker =   OneTimeWorkRequest.Builder(GetVersionInfoWorker::class.java)
-        .setInputData(Data.Builder().putString(KEY_TABLE_NAME,tableName).build())
+        .setInputData(Data.Builder().putString(KEY_TABLE_NAME,tableName).putString(TOKEN,token).build())
         .build()
 
     val updateClientRequest = OneTimeWorkRequest.Builder(UpdateServerObjectsWorker::class.java)

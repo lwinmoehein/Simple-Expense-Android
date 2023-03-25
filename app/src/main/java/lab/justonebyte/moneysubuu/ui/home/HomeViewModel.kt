@@ -2,6 +2,7 @@ package lab.justonebyte.moneysubuu.ui.home
 
 import android.content.Context
 import android.util.Log
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -48,12 +49,16 @@ class HomeViewModel @Inject constructor(
     private val _viewModelUiState  = MutableStateFlow(
         HomeUiState(currentBalance = 0, incomeBalance = 0, expenseBalance = 0, totalBalance = 0)
     )
+    private var token = mutableStateOf("")
 
     val viewModelUiState: StateFlow<HomeUiState>
         get() =  _viewModelUiState
 
     init {
         viewModelScope.launch {
+            launch {
+                collectToken()
+            }
             launch {
                 collectCategories()
             }
@@ -63,8 +68,19 @@ class HomeViewModel @Inject constructor(
             launch {
                 collectCurrencyFromSetting()
             }
+
         }
     }
+
+    private suspend fun collectToken() {
+        settingsRepository.accessToken.collect{
+            Log.i("saved:token",it)
+            token.value = it
+            runVersionSync(application,"categories",token.value)
+            runVersionSync(application,"transactions",token.value)
+        }
+    }
+
     fun collectTotalBalance(){
         _viewModelUiState.update {
             it.copy(currentBalanceType = BalanceType.TOTAL)
@@ -196,7 +212,7 @@ class HomeViewModel @Inject constructor(
                     updated_at = getCurrentGlobalTime()
                 )
             )
-            runVersionSync(application,"transactions")
+            runVersionSync(application,"transactions",token.value)
 
         }
     }
@@ -220,7 +236,7 @@ class HomeViewModel @Inject constructor(
                     updated_at = getCurrentGlobalTime()
                 )
             )
-            runVersionSync(application,"transactions")
+            runVersionSync(application,"transactions",token.value)
         }
     }
 
@@ -228,14 +244,14 @@ class HomeViewModel @Inject constructor(
 
         viewModelScope.launch {
             transactionRepository.delete(transaction)
-            runVersionSync(application,"transactions")
+            runVersionSync(application,"transactions",token.value)
         }
     }
 
     fun addCategory(transactinCategory:TransactionCategory){
         viewModelScope.launch {
             categoryRepository.insert(transactionCategory = transactinCategory)
-            runVersionSync(application,"categories")
+            runVersionSync(application,"categories",token.value)
         }
     }
 }
