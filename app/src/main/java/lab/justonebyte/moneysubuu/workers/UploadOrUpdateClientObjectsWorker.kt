@@ -26,7 +26,7 @@ class UploadOrUpdateClientObjectsWorker (
     private val scope =  CoroutineScope(SupervisorJob())
 
     override suspend fun doWork(): Result {
-        Log.i("work:","client objects")
+        Log.i("update:","to upload to server")
 
         val categoryDao: CategoryDao =
             AppDatabase.getDatabase(applicationContext,scope).categoryDao()
@@ -51,22 +51,21 @@ class UploadOrUpdateClientObjectsWorker (
             Log.i("update: server:","null")
         }
 
-        if (newClientIds != null) {
-            if(newClientIds.isEmpty()) Result.success()
+        if (newClientIds.isNullOrEmpty()) {
+           return Result.success()
         }
 
-
-            if(newClientIds==null) return Result.success()
 
            Log.i("work manager:","trans size:"+allServerTransactions.size.toString())
            Log.i("work manager:","cats size:"+allServerCategories.size.toString())
 
-            val objectsToUpload = when(tableName){
-                "transactions"-> allServerTransactions.filter { transaction->newClientIds.contains(transaction.unique_id) }
-                else ->  allServerCategories.filter { category->newClientIds.contains(category.unique_id) }
-            }
+        val objectsToUpload = when(tableName){
+            "transactions" -> allServerTransactions.filterIsInstance<ServerTransaction>().filter { transaction -> newClientIds.contains(transaction.unique_id) }
+            else -> allServerCategories.filterIsInstance<ServerCategory>().filter { category -> newClientIds.contains(category.unique_id) }
+        }
 
-            Log.i("work manager:to_upload",objectsToUpload.size.toString())
+
+        Log.i("work manager:to_upload",objectsToUpload.size.toString())
 
                 when(tableName){
                     "transactions"->objectService.uploadNewOrUpdateTransactions(

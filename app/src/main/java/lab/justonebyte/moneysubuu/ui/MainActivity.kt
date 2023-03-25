@@ -37,32 +37,13 @@ class MainActivity : ComponentActivity() {
         }
 
         lifecycleScope.launch {
-            runVersionSync("categories")
+            runVersionSync(application,applicationContext,"categories")
         }
         lifecycleScope.launch{
-            runVersionSync("transactions")
+            runVersionSync(application,applicationContext,"transactions")
         }
     }
-    fun runVersionSync(tableName:String){
-        val versionInfoWorker =   OneTimeWorkRequest.Builder(GetVersionInfoWorker::class.java)
-            .setInputData(Data.Builder().putString(KEY_TABLE_NAME,tableName).build())
-            .build()
 
-        val updateClientRequest = OneTimeWorkRequest.Builder(UpdateServerObjectsWorker::class.java)
-            .build()
-
-
-
-        val updateServerRequest = OneTimeWorkRequest.Builder(UploadOrUpdateClientObjectsWorker::class.java)
-            .build()
-
-
-        val chainWorkRequest = WorkManager.getInstance(applicationContext)
-            .beginUniqueWork(tableName,ExistingWorkPolicy.REPLACE, versionInfoWorker)
-            .then(listOf(updateServerRequest,updateClientRequest))
-            .enqueue()
-
-    }
 
     override fun attachBaseContext(base: Context) {
         LocaleHelper().setLocale(base, LocaleHelper().getLanguage(base))
