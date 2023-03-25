@@ -22,6 +22,7 @@ interface CategoryRepository {
     suspend fun delete(id: String)
     suspend fun deleteAll()
     suspend fun getUniqueIdsWithVersions():List<UniqueIdWithVersion>
+    suspend fun populateCategories()
 }
 class  CategoryRepositoryImpl @Inject constructor(val categoryDao: CategoryDao) : CategoryRepository{
 
@@ -73,5 +74,9 @@ class  CategoryRepositoryImpl @Inject constructor(val categoryDao: CategoryDao) 
 
     override suspend fun getUniqueIdsWithVersions(): List<UniqueIdWithVersion>{
         return categoryDao.getUniqueIdsWithVersions()
+    }
+
+    override suspend fun populateCategories() {
+       populateCategories(categoryDao)
     }
 }

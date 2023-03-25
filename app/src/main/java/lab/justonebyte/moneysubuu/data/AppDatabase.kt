@@ -51,21 +51,17 @@ public abstract class AppDatabase : RoomDatabase() {
                 instance
             }
         }
-
-        private suspend fun populateCategories(categoryDao: CategoryDao) {
-           val dao = this.INSTANCE?.categoryDao()
-           dao?.let {
-               it.insert(CategoryEntity(name = "မနက်စာ", unique_id ="one", transaction_type = TransactionType.Expense.value, created_at = getCurrentGlobalTime(), updated_at = getCurrentGlobalTime()))
-               it.insert(CategoryEntity(name = "ကားခ",unique_id = "two", transaction_type = TransactionType.Expense.value, created_at = getCurrentGlobalTime(), updated_at = getCurrentGlobalTime()))
-               it.insert(CategoryEntity(name = "အိမ်ပေး",unique_id = "three", transaction_type = TransactionType.Expense.value, created_at =  getCurrentGlobalTime(), updated_at = getCurrentGlobalTime()))
-               it.insert(CategoryEntity(name = "လစာ",unique_id = "Foru", transaction_type = TransactionType.Income.value, created_at =  getCurrentGlobalTime(), updated_at = getCurrentGlobalTime()))
-               it.insert(CategoryEntity(name = "မုန့်ဖိုး",unique_id ="five", transaction_type = TransactionType.Income.value, created_at =   getCurrentGlobalTime(), updated_at = getCurrentGlobalTime()))
-               it.insert(CategoryEntity(name = "ဘောနပ်စ်",unique_id = "six",  transaction_type = TransactionType.Income.value,created_at = getCurrentGlobalTime(), updated_at = getCurrentGlobalTime()))
-               it.insert(CategoryEntity(name = "လက်ဆောင်",unique_id = "seven", transaction_type = TransactionType.Income.value, created_at = getCurrentGlobalTime(), updated_at = getCurrentGlobalTime()))
-
-           }
-        }
     }
+}
+suspend fun populateCategories(dao: CategoryDao) {
+    dao?.let {
+        it.insert(CategoryEntity(name = "မနက်စာ", unique_id ="one", transaction_type = TransactionType.Expense.value, created_at = getCurrentGlobalTime(), updated_at = getCurrentGlobalTime()))
+        it.insert(CategoryEntity(name = "ကားခ",unique_id = "two", transaction_type = TransactionType.Expense.value, created_at = getCurrentGlobalTime(), updated_at = getCurrentGlobalTime()))
+        it.insert(CategoryEntity(name = "အိမ်ပေး",unique_id = "three", transaction_type = TransactionType.Expense.value, created_at =  getCurrentGlobalTime(), updated_at = getCurrentGlobalTime()))
+        it.insert(CategoryEntity(name = "လစာ",unique_id = "Foru", transaction_type = TransactionType.Income.value, created_at =  getCurrentGlobalTime(), updated_at = getCurrentGlobalTime()))
+        it.insert(CategoryEntity(name = "မုန့်ဖိုး",unique_id ="five", transaction_type = TransactionType.Income.value, created_at =   getCurrentGlobalTime(), updated_at = getCurrentGlobalTime()))
+        it.insert(CategoryEntity(name = "ဘောနပ်စ်",unique_id = "six",  transaction_type = TransactionType.Income.value,created_at = getCurrentGlobalTime(), updated_at = getCurrentGlobalTime()))
+        it.insert(CategoryEntity(name = "လက်ဆောင်",unique_id = "seven", transaction_type = TransactionType.Income.value, created_at = getCurrentGlobalTime(), updated_at = getCurrentGlobalTime()))
 
-
+    }
 }
