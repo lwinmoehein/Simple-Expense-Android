@@ -110,13 +110,15 @@ fun SettingsScreen(
         ){
             Column {
                 AuthenticatedUser(
-                    uploadTransactions = {
-
-                                         },
                     fetchAndUpdateAccessToken = {
                         coroutineScope.launch {
                             settingsViewModel.fetchAccessTokenByGoogleId(it)
                         }
+                    },
+                    logOutUser = {
+                       coroutineScope.launch {
+                           settingsViewModel.logOut()
+                       }
                     }
                 )
                 Spacer(modifier = Modifier.height(20.dp))
@@ -223,8 +225,8 @@ private fun rememberFirebaseAuthLauncher(
 fun AuthenticatedUser(
     modifier: Modifier=Modifier.absolutePadding(left = 10.dp, right = 10.dp),
     context: Context = LocalContext.current,
-    uploadTransactions:()->Unit,
-    fetchAndUpdateAccessToken:(googleId:String)->Unit
+    fetchAndUpdateAccessToken:(googleId:String)->Unit,
+    logOutUser:()->Unit
 ) {
     val token = stringResource(R.string.web_client_id)
     var user by remember { mutableStateOf(Firebase.auth.currentUser) }
@@ -267,6 +269,7 @@ fun AuthenticatedUser(
                     Button(onClick = {
                         Firebase.auth.signOut()
                         user = null
+                        logOutUser()
                     }) {
                         Text(text = "Log Out")
                     }
