@@ -60,8 +60,8 @@ fun formatYearString(dateString: String): String {
     val outputFormat = SimpleDateFormat("yyyy", Locale.getDefault())
     return outputFormat.format(date)
 }
-fun getFormatedDate(dateString:String):Date{
-    val inputFormat = SimpleDateFormat("MMMM d , yyyy", Locale.getDefault())
+fun getFormatedDate(dateString:String,pattern: String ="MMMM d , yyyy"):Date{
+    val inputFormat = SimpleDateFormat(pattern, Locale.getDefault())
     return inputFormat.parse(dateString)
 }
 fun getFormatedMonth(dateString:String):Date{

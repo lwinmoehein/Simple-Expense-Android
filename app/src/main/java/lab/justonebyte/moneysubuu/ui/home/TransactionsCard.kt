@@ -39,7 +39,7 @@ fun TransactionsCard(
             BalanceType.TOTAL-> formatYearString(it.created_at)
             else-> formatDateString(it.created_at)
         }
-    }.map { it.key to it.value }.sortedByDescending {
+    }.map { it.key to it.value.sortedByDescending{ value-> getFormatedDate(value.updated_at,"yyyy-MM-dd HH:mm:ss") } }.sortedByDescending {
         when(transactionGroupType){
             BalanceType.YEARLY-> getFormatedMonth(it.first)
             BalanceType.TOTAL-> getFormatedYear(it.first)
