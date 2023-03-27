@@ -23,15 +23,9 @@ import lab.justonebyte.moneysubuu.utils.getCurrentYear
 @Composable
 fun HomeContent(
     homeUiState: HomeUiState,
-    collectBalanceOfDay:(day:String)->Unit,
-    onMonthPicked:(month:String)->Unit,
-    onYearPicked:(year:String)->Unit,
     onTransactionClick:(t: Transaction)->Unit,
-    onTypeChanged:(type: BalanceType)->Unit
 ){
-    val currentDay = getCurrentDate()
-    val currentMonth = getCurrentMonth()
-    val currentYear = getCurrentYear()
+
 
     Scaffold{
         Column(Modifier.padding(it)) {
@@ -41,13 +35,14 @@ fun HomeContent(
                 incomeBalance = homeUiState.incomeBalance,
                 expenseBalance = homeUiState.expenseBalance
             )
-            SectionTitle(title = stringResource(id = R.string.history),modifier = Modifier.absolutePadding(top = 15.dp, left = 10.dp, bottom = 5.dp, right = 10.dp))
+            SectionTitle(title = stringResource(id = R.string.history),modifier = Modifier.absolutePadding(top = 15.dp, left = 10.dp, bottom = 15.dp, right = 10.dp))
             TransactionsCard(
                 transactions = homeUiState.transactions,
                 currency = homeUiState.currentCurrency,
                 onTransactionClick = {
                     onTransactionClick(it)
-                }
+                },
+                transactionGroupType = homeUiState.currentBalanceType
             )
         }
     }

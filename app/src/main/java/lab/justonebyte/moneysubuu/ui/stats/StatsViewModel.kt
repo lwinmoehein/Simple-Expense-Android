@@ -22,7 +22,7 @@ import javax.inject.Inject
 data class StatsUiState(
     val categories:List<TransactionCategory>  = emptyList(),
     val transactions:List<Transaction> = emptyList(),
-    val currentBalanceType: BalanceType = BalanceType.DAILY,
+    val currentBalanceType: BalanceType = BalanceType.MONTHLY,
     val currentCurrency: Currency = Currency.Kyat,
     val currentSnackBar : SnackBarType? = null,
     val selectedDay:String = dateFormatter(System.currentTimeMillis()),

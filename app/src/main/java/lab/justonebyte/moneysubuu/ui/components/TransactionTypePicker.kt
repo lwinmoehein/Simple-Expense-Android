@@ -2,13 +2,21 @@ package lab.justonebyte.moneysubuu.ui.components
 
 import android.annotation.SuppressLint
 import android.app.DatePickerDialog
+import android.widget.Button
 import android.widget.DatePicker
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Home
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import lab.justonebyte.moneysubuu.R
 import lab.justonebyte.moneysubuu.model.BalanceType
@@ -102,25 +110,22 @@ fun TransactionTypePicker(
             )
         }
     }
-//    Text(modifier = Modifier.clickable {
-//            when (balanceType) {
-//                BalanceType.DAILY -> mDatePickerDialog.show()
-//                BalanceType.MONTHLY -> isMonthPickerShown.value = true
-//                BalanceType.YEARLY -> isMonthPickerShown.value = true
-//                else -> {}
-//            }
-//        },
-//        text = chosenDateString,
-//        style = MaterialTheme.typography.titleSmall
-//    )
-    Button(modifier = modifier, onClick = {
-        when (balanceType) {
-            BalanceType.DAILY -> mDatePickerDialog.show()
-            BalanceType.MONTHLY -> isMonthPickerShown.value = true
-            BalanceType.YEARLY -> isMonthPickerShown.value = true
-            else -> {}
-        }
-    }) {
-        Text(text = chosenDateString)
-    }
+
+   if(balanceType!=BalanceType.TOTAL){
+       OutlinedButton(
+           modifier = Modifier.height(33.dp),
+           onClick = {
+               when (balanceType) {
+                   BalanceType.DAILY -> mDatePickerDialog.show()
+                   BalanceType.MONTHLY -> isMonthPickerShown.value = true
+                   BalanceType.YEARLY -> isMonthPickerShown.value = true
+                   else -> {}
+               }
+           }) {
+           Icon(painter = painterResource(id = R.drawable.ic_baseline_calendar_today_24), modifier = Modifier.absolutePadding(right = 3.dp), contentDescription = "")
+           Text(text = chosenDateString)
+       }
+   }else{
+       Spacer(modifier = Modifier.height(33.dp))
+   }
 }

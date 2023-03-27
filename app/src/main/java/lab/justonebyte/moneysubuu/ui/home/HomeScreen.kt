@@ -226,7 +226,6 @@ fun HomeScreen(){
                               )
 
                           }
-                          Divider()
                       }
         },
         floatingActionButton = {
@@ -258,26 +257,9 @@ fun HomeScreen(){
            }
             HomeContent(
                 homeUiState = homeUiState,
-                collectBalanceOfDay = {
-                    homeViewModel.collectDailyBalance(it)
-                                      },
-                onMonthPicked = {
-                    homeViewModel.collectMonthlyBalance(it)
-                },
-                onYearPicked = {
-                    homeViewModel.collectYearlyBalance(it)
-                },
                 onTransactionClick = {
                     currentTransaction.value = it
-                },
-                onTypeChanged = { type->
-                    when(type){
-                        BalanceType.DAILY->homeViewModel.collectDailyBalance()
-                        BalanceType.MONTHLY->homeViewModel.collectMonthlyBalance()
-                        BalanceType.YEARLY->homeViewModel.collectYearlyBalance()
-                        else->homeViewModel.collectTotalBalance()
-                    }
-                },
+                }
             )
         }
 

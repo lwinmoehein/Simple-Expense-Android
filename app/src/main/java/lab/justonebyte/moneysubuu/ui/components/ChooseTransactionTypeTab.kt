@@ -44,7 +44,7 @@ fun ChooseTransactionTypeTab(
 
 
     var currentHomeTabIndex: Int by remember { mutableStateOf(0) }
-    val homeTabs = listOf<OptionItem>(BalanceType.DAILY,BalanceType.MONTHLY,BalanceType.YEARLY,BalanceType.TOTAL)
+    val homeTabs = listOf<OptionItem>(BalanceType.MONTHLY,BalanceType.YEARLY,BalanceType.TOTAL)
 
     TabRow(selectedTabIndex = currentHomeTabIndex) {
         homeTabs.forEachIndexed { index, balanceType ->
@@ -54,9 +54,8 @@ fun ChooseTransactionTypeTab(
                     currentHomeTabIndex = index
 
                     when(currentHomeTabIndex){
-                        0->currentBalanceType.value = BalanceType.DAILY
-                        1->currentBalanceType.value = BalanceType.MONTHLY
-                        2->currentBalanceType.value = BalanceType.YEARLY
+                        0->currentBalanceType.value = BalanceType.MONTHLY
+                        1->currentBalanceType.value = BalanceType.YEARLY
                         else->currentBalanceType.value = BalanceType.TOTAL
                     }
                     onTypeChanged(currentBalanceType.value)

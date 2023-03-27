@@ -39,3 +39,24 @@ fun getCurrentGlobalTime():String{
     val currentDateTime = Date()
     return globalTimestampFormat.format(currentDateTime)
 }
+fun formatDateString(dateString: String): String {
+    val inputFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+    val date = inputFormat.parse(dateString)
+
+    val outputFormat = SimpleDateFormat("MMMM d , yyyy", Locale.getDefault())
+    return outputFormat.format(date)
+}
+fun formatMonthString(dateString: String): String {
+    val inputFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+    val date = inputFormat.parse(dateString)
+
+    val outputFormat = SimpleDateFormat("MMMM yyyy", Locale.getDefault())
+    return outputFormat.format(date)
+}
+fun formatYearString(dateString: String): String {
+    val inputFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+    val date = inputFormat.parse(dateString)
+
+    val outputFormat = SimpleDateFormat("yyyy", Locale.getDefault())
+    return outputFormat.format(date)
+}

@@ -26,7 +26,7 @@ data class HomeUiState(
     val incomeBalance:Int,
     val expenseBalance:Int,
     val totalBalance:Int,
-    val currentBalanceType:BalanceType = BalanceType.DAILY,
+    val currentBalanceType:BalanceType = BalanceType.MONTHLY,
     val currentCurrency: Currency = Currency.Kyat,
     val categories:List<TransactionCategory>  = emptyList(),
     val transactions:List<Transaction> = emptyList(),
