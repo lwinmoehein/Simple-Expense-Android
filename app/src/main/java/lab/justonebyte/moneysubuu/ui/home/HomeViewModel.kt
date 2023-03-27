@@ -253,6 +253,9 @@ class HomeViewModel @Inject constructor(
             transactionRepository.delete(transaction)
             runVersionSync(application,"transactions",token.value)
         }
+        viewModelScope.launch {
+            bindTransactionsFromBalanceType(_viewModelUiState.value.currentBalanceType)
+        }
     }
 
     fun addCategory(transactinCategory:TransactionCategory){
