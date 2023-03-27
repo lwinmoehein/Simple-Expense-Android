@@ -4,4 +4,13 @@
     <style name="Theme.MoneySuBuu" parent="android:Theme.Material.Light.NoActionBar">
         <item name="android:statusBarColor">@color/purple_700</item>
     </style>
+
+    <style name="Theme.MoneySuBuu.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="Theme.MoneySuBuu.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="Theme.MoneySuBuu.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 </resources>
