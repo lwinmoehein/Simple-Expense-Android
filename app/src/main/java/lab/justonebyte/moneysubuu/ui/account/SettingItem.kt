@@ -1,4 +1,4 @@
-package lab.justonebyte.moneysubuu.ui.settings
+package lab.justonebyte.moneysubuu.ui.account
 
 interface SettingItem {
     val name:Int

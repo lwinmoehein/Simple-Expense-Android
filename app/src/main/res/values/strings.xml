@@ -46,6 +46,8 @@
     <string name="charts">Charts</string>
     <string name="m_categories">Categories</string>
     <string name="settings">Settings</string>
+    <string name="account">Me</string>
+
     <string name="balance">Balance</string>
     <string name="history">History</string>
 

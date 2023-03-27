@@ -1,4 +1,4 @@
-package lab.justonebyte.moneysubuu.ui.settings
+package lab.justonebyte.moneysubuu.ui.account
 
 import android.content.Context
 import android.util.Log
@@ -13,7 +13,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import lab.justonebyte.moneysubuu.api.AuthService
-import lab.justonebyte.moneysubuu.api.CompanionAppService
 import lab.justonebyte.moneysubuu.data.CategoryRepository
 import lab.justonebyte.moneysubuu.data.SettingPrefRepository
 import lab.justonebyte.moneysubuu.data.TransactionRepository

@@ -1,12 +1,9 @@
 package lab.justonebyte.moneysubuu.ui
 
 import AppTheme
-import android.os.Build
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -19,7 +16,7 @@ enum class NavItem(val stringResource:Int,val iconResource:Int){
     HOME(R.string.home,R.drawable.ic_round_home_24),
     CHARTS(R.string.charts,R.drawable.ic_round_pie_chart_24),
     CATEGORIES(R.string.m_categories,R.drawable.ic_round_category_24),
-    SETTINGS(R.string.settings,R.drawable.ic_round_settings_24)
+    ACCOUNT(R.string.account,R.drawable.ic_baseline_account_circle_24)
 }
 
 val appContentPadding = 20.dp
@@ -28,7 +25,7 @@ val appContentPadding = 20.dp
 fun SuBuuApp() {
 
     var selectedItem by remember { mutableStateOf(0) }
-    val navItems = listOf(NavItem.HOME,NavItem.CHARTS,NavItem.CATEGORIES,NavItem.SETTINGS)
+    val navItems = listOf(NavItem.HOME,NavItem.CHARTS,NavItem.CATEGORIES,NavItem.ACCOUNT)
 
     AppTheme() {
         ProvideWindowInsets {
@@ -57,7 +54,7 @@ fun SuBuuApp() {
                                         0-> navController.navigate(MainDestinations.HOME_ROUTE)
                                         1->navController.navigate(MainDestinations.STATS_ROUTE)
                                         2->navController.navigate(MainDestinations.CATEGORY_ROUTE)
-                                        else-> navController.navigate(MainDestinations.SETTINGS_ROUTE)
+                                        else-> navController.navigate(MainDestinations.ACCOUNT_ROUTE)
                                     }
                                 }
                             )

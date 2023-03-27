@@ -15,7 +15,7 @@ import androidx.navigation.compose.rememberNavController
 import kotlinx.coroutines.launch
 import lab.justonebyte.moneysubuu.ui.category.ManageCategoryScreen
 import lab.justonebyte.moneysubuu.ui.home.SuBuuAppHomeScreen
-import lab.justonebyte.moneysubuu.ui.settings.SettingsScreen
+import lab.justonebyte.moneysubuu.ui.account.AccountScreen
 
 /**
  * Destinations used in the ([JetnewsApp]).
@@ -23,7 +23,7 @@ import lab.justonebyte.moneysubuu.ui.settings.SettingsScreen
 object MainDestinations {
     const val HOME_ROUTE = "home"
     const val STATS_ROUTE = "stats"
-    const val SETTINGS_ROUTE = "settings"
+    const val ACCOUNT_ROUTE = "account"
     const val CATEGORY_ROUTE = "category"
 }
 
@@ -48,8 +48,8 @@ fun SuBuuNavGraph(
             SuBuuAppHomeScreen(navController=navController)
         }
 
-        composable(MainDestinations.SETTINGS_ROUTE) {
-            SettingsScreen(
+        composable(MainDestinations.ACCOUNT_ROUTE) {
+            AccountScreen(
                 openDrawer = openDrawer,
             )
         }

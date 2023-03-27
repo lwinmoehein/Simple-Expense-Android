@@ -2,7 +2,6 @@ package lab.justonebyte.moneysubuu.model
 
 import lab.justonebyte.moneysubuu.R
 import lab.justonebyte.moneysubuu.ui.components.OptionItem
-import lab.justonebyte.moneysubuu.ui.settings.SettingItem
 
 
 sealed class AppLocale(override val value:String, override val name:Int): OptionItem {
