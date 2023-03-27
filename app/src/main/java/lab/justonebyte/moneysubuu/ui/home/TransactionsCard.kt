@@ -21,10 +21,7 @@ import lab.justonebyte.moneysubuu.model.Currency
 import lab.justonebyte.moneysubuu.model.Transaction
 import lab.justonebyte.moneysubuu.model.TransactionType
 import lab.justonebyte.moneysubuu.ui.theme.*
-import lab.justonebyte.moneysubuu.utils.dateFormatter
-import lab.justonebyte.moneysubuu.utils.formatDateString
-import lab.justonebyte.moneysubuu.utils.formatMonthString
-import lab.justonebyte.moneysubuu.utils.formatYearString
+import lab.justonebyte.moneysubuu.utils.*
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -42,24 +39,14 @@ fun TransactionsCard(
             BalanceType.TOTAL-> formatYearString(it.created_at)
             else-> formatDateString(it.created_at)
         }
-    }.map { it.key to it.value }
-    groupedTransactions.firstOrNull()?.let { Log.i("first:", it.first) }
-//    Card(
-//        shape = SuBuuShapes.small,
-//        modifier = modifier
-//            .fillMaxWidth()
-//            .fillMaxHeight()
-//            .padding(10.dp),
-//    ) {
-//        if(transactions.isEmpty()){
-//            NoData(modifier = Modifier)
-//        }
-//        LazyColumn(){
-//            items(transactions){
-//                TransactionItem(transaction = it,currency = currency, onTransactionClick = {onTransactionClick(it)})
-//            }
-//        }
-//    }
+    }.map { it.key to it.value }.sortedByDescending {
+        when(transactionGroupType){
+            BalanceType.YEARLY-> getFormatedMonth(it.first)
+            BalanceType.TOTAL-> getFormatedYear(it.first)
+            else-> getFormatedDate(it.first)
+        }
+    }
+
    Card(
                shape = SuBuuShapes.small,
         modifier = modifier
