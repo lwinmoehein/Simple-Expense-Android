@@ -1,6 +1,7 @@
 package lab.justonebyte.moneysubuu.ui.home
 
 import android.annotation.SuppressLint
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
@@ -53,16 +54,7 @@ fun HomeScreen(){
     val isSelectedTransactionEditMode = remember { mutableStateOf<Boolean?>(null) }
     val isDeleteTransactionDialogOpen = remember { mutableStateOf(false) }
 
-    val currentDay = getCurrentDate()
-    val currentMonth = getCurrentMonth()
-    val currentYear = getCurrentYear()
-    var currentHomeTabIndex: Int by remember { mutableStateOf(0) }
-    val homeTabs = listOf<OptionItem>(BalanceType.DAILY,BalanceType.MONTHLY,BalanceType.YEARLY,BalanceType.TOTAL)
-    val chosenDateString = when(homeUiState.currentBalanceType){
-        BalanceType.DAILY-> if(homeUiState.selectedDay==currentDay) stringResource(id = R.string.this_day) else homeUiState.selectedDay
-        BalanceType.MONTHLY->if(homeUiState.selectedMonth==currentMonth) stringResource(id = R.string.this_month) else homeUiState.selectedMonth
-        BalanceType.YEARLY->if(homeUiState.selectedYear==currentYear) stringResource(id = R.string.this_year) else homeUiState.selectedYear
-        else->stringResource(id = R.string.total) }
+    Log.i("crrentType:", stringResource(id = homeUiState.currentBalanceType.name))
 
 
 

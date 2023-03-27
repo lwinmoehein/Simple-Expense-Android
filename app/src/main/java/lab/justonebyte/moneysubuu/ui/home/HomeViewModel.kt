@@ -3,6 +3,7 @@ package lab.justonebyte.moneysubuu.ui.home
 import android.content.Context
 import android.util.Log
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -213,7 +214,9 @@ class HomeViewModel @Inject constructor(
                 )
             )
             runVersionSync(application,"transactions",token.value)
-
+        }
+        viewModelScope.launch {
+            bindTransactionsFromBalanceType(_viewModelUiState.value.currentBalanceType)
         }
     }
     fun updateTransaction(
@@ -236,7 +239,11 @@ class HomeViewModel @Inject constructor(
                     updated_at = getCurrentGlobalTime()
                 )
             )
+            Log.i("crrentType:update", _viewModelUiState.value.currentBalanceType.value.toString())
             runVersionSync(application,"transactions",token.value)
+        }
+        viewModelScope.launch {
+            bindTransactionsFromBalanceType(_viewModelUiState.value.currentBalanceType)
         }
     }
 
