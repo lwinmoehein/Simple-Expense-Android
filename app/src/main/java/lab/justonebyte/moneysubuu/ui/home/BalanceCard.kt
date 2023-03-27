@@ -1,5 +1,6 @@
 package lab.justonebyte.moneysubuu.ui.home
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Card
 import androidx.compose.material3.Text
@@ -7,6 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import lab.justonebyte.moneysubuu.model.BalanceType
@@ -42,9 +44,10 @@ fun BalanceCard(
                      Row(
                          modifier = Modifier
                              .height(120.dp)
-                             .padding(10.dp)
+                             .padding(10.dp),
+                         horizontalArrangement = Arrangement.SpaceBetween
                      ) {
-                         Column(horizontalAlignment = Alignment.Start, verticalArrangement = Arrangement.Center) {
+                         Column(verticalArrangement = Arrangement.Center, modifier = Modifier.weight(1f)) {
                              Text(
                                  text = stringResource(id = R.string.current_balance),
                                  modifier = Modifier
@@ -65,7 +68,7 @@ fun BalanceCard(
                                      .wrapContentHeight(align = CenterVertically),
                              )
                          }
-                         Column(horizontalAlignment = Alignment.Start, verticalArrangement = Arrangement.Center) {
+                         Column( verticalArrangement = Arrangement.Center, modifier = Modifier.weight(1f)) {
                              Row(horizontalArrangement = Arrangement.Start, verticalAlignment = Alignment.CenterVertically, modifier = Modifier.weight(1f)) {
                                  Text(
                                      text = "$currentBalance",
@@ -92,9 +95,13 @@ fun BalanceCard(
 
                              }
                          }
+                         Spacer(modifier = Modifier.weight(1f))
                      }
+                     
                  }else{
-                     NoData(modifier = Modifier.fillMaxWidth().height(100.dp),)
+                     NoData(modifier = Modifier
+                         .fillMaxWidth()
+                         .height(100.dp),)
                  }
             }
         }
