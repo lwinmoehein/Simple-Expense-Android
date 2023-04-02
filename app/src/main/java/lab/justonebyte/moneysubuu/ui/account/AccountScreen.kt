@@ -4,17 +4,15 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
-import android.graphics.Path
 import android.util.Log
 import androidx.activity.compose.ManagedActivityResultLauncher
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.animation.AnimatedContentScope.SlideDirection.Companion.Right
-import androidx.compose.animation.core.updateTransition
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.layout.Arrangement.Absolute.Right
+import androidx.compose.material.Icon
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
@@ -28,6 +26,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.rememberAsyncImagePainter
+import com.google.accompanist.navigation.animation.*
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
@@ -43,48 +42,16 @@ import lab.justonebyte.moneysubuu.model.Currency
 import lab.justonebyte.moneysubuu.ui.MainActivity
 import lab.justonebyte.moneysubuu.ui.components.OptionItem
 import lab.justonebyte.moneysubuu.ui.home.SectionTitle
-import lab.justonebyte.moneysubuu.ui.settings.SettingsScreen
 import lab.justonebyte.moneysubuu.utils.LocaleHelper
-import androidx.compose.animation.core.animate
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.core.updateTransition
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.Scaffold
-import androidx.compose.material.TopAppBar
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.unit.dp
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
-import com.google.accompanist.insets.LocalWindowInsets
-import com.google.accompanist.insets.navigationBarsPadding
-import com.google.accompanist.insets.navigationBarsWithImePadding
-import com.google.accompanist.insets.statusBarsPadding
-import com.google.accompanist.systemuicontroller.rememberSystemUiController
-import kotlinx.coroutines.delay
-import androidx.navigation.compose.rememberNavController
-import com.google.accompanist.navigation.animation.*
 
-
-
-
-@OptIn(ExperimentalMaterial3Api::class)
-@SuppressLint("UnrememberedMutableState", "UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun AccountScreen(
-    openDrawer:()->Unit,
+fun SettingsScreen(
     context: Context = LocalContext.current
 ){
     val settingsViewModel = hiltViewModel<SettingsViewModel>()
     val settingsUiState by settingsViewModel.viewModelUiState.collectAsState()
 
+    var showSettingsScreen by remember { mutableStateOf(false) }
     val settingCurrencies = listOf<OptionItem>(Currency.Kyat,Currency.Dollar)
     val appLanguages = listOf(AppLocale.English,AppLocale.Myanmar)
     val packageName = context.packageName
@@ -97,28 +64,53 @@ fun AccountScreen(
         context.startActivity(i)
     }
 
+    Column(
+        Modifier.absolutePadding(left = 10.dp, right = 10.dp, top = 5.dp)
+    ) {
+        Spacer(modifier = Modifier.height(20.dp))
+        Column(
+        ) {
+            SectionTitle(title = stringResource(id = R.string.feat_setting))
 
-    var showNewPage by remember { mutableStateOf(false) }
+            SettingMenu(
+                modifier = Modifier.fillMaxWidth(),
+                settingItemLabel =  R.string.select_currency,
+                selectedOption = settingsUiState.selectedCurrency,
+                menuItems = settingCurrencies,
+                onMenuItemChosen = {
+                    settingsViewModel.updateCurrency(it as Currency)
+                }
+            )
+        }
+        SectionTitle(title = stringResource(id = R.string.sys_setting))
 
-//    if (showNewPage) {
-//        SettingsScreen(onBackPressed = { showNewPage = false })
-//        SlideInHorizontally(
-//            modifier = Modifier.fillMaxWidth(),
-//            initialOffsetX = { fullWidth -> fullWidth },
-//            animationSpec = tween(durationMillis = 500)
-//        ) {
-//            // This content will slide in from the right
-//        }
-//    } else {
-//        // Content of your main screen goes here
-//        SlideOutHorizontally(
-//            modifier = Modifier.fillMaxWidth(),
-//            targetOffsetX = { fullWidth -> -fullWidth },
-//            animationSpec = tween(durationMillis = 500)
-//        ) {
-//            // This content will slide out to the left
-//        }
-//    }
+        SettingMenu(
+            modifier = Modifier.fillMaxWidth(),
+            settingItemLabel =  R.string.select_lang,
+            selectedOption = settingsUiState.defaultLanguage,
+            menuItems = appLanguages,
+            onMenuItemChosen = {
+                settingsViewModel.updateLocale(it as AppLocale)
+                changeLocale(it.value)
+            }
+        )
+    }
+}
+
+
+@OptIn(ExperimentalMaterial3Api::class)
+@SuppressLint("UnrememberedMutableState", "UnusedMaterial3ScaffoldPaddingParameter")
+@Composable
+fun AccountScreen(
+    openDrawer:()->Unit,
+    context: Context = LocalContext.current
+){
+    val settingsViewModel = hiltViewModel<SettingsViewModel>()
+    val settingsUiState by settingsViewModel.viewModelUiState.collectAsState()
+
+    var showSettingsScreen by remember { mutableStateOf(false) }
+
+    val coroutineScope = rememberCoroutineScope()
 
 
 
@@ -137,13 +129,24 @@ fun AccountScreen(
                        verticalAlignment = Alignment.CenterVertically
 
                    ) {
-                       Icon(painterResource(id =R.drawable.ic_baseline_account_circle_24), contentDescription = "",Modifier.absolutePadding(right = 5.dp))
-                       Text(
-                           text= stringResource(id = R.string.account),
-                           maxLines = 1,
-                           overflow = TextOverflow.Ellipsis,
-                           style = MaterialTheme.typography.titleLarge
-                       )
+                       if(!showSettingsScreen){
+                           Icon(painterResource(id =R.drawable.ic_baseline_account_circle_24), contentDescription = "",Modifier.absolutePadding(right = 5.dp))
+                           Text(
+                               text= stringResource(id = R.string.account),
+                               maxLines = 1,
+                               overflow = TextOverflow.Ellipsis,
+                               style = MaterialTheme.typography.titleLarge
+                           )
+                       }else{
+                           Icon(Icons.Default.ArrowBack, contentDescription = "",Modifier.absolutePadding(right = 5.dp).clickable { showSettingsScreen = false })
+                           Text(
+                               text= stringResource(id = R.string.settings),
+                               maxLines = 1,
+                               overflow = TextOverflow.Ellipsis,
+                               style = MaterialTheme.typography.titleLarge
+                           )
+                       }
+
                    }
                }
                Divider()
@@ -156,58 +159,33 @@ fun AccountScreen(
                 .absolutePadding(top = 20.dp)
         ){
             Column {
-                AuthenticatedUser(
-                    fetchAndUpdateAccessToken = {
-                        coroutineScope.launch {
-                            settingsViewModel.fetchAccessTokenByGoogleId(it)
-                        }
-                    },
-                    logOutUser = {
-                       coroutineScope.launch {
-                           settingsViewModel.logOut()
-                       }
-                    }
-                )
-                Spacer(modifier = Modifier.height(20.dp))
-                Column(
-                    Modifier.absolutePadding(left = 10.dp, right = 10.dp)
-                ) {
-                    SectionTitle(title = stringResource(id = R.string.feat_setting))
-
-                    SettingMenu(
-                        modifier = Modifier.fillMaxWidth(),
-                        settingItemLabel =  R.string.select_currency,
-                        selectedOption = settingsUiState.selectedCurrency,
-                        menuItems = settingCurrencies,
-                        onMenuItemChosen = {
-                            settingsViewModel.updateCurrency(it as Currency)
+                if(!showSettingsScreen){
+                    AuthenticatedUser(
+                        fetchAndUpdateAccessToken = {
+                            coroutineScope.launch {
+                                settingsViewModel.fetchAccessTokenByGoogleId(it)
+                            }
+                        },
+                        logOutUser = {
+                            coroutineScope.launch {
+                                settingsViewModel.logOut()
+                            }
                         }
                     )
+                    Row(
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        modifier = Modifier.fillMaxWidth().clickable {showSettingsScreen = true }.padding(10.dp)
+                    ) {
+                       Row() {
+                           Icon(Icons.Default.Settings, contentDescription ="", modifier = Modifier.absolutePadding(right = 10.dp) )
+                           Text(text = stringResource(id = R.string.settings))
+                       }
+                        Icon(Icons.Default.ArrowForward, contentDescription ="" )
+                    }
+                }else{
+                    SettingsScreen()
                 }
             }
-                Column(
-                    Modifier.absolutePadding(left = 10.dp, right = 10.dp, top = 5.dp)
-                ) {
-                    SectionTitle(title = stringResource(id = R.string.sys_setting))
-
-                    SettingMenu(
-                        modifier = Modifier.fillMaxWidth(),
-                        settingItemLabel =  R.string.select_lang,
-                        selectedOption = settingsUiState.defaultLanguage,
-                        menuItems = appLanguages,
-                        onMenuItemChosen = {
-                            settingsViewModel.updateLocale(it as AppLocale)
-                            changeLocale(it.value)
-                        }
-                    )
-                }
-            SectionTitle(title = stringResource(id = R.string.settings), modifier = Modifier.absolutePadding(left = 10.dp, top = 15.dp))
-
-//            OtherApps(Modifier.absolutePadding(left = 15.dp, right = 15.dp))
-//            Divider(Modifier.absolutePadding(bottom = 15.dp,top=30.dp))
-
-
-            Divider(Modifier.absolutePadding(bottom = 15.dp, top = 15.dp))
 
         }
     }
@@ -273,7 +251,9 @@ fun AuthenticatedUser(
                         Image(
                             painter = rememberAsyncImagePainter(user?.photoUrl),
                             contentDescription = null,
-                            modifier = Modifier.width(50.dp).height(50.dp)
+                            modifier = Modifier
+                                .width(50.dp)
+                                .height(50.dp)
                         )
                         Spacer(modifier = Modifier.width(10.dp))
                         user?.displayName?.let { it1 ->
