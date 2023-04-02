@@ -152,7 +152,11 @@ fun AccountScreen(
                     SettingsScreen()
                 }
                 if(showExportScreen){
-                    ExportScreen()
+                    ExportScreen(
+                        onExportClicked = { from, to, format ->
+                            settingsViewModel.exportDate(from,to,format)
+                        }
+                    )
                 }
             }
 

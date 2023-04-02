@@ -170,5 +170,8 @@ class SettingsViewModel @Inject constructor(
             it.copy(currentSnackBar = null)
         }
     }
+    fun exportDate(from:String,to:String,format:FileFormat){
+
+    }
 
 }

@@ -100,5 +100,9 @@
     <string name="give_stars">ကြယ်တွေပေးမယ်</string>
     <string name="other_apps">အခြားဆော့၀ဲလ်များ</string>
     <string name="export">ဒေတာတွေကိုဖိုင်ပြောင်းမည်</string>
+    <string name="excel_format">အိတ်စယ်လ်ဖိုင်</string>
+    <string name="pdf_format">ပီဒီအက်ပ်ဖိုင်</string>
+    <string name="csv_format">စီအက်စ်ဗွီဖိုင်</string>
+    <string name="choose_format">ဖိုင်အမျိုးအစားရွေးပါ</string>
 
 </resources>

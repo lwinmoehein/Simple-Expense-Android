@@ -107,5 +107,9 @@
     <string name="web_client_id" translatable="false">533565625186-sujbsu657r2l7bdddboe99i1k31c54q1.apps.googleusercontent.com</string>
 
     <string name="export">Export Data</string>
+    <string name="excel_format">Excel</string>
+    <string name="pdf_format">PDF</string>
+    <string name="csv_format">CSV</string>
+    <string name="choose_format">Choose  file format</string>
 
 </resources>
