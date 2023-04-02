@@ -14,22 +14,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MoneySuBuu"
         android:usesCleartextTraffic="true">
-        <activity
-            android:name=".SettingsActivity"
-            android:exported="false">
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="" />
-        </activity>
-        <activity
-            android:name=".SettingActivity"
-            android:exported="false"
-            android:label="@string/title_activity_setting"
-            android:theme="@style/Theme.MoneySuBuu.NoActionBar">
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="" />
-        </activity>
+
         <activity
             android:name=".ui.MainActivity"
             android:exported="true"

@@ -44,58 +44,7 @@ import lab.justonebyte.moneysubuu.ui.components.OptionItem
 import lab.justonebyte.moneysubuu.ui.home.SectionTitle
 import lab.justonebyte.moneysubuu.utils.LocaleHelper
 
-@Composable
-fun SettingsScreen(
-    context: Context = LocalContext.current
-){
-    val settingsViewModel = hiltViewModel<SettingsViewModel>()
-    val settingsUiState by settingsViewModel.viewModelUiState.collectAsState()
 
-    var showSettingsScreen by remember { mutableStateOf(false) }
-    val settingCurrencies = listOf<OptionItem>(Currency.Kyat,Currency.Dollar)
-    val appLanguages = listOf(AppLocale.English,AppLocale.Myanmar)
-    val packageName = context.packageName
-    val coroutineScope = rememberCoroutineScope()
-
-    fun changeLocale(localeString: String){
-        LocaleHelper().setLocale(context, localeString)
-        val i = Intent(context as Activity, MainActivity::class.java)
-        context.finish()
-        context.startActivity(i)
-    }
-
-    Column(
-        Modifier.absolutePadding(left = 10.dp, right = 10.dp, top = 5.dp)
-    ) {
-        Spacer(modifier = Modifier.height(20.dp))
-        Column(
-        ) {
-            SectionTitle(title = stringResource(id = R.string.feat_setting))
-
-            SettingMenu(
-                modifier = Modifier.fillMaxWidth(),
-                settingItemLabel =  R.string.select_currency,
-                selectedOption = settingsUiState.selectedCurrency,
-                menuItems = settingCurrencies,
-                onMenuItemChosen = {
-                    settingsViewModel.updateCurrency(it as Currency)
-                }
-            )
-        }
-        SectionTitle(title = stringResource(id = R.string.sys_setting))
-
-        SettingMenu(
-            modifier = Modifier.fillMaxWidth(),
-            settingItemLabel =  R.string.select_lang,
-            selectedOption = settingsUiState.defaultLanguage,
-            menuItems = appLanguages,
-            onMenuItemChosen = {
-                settingsViewModel.updateLocale(it as AppLocale)
-                changeLocale(it.value)
-            }
-        )
-    }
-}
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -109,10 +58,9 @@ fun AccountScreen(
     val settingsUiState by settingsViewModel.viewModelUiState.collectAsState()
 
     var showSettingsScreen by remember { mutableStateOf(false) }
+    var showExportScreen by remember { mutableStateOf(false) }
 
     val coroutineScope = rememberCoroutineScope()
-
-
 
 
     Scaffold(
@@ -138,7 +86,10 @@ fun AccountScreen(
                                style = MaterialTheme.typography.titleLarge
                            )
                        }else{
-                           Icon(Icons.Default.ArrowBack, contentDescription = "",Modifier.absolutePadding(right = 5.dp).clickable { showSettingsScreen = false })
+                           Icon(Icons.Default.ArrowBack, contentDescription = "",
+                               Modifier
+                                   .absolutePadding(right = 5.dp)
+                                   .clickable { showSettingsScreen = false })
                            Text(
                                text= stringResource(id = R.string.settings),
                                maxLines = 1,
@@ -159,7 +110,7 @@ fun AccountScreen(
                 .absolutePadding(top = 20.dp)
         ){
             Column {
-                if(!showSettingsScreen){
+                if(!showSettingsScreen && !showExportScreen){
                     AuthenticatedUser(
                         fetchAndUpdateAccessToken = {
                             coroutineScope.launch {
@@ -174,7 +125,10 @@ fun AccountScreen(
                     )
                     Row(
                         horizontalArrangement = Arrangement.SpaceBetween,
-                        modifier = Modifier.fillMaxWidth().clickable {showSettingsScreen = true }.padding(10.dp)
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable { showSettingsScreen = true }
+                            .padding(10.dp)
                     ) {
                        Row() {
                            Icon(Icons.Default.Settings, contentDescription ="", modifier = Modifier.absolutePadding(right = 10.dp) )
@@ -182,8 +136,26 @@ fun AccountScreen(
                        }
                         Icon(Icons.Default.ArrowForward, contentDescription ="" )
                     }
-                }else{
+
+                    Row(
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable { showSettingsScreen = true }
+                            .padding(10.dp)
+                    ) {
+                        Row() {
+                            Icon(Icons.Default.DateRange, contentDescription ="", modifier = Modifier.absolutePadding(right = 10.dp) )
+                            Text(text = stringResource(id = R.string.export))
+                        }
+                        Icon(Icons.Default.ArrowForward, contentDescription ="" )
+                    }
+                }
+                if(showSettingsScreen){
                     SettingsScreen()
+                }
+                if(showExportScreen){
+                    ExportScreen()
                 }
             }
 
