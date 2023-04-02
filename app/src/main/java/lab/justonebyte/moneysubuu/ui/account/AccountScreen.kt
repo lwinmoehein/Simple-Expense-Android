@@ -77,7 +77,7 @@ fun AccountScreen(
                        verticalAlignment = Alignment.CenterVertically
 
                    ) {
-                       if(!showSettingsScreen){
+                       if(!showSettingsScreen && !showExportScreen){
                            Icon(painterResource(id =R.drawable.ic_baseline_account_circle_24), contentDescription = "",Modifier.absolutePadding(right = 5.dp))
                            Text(
                                text= stringResource(id = R.string.account),
@@ -89,13 +89,10 @@ fun AccountScreen(
                            Icon(Icons.Default.ArrowBack, contentDescription = "",
                                Modifier
                                    .absolutePadding(right = 5.dp)
-                                   .clickable { showSettingsScreen = false })
-                           Text(
-                               text= stringResource(id = R.string.settings),
-                               maxLines = 1,
-                               overflow = TextOverflow.Ellipsis,
-                               style = MaterialTheme.typography.titleLarge
-                           )
+                                   .clickable {
+                                       showSettingsScreen = false
+                                       showExportScreen = false
+                                   })
                        }
 
                    }
@@ -141,7 +138,7 @@ fun AccountScreen(
                         horizontalArrangement = Arrangement.SpaceBetween,
                         modifier = Modifier
                             .fillMaxWidth()
-                            .clickable { showSettingsScreen = true }
+                            .clickable { showExportScreen = true }
                             .padding(10.dp)
                     ) {
                         Row() {
