@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="lab.justonebyte.moneysubuu">
+    package="lab.justonebyte.simpleexpense">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -8,7 +8,7 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
-        android:name=".SuBuuApplication"
+        android:name="lab.justonebyte.simpleexpense.SuBuuApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_lanucher"
         android:label="@string/app_name"
@@ -18,7 +18,7 @@
         android:usesCleartextTraffic="true">
 
         <activity
-            android:name=".ui.MainActivity"
+            android:name="lab.justonebyte.simpleexpense.ui.MainActivity"
             android:exported="true"
             android:label="@string/app_name"
             android:theme="@style/Theme.MoneySuBuu">
