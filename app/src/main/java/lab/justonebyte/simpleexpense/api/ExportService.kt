@@ -6,6 +6,7 @@ import okhttp3.ResponseBody
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.POST
+import retrofit2.http.Streaming
 
 
 data class BetweenPostData(
@@ -15,6 +16,7 @@ data class BetweenPostData(
 
 interface ExportService {
 
+    @Streaming
     @POST("reporting/excel" )
     suspend fun generateExcelFile(@Body postDat: BetweenPostData) : Response<ResponseBody>
 

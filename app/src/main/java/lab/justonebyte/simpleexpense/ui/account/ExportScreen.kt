@@ -1,7 +1,15 @@
 package lab.justonebyte.simpleexpense.ui.account
 
 import android.app.DatePickerDialog
+import android.content.Context
+import android.content.Intent
+import android.os.Build
+import android.provider.DocumentsContract
 import android.widget.DatePicker
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -15,6 +23,7 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.core.app.ActivityCompat.startActivityForResult
 import lab.justonebyte.simpleexpense.R
 import lab.justonebyte.simpleexpense.utils.dateFormatter
 import java.util.*
@@ -75,12 +84,31 @@ fun ChooseFormat(
     )
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun ExportScreen(
-    onExportClicked:(from:String,to:String,format:FileFormat)->Unit
+    settingsViewModel: SettingsViewModel,
+    onExportClicked:(from:String,to:String,format:FileFormat)->Unit,
+    context:Context = LocalContext.current,
 ) {
     val mContext = LocalContext.current
-    val localFocusManage = LocalFocusManager.current
+    val contentResolver = LocalContext.current.contentResolver
+    val downloadedFile = settingsViewModel.downloadedFile.collectAsState()
+
+    val launcher = rememberLauncherForActivityResult(ActivityResultContracts.CreateDocument("text/plain")) { selectedUri ->
+        if (selectedUri != null) {
+            contentResolver.openOutputStream(selectedUri)?.use {
+                it.write(downloadedFile.value?.bytes())
+            }
+        } else {
+            println("No file was selected")
+        }
+    }
+
+    if(downloadedFile.value!==null){
+        launcher.launch("test.txt")
+    }
+
 
     val mCalendar = Calendar.getInstance()
     var chosenFormat by remember { mutableStateOf<FileFormat?>(null) }

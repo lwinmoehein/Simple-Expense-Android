@@ -3,11 +3,13 @@ package lab.justonebyte.simpleexpense.ui.account
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import android.util.Log
 import androidx.activity.compose.ManagedActivityResultLauncher
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -38,6 +40,7 @@ import kotlinx.coroutines.tasks.await
 import lab.justonebyte.simpleexpense.R
 
 
+@RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnrememberedMutableState", "UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
@@ -146,7 +149,8 @@ fun AccountScreen(
                     ExportScreen(
                         onExportClicked = { from, to, format ->
                             settingsViewModel.exportDate(from,to,format)
-                        }
+                        },
+                        settingsViewModel = settingsViewModel
                     )
                 }
             }
