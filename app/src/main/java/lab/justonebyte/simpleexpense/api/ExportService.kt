@@ -20,7 +20,9 @@ interface ExportService {
     @POST("reporting/excel" )
     suspend fun generateExcelFile(@Body postDat: BetweenPostData) : Response<ResponseBody>
 
+
     @POST("reporting/pdf" )
+    @Streaming
     suspend fun generatePDFFile(@Body postData: BetweenPostData) : Response<ResponseBody>
 
 }

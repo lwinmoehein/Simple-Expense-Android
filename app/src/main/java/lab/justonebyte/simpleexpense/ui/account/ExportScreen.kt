@@ -95,18 +95,16 @@ fun ExportScreen(
     val contentResolver = LocalContext.current.contentResolver
     val downloadedFile = settingsViewModel.downloadedFile.collectAsState()
 
-    val launcher = rememberLauncherForActivityResult(ActivityResultContracts.CreateDocument("text/plain")) { selectedUri ->
+    val launcher = rememberLauncherForActivityResult(ActivityResultContracts.CreateDocument("application/pdf")) { selectedUri ->
         if (selectedUri != null) {
-            contentResolver.openOutputStream(selectedUri)?.use {
-                it.write(downloadedFile.value?.bytes())
-            }
+            settingsViewModel.save(contentResolver,selectedUri)
         } else {
             println("No file was selected")
         }
     }
 
     if(downloadedFile.value!==null){
-        launcher.launch("test.txt")
+        launcher.launch("test.pdf")
     }
 
 

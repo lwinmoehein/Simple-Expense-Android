@@ -1,6 +1,7 @@
 package lab.justonebyte.simpleexpense.ui.account
 
 import android.app.Activity
+import android.content.ContentResolver
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -263,10 +264,11 @@ class SettingsViewModel @Inject constructor(
     private suspend fun generateExcelFile(from: String, to:String ) {
         if(token.value.isNotEmpty()) {
             val exportService = RetrofitHelper.getInstance(token.value).create(ExportService::class.java)
-            Log.i("file:","got file")
 
             viewModelScope.launch {
-                val responseBody=exportService.generateExcelFile(BetweenPostData(from,to)).body()
+                val response =exportService.generateExcelFile(BetweenPostData(from,to))
+                Log.i("file:","downloaded file:"+response.headers())
+                val responseBody = response.body()
                 saveFile(responseBody)
             }
         }
@@ -277,24 +279,43 @@ class SettingsViewModel @Inject constructor(
         withContext(Dispatchers.IO) {
             if(body === null) {
                 Log.i("file","response body is null")
+            }else{
+                Log.i("file","response body size:"+body.bytes().size)
+                _downloadedFile.update { body  }
             }
 
-            body?.saveFile()
-                ?.collect{ downloadState->
-                    when (downloadState) {
-                        is DownloadState.Downloading -> {
-                            _downloadedFile.update { body }
-                            Log.d("myTag", "progress=${downloadState.progress}")
+//            body?.saveFile()
+//                ?.collect{ downloadState->
+//                    Log.i("file","collecting")
+//                    when (downloadState) {
+//                        is DownloadState.Downloading -> {
+//                            Log.d("file", "progress=${downloadState.progress}")
+//                        }
+//
+//                        is DownloadState.Failed -> {
+//                            Log.d("file", "Download failed")
+//                        }
+//                        is DownloadState.Finished -> {
+//                            Log.d("file", "Download finished")
+//                            _downloadedFile.update { body  }
+//                        }
+//                    }
+//                }
+        }
+
+    }
+    fun save(resolver:ContentResolver,selectedUri: Uri?) {
+        viewModelScope.launch {
+            try {
+                selectedUri?.let { uri ->
+                    resolver.openOutputStream(uri)?.use { outputStream ->
+                        _downloadedFile.value?.byteStream()?.use { inputStream->
+                            inputStream.copyTo(outputStream)
                         }
-
-
-                        DownloadState.Finished -> {
-//                            _downloadedFile.update { "Done" }
-                        }
-
-                        else -> {}
                     }
                 }
+            } catch (_: Exception) {
+            }
         }
     }
 
