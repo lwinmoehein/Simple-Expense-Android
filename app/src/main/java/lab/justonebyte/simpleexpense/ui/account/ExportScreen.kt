@@ -2,32 +2,37 @@ package lab.justonebyte.simpleexpense.ui.account
 
 import android.app.DatePickerDialog
 import android.content.Context
-import android.content.Intent
-import android.os.Build
-import android.provider.DocumentsContract
 import android.widget.DatePicker
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
-import androidx.annotation.RequiresApi
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.Button
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.core.app.ActivityCompat.startActivityForResult
 import lab.justonebyte.simpleexpense.R
 import lab.justonebyte.simpleexpense.utils.dateFormatter
-import java.util.*
-
+import java.util.Calendar
+import java.util.Date
 
 
 data class FileFormat(val iconId:Int,val nameId:Int)
@@ -84,7 +89,7 @@ fun ChooseFormat(
     )
 }
 
-@RequiresApi(Build.VERSION_CODES.O)
+
 @Composable
 fun ExportScreen(
     settingsViewModel: SettingsViewModel,
@@ -92,21 +97,6 @@ fun ExportScreen(
     context:Context = LocalContext.current,
 ) {
     val mContext = LocalContext.current
-    val contentResolver = LocalContext.current.contentResolver
-    val downloadedFile = settingsViewModel.downloadedFile.collectAsState()
-
-    val launcher = rememberLauncherForActivityResult(ActivityResultContracts.CreateDocument("application/pdf")) { selectedUri ->
-        if (selectedUri != null) {
-            settingsViewModel.save(contentResolver,selectedUri)
-        } else {
-            println("No file was selected")
-        }
-    }
-
-    if(downloadedFile.value!==null){
-        launcher.launch("test.pdf")
-    }
-
 
     val mCalendar = Calendar.getInstance()
     var chosenFormat by remember { mutableStateOf<FileFormat?>(null) }
