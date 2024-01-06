@@ -1,49 +1,31 @@
 package lab.justonebyte.simpleexpense.ui.account
 
-import android.app.Activity
-import android.content.ContentResolver
 import android.content.Context
-import android.content.Intent
-import android.content.pm.PackageManager
-import android.net.Uri
-import android.os.Build
-import android.os.Environment
-import android.provider.DocumentsContract
 import android.util.Log
-import androidx.annotation.RequiresApi
 import androidx.compose.runtime.mutableStateOf
-import androidx.core.app.ActivityCompat.startActivityForResult
-import androidx.core.content.ContextCompat.checkSelfPermission
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import lab.justonebyte.simpleexpense.R
 import lab.justonebyte.simpleexpense.api.AuthService
 import lab.justonebyte.simpleexpense.data.CategoryRepository
 import lab.justonebyte.simpleexpense.data.SettingPrefRepository
 import lab.justonebyte.simpleexpense.data.TransactionRepository
-import lab.justonebyte.simpleexpense.model.*
+import lab.justonebyte.simpleexpense.model.AppList
+import lab.justonebyte.simpleexpense.model.AppLocale
+import lab.justonebyte.simpleexpense.model.BalanceType
+import lab.justonebyte.simpleexpense.model.Currency
+import lab.justonebyte.simpleexpense.model.Transaction
 import lab.justonebyte.simpleexpense.ui.components.SnackBarType
 import lab.justonebyte.simpleexpense.utils.RetrofitHelper
 import lab.justonebyte.simpleexpense.workers.runVersionSync
-import lab.justonebyte.simpleexpense.R
-import lab.justonebyte.simpleexpense.api.BetweenPostData
-import lab.justonebyte.simpleexpense.api.ExportService
 import okhttp3.ResponseBody
-import java.io.File
-
-
 import javax.inject.Inject
 
 data class SettingUiState(
@@ -53,41 +35,7 @@ data class SettingUiState(
     val currentSnackBar : SnackBarType? = null,
     val companionApps: AppList? = null
 )
-const val CREATE_FILE = 1
 
-private sealed class DownloadState {
-    data class Downloading(val progress: Int) : DownloadState()
-    object Finished : DownloadState()
-    data class Failed(val error: Throwable? = null) : DownloadState()
-}
-
-private fun ResponseBody.saveFile(): Flow<DownloadState> {
-    return flow{
-        emit(DownloadState.Downloading(0))
-        val destinationFile = File("Downloads")
-
-        try {
-            byteStream().use { inputStream->
-                destinationFile.outputStream().use { outputStream->
-                    val totalBytes = contentLength()
-                    val buffer = ByteArray(DEFAULT_BUFFER_SIZE)
-                    var progressBytes = 0L
-                    var bytes = inputStream.read(buffer)
-                    while (bytes >= 0) {
-                        outputStream.write(buffer, 0, bytes)
-                        progressBytes += bytes
-                        bytes = inputStream.read(buffer)
-                        emit(DownloadState.Downloading(((progressBytes * 100) / totalBytes).toInt()))
-                    }
-                }
-            }
-            emit(DownloadState.Finished)
-        } catch (e: Exception) {
-            emit(DownloadState.Failed(e))
-        }
-    }
-        .flowOn(Dispatchers.IO).distinctUntilChanged()
-}
 
 @HiltViewModel
 class SettingsViewModel @Inject constructor(
@@ -109,6 +57,7 @@ class SettingsViewModel @Inject constructor(
         get() = _viewModelUiState
 
     val totalTransactions = mutableStateOf(listOf<Transaction>())
+
     private var token = mutableStateOf("")
 
 
@@ -223,11 +172,6 @@ class SettingsViewModel @Inject constructor(
         }
     }
 
-    fun updateDefaultBalanceType(balanceType: BalanceType){
-        viewModelScope.launch {
-            settingRepository.updateBalanceType(balanceType.value)
-        }
-    }
     fun showSnackBar(type: SnackBarType){
         _viewModelUiState.update {
             it.copy(currentSnackBar = type)
@@ -238,7 +182,6 @@ class SettingsViewModel @Inject constructor(
             it.copy(currentSnackBar = null)
         }
     }
-    @RequiresApi(Build.VERSION_CODES.O)
     fun exportDate(from:String, to:String, format:FileFormat){
         viewModelScope.launch {
             when(format.nameId){
@@ -251,73 +194,10 @@ class SettingsViewModel @Inject constructor(
     private fun generatePDFFile() {
         TODO("Not yet implemented")
     }
-    private fun hasPermissions(vararg permissions: String): Boolean {
-        for (permission in permissions) {
-            if (checkSelfPermission(application,permission) != PackageManager.PERMISSION_GRANTED) {
-                return false
-            }
-        }
-        return true
-    }
 
-    @RequiresApi(Build.VERSION_CODES.O)
+
     private suspend fun generateExcelFile(from: String, to:String ) {
-        if(token.value.isNotEmpty()) {
-            val exportService = RetrofitHelper.getInstance(token.value).create(ExportService::class.java)
-
-            viewModelScope.launch {
-                val response =exportService.generateExcelFile(BetweenPostData(from,to))
-                Log.i("file:","downloaded file:"+response.headers())
-                val responseBody = response.body()
-                saveFile(responseBody)
-            }
-        }
+       TODO("Not yet ")
     }
-
-    @RequiresApi(Build.VERSION_CODES.O)
-    suspend fun saveFile(body: ResponseBody?) {
-        withContext(Dispatchers.IO) {
-            if(body === null) {
-                Log.i("file","response body is null")
-            }else{
-                Log.i("file","response body size:"+body.bytes().size)
-                _downloadedFile.update { body  }
-            }
-
-//            body?.saveFile()
-//                ?.collect{ downloadState->
-//                    Log.i("file","collecting")
-//                    when (downloadState) {
-//                        is DownloadState.Downloading -> {
-//                            Log.d("file", "progress=${downloadState.progress}")
-//                        }
-//
-//                        is DownloadState.Failed -> {
-//                            Log.d("file", "Download failed")
-//                        }
-//                        is DownloadState.Finished -> {
-//                            Log.d("file", "Download finished")
-//                            _downloadedFile.update { body  }
-//                        }
-//                    }
-//                }
-        }
-
-    }
-    fun save(resolver:ContentResolver,selectedUri: Uri?) {
-        viewModelScope.launch {
-            try {
-                selectedUri?.let { uri ->
-                    resolver.openOutputStream(uri)?.use { outputStream ->
-                        _downloadedFile.value?.byteStream()?.use { inputStream->
-                            inputStream.copyTo(outputStream)
-                        }
-                    }
-                }
-            } catch (_: Exception) {
-            }
-        }
-    }
-
 
 }
