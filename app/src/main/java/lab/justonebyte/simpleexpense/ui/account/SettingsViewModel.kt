@@ -212,12 +212,24 @@ class SettingsViewModel @Inject constructor(
     }
 
     private fun generatePDFFile() {
-        TODO("Not yet implemented")
+
     }
 
 
-    private suspend fun generateExcelFile(from: String, to:String ) {
-       TODO("Not yet ")
+    private fun generateExcelFile(from: String, to:String ) {
+        val downloadFolderUriString = _viewModelUiState.value.downloadFolder
+        if(!downloadFolderUriString.isNullOrEmpty()){
+            val uri = Uri.parse(_viewModelUiState.value.downloadFolder)
+            val file = DocumentFile.fromTreeUri(application,uri)
+
+            if (file != null && file.canRead() && file.canWrite()) {
+                Log.i("Folder:main:w:", file.canWrite().toString())
+                Log.i("Folder:main:r:", file.canRead().toString())
+            } else
+            {
+                Log.i("Folder:","Have no access to download folder.")
+            }
+        }
     }
 
     private suspend fun updateDownloadFolder(folderUri:String){
