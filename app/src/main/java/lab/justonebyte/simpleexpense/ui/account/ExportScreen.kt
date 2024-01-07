@@ -7,10 +7,14 @@ import android.net.Uri
 import android.provider.DocumentsContract
 import android.widget.DatePicker
 import androidx.activity.result.ActivityResultLauncher
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.absolutePadding
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
@@ -53,14 +57,14 @@ fun ChooseFormat(
 ){
     var chosenFormat by remember { mutableStateOf<FileFormat?>(null) }
 
-    Column(modifier = Modifier.padding(10.dp)) {
-        Text(text = stringResource(id = R.string.choose_format), style = MaterialTheme.typography.labelLarge)
+    Column() {
+        ExportScreenTitle(title = "Choose Export File Format : ")
         LazyVerticalGrid(
-            horizontalArrangement = Arrangement.Center,
-            modifier = Modifier.heightIn(max=300.dp),
+            modifier = Modifier
+                .heightIn(max = 300.dp)
+                .fillMaxWidth(),
             userScrollEnabled = true,
             columns = GridCells.Fixed(3),
-            // content padding
 
             content = {
 
@@ -69,8 +73,8 @@ fun ChooseFormat(
 
                     Card(
                         modifier = Modifier
-                            .padding(2.dp)
                             .fillMaxWidth()
+                            .absolutePadding(right = 5.dp)
                             .clickable {
                                 chosenFormat = formats[index]
                                 onFormatChosen(chosenFormat!!)
@@ -102,10 +106,9 @@ fun ChooseDownloadFolder(
 
     Column(
         modifier = Modifier
-            .fillMaxWidth()
-            .padding(10.dp),
+            .fillMaxWidth(),
     ) {
-        Text(text = "Export To :", style = MaterialTheme.typography.labelLarge)
+        ExportScreenTitle(title = "Export To :")
         if(!downloadFolder.isNullOrEmpty())
             Text(
                 text = downloadFolder,
@@ -153,8 +156,8 @@ fun ExportScreen(
     val fromDate = remember { mutableStateOf(dateFormatter(System.currentTimeMillis())) }
 
         Column(
-            modifier = Modifier.padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
+            modifier = Modifier.absolutePadding(top = 5.dp).padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(15.dp)
         ) {
             ChooseDateRange(
                 fromDate = fromDate.value,
@@ -175,6 +178,7 @@ fun ExportScreen(
                 downloadFolder = downloadFolder.downloadFolder
             )
 
+            Spacer(modifier = Modifier.absolutePadding(top = 20.dp))
 
             Button(
                 onClick = {
@@ -220,39 +224,41 @@ fun ChooseDateRange(
         }, mYear, mMonth, mDay
     )
 
+    ExportScreenTitle(title = "Select Export Date Range : ")
     Card(
-        modifier = Modifier
-            .padding(2.dp)
-            .fillMaxWidth(),
         colors =  CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.onSecondary,
         )
     ) {
+        Column(Modifier.padding(10.dp)) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(text = "From")
+                Text(
+                    text = fromDate,
+                    modifier = Modifier.clickable { fromDatePickerDialog.show() })
+            }
 
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(10.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(text = "From")
-            Text(
-                text = fromDate,
-                modifier = Modifier.clickable { fromDatePickerDialog.show() })
-        }
-
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(10.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(text = "To")
-            Text(
-                text = toDate,
-                modifier = Modifier.clickable { toDatePickerDialog.show() })
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(text = "To")
+                Text(
+                    text = toDate,
+                    modifier = Modifier.clickable { toDatePickerDialog.show() })
+            }
         }
     }
+}
+
+@Composable
+fun ExportScreenTitle(title:String){
+    Text(text = title, style = MaterialTheme.typography.labelLarge, modifier = Modifier.padding(bottom = 5.dp))
 }
