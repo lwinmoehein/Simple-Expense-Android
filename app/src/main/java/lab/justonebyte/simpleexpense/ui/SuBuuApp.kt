@@ -1,6 +1,8 @@
 package lab.justonebyte.simpleexpense.ui
 
 import AppTheme
+import android.content.Intent
+import androidx.activity.result.ActivityResultLauncher
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -22,7 +24,7 @@ enum class NavItem(val stringResource:Int,val iconResource:Int){
 val appContentPadding = 20.dp
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SuBuuApp() {
+fun SuBuuApp(chooseDownloadFolderLauncher: ActivityResultLauncher<Intent>) {
 
     var selectedItem by remember { mutableStateOf(0) }
     val navItems = listOf(NavItem.HOME,NavItem.CHARTS,NavItem.CATEGORIES,NavItem.ACCOUNT)
@@ -39,6 +41,7 @@ fun SuBuuApp() {
 
             val navBackStackEntry by navController.currentBackStackEntryAsState()
             val currentRoute = navBackStackEntry?.destination?.route ?: MainDestinations.HOME_ROUTE
+
             Scaffold(
 
                 bottomBar = {
@@ -66,6 +69,7 @@ fun SuBuuApp() {
                     paddings = it,
                     navController = navController,
                     scaffoldState = scaffoldState,
+                    chooseDownloadFolderLauncher = chooseDownloadFolderLauncher
                 )
             }
         }

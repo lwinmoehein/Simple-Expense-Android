@@ -33,7 +33,8 @@ data class SettingUiState(
     val defaultBalanceType: BalanceType = BalanceType.MONTHLY,
     val defaultLanguage:AppLocale = AppLocale.English,
     val currentSnackBar : SnackBarType? = null,
-    val companionApps: AppList? = null
+    val companionApps: AppList? = null,
+    val downloadFolder:String? = null
 )
 
 
@@ -49,10 +50,6 @@ class SettingsViewModel @Inject constructor(
     private val _viewModelUiState = MutableStateFlow(
         SettingUiState()
     )
-    private val _downloadedFile : MutableStateFlow<ResponseBody?> = MutableStateFlow(null)
-
-    val downloadedFile :StateFlow<ResponseBody?>
-        get() = _downloadedFile
     val viewModelUiState: StateFlow<SettingUiState>
         get() = _viewModelUiState
 
@@ -70,6 +67,7 @@ class SettingsViewModel @Inject constructor(
 //            launch { getCompanionApps() }
             launch { getTransactions() }
             launch { collectToken() }
+            launch { collectDownloadFolder() }
         }
     }
     private suspend fun getTransactions(){
@@ -125,6 +123,15 @@ class SettingsViewModel @Inject constructor(
     private suspend fun collectToken(){
         settingRepository.accessToken.collect{
             token.value = it
+        }
+    }
+    private suspend fun collectDownloadFolder(){
+        settingRepository.downloadFolder.collect{
+            _viewModelUiState.update { uiState->
+                uiState.copy(
+                    downloadFolder = it
+                )
+            }
         }
     }
     private suspend fun collectLanguage(){
@@ -198,6 +205,10 @@ class SettingsViewModel @Inject constructor(
 
     private suspend fun generateExcelFile(from: String, to:String ) {
        TODO("Not yet ")
+    }
+
+    private suspend fun updateDownloadFolder(folderUri:String){
+        settingRepository.updateDownloadFolder(folderUri)
     }
 
 }

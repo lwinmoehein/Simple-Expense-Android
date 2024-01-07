@@ -7,6 +7,7 @@ import androidx.datastore.preferences.core.*
 import kotlinx.coroutines.flow.map
 import lab.justonebyte.simpleexpense.data.SettingPreferencesRepositoryImpl.PreferencesKeys.ACCESS_TOKEN
 import lab.justonebyte.simpleexpense.data.SettingPreferencesRepositoryImpl.PreferencesKeys.DEFAULT_BALANCE_TYPE
+import lab.justonebyte.simpleexpense.data.SettingPreferencesRepositoryImpl.PreferencesKeys.DOWNLOAD_FOLDER
 import lab.justonebyte.simpleexpense.data.SettingPreferencesRepositoryImpl.PreferencesKeys.IS_FIRST_TIME
 import lab.justonebyte.simpleexpense.data.SettingPreferencesRepositoryImpl.PreferencesKeys.LOCALE
 import lab.justonebyte.simpleexpense.data.SettingPreferencesRepositoryImpl.PreferencesKeys.SELECTED_CURRENCY
@@ -27,7 +28,7 @@ interface SettingPrefRepository {
     val selectedCurrency: Flow<Int>
     val isAppIntroduced:Flow<Boolean>
     val accessToken:Flow<String>
-
+    val downloadFolder:Flow<String>
 
     suspend fun updateTheme(theme: Int)
     suspend fun updateLocale(locale:String)
@@ -35,6 +36,8 @@ interface SettingPrefRepository {
     suspend fun updateIsAppIntroduced(introduced:Boolean)
     suspend fun updateSelectedCurrency(currency:Int)
     suspend fun updateToken(token: String)
+    suspend fun updateDownloadFolder(folderUri: String)
+
 
 }
 
@@ -49,7 +52,7 @@ class SettingPreferencesRepositoryImpl @Inject constructor
         val DEFAULT_BALANCE_TYPE = intPreferencesKey("balance_type")
         val SELECTED_CURRENCY = intPreferencesKey("currency")
         val ACCESS_TOKEN = stringPreferencesKey("token")
-
+        val DOWNLOAD_FOLDER  = stringPreferencesKey("download_folder")
     }
 
     override val selectedTheme: Flow<Int> = dataStore.data.map { it[THEME] ?: Theme.SYSTEM.id }
@@ -58,7 +61,7 @@ class SettingPreferencesRepositoryImpl @Inject constructor
     override val defaultBalanceType: Flow<Int> = dataStore.data.map { it[DEFAULT_BALANCE_TYPE]?:BalanceType.MONTHLY.value }
     override val selectedCurrency: Flow<Int> = dataStore.data.map { it[SELECTED_CURRENCY]?:Currency.Kyat.value }
     override val accessToken: Flow<String> = dataStore.data.map { it[ACCESS_TOKEN]?:"" }
-
+    override val downloadFolder: Flow<String> = dataStore.data.map { it[DOWNLOAD_FOLDER]?:"" }
     override suspend fun updateTheme(theme: Int) {
         dataStore.edit { preferences ->
             preferences[THEME] = theme
@@ -91,6 +94,12 @@ class SettingPreferencesRepositoryImpl @Inject constructor
     override suspend fun updateToken(token:String) {
         dataStore.edit { preferences ->
             preferences[ACCESS_TOKEN] = token
+        }
+    }
+
+    override suspend fun updateDownloadFolder(folderUri: String) {
+        dataStore.edit { preferences ->
+            preferences[DOWNLOAD_FOLDER] = folderUri
         }
     }
 

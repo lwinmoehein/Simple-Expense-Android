@@ -1,5 +1,9 @@
 package lab.justonebyte.simpleexpense.ui
 
+import android.content.Intent
+import android.os.Build
+import androidx.activity.result.ActivityResultLauncher
+import androidx.annotation.RequiresApi
 import lab.justonebyte.simpleexpense.ui.stats.StatsScreen
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
@@ -27,6 +31,7 @@ object MainDestinations {
     const val CATEGORY_ROUTE = "category"
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun SuBuuNavGraph(
@@ -34,6 +39,7 @@ fun SuBuuNavGraph(
     navController: NavHostController = rememberNavController(),
     scaffoldState: ScaffoldState = rememberScaffoldState(),
     startDestination: String = MainDestinations.HOME_ROUTE,
+    chooseDownloadFolderLauncher: ActivityResultLauncher<Intent>
 ) {
     val coroutineScope = rememberCoroutineScope()
     val openDrawer: () -> Unit = { coroutineScope.launch { scaffoldState.drawerState.open() } }
@@ -51,6 +57,7 @@ fun SuBuuNavGraph(
         composable(MainDestinations.ACCOUNT_ROUTE) {
             AccountScreen(
                 openDrawer = openDrawer,
+                chooseDownloadFolderLauncher = chooseDownloadFolderLauncher
             )
         }
         composable(MainDestinations.STATS_ROUTE) {

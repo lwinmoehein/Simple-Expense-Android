@@ -8,6 +8,7 @@ import android.util.Log
 import androidx.activity.compose.ManagedActivityResultLauncher
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.ActivityResult
+import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
@@ -46,7 +47,8 @@ import lab.justonebyte.simpleexpense.R
 @Composable
 fun AccountScreen(
     openDrawer:()->Unit,
-    context: Context = LocalContext.current
+    context: Context = LocalContext.current,
+    chooseDownloadFolderLauncher: ActivityResultLauncher<Intent>
 ){
     val settingsViewModel = hiltViewModel<SettingsViewModel>()
     val settingsUiState by settingsViewModel.viewModelUiState.collectAsState()
@@ -150,7 +152,8 @@ fun AccountScreen(
                         onExportClicked = { from, to, format ->
                             settingsViewModel.exportDate(from,to,format)
                         },
-                        settingsViewModel = settingsViewModel
+                        settingsViewModel = settingsViewModel,
+                        chooseDownloadFolderLauncher = chooseDownloadFolderLauncher
                     )
                 }
             }
