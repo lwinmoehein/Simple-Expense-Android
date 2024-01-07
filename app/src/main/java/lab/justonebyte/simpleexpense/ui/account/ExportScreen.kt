@@ -120,7 +120,7 @@ fun ChooseDownloadFolder(
             )
         else
             Text(
-                text =  "Choose Download Folder :",
+                text =  "warning : please click to choose a folder for saving exported file.",
                 color = Color.Red,
                 modifier = Modifier.clickable {
                     val intent = chooseDownloadFolderIntent()
@@ -151,7 +151,7 @@ fun ExportScreen(
 ) {
 
     var chosenFormat by remember { mutableStateOf<FileFormat?>(null) }
-    val downloadFolder by settingsViewModel.viewModelUiState.collectAsState()
+    val uiState by settingsViewModel.viewModelUiState.collectAsState()
     val toDate = remember { mutableStateOf(dateFormatter(System.currentTimeMillis())) }
     val fromDate = remember { mutableStateOf(dateFormatter(System.currentTimeMillis())) }
 
@@ -175,7 +175,7 @@ fun ExportScreen(
 
             ChooseDownloadFolder(
                 chooseDownloadFolderLauncher = chooseDownloadFolderLauncher,
-                downloadFolder = downloadFolder.downloadFolder
+                downloadFolder = uiState.readableDownloadFolder
             )
 
             Spacer(modifier = Modifier.absolutePadding(top = 20.dp))

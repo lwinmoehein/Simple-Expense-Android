@@ -1,8 +1,11 @@
 package lab.justonebyte.simpleexpense.ui.account
 
 import android.content.Context
+import android.net.Uri
+import android.provider.DocumentsContract
 import android.util.Log
 import androidx.compose.runtime.mutableStateOf
+import androidx.documentfile.provider.DocumentFile
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -24,6 +27,7 @@ import lab.justonebyte.simpleexpense.model.Currency
 import lab.justonebyte.simpleexpense.model.Transaction
 import lab.justonebyte.simpleexpense.ui.components.SnackBarType
 import lab.justonebyte.simpleexpense.utils.RetrofitHelper
+import lab.justonebyte.simpleexpense.utils.getDecodedPath
 import lab.justonebyte.simpleexpense.workers.runVersionSync
 import okhttp3.ResponseBody
 import javax.inject.Inject
@@ -34,7 +38,8 @@ data class SettingUiState(
     val defaultLanguage:AppLocale = AppLocale.English,
     val currentSnackBar : SnackBarType? = null,
     val companionApps: AppList? = null,
-    val downloadFolder:String? = null
+    val downloadFolder:String? = null,
+    val readableDownloadFolder:String? = null
 )
 
 
@@ -131,6 +136,14 @@ class SettingsViewModel @Inject constructor(
                 uiState.copy(
                     downloadFolder = it
                 )
+            }
+            if(it.isNotEmpty()){
+                val uri = Uri.parse(it)
+                _viewModelUiState.update { uiState->
+                    uiState.copy(
+                        readableDownloadFolder = uri.getDecodedPath()
+                    )
+                }
             }
         }
     }
