@@ -48,6 +48,7 @@ data class SettingUiState(
 )
 
 
+
 @HiltViewModel
 class SettingsViewModel @Inject constructor(
     private val settingRepository: SettingPrefRepository,
@@ -286,12 +287,20 @@ class SettingsViewModel @Inject constructor(
 
         val responseBody = response.body()
 
+        val contentDispositionHeader = response.headers().get("Content-Disposition")
+        val fileName = contentDispositionHeader?.let {
+            // Extract filename from header value (example: "attachment; filename=example.pdf")
+            val filenameRegex = "filename=(.+)".toRegex()
+            filenameRegex.find(it)?.groupValues?.get(1)?.replace("\"","")
+        }
+
+
         var file:DocumentFile? = null
 
         file = if(format=== excel){
-            uriFile.createFile("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "my_excel.xlsx")
+            uriFile.createFile("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", fileName?:"simple_expense.xlsx")
         }else{
-            uriFile.createFile("application/pdf", "my_pdf.pdf")
+            uriFile.createFile("application/pdf", fileName?:"simple_expense.pdf")
         }
 
         if (file != null) {
