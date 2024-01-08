@@ -55,9 +55,12 @@ import java.util.Date
 
 data class FileFormat(val iconId:Int,val nameId:Int)
 
-val formats = listOf(FileFormat(1,R.string.excel_format),
-    FileFormat(2,R.string.pdf_format),
-    FileFormat(3,R.string.csv_format)
+val excel = FileFormat(1,R.string.excel_format)
+val pdf = FileFormat(1,R.string.pdf_format)
+
+val formats = listOf(
+    excel,
+    pdf
 )
 
 @Composable
@@ -193,7 +196,9 @@ fun ExportScreen(
 
             Button(
                 onClick = {
-                    chosenFormat?.let { onExportClicked(fromDate.value,toDate.value, it) }
+                    if(!uiState.isExportingFile){
+                        chosenFormat?.let { onExportClicked(fromDate.value,toDate.value, it) }
+                    }
                 },
                 modifier = Modifier.fillMaxWidth(),
             ) {

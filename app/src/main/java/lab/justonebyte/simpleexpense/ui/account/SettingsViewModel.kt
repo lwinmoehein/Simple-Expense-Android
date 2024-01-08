@@ -210,12 +210,40 @@ class SettingsViewModel @Inject constructor(
     fun exportDate(from:String, to:String, format:FileFormat){
             when(format.nameId){
                 R.string.excel_format-> generateExcelFile(from,to)
-                else->generatePDFFile()
+                else->generatePDFFile(from,to)
             }
     }
 
-    private fun generatePDFFile() {
+    private fun generatePDFFile(from: String, to:String ) {
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                _viewModelUiState.update {
+                    it.copy(isExportingFile = true)
+                }
 
+                val downloadFolderUriString = _viewModelUiState.value.downloadFolder
+                if(!downloadFolderUriString.isNullOrEmpty()) {
+                    val uri = Uri.parse(_viewModelUiState.value.downloadFolder)
+                    val file = DocumentFile.fromTreeUri(application, uri)
+
+                    if (file != null && file.canRead() && file.canWrite()) {
+                        downloadAndSaveFile(file, pdf,from,to)
+                    } else {
+                        showSnackBar(SnackBarType.SELECT_CORRECT_DOWNLOAD_FOLDER)
+                        _viewModelUiState.update {
+                            it.copy(isExportingFile = false)
+                        }
+
+                        Log.i("Folder:", "Have no access to download folder.")
+                    }
+                }else{
+                    showSnackBar(SnackBarType.SELECT_CORRECT_DOWNLOAD_FOLDER)
+                    _viewModelUiState.update {
+                        it.copy(isExportingFile = false)
+                    }
+                }
+            }
+        }
     }
 
 
@@ -232,46 +260,7 @@ class SettingsViewModel @Inject constructor(
                     val file = DocumentFile.fromTreeUri(application, uri)
 
                     if (file != null && file.canRead() && file.canWrite()) {
-                        Log.i("Folder:main:w:", file.canWrite().toString())
-                        Log.i("Folder:main:r:", file.canRead().toString())
-
-                        val exportService =
-                            RetrofitHelper.getInstance(token.value).create(ExportService::class.java)
-                        val response = exportService.generateExcelFile(BetweenPostData(from, to))
-                        Log.i("file:", "downloaded file:" + response.headers())
-                        val responseBody = response.body()
-
-                        val pdfFile = file.createFile("application/pdf", "my_pdf.pdf")
-
-                        if (pdfFile != null) {
-                            val outputStream = application.contentResolver.openOutputStream(pdfFile.uri)
-                            if (outputStream != null) {
-                                responseBody?.byteStream()?.use { inputStream ->
-                                    inputStream.copyTo(outputStream)
-                                }
-                                outputStream.close()
-                                showSnackBar(SnackBarType.FILE_EXPORT_SUCCESS)
-                                _viewModelUiState.update {
-                                    it.copy(isExportingFile = false)
-                                }
-
-                            } else {
-                                Log.i("Folder:", "Output stream is null.")
-                                showSnackBar(SnackBarType.FILE_EXPORT_FAILED)
-                                _viewModelUiState.update {
-                                    it.copy(isExportingFile = false)
-                                }
-
-                            }
-                        } else {
-                            Log.i("Folder:", "PDF file is null.")
-
-                            showSnackBar(SnackBarType.FILE_EXPORT_FAILED)
-                            _viewModelUiState.update {
-                                it.copy(isExportingFile = false)
-                            }
-
-                        }
+                        downloadAndSaveFile(file, excel,from,to)
                     } else {
                         showSnackBar(SnackBarType.SELECT_CORRECT_DOWNLOAD_FOLDER)
                         _viewModelUiState.update {
@@ -287,6 +276,52 @@ class SettingsViewModel @Inject constructor(
                     }
                 }
             }
+        }
+    }
+    private suspend fun downloadAndSaveFile(uriFile:DocumentFile,format:FileFormat,from:String,to:String){
+        val exportService =
+            RetrofitHelper.getInstance(token.value).create(ExportService::class.java)
+
+        val response =if(format=== excel) exportService.generateExcelFile(BetweenPostData(from, to)) else exportService.generatePDFFile(BetweenPostData(from, to))
+
+        val responseBody = response.body()
+
+        var file:DocumentFile? = null
+
+        file = if(format=== excel){
+            uriFile.createFile("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "my_excel.xlsx")
+        }else{
+            uriFile.createFile("application/pdf", "my_pdf.pdf")
+        }
+
+        if (file != null) {
+            val outputStream = application.contentResolver.openOutputStream(file.uri)
+            if (outputStream != null) {
+                responseBody?.byteStream()?.use { inputStream ->
+                    inputStream.copyTo(outputStream)
+                }
+                outputStream.close()
+                showSnackBar(SnackBarType.FILE_EXPORT_SUCCESS)
+                _viewModelUiState.update {
+                    it.copy(isExportingFile = false)
+                }
+
+            } else {
+                Log.i("Folder:", "Output stream is null.")
+                showSnackBar(SnackBarType.FILE_EXPORT_FAILED)
+                _viewModelUiState.update {
+                    it.copy(isExportingFile = false)
+                }
+
+            }
+        } else {
+            Log.i("Folder:", "file is null.")
+
+            showSnackBar(SnackBarType.FILE_EXPORT_FAILED)
+            _viewModelUiState.update {
+                it.copy(isExportingFile = false)
+            }
+
         }
     }
 
