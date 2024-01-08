@@ -18,7 +18,8 @@ enum class SnackBarType{
     REMOVE_CATEGORY_SUCCESS,
     LANG_CHANGE_SUCCESS,
     FILE_EXPORT_SUCCESS,
-    FILE_EXPORT_FAILED
+    FILE_EXPORT_FAILED,
+    SELECT_CORRECT_DOWNLOAD_FOLDER
 }
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
@@ -38,6 +39,8 @@ fun SuBuuSnackBar(
             SnackBarType.LANG_CHANGE_SUCCESS-> stringResource(id = R.string.lang_change_success)
             SnackBarType.FILE_EXPORT_SUCCESS-> stringResource(id = R.string.file_export_success)
             SnackBarType.FILE_EXPORT_FAILED-> stringResource(id = R.string.file_export_failed)
+            SnackBarType.SELECT_CORRECT_DOWNLOAD_FOLDER-> stringResource(id = R.string.select_correct_download_folder)
+
             else -> stringResource(id = R.string.incorrect_data)
         }
 

@@ -248,11 +248,15 @@ class SettingsViewModel @Inject constructor(
                                 showSnackBar(SnackBarType.FILE_EXPORT_SUCCESS)
                             } else {
                                 Log.i("Folder:", "Output stream is null.")
+                                showSnackBar(SnackBarType.FILE_EXPORT_FAILED)
                             }
                         } else {
                             Log.i("Folder:", "PDF file is null.")
+
+                            showSnackBar(SnackBarType.FILE_EXPORT_FAILED)
                         }
                     } else {
+                        showSnackBar(SnackBarType.SELECT_CORRECT_DOWNLOAD_FOLDER)
                         Log.i("Folder:", "Have no access to download folder.")
                     }
                 }
