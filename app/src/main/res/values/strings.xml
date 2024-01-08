@@ -111,5 +111,7 @@
     <string name="pdf_format">PDF</string>
     <string name="csv_format">CSV</string>
     <string name="choose_format">Choose  file format : </string>
+    <string name="file_export_failed">Exporting file failed.</string>
+    <string name="file_export_success">File successfully saved to download folder.</string>
 
 </resources>

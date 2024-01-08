@@ -45,8 +45,7 @@ fun SettingsScreen(
         Modifier.absolutePadding(left = 10.dp, right = 10.dp, top = 5.dp)
     ) {
         Spacer(modifier = Modifier.height(20.dp))
-        Column(
-        ) {
+        Column {
             SectionTitle(title = stringResource(id = R.string.feat_setting))
 
             SettingMenu(

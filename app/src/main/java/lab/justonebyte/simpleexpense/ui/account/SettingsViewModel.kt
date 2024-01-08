@@ -245,6 +245,7 @@ class SettingsViewModel @Inject constructor(
                                     inputStream.copyTo(outputStream)
                                 }
                                 outputStream.close()
+                                showSnackBar(SnackBarType.FILE_EXPORT_SUCCESS)
                             } else {
                                 Log.i("Folder:", "Output stream is null.")
                             }

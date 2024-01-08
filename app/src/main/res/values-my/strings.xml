@@ -104,5 +104,7 @@
     <string name="pdf_format">ပီဒီအက်ပ်ဖိုင်</string>
     <string name="csv_format">စီအက်စ်ဗွီဖိုင်</string>
     <string name="choose_format">ဖိုင်အမျိုးအစားရွေးပါ : </string>
+    <string name="file_export_failed">Exporting file failed.</string>
+    <string name="file_export_success">File successfully saved to download folder.</string>
 
 </resources>

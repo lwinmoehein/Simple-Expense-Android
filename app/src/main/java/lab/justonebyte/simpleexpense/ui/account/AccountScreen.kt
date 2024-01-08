@@ -39,6 +39,7 @@ import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import lab.justonebyte.simpleexpense.R
+import lab.justonebyte.simpleexpense.ui.components.SuBuuSnackBar
 
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -52,12 +53,16 @@ fun AccountScreen(
 ){
     val settingsViewModel = hiltViewModel<SettingsViewModel>()
     val settingsUiState by settingsViewModel.viewModelUiState.collectAsState()
-
     var showSettingsScreen by remember { mutableStateOf(false) }
     var showExportScreen by remember { mutableStateOf(false) }
-
+    val snackbarHostState = remember { SnackbarHostState() }
     val coroutineScope = rememberCoroutineScope()
 
+    SuBuuSnackBar(
+        snackBarType = settingsUiState.currentSnackBar,
+        onDismissSnackBar = {  },
+        snackbarHostState = snackbarHostState
+    )
 
     Scaffold(
         topBar = {
@@ -95,8 +100,9 @@ fun AccountScreen(
                }
                Divider()
            }
-        }
-    ) {
+        },
+        snackbarHost = { SnackbarHost(snackbarHostState) }
+        ) {
         Column (
             Modifier
                 .padding(it)

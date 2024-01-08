@@ -2,7 +2,9 @@ package lab.justonebyte.simpleexpense.ui
 
 import AppTheme
 import android.content.Intent
+import android.os.Build
 import androidx.activity.result.ActivityResultLauncher
+import androidx.annotation.RequiresApi
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -22,6 +24,7 @@ enum class NavItem(val stringResource:Int,val iconResource:Int){
 }
 
 val appContentPadding = 20.dp
+@RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SuBuuApp(chooseDownloadFolderLauncher: ActivityResultLauncher<Intent>) {
