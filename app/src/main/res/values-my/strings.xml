@@ -105,7 +105,7 @@
     <string name="csv_format">စီအက်စ်ဗွီဖိုင်</string>
     <string name="choose_format">ဖိုင်အမျိုးအစားရွေးပါ : </string>
     <string name="file_export_failed">Exporting file failed.</string>
-    <string name="file_export_success">File successfully saved to download folder.</string>
-    <string name="select_correct_download_folder">Please select correct download folder.</string>
+    <string name="file_export_success">File successfully saved to export folder.</string>
+    <string name="select_correct_download_folder">Please select correct export folder.</string>
 
 </resources>

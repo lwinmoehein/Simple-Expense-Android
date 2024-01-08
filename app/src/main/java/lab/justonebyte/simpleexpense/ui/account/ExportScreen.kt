@@ -10,19 +10,24 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.absolutePadding
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHostState
@@ -43,6 +48,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import lab.justonebyte.simpleexpense.R
 import lab.justonebyte.simpleexpense.utils.dateFormatter
+import okhttp3.internal.format
 import java.util.Calendar
 import java.util.Date
 
@@ -58,7 +64,7 @@ val formats = listOf(FileFormat(1,R.string.excel_format),
 fun ChooseFormat(
     onFormatChosen:(format:FileFormat)->Unit
 ){
-    var chosenFormat by remember { mutableStateOf<FileFormat?>(null) }
+    var chosenFormat by remember { mutableStateOf<FileFormat?>(formats[0]) }
 
     Column() {
         ExportScreenTitle(title = "Choose Export File Format : ")
@@ -153,13 +159,15 @@ fun ExportScreen(
     chooseDownloadFolderLauncher: ActivityResultLauncher<Intent>
 ) {
 
-    var chosenFormat by remember { mutableStateOf<FileFormat?>(null) }
+    var chosenFormat by remember { mutableStateOf<FileFormat?>(formats[0]) }
     val uiState by settingsViewModel.viewModelUiState.collectAsState()
     val toDate = remember { mutableStateOf(dateFormatter(System.currentTimeMillis())) }
     val fromDate = remember { mutableStateOf(dateFormatter(System.currentTimeMillis())) }
 
         Column(
-            modifier = Modifier.absolutePadding(top = 5.dp).padding(16.dp),
+            modifier = Modifier
+                .absolutePadding(top = 5.dp)
+                .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(15.dp)
         ) {
             ChooseDateRange(
@@ -187,9 +195,28 @@ fun ExportScreen(
                 onClick = {
                     chosenFormat?.let { onExportClicked(fromDate.value,toDate.value, it) }
                 },
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
             ) {
-                Text(text = stringResource(id = R.string.export))
+                Box(
+                    contentAlignment = Alignment.Center,  // Center content within the box
+                    modifier = Modifier.fillMaxWidth()  // Expand the box to fill available space
+                ) {
+                    if (uiState.isExportingFile) {
+                        CircularProgressIndicator(
+                            modifier = Modifier
+                                .width(15.dp)
+                                .height(15.dp)
+                                .align(Alignment.Center),  // Explicitly center the indicator
+                            color = Color.White,
+                            strokeWidth = 3.dp
+                        )
+                    } else {
+                        Text(
+                            text = stringResource(id = R.string.export),
+                            modifier = Modifier.align(Alignment.Center)  // Center the text
+                        )
+                    }
+                }
             }
         }
 

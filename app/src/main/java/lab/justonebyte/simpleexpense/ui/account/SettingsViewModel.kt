@@ -280,6 +280,11 @@ class SettingsViewModel @Inject constructor(
 
                         Log.i("Folder:", "Have no access to download folder.")
                     }
+                }else{
+                    showSnackBar(SnackBarType.SELECT_CORRECT_DOWNLOAD_FOLDER)
+                    _viewModelUiState.update {
+                        it.copy(isExportingFile = false)
+                    }
                 }
             }
         }
