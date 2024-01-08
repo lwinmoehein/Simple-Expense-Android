@@ -10,13 +10,17 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import lab.justonebyte.simpleexpense.R
 import lab.justonebyte.simpleexpense.api.AuthService
+import lab.justonebyte.simpleexpense.api.BetweenPostData
+import lab.justonebyte.simpleexpense.api.ExportService
 import lab.justonebyte.simpleexpense.data.CategoryRepository
 import lab.justonebyte.simpleexpense.data.SettingPrefRepository
 import lab.justonebyte.simpleexpense.data.TransactionRepository
@@ -203,12 +207,10 @@ class SettingsViewModel @Inject constructor(
         }
     }
     fun exportDate(from:String, to:String, format:FileFormat){
-        viewModelScope.launch {
             when(format.nameId){
                 R.string.excel_format-> generateExcelFile(from,to)
                 else->generatePDFFile()
             }
-        }
     }
 
     private fun generatePDFFile() {
@@ -217,17 +219,42 @@ class SettingsViewModel @Inject constructor(
 
 
     private fun generateExcelFile(from: String, to:String ) {
-        val downloadFolderUriString = _viewModelUiState.value.downloadFolder
-        if(!downloadFolderUriString.isNullOrEmpty()){
-            val uri = Uri.parse(_viewModelUiState.value.downloadFolder)
-            val file = DocumentFile.fromTreeUri(application,uri)
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                val downloadFolderUriString = _viewModelUiState.value.downloadFolder
+                if(!downloadFolderUriString.isNullOrEmpty()) {
+                    val uri = Uri.parse(_viewModelUiState.value.downloadFolder)
+                    val file = DocumentFile.fromTreeUri(application, uri)
 
-            if (file != null && file.canRead() && file.canWrite()) {
-                Log.i("Folder:main:w:", file.canWrite().toString())
-                Log.i("Folder:main:r:", file.canRead().toString())
-            } else
-            {
-                Log.i("Folder:","Have no access to download folder.")
+                    if (file != null && file.canRead() && file.canWrite()) {
+                        Log.i("Folder:main:w:", file.canWrite().toString())
+                        Log.i("Folder:main:r:", file.canRead().toString())
+
+                        val exportService =
+                            RetrofitHelper.getInstance(token.value).create(ExportService::class.java)
+                        val response = exportService.generateExcelFile(BetweenPostData(from, to))
+                        Log.i("file:", "downloaded file:" + response.headers())
+                        val responseBody = response.body()
+
+                        val pdfFile = file.createFile("application/pdf", "my_pdf.pdf")
+
+                        if (pdfFile != null) {
+                            val outputStream = application.contentResolver.openOutputStream(pdfFile.uri)
+                            if (outputStream != null) {
+                                responseBody?.byteStream()?.use { inputStream ->
+                                    inputStream.copyTo(outputStream)
+                                }
+                                outputStream.close()
+                            } else {
+                                Log.i("Folder:", "Output stream is null.")
+                            }
+                        } else {
+                            Log.i("Folder:", "PDF file is null.")
+                        }
+                    } else {
+                        Log.i("Folder:", "Have no access to download folder.")
+                    }
+                }
             }
         }
     }
