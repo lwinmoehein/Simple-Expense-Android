@@ -58,12 +58,6 @@ fun AccountScreen(
     val snackbarHostState = remember { SnackbarHostState() }
     val coroutineScope = rememberCoroutineScope()
 
-    SuBuuSnackBar(
-        snackBarType = settingsUiState.currentSnackBar,
-        onDismissSnackBar = {  },
-        snackbarHostState = snackbarHostState
-    )
-
     Scaffold(
         topBar = {
            Column {
@@ -103,6 +97,11 @@ fun AccountScreen(
         },
         snackbarHost = { SnackbarHost(snackbarHostState) }
         ) {
+        SuBuuSnackBar(
+            snackBarType = settingsUiState.currentSnackBar,
+            onDismissSnackBar = { settingsViewModel.clearSnackBar() },
+            snackbarHostState = snackbarHostState
+        )
         Column (
             Modifier
                 .padding(it)

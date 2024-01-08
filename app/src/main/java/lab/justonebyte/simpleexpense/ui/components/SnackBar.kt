@@ -1,7 +1,5 @@
 package lab.justonebyte.simpleexpense.ui.components
 
-import androidx.compose.material.BottomSheetScaffoldState
-import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -10,7 +8,7 @@ import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.res.stringResource
 import lab.justonebyte.simpleexpense.R
 
-enum class SnackBarType{
+ enum  class SnackBarType{
     INCORRECT_DATA,
     INCORRECT_CATEGORY_DATA,
     ADD_CATEGORY_SUCCESS,
@@ -21,7 +19,6 @@ enum class SnackBarType{
     FILE_EXPORT_FAILED,
     SELECT_CORRECT_DOWNLOAD_FOLDER
 }
-@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun SuBuuSnackBar(
     snackBarType: SnackBarType?=null,
@@ -47,7 +44,7 @@ fun SuBuuSnackBar(
 
         val onActionDismissState by rememberUpdatedState(onDismissSnackBar)
 
-        LaunchedEffect(snackMessage,snackbarHostState) {
+        LaunchedEffect(snackMessage) {
             snackbarHostState.showSnackbar(
                 message = snackMessage
             )
