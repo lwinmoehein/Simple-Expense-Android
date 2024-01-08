@@ -43,7 +43,8 @@ data class SettingUiState(
     val currentSnackBar : SnackBarType? = null,
     val companionApps: AppList? = null,
     val downloadFolder:String? = null,
-    val readableDownloadFolder:String? = null
+    val readableDownloadFolder:String? = null,
+    val isExportingFile:Boolean = false
 )
 
 
@@ -221,6 +222,10 @@ class SettingsViewModel @Inject constructor(
     private fun generateExcelFile(from: String, to:String ) {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
+                _viewModelUiState.update {
+                    it.copy(isExportingFile = true)
+                }
+
                 val downloadFolderUriString = _viewModelUiState.value.downloadFolder
                 if(!downloadFolderUriString.isNullOrEmpty()) {
                     val uri = Uri.parse(_viewModelUiState.value.downloadFolder)
@@ -246,17 +251,33 @@ class SettingsViewModel @Inject constructor(
                                 }
                                 outputStream.close()
                                 showSnackBar(SnackBarType.FILE_EXPORT_SUCCESS)
+                                _viewModelUiState.update {
+                                    it.copy(isExportingFile = false)
+                                }
+
                             } else {
                                 Log.i("Folder:", "Output stream is null.")
                                 showSnackBar(SnackBarType.FILE_EXPORT_FAILED)
+                                _viewModelUiState.update {
+                                    it.copy(isExportingFile = false)
+                                }
+
                             }
                         } else {
                             Log.i("Folder:", "PDF file is null.")
 
                             showSnackBar(SnackBarType.FILE_EXPORT_FAILED)
+                            _viewModelUiState.update {
+                                it.copy(isExportingFile = false)
+                            }
+
                         }
                     } else {
                         showSnackBar(SnackBarType.SELECT_CORRECT_DOWNLOAD_FOLDER)
+                        _viewModelUiState.update {
+                            it.copy(isExportingFile = false)
+                        }
+
                         Log.i("Folder:", "Have no access to download folder.")
                     }
                 }
