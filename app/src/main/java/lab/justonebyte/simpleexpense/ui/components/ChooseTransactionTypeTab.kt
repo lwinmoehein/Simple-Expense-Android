@@ -14,6 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import lab.justonebyte.simpleexpense.model.BalanceType
@@ -66,7 +67,8 @@ fun ChooseTransactionTypeTab(
                 Text(
                     text = stringResource(id = balanceType.name),
                     color = if (currentHomeTabIndex == index) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSecondary,
-                    style = MaterialTheme.typography.titleSmall
+                    style = MaterialTheme.typography.titleSmall,
+                    fontWeight = if (currentHomeTabIndex == index) FontWeight.ExtraBold else FontWeight.Medium
                 )
             }
         }

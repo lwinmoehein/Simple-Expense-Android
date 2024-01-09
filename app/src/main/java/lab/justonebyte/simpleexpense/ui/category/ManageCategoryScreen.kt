@@ -1,13 +1,17 @@
 package lab.justonebyte.simpleexpense.ui.category
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -25,9 +29,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -37,6 +43,7 @@ import compose.icons.feathericons.ArrowDown
 import compose.icons.feathericons.ArrowUp
 import compose.icons.feathericons.Plus
 import lab.justonebyte.simpleexpense.R
+import lab.justonebyte.simpleexpense.model.BalanceType
 import lab.justonebyte.simpleexpense.model.TransactionCategory
 import lab.justonebyte.simpleexpense.model.TransactionType
 import lab.justonebyte.simpleexpense.ui.components.AppAlertDialog
@@ -58,16 +65,30 @@ fun CategoryTabs(
 
     val categoryTabs = listOf(CategoryTab.Expense,CategoryTab.Income)
 
-    TabRow(selectedTabIndex = currentCategoryTabIndex) {
-            categoryTabs.forEachIndexed { index, categoryTab ->
-                Tab(
-                    selected = currentCategoryTabIndex == index,
-                    onClick = {
-                        onTabChanged(categoryTab)
+    Row(
+        horizontalArrangement = Arrangement.spacedBy(15.dp),
+        modifier = Modifier.width(250.dp)
+    ) {
+        categoryTabs.forEachIndexed { index, categoryTab ->
+            Row(
+                modifier = Modifier
+                    .clip(RoundedCornerShape(15.dp))
+                    .background(if (currentCategoryTabIndex == index) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.secondary)
+                    .padding(5.dp)
+                    .weight(1f)
+                    .clickable {
+                        onTabChanged(categoryTabs[index])
                     },
-                    text = { Text(text = stringResource(id = categoryTab.title), maxLines = 1) }
+                horizontalArrangement = Arrangement.Center
+            ) {
+                Text(
+                    text = stringResource(id = categoryTab.title),
+                    color = if (currentCategoryTabIndex == index) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSecondary,
+                    style = MaterialTheme.typography.titleSmall,
+                    fontWeight = if (currentCategoryTabIndex == index) FontWeight.ExtraBold else FontWeight.Medium
                 )
             }
+        }
     }
 }
 
@@ -201,13 +222,19 @@ fun ManageCategoryScreen(
         }
     ) {
          Column(Modifier.padding(it)) {
-             CategoryTabs(
-                 onTabChanged = {
-                     currentCategoryTabIndex.value = it.index
-                 },
-                 currentCategoryTabIndex = currentCategoryTabIndex.value
-             )
-             LazyColumn(Modifier.padding(20.dp)){
+             Spacer(modifier = Modifier.height(30.dp))
+             Row(
+                 modifier  = Modifier.fillMaxWidth(),
+                 horizontalArrangement = Arrangement.Center
+             ){
+                 CategoryTabs(
+                     onTabChanged = {
+                         currentCategoryTabIndex.value = it.index
+                     },
+                     currentCategoryTabIndex = currentCategoryTabIndex.value
+                 )
+             }
+             LazyColumn(Modifier.padding(10.dp)){
                  items(categories){
                         CategoryItem(
                             category = it,

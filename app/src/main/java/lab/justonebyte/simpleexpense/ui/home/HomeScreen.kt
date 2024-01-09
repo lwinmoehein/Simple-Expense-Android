@@ -219,7 +219,7 @@ fun HomeScreen(){
         Column(Modifier.padding(it)) {
             Row(
                 horizontalArrangement = Arrangement.Center,
-                modifier = Modifier.absolutePadding(top = 50.dp, bottom = 20.dp).fillMaxWidth()
+                modifier = Modifier.absolutePadding(top = 30.dp, bottom = 20.dp).fillMaxWidth()
             ) {
                     ChooseTransactionTypeTab(
                         balanceType =  homeUiState.currentBalanceType,
