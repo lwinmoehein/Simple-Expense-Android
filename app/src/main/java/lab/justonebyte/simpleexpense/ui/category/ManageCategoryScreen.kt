@@ -149,7 +149,6 @@ fun ManageCategoryScreen(
                        verticalAlignment = Alignment.CenterVertically
 
                    ) {
-                       Icon(painterResource(id = R.drawable.ic_round_category_24), contentDescription = "",Modifier.absolutePadding(right = 5.dp))
                        Text(
                            stringResource(id = R.string.m_categories),
                            maxLines = 1,

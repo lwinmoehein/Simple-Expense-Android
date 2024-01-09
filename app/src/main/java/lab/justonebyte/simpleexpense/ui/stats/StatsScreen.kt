@@ -66,7 +66,6 @@ fun StatsScreen(goBack:()->Unit) {
                        verticalAlignment = Alignment.CenterVertically
 
                    ) {
-                       Icon(painterResource(id = R.drawable.ic_round_pie_chart_24), contentDescription = "s",Modifier.absolutePadding(right = 5.dp))
                        Text(
                            stringResource(id = R.string.charts),
                            maxLines = 1,

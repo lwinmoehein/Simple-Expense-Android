@@ -188,7 +188,7 @@ fun HomeScreen(){
 
                               ) {
                                   Text(
-                                      stringResource(id = R.string.app_name),
+                                      stringResource(id = R.string.home),
                                       maxLines = 1,
                                       overflow = TextOverflow.Ellipsis,
                                       style = MaterialTheme.typography.titleLarge

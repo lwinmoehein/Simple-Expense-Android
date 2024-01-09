@@ -81,7 +81,6 @@ fun AccountScreen(
 
                    ) {
                        if(!showSettingsScreen && !showExportScreen){
-                           Icon(painterResource(id =R.drawable.ic_baseline_account_circle_24), contentDescription = "",Modifier.absolutePadding(right = 5.dp))
                            Text(
                                text= stringResource(id = R.string.account),
                                maxLines = 1,
