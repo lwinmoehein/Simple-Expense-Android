@@ -116,5 +116,6 @@
     <string name="select_correct_download_folder">Please select correct export folder.</string>
 
     <string name="log_out">Log Out</string>
+    <string name="connection_error">Cannot connect to internet.</string>
 
 </resources>

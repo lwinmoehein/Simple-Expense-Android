@@ -17,7 +17,8 @@ import lab.justonebyte.simpleexpense.R
     LANG_CHANGE_SUCCESS,
     FILE_EXPORT_SUCCESS,
     FILE_EXPORT_FAILED,
-    SELECT_CORRECT_DOWNLOAD_FOLDER
+    SELECT_CORRECT_DOWNLOAD_FOLDER,
+     CONNECTION_ERROR
 }
 @Composable
 fun SuBuuSnackBar(
@@ -37,6 +38,7 @@ fun SuBuuSnackBar(
             SnackBarType.FILE_EXPORT_SUCCESS-> stringResource(id = R.string.file_export_success)
             SnackBarType.FILE_EXPORT_FAILED-> stringResource(id = R.string.file_export_failed)
             SnackBarType.SELECT_CORRECT_DOWNLOAD_FOLDER-> stringResource(id = R.string.select_correct_download_folder)
+            SnackBarType.CONNECTION_ERROR-> stringResource(id = R.string.connection_error)
 
             else -> stringResource(id = R.string.incorrect_data)
         }

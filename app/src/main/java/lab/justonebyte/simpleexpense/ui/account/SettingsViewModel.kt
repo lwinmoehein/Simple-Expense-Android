@@ -255,7 +255,7 @@ class SettingsViewModel @Inject constructor(
                     val file = DocumentFile.fromTreeUri(application, uri)
 
                     if (file != null && file.canRead() && file.canWrite()) {
-                        downloadAndSaveFile(file, excel,from,to)
+                            downloadAndSaveFile(file, excel,from,to)
                     } else {
                         showSnackBar(SnackBarType.SELECT_CORRECT_DOWNLOAD_FOLDER)
                         _viewModelUiState.update {
@@ -274,57 +274,73 @@ class SettingsViewModel @Inject constructor(
         }
     }
     private suspend fun downloadAndSaveFile(uriFile:DocumentFile,format:FileFormat,from:String,to:String){
-        val exportService =
-            RetrofitHelper.getInstance(token.value).create(ExportService::class.java)
 
-        val response =if(format=== excel) exportService.generateExcelFile(BetweenPostData(from, to)) else exportService.generatePDFFile(BetweenPostData(from, to))
+        try {
+            val exportService =
+                RetrofitHelper.getInstance(token.value).create(ExportService::class.java)
 
-        val responseBody = response.body()
+            val response = if (format === excel) exportService.generateExcelFile(
+                BetweenPostData(
+                    from,
+                    to
+                )
+            ) else exportService.generatePDFFile(BetweenPostData(from, to))
 
-        val contentDispositionHeader = response.headers().get("Content-Disposition")
-        val fileName = contentDispositionHeader?.let {
-            // Extract filename from header value (example: "attachment; filename=example.pdf")
-            val filenameRegex = "filename=(.+)".toRegex()
-            filenameRegex.find(it)?.groupValues?.get(1)?.replace("\"","")
-        }
+            val responseBody = response.body()
+
+            val contentDispositionHeader = response.headers().get("Content-Disposition")
+            val fileName = contentDispositionHeader?.let {
+                // Extract filename from header value (example: "attachment; filename=example.pdf")
+                val filenameRegex = "filename=(.+)".toRegex()
+                filenameRegex.find(it)?.groupValues?.get(1)?.replace("\"", "")
+            }
 
 
-        var file:DocumentFile? = null
+            var file: DocumentFile? = null
 
-        file = if(format=== excel){
-            uriFile.createFile("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", fileName?:"simple_expense.xlsx")
-        }else{
-            uriFile.createFile("application/pdf", fileName?:"simple_expense.pdf")
-        }
-
-        if (file != null) {
-            val outputStream = application.contentResolver.openOutputStream(file.uri)
-            if (outputStream != null) {
-                responseBody?.byteStream()?.use { inputStream ->
-                    inputStream.copyTo(outputStream)
-                }
-                outputStream.close()
-                showSnackBar(SnackBarType.FILE_EXPORT_SUCCESS)
-                _viewModelUiState.update {
-                    it.copy(isExportingFile = false)
-                }
-
+            file = if (format === excel) {
+                uriFile.createFile(
+                    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                    fileName ?: "simple_expense.xlsx"
+                )
             } else {
-                Log.i("Folder:", "Output stream is null.")
+                uriFile.createFile("application/pdf", fileName ?: "simple_expense.pdf")
+            }
+
+            if (file != null) {
+                val outputStream = application.contentResolver.openOutputStream(file.uri)
+                if (outputStream != null) {
+                    responseBody?.byteStream()?.use { inputStream ->
+                        inputStream.copyTo(outputStream)
+                    }
+                    outputStream.close()
+                    showSnackBar(SnackBarType.FILE_EXPORT_SUCCESS)
+                    _viewModelUiState.update {
+                        it.copy(isExportingFile = false)
+                    }
+
+                } else {
+                    Log.i("Folder:", "Output stream is null.")
+                    showSnackBar(SnackBarType.FILE_EXPORT_FAILED)
+                    _viewModelUiState.update {
+                        it.copy(isExportingFile = false)
+                    }
+
+                }
+            } else {
+                Log.i("Folder:", "file is null.")
+
                 showSnackBar(SnackBarType.FILE_EXPORT_FAILED)
                 _viewModelUiState.update {
                     it.copy(isExportingFile = false)
                 }
 
             }
-        } else {
-            Log.i("Folder:", "file is null.")
-
-            showSnackBar(SnackBarType.FILE_EXPORT_FAILED)
+        }catch (e:Exception){
+            showSnackBar(SnackBarType.CONNECTION_ERROR)
             _viewModelUiState.update {
                 it.copy(isExportingFile = false)
             }
-
         }
     }
 
