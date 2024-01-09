@@ -194,21 +194,6 @@ fun HomeScreen(){
                                       style = MaterialTheme.typography.titleLarge
                                   )
                               }
-                              TransactionTypePicker(
-                                  onDatePicked = { date ->
-                                      homeViewModel.collectDailyBalance(date)
-                                  },
-                                  balanceType = homeUiState.currentBalanceType,
-                                  onMonthPicked = { month ->
-                                      homeViewModel.collectMonthlyBalance(month)
-                                  },
-                                  onYearPicked = { year ->
-                                      homeViewModel.collectYearlyBalance(year)
-                                  },
-                                  selectedYear = homeUiState.selectedYear,
-                                  selectedMonth = homeUiState.selectedMonth,
-                                  selectedDay = homeUiState.selectedDay
-                              )
 
                           }
                       }
@@ -248,7 +233,8 @@ fun HomeScreen(){
                 homeUiState = homeUiState,
                 onTransactionClick = {
                     currentTransaction.value = it
-                }
+                },
+                homeViewModel = homeViewModel
             )
         }
 

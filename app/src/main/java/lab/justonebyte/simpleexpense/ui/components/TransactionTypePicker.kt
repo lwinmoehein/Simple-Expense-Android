@@ -3,15 +3,18 @@ package lab.justonebyte.simpleexpense.ui.components
 import android.annotation.SuppressLint
 import android.app.DatePickerDialog
 import android.widget.DatePicker
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
+import compose.icons.FeatherIcons
+import compose.icons.feathericons.Calendar
 import lab.justonebyte.simpleexpense.R
 import lab.justonebyte.simpleexpense.model.BalanceType
 import lab.justonebyte.simpleexpense.ui.home.MonthPicker
@@ -68,17 +71,6 @@ fun TransactionTypePicker(
         }, mYear, mMonth-1, mDay
     )
 
-    val balanceTypeOptions = listOf(
-        BalanceTypeOption.DAILY,BalanceTypeOption.MONTHLY,BalanceTypeOption.YEARLY,BalanceTypeOption.TOTAL
-    )
-
-    var currentHomeTabIndex: Int by remember { mutableStateOf(0) }
-    val homeTabs = listOf<OptionItem>(
-        BalanceType.DAILY,
-        BalanceType.MONTHLY,
-        BalanceType.YEARLY,
-        BalanceType.TOTAL)
-
 
     if(isMonthPickerShown.value){
         Dialog(onDismissRequest = { isMonthPickerShown.value=false }) {
@@ -106,18 +98,25 @@ fun TransactionTypePicker(
     }
 
    if(balanceType!=BalanceType.TOTAL){
-       OutlinedButton(
-           modifier = Modifier.height(33.dp),
-           onClick = {
+       Row(
+           modifier = Modifier.height(33.dp).clickable {
                when (balanceType) {
                    BalanceType.DAILY -> mDatePickerDialog.show()
                    BalanceType.MONTHLY -> isMonthPickerShown.value = true
                    BalanceType.YEARLY -> isMonthPickerShown.value = true
                    else -> {}
                }
-           }) {
-           Icon(painter = painterResource(id = R.drawable.ic_baseline_calendar_today_24), modifier = Modifier.absolutePadding(right = 3.dp), contentDescription = "")
-           Text(text = chosenDateString)
+           },
+           horizontalArrangement = Arrangement.Center,
+           verticalAlignment = Alignment.CenterVertically
+           ) {
+           Icon(
+               imageVector = FeatherIcons.Calendar,
+               modifier = Modifier.width(15.dp).absolutePadding(right = 3.dp),
+               contentDescription = "",
+               tint = MaterialTheme.colorScheme.primary
+           )
+           Text(text = chosenDateString,style=MaterialTheme.typography.labelMedium)
        }
    }else{
        Spacer(modifier = Modifier.height(33.dp))

@@ -5,6 +5,7 @@ import androidx.compose.material3.*
 
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import com.chargemap.compose.numberpicker.NumberPicker
 import java.util.*
@@ -31,7 +32,9 @@ fun MonthPicker(
                     onValueChange = {
                         onYearSelected(it)
                     },
-                    dividersColor = MaterialTheme.colorScheme.primary
+                    dividersColor = MaterialTheme.colorScheme.secondary,
+                    textStyle = TextStyle(color = MaterialTheme.colorScheme.primary)
+
                 )
                 if(isMonthPicker){
                     NumberPicker(
@@ -41,13 +44,14 @@ fun MonthPicker(
                         onValueChange = {
                             onMonthSelected(it)
                         },
-                        dividersColor = MaterialTheme.colorScheme.primary
+                        dividersColor = MaterialTheme.colorScheme.secondary,
+                        textStyle = TextStyle(color = MaterialTheme.colorScheme.primary)
                     )
                 }
             }
             Row(horizontalArrangement = Arrangement.End, modifier = Modifier.fillMaxWidth()) {
                 Button(onClick = { onConfirmPicker() }) {
-                    Text(text = "OK")
+                    Text(text = "Confirm", color = MaterialTheme.colorScheme.onPrimary)
                 }
             }
         }

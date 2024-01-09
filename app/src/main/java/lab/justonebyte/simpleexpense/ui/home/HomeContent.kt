@@ -15,14 +15,13 @@ import lab.justonebyte.simpleexpense.model.Transaction
 fun HomeContent(
     homeUiState: HomeUiState,
     onTransactionClick:(t: Transaction)->Unit,
+    homeViewModel: HomeViewModel
 ){
 
         Column(Modifier.padding(10.dp)) {
             BalanceCard(
-                currency = homeUiState.currentCurrency,
-                currentBalance = homeUiState.currentBalance,
-                incomeBalance = homeUiState.incomeBalance,
-                expenseBalance = homeUiState.expenseBalance
+                homeViewModel = homeViewModel,
+                homeUiState = homeUiState
             )
             SectionTitle(title = stringResource(id = R.string.history),modifier = Modifier.absolutePadding(top = 15.dp, left = 10.dp, bottom = 15.dp, right = 10.dp))
             TransactionsCard(

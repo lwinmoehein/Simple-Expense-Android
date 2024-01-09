@@ -24,29 +24,50 @@ import compose.icons.feathericons.TrendingUp
 import lab.justonebyte.simpleexpense.model.Currency
 import lab.justonebyte.simpleexpense.ui.theme.SuBuuShapes
 import lab.justonebyte.simpleexpense.R
+import lab.justonebyte.simpleexpense.ui.components.TransactionTypePicker
 
 @Composable
 fun BalanceCard(
     modifier: Modifier = Modifier,
-    currency: Currency,
-    currentBalance: Int,
-    incomeBalance: Int,
-    expenseBalance: Int
+    homeUiState:HomeUiState,
+    homeViewModel: HomeViewModel
 ){
     Card(
         modifier = modifier.fillMaxWidth(),
         shape = RoundedCornerShape(10.dp)
     ) {
         Column(
-            modifier = Modifier.padding(16.dp)
+            modifier = Modifier.absolutePadding(top=0.dp, bottom = 10.dp, right = 10.dp, left = 10.dp)
         ) {
             // Title with current balance
-            Text(
-                text = "Your Wallet",
-                style = MaterialTheme.typography.labelLarge,
-                color = LocalContentColor.current
-            )
-            Spacer(modifier = Modifier.height(8.dp))
+
+            Row(
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text(
+                    text = "Your Wallet",
+                    style = MaterialTheme.typography.labelLarge,
+                    color = LocalContentColor.current
+                )
+                TransactionTypePicker(
+                    onDatePicked = { date ->
+                        homeViewModel.collectDailyBalance(date)
+                    },
+                    balanceType = homeUiState.currentBalanceType,
+                    onMonthPicked = { month ->
+                        homeViewModel.collectMonthlyBalance(month)
+                    },
+                    onYearPicked = { year ->
+                        homeViewModel.collectYearlyBalance(year)
+                    },
+                    selectedYear = homeUiState.selectedYear,
+                    selectedMonth = homeUiState.selectedMonth,
+                    selectedDay = homeUiState.selectedDay
+                )
+            }
+            Spacer(modifier = Modifier.height(10.dp))
 
             // Balance row with icons and colors
             Row(
@@ -56,19 +77,19 @@ fun BalanceCard(
                 BalanceItem(
                     icon = FeatherIcons.DollarSign,
                     text = "",
-                    amount = currentBalance.toFloat(),
+                    amount = homeUiState.currentBalance.toFloat(),
                     color = MaterialTheme.colorScheme.primary
                 )
                 BalanceItem(
                     icon = FeatherIcons.ArrowUp,
                     text = "",
-                    amount = expenseBalance.toFloat(),
+                    amount = homeUiState.expenseBalance.toFloat(),
                     color = Color.Red
                 )
                 BalanceItem(
                     icon = FeatherIcons.ArrowDown,
                     text = "",
-                    amount = incomeBalance.toFloat(),
+                    amount = homeUiState.incomeBalance.toFloat(),
                     color = Color.Green
                 )
             }
