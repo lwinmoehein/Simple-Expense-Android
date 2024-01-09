@@ -2,6 +2,7 @@ package lab.justonebyte.simpleexpense.ui.stats
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
@@ -19,6 +20,7 @@ import compose.icons.feathericons.ArrowDown
 import compose.icons.feathericons.ArrowUp
 import lab.justonebyte.simpleexpense.R
 import lab.justonebyte.simpleexpense.model.BalanceType
+import lab.justonebyte.simpleexpense.model.TransactionType
 import lab.justonebyte.simpleexpense.ui.components.AppOption
 import lab.justonebyte.simpleexpense.ui.components.OptionItem
 import lab.justonebyte.simpleexpense.ui.components.TransactionTypePicker
@@ -36,7 +38,9 @@ sealed class BalanceTypeOption(override val name:Int, override  val value:Any) :
 
 @Composable
 fun TransactionTypeTab(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    selectedTransactionType: TransactionType,
+    onTransactionTypeSelected:(transactionType:TransactionType)->Unit
 ){
     Row (
         modifier = modifier
@@ -50,23 +54,32 @@ fun TransactionTypeTab(
             Row(
                 modifier = Modifier.weight(1f)
                     .clip(RoundedCornerShape(5.dp))
-                    .background(MaterialTheme.colorScheme.primary)
+                    .background(if(selectedTransactionType===TransactionType.Expense) MaterialTheme.colorScheme.primary else Color.Transparent)
+                    .clickable {
+                        onTransactionTypeSelected(TransactionType.Expense)
+                    }
                     ,
                 horizontalArrangement = Arrangement.Center,
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Icon(imageVector = FeatherIcons.ArrowUp , contentDescription ="", tint = Color.Red )
                 Spacer(modifier = Modifier.width(10.dp))
-                Text(text = "Expense", color = MaterialTheme.colorScheme.onPrimary)
+                Text(text = "Expense", color =if(selectedTransactionType===TransactionType.Expense) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.primary)
             }
             Row(
-                modifier = Modifier.weight(1f),
+                modifier =
+                Modifier.weight(1f)
+                    .clip(RoundedCornerShape(5.dp))
+                    .background(if(selectedTransactionType===TransactionType.Income) MaterialTheme.colorScheme.primary else Color.Transparent)
+                    .clickable {
+                        onTransactionTypeSelected(TransactionType.Income)
+                    },
                 horizontalArrangement = Arrangement.Center,
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Icon(imageVector = FeatherIcons.ArrowDown , contentDescription ="", tint = Color.Green )
                 Spacer(modifier = Modifier.width(10.dp))
-                Text(text = "Income")
+                Text(text = "Income", color = if(selectedTransactionType===TransactionType.Income) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.primary)
             }
         }
     }
@@ -80,20 +93,13 @@ fun StatsScreen(goBack:()->Unit) {
     val statsUiState by statsViewModel.viewModelUiState.collectAsState()
     val transactions = statsUiState.transactions
 
-    val balanceType = mutableStateOf(statsUiState.currentBalanceType)
-
-    val chosenDateString = when(balanceType.value){
-        BalanceType.DAILY-> if(statsUiState.selectedDay== getCurrentDate()) stringResource(id = R.string.this_day) else statsUiState.selectedDay+" "+stringResource(id = R.string.day)
-        BalanceType.MONTHLY->if(statsUiState.selectedMonth== getCurrentMonth()) stringResource(id = R.string.this_month) else statsUiState.selectedMonth+" "+stringResource(id = R.string.month)
-        BalanceType.YEARLY->if(statsUiState.selectedYear== getCurrentYear()) stringResource(id = R.string.this_year) else statsUiState.selectedYear+" "+stringResource(id = R.string.year)
-        else->stringResource(id = R.string.total) }
-
     val balanceTypeOptions = listOf<OptionItem>(
         BalanceTypeOption.MONTHLY,
         BalanceTypeOption.YEARLY,
         BalanceTypeOption.TOTAL
     )
     val selectedBalanceType = remember { mutableStateOf<BalanceType>(BalanceType.MONTHLY) }
+    val selectedTransactionType = remember { mutableStateOf<TransactionType>(TransactionType.Expense) }
 
     Scaffold(
         topBar =  {
@@ -168,11 +174,17 @@ fun StatsScreen(goBack:()->Unit) {
                 Modifier.fillMaxSize().padding(10.dp)
             ) {
                 Spacer(modifier = Modifier.height(10.dp))
-                TransactionTypeTab()
+                TransactionTypeTab(
+                    selectedTransactionType = selectedTransactionType.value,
+                    onTransactionTypeSelected = {
+                        selectedTransactionType.value = it
+                    }
+                )
                 Spacer(modifier = Modifier.height(20.dp))
                 CustomPieChartWithData(
                     currency = statsUiState.currentCurrency,
-                    transactions = transactions)
+                    transactions = transactions.filter { it.type===selectedTransactionType.value }
+                )
             }
 
         }
