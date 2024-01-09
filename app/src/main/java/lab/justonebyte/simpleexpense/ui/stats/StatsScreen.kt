@@ -1,11 +1,14 @@
 package lab.justonebyte.simpleexpense.ui.stats
 
 import android.annotation.SuppressLint
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
@@ -32,22 +35,29 @@ sealed class BalanceTypeOption(override val name:Int, override  val value:Any) :
 }
 
 @Composable
-fun TransactionTypeTab(modifier: Modifier = Modifier){
+fun TransactionTypeTab(
+    modifier: Modifier = Modifier
+){
     Row (
         modifier = modifier
             .fillMaxWidth()
+            .absolutePadding(right = 10.dp, left = 10.dp)
     ){
         Row(
-            Modifier.absolutePadding(top = 5.dp, bottom = 5.dp)
+            horizontalArrangement = Arrangement.spacedBy(5.dp),
+            modifier = Modifier.absolutePadding(top = 5.dp, bottom = 5.dp)
         ){
             Row(
-                modifier = Modifier.weight(1f),
+                modifier = Modifier.weight(1f)
+                    .clip(RoundedCornerShape(5.dp))
+                    .background(MaterialTheme.colorScheme.primary)
+                    ,
                 horizontalArrangement = Arrangement.Center,
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Icon(imageVector = FeatherIcons.ArrowUp , contentDescription ="", tint = Color.Red )
                 Spacer(modifier = Modifier.width(10.dp))
-                Text(text = "Expense")
+                Text(text = "Expense", color = MaterialTheme.colorScheme.onPrimary)
             }
             Row(
                 modifier = Modifier.weight(1f),
@@ -67,8 +77,6 @@ fun TransactionTypeTab(modifier: Modifier = Modifier){
 @Composable
 fun StatsScreen(goBack:()->Unit) {
     val statsViewModel = hiltViewModel<StatsViewModel>()
-    val homeViewModel = hiltViewModel<HomeViewModel>()
-
     val statsUiState by statsViewModel.viewModelUiState.collectAsState()
     val transactions = statsUiState.transactions
 
@@ -129,10 +137,10 @@ fun StatsScreen(goBack:()->Unit) {
                     onItemSelected = {
                         selectedBalanceType.value = it.value as BalanceType
                         when(selectedBalanceType.value){
-                            BalanceType.YEARLY->homeViewModel.collectDailyBalance()
-                            BalanceType.MONTHLY-> homeViewModel.collectMonthlyBalance()
-                            BalanceType.YEARLY->homeViewModel.collectYearlyBalance()
-                            else->homeViewModel.collectTotalBalance()
+                            BalanceType.YEARLY->statsViewModel.collectDailyBalance()
+                            BalanceType.MONTHLY-> statsViewModel.collectMonthlyBalance()
+                            BalanceType.YEARLY->statsViewModel.collectYearlyBalance()
+                            else->statsViewModel.collectTotalBalance()
                         }
                     },
                     selectedOption = selectedBalanceType.value
