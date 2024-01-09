@@ -58,7 +58,12 @@ fun TransactionsCard(
        ) {
            groupedTransactions.forEach { (date, transactions) ->
                stickyHeader {
-                   Text(text = date, style = MaterialTheme.typography.titleMedium,color=MaterialTheme.colorScheme.onPrimary, modifier = Modifier.fillMaxWidth().background(MaterialTheme.colorScheme.primary).absolutePadding(left = 5.dp))
+                   Text(
+                       text = date,
+                       style = MaterialTheme.typography.titleMedium,
+                       color= MaterialTheme.colorScheme.onSecondary,
+                       modifier = Modifier.fillMaxWidth().background(MaterialTheme.colorScheme.secondary).absolutePadding(left = 5.dp),
+                   )
                }
                itemsIndexed(transactions) { index, transaction ->
                    TransactionItem(transaction,currency = currency, onTransactionClick = {onTransactionClick(it)})
