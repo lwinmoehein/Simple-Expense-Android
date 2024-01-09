@@ -2,8 +2,8 @@
     <string name="app_name">X Money Tracker</string>
     <string name="en">English</string>
     <string name="my">Myanmar</string>
-    <string name="kyat">kyats</string>
-    <string name="dollar">dollars</string>
+    <string name="kyat">MMK</string>
+    <string name="dollar">USD</string>
     <string name="select_currency">Select Currency</string>
     <string name="select_balance">Show Data By</string>
     <string name="select_lang">Select Language</string>

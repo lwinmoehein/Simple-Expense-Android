@@ -18,11 +18,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import compose.icons.FeatherIcons
 import compose.icons.feathericons.ArrowDown
 import compose.icons.feathericons.ArrowUp
 import compose.icons.feathericons.DollarSign
+import lab.justonebyte.simpleexpense.model.Currency
 import lab.justonebyte.simpleexpense.ui.components.TransactionTypePicker
 
 @Composable
@@ -76,20 +78,23 @@ fun BalanceCard(
                 BalanceItem(
                     icon = FeatherIcons.DollarSign,
                     text = "",
-                    amount = homeUiState.currentBalance.toFloat(),
-                    color = MaterialTheme.colorScheme.primary
+                    amount = homeUiState.currentBalance,
+                    color = MaterialTheme.colorScheme.primary,
+                    currency = homeUiState.currentCurrency
                 )
                 BalanceItem(
                     icon = FeatherIcons.ArrowUp,
                     text = "",
-                    amount = homeUiState.expenseBalance.toFloat(),
-                    color = Color.Red
+                    amount = homeUiState.expenseBalance,
+                    color = Color.Red,
+                    currency = homeUiState.currentCurrency
                 )
                 BalanceItem(
                     icon = FeatherIcons.ArrowDown,
                     text = "",
-                    amount = homeUiState.incomeBalance.toFloat(),
-                    color = Color.Green
+                    amount = homeUiState.incomeBalance,
+                    color = Color.Green,
+                    currency = homeUiState.currentCurrency
                 )
             }
         }
@@ -100,9 +105,10 @@ fun BalanceCard(
 private fun BalanceItem(
     icon: ImageVector,
     text: String,
-    amount: Float,
+    amount: Int,
     color: Color,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    currency: Currency
 ) {
     Column(
         modifier = modifier,
@@ -115,7 +121,7 @@ private fun BalanceItem(
             modifier = Modifier.align(Alignment.CenterHorizontally)
         )
         Text(
-            text = amount.toString(),
+            text = amount.toString()+" "+ stringResource(id = currency.name),
             color = LocalContentColor.current,
             style = MaterialTheme.typography.labelLarge,
             modifier = Modifier.align(Alignment.CenterHorizontally)
