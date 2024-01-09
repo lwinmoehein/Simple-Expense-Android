@@ -24,6 +24,7 @@ import com.google.accompanist.pager.*
 import compose.icons.FeatherIcons
 import compose.icons.feathericons.ArrowDown
 import compose.icons.feathericons.ArrowUp
+import compose.icons.feathericons.Plus
 import lab.justonebyte.simpleexpense.R
 import lab.justonebyte.simpleexpense.model.TransactionCategory
 import lab.justonebyte.simpleexpense.model.TransactionType
@@ -171,8 +172,9 @@ fun ManageCategoryScreen(
                         currentEditingCategory.value = null
                         isReusableInputDialogShown.value = true
                     },
+                    shape = MaterialTheme.shapes.extraLarge
                 ) {
-                    Icon(Icons.Filled.Add, "Localized description")
+                    Icon(imageVector = FeatherIcons.Plus, "Localized description")
                 }
             }else{
                 FloatingActionButton(
@@ -180,8 +182,9 @@ fun ManageCategoryScreen(
                         currentEditingCategory.value = null
                         isReusableInputDialogShown.value = true
                     },
+                    shape = MaterialTheme.shapes.extraLarge
                 ) {
-                    Icon(Icons.Filled.Add, "Localized description")
+                    Icon(imageVector = FeatherIcons.Plus, "Localized description")
                 }
             }
         }
@@ -193,7 +196,7 @@ fun ManageCategoryScreen(
                  },
                  currentCategoryTabIndex = currentCategoryTabIndex.value
              )
-             LazyColumn(Modifier.padding(10.dp)){
+             LazyColumn(Modifier.padding(20.dp)){
                  items(categories){
                         CategoryItem(
                             category = it,

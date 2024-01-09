@@ -20,6 +20,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import compose.icons.FeatherIcons
+import compose.icons.feathericons.DollarSign
 import lab.justonebyte.simpleexpense.R
 import lab.justonebyte.simpleexpense.model.Transaction
 import lab.justonebyte.simpleexpense.model.TransactionCategory
@@ -132,7 +134,7 @@ fun AddTransactionContent(
                     shape = MaterialTheme.shapes.small,
                     singleLine = true,
                     leadingIcon = {
-                         Image(painterResource(id = R.drawable.ic_baseline_attach_money_24), contentDescription ="" )
+                        Icon(imageVector = FeatherIcons.DollarSign, contentDescription = "",tint=MaterialTheme.colorScheme.primary)
                     } ,
                     modifier = Modifier.fillMaxWidth(),
                     value = currentAmount.value,
@@ -191,7 +193,9 @@ fun AddTransactionContent(
         }
         Row(
             horizontalArrangement = Arrangement.End,
-            modifier = Modifier.fillMaxWidth().absolutePadding(top = 50.dp)
+            modifier = Modifier
+                .fillMaxWidth()
+                .absolutePadding(top = 50.dp)
         ) {
             TextButton(
                 modifier = Modifier.absolutePadding(left = 10.dp, right = 10.dp),

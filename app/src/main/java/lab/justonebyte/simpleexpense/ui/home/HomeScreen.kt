@@ -15,6 +15,9 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
 import androidx.hilt.navigation.compose.hiltViewModel
+import compose.icons.FeatherIcons
+import compose.icons.feathericons.Plus
+import compose.icons.feathericons.PlusCircle
 import kotlinx.coroutines.launch
 import lab.justonebyte.simpleexpense.R
 import lab.justonebyte.simpleexpense.model.BalanceType
@@ -196,6 +199,7 @@ fun HomeScreen(){
                               }
 
                           }
+                          Divider()
                       }
         },
         floatingActionButton = {
@@ -204,8 +208,9 @@ fun HomeScreen(){
                     clearStates()
                     isChooseAddTransactionTypeOpen.value = true
                 },
+                shape = MaterialTheme.shapes.extraLarge
             ) {
-                Icon(Icons.Filled.Add, "Localized description")
+                Icon(imageVector = FeatherIcons.Plus, "Localized description")
             }
         },
         snackbarHost = { SnackbarHost(snackbarHostState) },
@@ -214,7 +219,7 @@ fun HomeScreen(){
         Column(Modifier.padding(it)) {
             Row(
                 horizontalArrangement = Arrangement.Center,
-                modifier = Modifier.absolutePadding(top = 20.dp, bottom = 30.dp).fillMaxWidth()
+                modifier = Modifier.absolutePadding(top = 50.dp, bottom = 20.dp).fillMaxWidth()
             ) {
                     ChooseTransactionTypeTab(
                         balanceType =  homeUiState.currentBalanceType,

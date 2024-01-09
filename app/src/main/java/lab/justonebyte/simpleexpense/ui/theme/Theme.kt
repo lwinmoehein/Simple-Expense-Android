@@ -2,6 +2,7 @@ import android.os.Build
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
+import lab.justonebyte.simpleexpense.ui.theme.SuBuuShapes
 import lab.justonebyte.simpleexpense.ui.theme.suBuuTypography
 
 
@@ -88,7 +89,8 @@ fun AppTheme(
     MaterialTheme(
         colorScheme = colors,
         content = content,
-        typography = suBuuTypography
+        typography = suBuuTypography,
+        shapes = SuBuuShapes
     )
 }
 

@@ -8,6 +8,7 @@ import android.provider.DocumentsContract
 import android.widget.DatePicker
 import androidx.activity.result.ActivityResultLauncher
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -28,6 +29,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHostState
@@ -46,6 +48,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import compose.icons.FeatherIcons
+import compose.icons.feathericons.File
 import lab.justonebyte.simpleexpense.R
 import lab.justonebyte.simpleexpense.utils.dateFormatter
 import okhttp3.internal.format
@@ -83,17 +87,15 @@ fun ChooseFormat(
                 items(formats.size) { index ->
                     val isSelected = chosenFormat?.let { (it.nameId== formats[index].nameId) }
 
-                    Card(
+                    Row(
                         modifier = Modifier
                             .fillMaxWidth()
                             .absolutePadding(right = 5.dp)
+                            .border(width=if(isSelected == true) 2.dp else 0.dp,color=Color.Transparent)
                             .clickable {
                                 chosenFormat = formats[index]
                                 onFormatChosen(chosenFormat!!)
-                            },
-                        colors =  CardDefaults.cardColors(
-                            containerColor = if(isSelected==true) MaterialTheme.colorScheme.primary else  MaterialTheme.colorScheme.onSecondary,
-                        )
+                            }
                     ) {
 
                         Text(
@@ -194,32 +196,43 @@ fun ExportScreen(
 
             Spacer(modifier = Modifier.absolutePadding(top = 20.dp))
 
-            Button(
-                onClick = {
-                    if(!uiState.isExportingFile){
-                        chosenFormat?.let { onExportClicked(fromDate.value,toDate.value, it) }
-                    }
-                },
-                modifier = Modifier.fillMaxWidth(),
+            Row(
+                modifier = Modifier.fillMaxWidth().absolutePadding(left = 50.dp, right = 50.dp),
             ) {
-                Box(
-                    contentAlignment = Alignment.Center,  // Center content within the box
-                    modifier = Modifier.fillMaxWidth()  // Expand the box to fill available space
+                Button(
+                    modifier = Modifier.fillMaxWidth(),
+                    onClick = {
+                        if(!uiState.isExportingFile){
+                            chosenFormat?.let { onExportClicked(fromDate.value,toDate.value, it) }
+                        }
+                    }
                 ) {
-                    if (uiState.isExportingFile) {
-                        CircularProgressIndicator(
-                            modifier = Modifier
-                                .width(15.dp)
-                                .height(15.dp)
-                                .align(Alignment.Center),  // Explicitly center the indicator
-                            color = Color.White,
-                            strokeWidth = 3.dp
-                        )
-                    } else {
-                        Text(
-                            text = stringResource(id = R.string.export),
-                            modifier = Modifier.align(Alignment.Center)  // Center the text
-                        )
+                    Box(
+                        contentAlignment = Alignment.Center,
+                        modifier =  Modifier.fillMaxWidth()// Center content within the box
+                        // Expand the box to fill available space
+                    ) {
+                        if (uiState.isExportingFile) {
+                            CircularProgressIndicator(
+                                modifier = Modifier
+                                    .width(15.dp)
+                                    .height(15.dp)
+                                    .align(Alignment.Center),  // Explicitly center the indicator
+                                color = Color.White,
+                                strokeWidth = 3.dp
+                            )
+                        } else {
+                            Row(
+                                horizontalArrangement = Arrangement.Center,
+                                verticalAlignment = Alignment.CenterVertically,
+                                modifier = Modifier.align(Alignment.Center)
+                            ) {
+                                Text(
+                                    text = stringResource(id = R.string.export),
+                                )
+                                Icon(modifier = Modifier.absolutePadding(left = 5.dp).width(15.dp),imageVector = FeatherIcons.File, contentDescription = "",tint= MaterialTheme.colorScheme.onPrimary)
+                            }
+                        }
                     }
                 }
             }

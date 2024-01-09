@@ -62,6 +62,7 @@ fun AppAlertDialog(
                 }
 
             },
-            properties = properties
+            properties = properties,
+            shape = MaterialTheme.shapes.large
         )
 }
