@@ -38,6 +38,8 @@ import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import compose.icons.FeatherIcons
+import compose.icons.feathericons.ArrowLeft
+import compose.icons.feathericons.ArrowRight
 import compose.icons.feathericons.File
 import compose.icons.feathericons.Info
 import compose.icons.feathericons.LogOut
@@ -88,13 +90,21 @@ fun AccountScreen(
                                style = MaterialTheme.typography.titleLarge
                            )
                        }else{
-                           Icon(Icons.Default.ArrowBack, contentDescription = "",
-                               Modifier
+                           Icon(
+                               imageVector = FeatherIcons.ArrowLeft, contentDescription = "",
+                               tint = MaterialTheme.colorScheme.primary,
+                               modifier = Modifier
                                    .absolutePadding(right = 5.dp)
                                    .clickable {
                                        showSettingsScreen = false
                                        showExportScreen = false
                                    })
+                           Text(
+                               text= "Test",
+                               maxLines = 1,
+                               overflow = TextOverflow.Ellipsis,
+                               style = MaterialTheme.typography.titleLarge
+                           )
                        }
 
                    }
@@ -114,7 +124,7 @@ fun AccountScreen(
                 .padding(it)
                 .absolutePadding(top = 20.dp)
         ){
-            Column {
+            Column(Modifier.padding(5.dp)) {
                 if(!showSettingsScreen && !showExportScreen){
                     AuthenticatedUser(
                         user = user,
@@ -127,6 +137,7 @@ fun AccountScreen(
                             }
                         }
                     )
+                    Spacer(modifier = Modifier.height(10.dp))
                     Row(
                         horizontalArrangement = Arrangement.SpaceBetween,
                         modifier = Modifier
@@ -134,7 +145,7 @@ fun AccountScreen(
                             .clickable { showSettingsScreen = true }
                             .padding(10.dp)
                     ) {
-                       Row() {
+                       Row{
                            Icon(
                                imageVector = FeatherIcons.Settings,
                                contentDescription ="",
@@ -143,8 +154,9 @@ fun AccountScreen(
                            )
                            Text(text = stringResource(id = R.string.settings))
                        }
-                        Icon(Icons.Default.ArrowForward, contentDescription ="" )
+                        Icon(imageVector = FeatherIcons.ArrowRight, contentDescription ="", tint = MaterialTheme.colorScheme.primary)
                     }
+                    Spacer(modifier = Modifier.height(10.dp))
 
                     Row(
                         horizontalArrangement = Arrangement.SpaceBetween,
@@ -162,17 +174,25 @@ fun AccountScreen(
                             )
                             Text(text = stringResource(id = R.string.export))
                         }
-                        Icon(Icons.Default.ArrowForward, contentDescription ="" )
+                        Icon(imageVector = FeatherIcons.ArrowRight, contentDescription ="", tint = MaterialTheme.colorScheme.primary)
                     }
+                    Spacer(modifier = Modifier.height(10.dp))
+
                     user?.let {
-                        Row(Modifier.fillMaxWidth().padding(10.dp).clickable {
-                            Firebase.auth.signOut()
-                            GoogleSignIn.getClient(context, GoogleSignInOptions.DEFAULT_SIGN_IN).signOut()
-                            user = null
-                            coroutineScope.launch {
-                                settingsViewModel.logOut()
-                            }
-                        }) {
+                        Row(
+                            Modifier
+                                .fillMaxWidth()
+                                .padding(10.dp)
+                                .clickable {
+                                    Firebase.auth.signOut()
+                                    GoogleSignIn
+                                        .getClient(context, GoogleSignInOptions.DEFAULT_SIGN_IN)
+                                        .signOut()
+                                    user = null
+                                    coroutineScope.launch {
+                                        settingsViewModel.logOut()
+                                    }
+                                }) {
                             Icon(
                                 imageVector = FeatherIcons.LogOut,
                                 contentDescription = "",
