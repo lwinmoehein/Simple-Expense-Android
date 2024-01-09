@@ -36,6 +36,10 @@ import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
+import compose.icons.FeatherIcons
+import compose.icons.feathericons.File
+import compose.icons.feathericons.LogOut
+import compose.icons.feathericons.Settings
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import lab.justonebyte.simpleexpense.R
@@ -57,6 +61,8 @@ fun AccountScreen(
     var showExportScreen by remember { mutableStateOf(false) }
     val snackbarHostState = remember { SnackbarHostState() }
     val coroutineScope = rememberCoroutineScope()
+    var user by remember { mutableStateOf(Firebase.auth.currentUser) }
+
 
     Scaffold(
         topBar = {
@@ -114,11 +120,6 @@ fun AccountScreen(
                             coroutineScope.launch {
                                 settingsViewModel.fetchAccessTokenByGoogleId(it)
                             }
-                        },
-                        logOutUser = {
-                            coroutineScope.launch {
-                                settingsViewModel.logOut()
-                            }
                         }
                     )
                     Row(
@@ -129,7 +130,11 @@ fun AccountScreen(
                             .padding(10.dp)
                     ) {
                        Row() {
-                           Icon(Icons.Default.Settings, contentDescription ="", modifier = Modifier.absolutePadding(right = 10.dp) )
+                           Icon(
+                               imageVector = FeatherIcons.Settings,
+                               contentDescription ="",
+                               modifier = Modifier.absolutePadding(right = 10.dp)
+                           )
                            Text(text = stringResource(id = R.string.settings))
                        }
                         Icon(Icons.Default.ArrowForward, contentDescription ="" )
@@ -143,10 +148,30 @@ fun AccountScreen(
                             .padding(10.dp)
                     ) {
                         Row() {
-                            Icon(Icons.Default.DateRange, contentDescription ="", modifier = Modifier.absolutePadding(right = 10.dp) )
+                            Icon(
+                                imageVector = FeatherIcons.File,
+                                contentDescription ="",
+                                modifier = Modifier.absolutePadding(right = 10.dp)
+                            )
                             Text(text = stringResource(id = R.string.export))
                         }
                         Icon(Icons.Default.ArrowForward, contentDescription ="" )
+                    }
+                    Row(Modifier.padding(10.dp).clickable {
+                        Firebase.auth.signOut()
+                        GoogleSignIn.getClient(context, GoogleSignInOptions.DEFAULT_SIGN_IN).signOut()
+                        user = null
+                        coroutineScope.launch {
+                            settingsViewModel.logOut()
+                        }
+                    }) {
+                            Icon(
+                                imageVector = FeatherIcons.LogOut,
+                                contentDescription = "",
+                                modifier = Modifier.absolutePadding(right = 10.dp),
+
+                            )
+                            Text(text = stringResource(id = R.string.log_out))
                     }
                 }
                 if(showSettingsScreen){
@@ -196,8 +221,7 @@ private fun rememberFirebaseAuthLauncher(
 fun AuthenticatedUser(
     modifier: Modifier=Modifier.absolutePadding(left = 10.dp, right = 10.dp),
     context: Context = LocalContext.current,
-    fetchAndUpdateAccessToken:(googleId:String)->Unit,
-    logOutUser:()->Unit
+    fetchAndUpdateAccessToken:(googleId:String)->Unit
 ) {
     val token = stringResource(R.string.web_client_id)
     var user by remember { mutableStateOf(Firebase.auth.currentUser) }
@@ -206,8 +230,6 @@ fun AuthenticatedUser(
         onAuthComplete = { result,idToken ->
             user = result.user
             result.user?.let { fetchAndUpdateAccessToken(idToken) }
-
-//            uploadTransactions()
         },
         onAuthError = {
             user = null
@@ -238,14 +260,6 @@ fun AuthenticatedUser(
                                 Text(text = it1, style = MaterialTheme.typography.labelLarge)
                             }
                         }
-                    }
-                    Button(onClick = {
-                        Firebase.auth.signOut()
-                        GoogleSignIn.getClient(context, GoogleSignInOptions.DEFAULT_SIGN_IN).signOut()
-                        user = null
-                        logOutUser()
-                    }) {
-                        Text(text = "Log Out")
                     }
                 }
             }
