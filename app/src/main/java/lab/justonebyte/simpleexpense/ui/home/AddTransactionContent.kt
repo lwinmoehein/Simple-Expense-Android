@@ -140,13 +140,7 @@ fun AddTransactionContent(
                     label = { Text(stringResource(id = R.string.enter_amount)) },
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Number
-                    ),
-//                    colors = TextFieldDefaults.textFieldColors(
-//                        disabledTextColor = Color.Transparent,
-//                        focusedIndicatorColor = Color.Transparent,
-//                        unfocusedIndicatorColor = Color.Transparent,
-//                        disabledIndicatorColor = Color.Transparent
-//                    )
+                    )
                 )
 
             }
