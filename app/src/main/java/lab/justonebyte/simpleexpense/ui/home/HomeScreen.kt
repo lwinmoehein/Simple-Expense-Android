@@ -226,20 +226,24 @@ fun HomeScreen(){
         snackbarHost = { SnackbarHost(snackbarHostState) },
 
         ) {
-        Card(Modifier.padding(it)){
-            Column {
-                ChooseTransactionTypeTab(
-                    balanceType =  homeUiState.currentBalanceType,
-                    onTypeChanged = { type->
-                        when(type){
-                            BalanceType.DAILY->homeViewModel.collectDailyBalance()
-                            BalanceType.MONTHLY->homeViewModel.collectMonthlyBalance()
-                            BalanceType.YEARLY->homeViewModel.collectYearlyBalance()
-                            else->homeViewModel.collectTotalBalance()
+        Column(Modifier.padding(it)) {
+            Row(
+                horizontalArrangement = Arrangement.Center,
+                modifier = Modifier.absolutePadding(top = 20.dp, bottom = 30.dp).fillMaxWidth()
+            ) {
+                    ChooseTransactionTypeTab(
+                        balanceType =  homeUiState.currentBalanceType,
+                        onTypeChanged = { type->
+                            when(type){
+                                BalanceType.DAILY->homeViewModel.collectDailyBalance()
+                                BalanceType.MONTHLY->homeViewModel.collectMonthlyBalance()
+                                BalanceType.YEARLY->homeViewModel.collectYearlyBalance()
+                                else->homeViewModel.collectTotalBalance()
+                            }
                         }
-                    }
-                )
-           }
+                    )
+
+            }
             HomeContent(
                 homeUiState = homeUiState,
                 onTransactionClick = {

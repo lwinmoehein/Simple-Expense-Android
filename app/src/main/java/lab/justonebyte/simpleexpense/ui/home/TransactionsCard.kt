@@ -44,8 +44,8 @@ fun TransactionsCard(
         }
     }
 
-   Card(
-               shape = SuBuuShapes.small,
+   Row(
+        //       shape = SuBuuShapes.small,
         modifier = modifier
             .fillMaxWidth()
             .fillMaxHeight()

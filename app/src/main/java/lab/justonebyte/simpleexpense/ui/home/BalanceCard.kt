@@ -1,14 +1,26 @@
 package lab.justonebyte.simpleexpense.ui.home
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
+import androidx.compose.material3.Icon
+import androidx.compose.material3.LocalContentColor
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import compose.icons.FeatherIcons
+import compose.icons.feathericons.ArrowDown
+import compose.icons.feathericons.ArrowUp
+import compose.icons.feathericons.DollarSign
+import compose.icons.feathericons.TrendingDown
+import compose.icons.feathericons.TrendingUp
 import lab.justonebyte.simpleexpense.model.Currency
 import lab.justonebyte.simpleexpense.ui.theme.SuBuuShapes
 import lab.justonebyte.simpleexpense.R
@@ -21,85 +33,72 @@ fun BalanceCard(
     incomeBalance: Int,
     expenseBalance: Int
 ){
-
-
-    Column(
-            verticalArrangement = Arrangement.Center,
+    Card(
+        modifier = modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(10.dp)
+    ) {
+        Column(
+            modifier = Modifier.padding(16.dp)
         ) {
+            // Title with current balance
+            Text(
+                text = "Your Wallet",
+                style = MaterialTheme.typography.labelLarge,
+                color = LocalContentColor.current
+            )
+            Spacer(modifier = Modifier.height(8.dp))
 
-            SectionTitle(title = stringResource(id = R.string.balance),modifier = Modifier.absolutePadding(top = 15.dp, left = 10.dp, bottom = 5.dp, right = 10.dp))
-            Card(
-                shape = SuBuuShapes.small,
-                modifier = modifier
-                    .wrapContentHeight()
-                    .fillMaxWidth()
-                    .padding(10.dp),
+            // Balance row with icons and colors
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween
             ) {
-
-                 if(currentBalance!=0){
-                     Row(
-                         modifier = Modifier
-                             .height(120.dp)
-                             .padding(10.dp),
-                         horizontalArrangement = Arrangement.SpaceBetween
-                     ) {
-                         Column(verticalArrangement = Arrangement.Center, modifier = Modifier.weight(1f)) {
-                             Text(
-                                 text = stringResource(id = R.string.current_balance),
-                                 modifier = Modifier
-                                     .weight(1f)
-                                     .wrapContentHeight(align = CenterVertically),
-                             )
-                             Text(
-                                 text =  stringResource(id = R.string.income_balance),
-                                 modifier = Modifier
-                                     .weight(1f)
-                                     .wrapContentHeight(align = CenterVertically),
-
-                                 )
-                             Text(
-                                 text = stringResource(id = R.string.expense_balance),
-                                 modifier = Modifier
-                                     .weight(1f)
-                                     .wrapContentHeight(align = CenterVertically),
-                             )
-                         }
-                         Column( verticalArrangement = Arrangement.Center, modifier = Modifier.weight(1f)) {
-                             Row(horizontalArrangement = Arrangement.Start, verticalAlignment = Alignment.CenterVertically, modifier = Modifier.weight(1f)) {
-                                 Text(
-                                     text = "$currentBalance",
-                                 )
-                                 Text(
-                                     text = " " + stringResource(id = currency.name)
-
-                                 )
-                             }
-                             Row(horizontalArrangement = Arrangement.Start, verticalAlignment = Alignment.CenterVertically, modifier = Modifier.weight(1f)) {
-
-                                 Text(
-                                     text = "$incomeBalance",
-                                 )
-                                 Text(text =  " " + stringResource(id = currency.name))
-
-
-                             }
-                             Row(horizontalArrangement = Arrangement.Start, verticalAlignment = Alignment.CenterVertically, modifier = Modifier.weight(1f)) {
-                                 Text(
-                                     text = "$expenseBalance",
-                                 )
-                                 Text(text =  " " + stringResource(id = currency.name))
-
-                             }
-                         }
-                         Spacer(modifier = Modifier.weight(1f))
-                     }
-                     
-                 }else{
-                     NoData(modifier = Modifier
-                         .fillMaxWidth()
-                         .height(100.dp),)
-                 }
+                BalanceItem(
+                    icon = FeatherIcons.DollarSign,
+                    text = "",
+                    amount = currentBalance.toFloat(),
+                    color = MaterialTheme.colorScheme.primary
+                )
+                BalanceItem(
+                    icon = FeatherIcons.ArrowUp,
+                    text = "",
+                    amount = expenseBalance.toFloat(),
+                    color = Color.Red
+                )
+                BalanceItem(
+                    icon = FeatherIcons.ArrowDown,
+                    text = "",
+                    amount = incomeBalance.toFloat(),
+                    color = Color.Green
+                )
             }
         }
+    }
+}
 
+@Composable
+private fun BalanceItem(
+    icon: ImageVector,
+    text: String,
+    amount: Float,
+    color: Color,
+    modifier: Modifier = Modifier
+) {
+    Column(
+        modifier = modifier,
+        verticalArrangement = Arrangement.spacedBy(5.dp)
+    ) {
+        Icon(
+            imageVector = icon,
+            tint = color,
+            contentDescription = text,
+            modifier = Modifier.align(Alignment.CenterHorizontally)
+        )
+        Text(
+            text = amount.toString(),
+            color = LocalContentColor.current,
+            style = MaterialTheme.typography.labelLarge,
+            modifier = Modifier.align(Alignment.CenterHorizontally)
+        )
+    }
 }

@@ -17,9 +17,7 @@ fun HomeContent(
     onTransactionClick:(t: Transaction)->Unit,
 ){
 
-
-    Scaffold{
-        Column(Modifier.padding(it)) {
+        Column(Modifier.padding(10.dp)) {
             BalanceCard(
                 currency = homeUiState.currentCurrency,
                 currentBalance = homeUiState.currentBalance,
@@ -36,5 +34,4 @@ fun HomeContent(
                 transactionGroupType = homeUiState.currentBalanceType
             )
         }
-    }
 }
