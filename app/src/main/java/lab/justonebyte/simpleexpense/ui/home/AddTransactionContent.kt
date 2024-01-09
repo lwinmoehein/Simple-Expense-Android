@@ -4,6 +4,7 @@ import android.app.DatePickerDialog
 import android.util.Log
 import android.widget.DatePicker
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.*
@@ -118,7 +119,8 @@ fun AddTransactionContent(
     ) {
 
         Spacer(modifier = Modifier.height(20.dp))
-        Column() {
+
+        Column {
             Row(
                 horizontalArrangement = Arrangement.Center,
                 verticalAlignment = Alignment.CenterVertically,
@@ -139,12 +141,12 @@ fun AddTransactionContent(
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Number
                     ),
-                    colors = TextFieldDefaults.textFieldColors(
-                        disabledTextColor = Color.Transparent,
-                        focusedIndicatorColor = Color.Transparent,
-                        unfocusedIndicatorColor = Color.Transparent,
-                        disabledIndicatorColor = Color.Transparent
-                    )
+//                    colors = TextFieldDefaults.textFieldColors(
+//                        disabledTextColor = Color.Transparent,
+//                        focusedIndicatorColor = Color.Transparent,
+//                        unfocusedIndicatorColor = Color.Transparent,
+//                        disabledIndicatorColor = Color.Transparent
+//                    )
                 )
 
             }
@@ -164,51 +166,39 @@ fun AddTransactionContent(
             currentTransactionType = if (currentType.value == TransactionType.Income.value) TransactionType.Income else TransactionType.Expense
         )
         if(!isEditMode){
-            Column(
-            ) {
-                Row(
-                    modifier = Modifier.padding(12.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.Center
+            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.SpaceBetween) {
+                Text(
+                    text =  stringResource(id = R.string.enter_date),
+                    modifier = Modifier.weight(1f)
+                )
+                TextButton(
+                    onClick = { mDatePickerDialog.show() },
+                    modifier = Modifier.weight(1f)
                 ) {
-                    Text(
-                        text =  stringResource(id = R.string.enter_date),
-                        modifier = Modifier.weight(1f)
-                    )
-                    TextButton(
-                        onClick = { mDatePickerDialog.show() },
-                        modifier = Modifier.weight(1f)
-                    ) {
-                        Text(text = mDate.value)
-                    }
-                    Spacer(modifier = Modifier.weight(1f))
+                    Text(text = mDate.value)
                 }
             }
         }
         Row(
-            modifier = Modifier.padding(12.dp),
-            verticalAlignment = Alignment.CenterVertically,
+            verticalAlignment = Alignment.Top,
             horizontalArrangement = Arrangement.Center
         ) {
-            Text(
-                text =  stringResource(id = R.string.enter_note),
-                modifier = Modifier.weight(1f)
-            )
             TextField(
-                modifier = Modifier.weight(2f),
+                modifier = Modifier.fillMaxWidth(),
                 shape = MaterialTheme.shapes.small,
                 singleLine = false,
                 value = note.value,
+                label = { Text(stringResource(id = R.string.enter_note)) },
                 onValueChange = { note.value = it },
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Text
                 ),
-                colors = TextFieldDefaults.textFieldColors(
-                    disabledTextColor = Color.Transparent,
-                    focusedIndicatorColor = Color.Transparent,
-                    unfocusedIndicatorColor = Color.Transparent,
-                    disabledIndicatorColor = Color.Transparent
-                )
+//                colors = TextFieldDefaults.textFieldColors(
+//                    disabledTextColor = Color.Transparent,
+//                    focusedIndicatorColor = Color.Transparent,
+//                    unfocusedIndicatorColor = Color.Transparent,
+//                    disabledIndicatorColor = Color.Transparent
+//                )
             )
         }
         Row(
