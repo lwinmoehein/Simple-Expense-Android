@@ -16,7 +16,6 @@ import compose.icons.feathericons.ArrowDown
 import compose.icons.feathericons.ArrowUp
 import lab.justonebyte.simpleexpense.R
 import lab.justonebyte.simpleexpense.model.BalanceType
-import lab.justonebyte.simpleexpense.model.TransactionType
 import lab.justonebyte.simpleexpense.ui.components.AppOption
 import lab.justonebyte.simpleexpense.ui.components.OptionItem
 import lab.justonebyte.simpleexpense.ui.components.TransactionTypePicker
@@ -86,7 +85,7 @@ fun StatsScreen(goBack:()->Unit) {
         BalanceTypeOption.YEARLY,
         BalanceTypeOption.TOTAL
     )
-    val selectedTransactionType = remember { mutableStateOf<BalanceType>(BalanceType.MONTHLY) }
+    val selectedBalanceType = remember { mutableStateOf<BalanceType>(BalanceType.MONTHLY) }
 
     Scaffold(
         topBar =  {
@@ -117,53 +116,56 @@ fun StatsScreen(goBack:()->Unit) {
     ) {
         Column(modifier = Modifier
             .padding(it)) {
-
-                Column(
-                    Modifier.padding(20.dp)
-                ) {
-                    if(transactions.isNotEmpty()){
-                        Row(
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .absolutePadding(bottom = 20.dp),
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            AppOption(
-                                    label = "Select",
-                                    options = balanceTypeOptions,
-                                    onItemSelected = {
-                                        selectedTransactionType.value = it.value as BalanceType
-                                    },
-                                    selectedOption = selectedTransactionType.value
-                            )
-                            TransactionTypePicker(
-                                onDatePicked = { date ->
-                                    statsViewModel.collectDailyBalance(date)
-                                },
-                                balanceType = statsUiState.currentBalanceType,
-                                onMonthPicked = { month ->
-                                    statsViewModel.collectMonthlyBalance(month)
-                                },
-                                onYearPicked = { year ->
-                                    statsViewModel.collectYearlyBalance(year)
-                                },
-                                selectedYear = statsUiState.selectedYear,
-                                selectedMonth = statsUiState.selectedMonth,
-                                selectedDay = statsUiState.selectedDay
-                            )
-
+            Row(
+                horizontalArrangement = Arrangement.SpaceBetween,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .absolutePadding(right = 10.dp, left = 10.dp, top = 20.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                AppOption(
+                    label = "Select",
+                    options = balanceTypeOptions,
+                    onItemSelected = {
+                        selectedBalanceType.value = it.value as BalanceType
+                        when(selectedBalanceType.value){
+                            BalanceType.YEARLY->homeViewModel.collectDailyBalance()
+                            BalanceType.MONTHLY-> homeViewModel.collectMonthlyBalance()
+                            BalanceType.YEARLY->homeViewModel.collectYearlyBalance()
+                            else->homeViewModel.collectTotalBalance()
                         }
-                    }
-                    Spacer(modifier = Modifier.height(10.dp))
-                    Card {
-                        TransactionTypeTab()
-                        Spacer(modifier = Modifier.height(30.dp))
-                        CustomPieChartWithData(
-                            currency = statsUiState.currentCurrency,
-                            transactions = transactions)
-                    }
-                }
+                    },
+                    selectedOption = selectedBalanceType.value
+                )
+                TransactionTypePicker(
+                    onDatePicked = { date ->
+                        statsViewModel.collectDailyBalance(date)
+                    },
+                    balanceType = statsUiState.currentBalanceType,
+                    onMonthPicked = { month ->
+                        statsViewModel.collectMonthlyBalance(month)
+                    },
+                    onYearPicked = { year ->
+                        statsViewModel.collectYearlyBalance(year)
+                    },
+                    selectedYear = statsUiState.selectedYear,
+                    selectedMonth = statsUiState.selectedMonth,
+                    selectedDay = statsUiState.selectedDay
+                )
+
+            }
+
+            Spacer(modifier = Modifier.height(10.dp))
+            Card(
+                Modifier.fillMaxSize().padding(10.dp)
+            ) {
+                Spacer(modifier = Modifier.height(10.dp))
+                TransactionTypeTab()
+                Spacer(modifier = Modifier.height(20.dp))
+                CustomPieChartWithData(
+                    currency = statsUiState.currentCurrency,
+                    transactions = transactions)
+            }
 
         }
     }
