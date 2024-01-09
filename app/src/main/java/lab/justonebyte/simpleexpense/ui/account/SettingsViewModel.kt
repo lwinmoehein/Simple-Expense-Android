@@ -2,7 +2,6 @@ package lab.justonebyte.simpleexpense.ui.account
 
 import android.content.Context
 import android.net.Uri
-import android.provider.DocumentsContract
 import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.documentfile.provider.DocumentFile
@@ -11,7 +10,6 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
@@ -33,7 +31,6 @@ import lab.justonebyte.simpleexpense.ui.components.SnackBarType
 import lab.justonebyte.simpleexpense.utils.RetrofitHelper
 import lab.justonebyte.simpleexpense.utils.getDecodedPath
 import lab.justonebyte.simpleexpense.workers.runVersionSync
-import okhttp3.ResponseBody
 import javax.inject.Inject
 
 data class SettingUiState(
@@ -64,8 +61,6 @@ class SettingsViewModel @Inject constructor(
     val viewModelUiState: StateFlow<SettingUiState>
         get() = _viewModelUiState
 
-    val totalTransactions = mutableStateOf(listOf<Transaction>())
-
     private var token = mutableStateOf("")
 
 
@@ -83,7 +78,6 @@ class SettingsViewModel @Inject constructor(
     }
     private suspend fun getTransactions(){
         transactionRepository.getTotalTransactions().collect{ transactions->
-          totalTransactions.value = transactions
         }
     }
 
@@ -107,7 +101,7 @@ class SettingsViewModel @Inject constructor(
     suspend fun fetchAccessTokenByGoogleId(googleId:String){
         Log.i("access token:fetch",googleId)
         val companionAppService = RetrofitHelper.getInstance("").create(AuthService::class.java)
-        GlobalScope.launch {
+        viewModelScope.launch {
             try{
                 val result = companionAppService.getAccessToken(googleId)
                 result.body()?.let {
