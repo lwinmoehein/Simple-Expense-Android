@@ -47,6 +47,7 @@ import compose.icons.feathericons.Settings
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import lab.justonebyte.simpleexpense.R
+import lab.justonebyte.simpleexpense.ui.components.AppAlertDialog
 import lab.justonebyte.simpleexpense.ui.components.SuBuuSnackBar
 
 
@@ -66,6 +67,20 @@ fun AccountScreen(
     val snackbarHostState = remember { SnackbarHostState() }
     val coroutineScope = rememberCoroutineScope()
     var user by remember { mutableStateOf(Firebase.auth.currentUser) }
+    var isLoginNeededDialogShown by remember { mutableStateOf(false) }
+
+    if(isLoginNeededDialogShown){
+        AppAlertDialog(
+            title = "Sorry",
+            negativeBtnText = null,
+            positiveBtnText = "OK",
+            onPositiveBtnClicked = {
+                isLoginNeededDialogShown = false
+            }
+        ){
+            Text(text = "Please login first to use this feature.")
+        }
+    }
 
 
     Scaffold(
@@ -162,10 +177,16 @@ fun AccountScreen(
                         horizontalArrangement = Arrangement.SpaceBetween,
                         modifier = Modifier
                             .fillMaxWidth()
-                            .clickable { showExportScreen = true }
+                            .clickable {
+                                if (user == null) {
+                                    isLoginNeededDialogShown = true
+                                }else{
+                                    showExportScreen = true
+                                }
+                            }
                             .padding(10.dp)
                     ) {
-                        Row() {
+                        Row {
                             Icon(
                                 imageVector = FeatherIcons.File,
                                 contentDescription ="",
