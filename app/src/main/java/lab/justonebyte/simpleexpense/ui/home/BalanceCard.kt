@@ -1,6 +1,12 @@
 package lab.justonebyte.simpleexpense.ui.home
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.absolutePadding
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
@@ -9,21 +15,14 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import compose.icons.FeatherIcons
 import compose.icons.feathericons.ArrowDown
 import compose.icons.feathericons.ArrowUp
 import compose.icons.feathericons.DollarSign
-import compose.icons.feathericons.TrendingDown
-import compose.icons.feathericons.TrendingUp
-import lab.justonebyte.simpleexpense.model.Currency
-import lab.justonebyte.simpleexpense.ui.theme.SuBuuShapes
-import lab.justonebyte.simpleexpense.R
 import lab.justonebyte.simpleexpense.ui.components.TransactionTypePicker
 
 @Composable

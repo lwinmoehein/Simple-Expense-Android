@@ -6,16 +6,18 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import compose.icons.FeatherIcons
+import compose.icons.feathericons.ArrowDown
+import compose.icons.feathericons.ArrowUp
 import lab.justonebyte.simpleexpense.R
 import lab.justonebyte.simpleexpense.model.BalanceType
 import lab.justonebyte.simpleexpense.model.TransactionType
 import lab.justonebyte.simpleexpense.ui.components.AppOption
-import lab.justonebyte.simpleexpense.ui.components.ChooseTransactionTypeTab
 import lab.justonebyte.simpleexpense.ui.components.OptionItem
 import lab.justonebyte.simpleexpense.ui.components.TransactionTypePicker
 import lab.justonebyte.simpleexpense.ui.detail.CustomPieChartWithData
@@ -24,17 +26,50 @@ import lab.justonebyte.simpleexpense.utils.getCurrentDate
 import lab.justonebyte.simpleexpense.utils.getCurrentMonth
 import lab.justonebyte.simpleexpense.utils.getCurrentYear
 
-sealed class TransactionTypeOption(override val name:Int ,override  val value:Any) : OptionItem {
-    object INCOME: TransactionTypeOption(R.string.income,TransactionType.Income)
-    object EXPENSE: TransactionTypeOption(R.string.expense,TransactionType.Expense)
+sealed class BalanceTypeOption(override val name:Int, override  val value:Any) : OptionItem {
+    object MONTHLY: BalanceTypeOption(R.string.monthly,BalanceType.MONTHLY)
+    object YEARLY: BalanceTypeOption(R.string.yearly,BalanceType.YEARLY)
+    object TOTAL: BalanceTypeOption(R.string.total,BalanceType.TOTAL)
 }
 
+@Composable
+fun TransactionTypeTab(modifier: Modifier = Modifier){
+    Row (
+        modifier = modifier
+            .fillMaxWidth()
+    ){
+        Row(
+            Modifier.absolutePadding(top = 5.dp, bottom = 5.dp)
+        ){
+            Row(
+                modifier = Modifier.weight(1f),
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Icon(imageVector = FeatherIcons.ArrowUp , contentDescription ="", tint = Color.Red )
+                Spacer(modifier = Modifier.width(10.dp))
+                Text(text = "Expense")
+            }
+            Row(
+                modifier = Modifier.weight(1f),
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Icon(imageVector = FeatherIcons.ArrowDown , contentDescription ="", tint = Color.Green )
+                Spacer(modifier = Modifier.width(10.dp))
+                Text(text = "Income")
+            }
+        }
+    }
+}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnrememberedMutableState")
 @Composable
 fun StatsScreen(goBack:()->Unit) {
     val statsViewModel = hiltViewModel<StatsViewModel>()
+    val homeViewModel = hiltViewModel<HomeViewModel>()
+
     val statsUiState by statsViewModel.viewModelUiState.collectAsState()
     val transactions = statsUiState.transactions
 
@@ -46,11 +81,12 @@ fun StatsScreen(goBack:()->Unit) {
         BalanceType.YEARLY->if(statsUiState.selectedYear== getCurrentYear()) stringResource(id = R.string.this_year) else statsUiState.selectedYear+" "+stringResource(id = R.string.year)
         else->stringResource(id = R.string.total) }
 
-    val transactionTypeOptions = listOf<OptionItem>(
-        TransactionTypeOption.INCOME,
-        TransactionTypeOption.EXPENSE
+    val balanceTypeOptions = listOf<OptionItem>(
+        BalanceTypeOption.MONTHLY,
+        BalanceTypeOption.YEARLY,
+        BalanceTypeOption.TOTAL
     )
-    val selectedTransactionType = remember { mutableStateOf(TransactionType.Expense) }
+    val selectedTransactionType = remember { mutableStateOf<BalanceType>(BalanceType.MONTHLY) }
 
     Scaffold(
         topBar =  {
@@ -73,21 +109,6 @@ fun StatsScreen(goBack:()->Unit) {
                            style = MaterialTheme.typography.titleLarge
                        )
                    }
-                   TransactionTypePicker(
-                       onDatePicked = { date ->
-                           statsViewModel.collectDailyBalance(date)
-                       },
-                       balanceType = statsUiState.currentBalanceType,
-                       onMonthPicked = { month ->
-                           statsViewModel.collectMonthlyBalance(month)
-                       },
-                       onYearPicked = { year ->
-                           statsViewModel.collectYearlyBalance(year)
-                       },
-                       selectedYear = statsUiState.selectedYear,
-                       selectedMonth = statsUiState.selectedMonth,
-                       selectedDay = statsUiState.selectedDay
-                   )
 
                }
                Divider()
@@ -97,49 +118,51 @@ fun StatsScreen(goBack:()->Unit) {
         Column(modifier = Modifier
             .padding(it)) {
 
-                ChooseTransactionTypeTab(
-                    balanceType = statsUiState.currentBalanceType,
-                    onTypeChanged = { type->
-                        balanceType.value = type
-                        when(type){
-                            BalanceType.DAILY->statsViewModel.collectDailyBalance()
-                            BalanceType.MONTHLY->statsViewModel.collectMonthlyBalance()
-                            BalanceType.YEARLY->statsViewModel.collectYearlyBalance()
-                            else->statsViewModel.collectTotalBalance()
-                        }
-                    }
-                )
-
                 Column(
                     Modifier.padding(20.dp)
                 ) {
                     if(transactions.isNotEmpty()){
                         Row(
-                            horizontalArrangement = Arrangement.Start,
+                            horizontalArrangement = Arrangement.SpaceBetween,
                             modifier = Modifier
-                                .absolutePadding(bottom = 20.dp)
+                                .fillMaxWidth()
+                                .absolutePadding(bottom = 20.dp),
+                            verticalAlignment = Alignment.CenterVertically
                         ) {
-                            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End){
-                                AppOption(
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .absolutePadding(top = 10.dp, bottom = 5.dp, right = 10.dp),
+                            AppOption(
                                     label = "Select",
-                                    options = transactionTypeOptions,
+                                    options = balanceTypeOptions,
                                     onItemSelected = {
-                                        selectedTransactionType.value = it.value as TransactionType
+                                        selectedTransactionType.value = it.value as BalanceType
                                     },
-                                    selectedOption = when(selectedTransactionType.value){
-                                        TransactionType.Income->transactionTypeOptions[0]
-                                        else->transactionTypeOptions[1]
-                                    }
-                                )
-                            }
+                                    selectedOption = selectedTransactionType.value
+                            )
+                            TransactionTypePicker(
+                                onDatePicked = { date ->
+                                    statsViewModel.collectDailyBalance(date)
+                                },
+                                balanceType = statsUiState.currentBalanceType,
+                                onMonthPicked = { month ->
+                                    statsViewModel.collectMonthlyBalance(month)
+                                },
+                                onYearPicked = { year ->
+                                    statsViewModel.collectYearlyBalance(year)
+                                },
+                                selectedYear = statsUiState.selectedYear,
+                                selectedMonth = statsUiState.selectedMonth,
+                                selectedDay = statsUiState.selectedDay
+                            )
+
                         }
                     }
-                    CustomPieChartWithData(
-                        currency = statsUiState.currentCurrency,
-                        transactions = transactions.filter { it.type==(if(selectedTransactionType.value==TransactionType.Expense) TransactionType.Expense else TransactionType.Income) })
+                    Spacer(modifier = Modifier.height(10.dp))
+                    Card {
+                        TransactionTypeTab()
+                        Spacer(modifier = Modifier.height(30.dp))
+                        CustomPieChartWithData(
+                            currency = statsUiState.currentCurrency,
+                            transactions = transactions)
+                    }
                 }
 
         }

@@ -81,7 +81,7 @@ fun CustomPieChartWithData(
                 content = {
                     items(incomePieSlices){
                         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
-                            Card(
+                            Row(
                                 modifier = Modifier.absolutePadding(top=3.dp, bottom = 3.dp)
                             ) {
                                 Row(
