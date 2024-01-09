@@ -1,5 +1,6 @@
 package lab.justonebyte.simpleexpense.ui.home
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -13,6 +14,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -51,33 +53,37 @@ fun AddCategoriesCard(
     )
 
     Card(
-        modifier = modifier.absolutePadding(top=30.dp, bottom = 20.dp),
+        modifier = modifier.absolutePadding(top=20.dp, bottom = 20.dp),
     ) {
         Column(
-            modifier = Modifier.padding(10.dp)
-        ) {
-            Row(modifier = Modifier.fillMaxWidth(),horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
-                Text(text = stringResource(id = R.string.enter_category))
+            Modifier.padding(5.dp)
+        ){
+            Row(
+                modifier = Modifier.fillMaxWidth().absolutePadding(left = 12.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = stringResource(id = R.string.enter_category),
+                    style = MaterialTheme.typography.labelLarge
+                )
                 TextButton(onClick = {
                     isAddCategoryDialogOpen.value = true
-                }) {
+                }
+                ) {
                     Text(
                         text = stringResource(id = R.string.add),
-                        textAlign = TextAlign.Center,
-                        modifier = Modifier.padding(10.dp)
+                        textAlign = TextAlign.Center
                     )
                     Icon(imageVector = Icons.Default.Add, contentDescription = "add category")
                 }
             }
             LazyVerticalGrid(
                 horizontalArrangement = Arrangement.Center,
-                modifier = Modifier.heightIn(max=300.dp),
+                modifier = Modifier.heightIn(max=300.dp).padding(10.dp),
                 userScrollEnabled = true,
                 columns = GridCells.Fixed(2),
                 // content padding
-                contentPadding = PaddingValues(
-                    top = 16.dp,
-                ),
                 content = {
 
                     items(filteredCategories.size) { index ->

@@ -192,18 +192,12 @@ fun AddTransactionContent(
                 onValueChange = { note.value = it },
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Text
-                ),
-//                colors = TextFieldDefaults.textFieldColors(
-//                    disabledTextColor = Color.Transparent,
-//                    focusedIndicatorColor = Color.Transparent,
-//                    unfocusedIndicatorColor = Color.Transparent,
-//                    disabledIndicatorColor = Color.Transparent
-//                )
+                )
             )
         }
         Row(
             horizontalArrangement = Arrangement.End,
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth().absolutePadding(top = 50.dp)
         ) {
             TextButton(
                 modifier = Modifier.absolutePadding(left = 10.dp, right = 10.dp),

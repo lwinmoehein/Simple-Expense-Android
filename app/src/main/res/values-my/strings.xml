@@ -84,8 +84,8 @@
 
     <string name="r_u_sure_cat_delete">ဒီအမျိုးအစားကိုဖျက်မှာသေချာပါသလား</string>
 
-    <string name="enter_ex_category">ထွက်ငွေအမျိုးအစားရဲ့အမည်ရေးပါ</string>
-    <string name="enter_in_category">၀င်ငွေအမျိုးအစားရဲ့အမည်ရေးပါ</string>
+    <string name="enter_ex_category">ထွက်ငွေအမျိုးအစားရဲ့အမည်</string>
+    <string name="enter_in_category">၀င်ငွေအမျိုးအစားရဲ့အမည်</string>
     <string name="add">အသစ်ထည့်မည်</string>
     <string name="add_income_cat">၀င်ငွေအမျိုးအစား</string>
     <string name="add_expense_cat">ထွက်ငွေအမျိုးအစား</string>

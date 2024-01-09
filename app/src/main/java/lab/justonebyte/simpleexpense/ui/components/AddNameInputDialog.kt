@@ -30,7 +30,6 @@ fun AddNameInputDialog(
             FocusRequester()
         }
         AppAlertDialog(
-            title = title,
             positiveBtnText = stringResource(id = R.string.confirm),
             negativeBtnText = stringResource(id = R.string.cancel),
             content = {
@@ -43,12 +42,7 @@ fun AddNameInputDialog(
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Text
                     ),
-                    colors = TextFieldDefaults.textFieldColors(
-                        disabledTextColor = Color.Transparent,
-                        focusedIndicatorColor = Color.Transparent,
-                        unfocusedIndicatorColor = Color.Transparent,
-                        disabledIndicatorColor = Color.Transparent
-                    )
+                    label = { Text(text = title) }
                 )
             },
             onPositiveBtnClicked = {

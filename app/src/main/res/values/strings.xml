@@ -87,8 +87,8 @@
 
     <string name="r_u_sure_cat_delete">Are you sure to delete this category?</string>
 
-    <string name="enter_ex_category">Enter expense category name : </string>
-    <string name="enter_in_category">Enter income category name :</string>
+    <string name="enter_ex_category">Expense category name</string>
+    <string name="enter_in_category">Income category name</string>
     <string name="add">Add</string>
 
     <string name="add_income_cat">Income Category</string>
