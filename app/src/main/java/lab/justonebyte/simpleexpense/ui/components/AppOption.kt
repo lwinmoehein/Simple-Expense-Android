@@ -34,7 +34,7 @@ fun AppOption(
             modifier =modifier.clickable { expanded = true }.absolutePadding(left = 5.dp, right = 5.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Text(text=stringResource(id = selectedOption.name), style = MaterialTheme.typography.labelMedium)
+            Text(text=stringResource(id = selectedOption.name), style = MaterialTheme.typography.labelLarge)
             Icon(Icons.Default.ArrowDropDown, contentDescription = "Localized description")
         }
         DropdownMenu(
@@ -49,7 +49,7 @@ fun AppOption(
                                     Text(
                                         text = stringResource(id = selectedOption.name),
                                         modifier = Modifier.padding(0.dp),
-                                        style = MaterialTheme.typography.labelMedium
+                                        style = MaterialTheme.typography.labelLarge
                                     )
                               },
                        onClick = {

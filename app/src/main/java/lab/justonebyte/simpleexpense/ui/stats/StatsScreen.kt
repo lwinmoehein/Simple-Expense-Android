@@ -143,7 +143,7 @@ fun StatsScreen(goBack:()->Unit) {
                     onItemSelected = {
                         selectedBalanceType.value = it.value as BalanceType
                         when(selectedBalanceType.value){
-                            BalanceType.YEARLY->statsViewModel.collectDailyBalance()
+                            BalanceType.DAILY->statsViewModel.collectDailyBalance()
                             BalanceType.MONTHLY-> statsViewModel.collectMonthlyBalance()
                             BalanceType.YEARLY->statsViewModel.collectYearlyBalance()
                             else->statsViewModel.collectTotalBalance()

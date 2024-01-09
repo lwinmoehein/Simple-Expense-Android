@@ -116,7 +116,7 @@ fun TransactionTypePicker(
                contentDescription = "",
                tint = MaterialTheme.colorScheme.primary
            )
-           Text(text = chosenDateString,style=MaterialTheme.typography.labelMedium)
+           Text(text = chosenDateString,style=MaterialTheme.typography.labelLarge)
        }
    }else{
        Spacer(modifier = Modifier.height(33.dp))
