@@ -14,12 +14,16 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.accompanist.pager.*
+import compose.icons.FeatherIcons
+import compose.icons.feathericons.ArrowDown
+import compose.icons.feathericons.ArrowUp
 import lab.justonebyte.simpleexpense.R
 import lab.justonebyte.simpleexpense.model.TransactionCategory
 import lab.justonebyte.simpleexpense.model.TransactionType
@@ -27,9 +31,9 @@ import lab.justonebyte.simpleexpense.ui.components.*
 import lab.justonebyte.simpleexpense.utils.getCurrentGlobalTime
 import java.util.UUID
 
-sealed class CategoryTab(val index:Int,val title:Int){
-    object  Income:CategoryTab(0,R.string.income)
-    object Expense:CategoryTab(1,R.string.expense)
+sealed class CategoryTab(val index:Int,val title:Int,val icon:ImageVector){
+    object Expense:CategoryTab(0,R.string.expense,FeatherIcons.ArrowUp)
+    object  Income:CategoryTab(1,R.string.income,FeatherIcons.ArrowDown)
 }
 
 
@@ -40,7 +44,7 @@ fun CategoryTabs(
     currentCategoryTabIndex: Int
 ) {
 
-    val categoryTabs = listOf(CategoryTab.Income,CategoryTab.Expense)
+    val categoryTabs = listOf(CategoryTab.Expense,CategoryTab.Income)
 
     TabRow(selectedTabIndex = currentCategoryTabIndex) {
             categoryTabs.forEachIndexed { index, categoryTab ->
@@ -49,7 +53,7 @@ fun CategoryTabs(
                     onClick = {
                         onTabChanged(categoryTab)
                     },
-                    text = { Text(text = stringResource(id = categoryTab.title), maxLines = 2, overflow = TextOverflow.Ellipsis) }
+                    text = { Text(text = stringResource(id = categoryTab.title), maxLines = 1) }
                 )
             }
     }
@@ -62,13 +66,13 @@ fun ManageCategoryScreen(
 ){
     val categoryViewModel = hiltViewModel<CategoryViewModel>()
     val categoryUiState by categoryViewModel.viewModelUiState.collectAsState()
-    var currentCategoryTabIndex = remember { mutableStateOf(0) }
+    val currentCategoryTabIndex = remember { mutableStateOf(0) }
     val currentEditingCategory = remember { mutableStateOf<TransactionCategory?>(null) }
     val isReusableInputDialogShown = remember { mutableStateOf(false) }
     val isChooseCategoryActionDialogOpen = remember { mutableStateOf(false) }
     val isConfirmDeleteCategoryDialogShown = remember { mutableStateOf(false) }
 
-    val categories =  categoryUiState.categories.filter { it.transaction_type==if(currentCategoryTabIndex.value==0) TransactionType.Income else TransactionType.Expense }
+    val categories =  categoryUiState.categories.filter { it.transaction_type==if(currentCategoryTabIndex.value==0) TransactionType.Expense else TransactionType.Income }
 
 
     fun clearDialogs(){
@@ -108,7 +112,7 @@ fun ManageCategoryScreen(
 
     AddNameInputDialog(
         initialValue = currentEditingCategory.value?.name?:"",
-        title = if(currentCategoryTabIndex.value==0) stringResource(id = R.string.enter_in_category) else stringResource(R.string.enter_ex_category),
+        title = if(currentCategoryTabIndex.value==1) stringResource(id = R.string.enter_in_category) else stringResource(R.string.enter_ex_category),
         isShown =  isReusableInputDialogShown.value,
         onDialogDismiss = {
             clearDialogs()
@@ -122,7 +126,7 @@ fun ManageCategoryScreen(
                 val category = TransactionCategory(
                     unique_id = UUID.randomUUID().toString(),
                     name = it,
-                    transaction_type = if(currentCategoryTabIndex.value==0) TransactionType.Income else TransactionType.Expense,
+                    transaction_type = if(currentCategoryTabIndex.value==1) TransactionType.Income else TransactionType.Expense,
                     created_at =  getCurrentGlobalTime(),
                     updated_at = getCurrentGlobalTime()
                 )
@@ -156,26 +160,30 @@ fun ManageCategoryScreen(
                            style = MaterialTheme.typography.titleLarge
                        )
                    }
-                   if(currentCategoryTabIndex.value==0){
-                       OutlinedButton(onClick = {
-                           currentEditingCategory.value = null
-                           isReusableInputDialogShown.value = true
-                       }) {
-                           Text(text = stringResource(id = R.string.add_income_cat))
-                           Icon(imageVector = Icons.Filled.Add, contentDescription ="" )
-                       }
-                   }else{
-                       OutlinedButton(onClick = {
-                           currentEditingCategory.value = null
-                           isReusableInputDialogShown.value = true
-                       }) {
-                           Text(text = stringResource(id = R.string.add_expense_cat))
-                           Icon(imageVector = Icons.Filled.Add, contentDescription ="" )
-                       }
-                   }
                }
                Divider()
            }
+        },
+        floatingActionButton = {
+            if(currentCategoryTabIndex.value==0){
+                FloatingActionButton(
+                    onClick = {
+                        currentEditingCategory.value = null
+                        isReusableInputDialogShown.value = true
+                    },
+                ) {
+                    Icon(Icons.Filled.Add, "Localized description")
+                }
+            }else{
+                FloatingActionButton(
+                    onClick = {
+                        currentEditingCategory.value = null
+                        isReusableInputDialogShown.value = true
+                    },
+                ) {
+                    Icon(Icons.Filled.Add, "Localized description")
+                }
+            }
         }
     ) {
          Column(Modifier.padding(it)) {
