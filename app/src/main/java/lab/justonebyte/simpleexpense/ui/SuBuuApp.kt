@@ -61,10 +61,16 @@ fun SuBuuApp(chooseDownloadFolderLauncher: ActivityResultLauncher<Intent>) {
                                 icon = {
                                     Icon(
                                         imageVector = item.imageVector,
-                                        contentDescription = ""
+                                        contentDescription = "",
+                                        tint = if(selectedItem == index) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.secondary
                                     )
                                 },
-                                label = { Text(stringResource(id = item.stringResource)) },
+                                label = {
+                                    Text(
+                                        text = stringResource(id = item.stringResource),
+                                        color = if(selectedItem == index) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.secondary
+                                    )
+                                },
                                 selected = selectedItem == index,
                                 onClick = {
                                     selectedItem = index
