@@ -25,6 +25,7 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardColors
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
@@ -40,9 +41,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -56,10 +57,10 @@ import java.util.Calendar
 import java.util.Date
 
 
-data class FileFormat(val iconId:Int,val nameId:Int)
+data class FileFormat(val imageVector: ImageVector,val nameId:Int)
 
-val excel = FileFormat(1,R.string.excel_format)
-val pdf = FileFormat(1,R.string.pdf_format)
+val excel = FileFormat(FeatherIcons.File,R.string.excel_format)
+val pdf = FileFormat(FeatherIcons.File,R.string.pdf_format)
 
 val formats = listOf(
     excel,
@@ -70,46 +71,58 @@ val formats = listOf(
 fun ChooseFormat(
     onFormatChosen:(format:FileFormat)->Unit
 ){
-    var chosenFormat by remember { mutableStateOf<FileFormat?>(formats[0]) }
+    var chosenFormat by remember { mutableStateOf(formats[0]) }
 
-    Column() {
+    Column {
         SectionTitle(title = stringResource(id = R.string.export_file_format))
-        LazyVerticalGrid(
-            modifier = Modifier
-                .heightIn(max = 300.dp)
-                .fillMaxWidth(),
-            userScrollEnabled = true,
-            columns = GridCells.Fixed(3),
 
-            content = {
+        Spacer(modifier = Modifier.height(10.dp))
 
-                items(formats.size) { index ->
-                    val isSelected = chosenFormat?.let { (it.nameId== formats[index].nameId) }
-
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .absolutePadding(right = 5.dp)
-                            .border(
-                                width = if (isSelected == true) 2.dp else 0.dp,
-                                color = Color.Transparent
-                            )
-                            .clickable {
-                                chosenFormat = formats[index]
-                                onFormatChosen(chosenFormat!!)
-                            }
-                    ) {
-
-                        Text(
-                            text = stringResource(id = formats[index].nameId),
-                            textAlign = TextAlign.Center,
-                            modifier = Modifier.padding(10.dp),
-                        )
-
-                    }
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(5.dp)
+        ) {
+            Card(
+                colors = CardDefaults.cardColors(
+                    containerColor =if(chosenFormat.nameId == excel.nameId) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.secondary,
+                ),
+            ) {
+                Row (
+                    modifier = Modifier.padding(horizontal = 10.dp, vertical = 5.dp).clickable {
+                        chosenFormat = excel
+                        onFormatChosen(excel)
+                    },
+                    horizontalArrangement = Arrangement.spacedBy(3.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ){
+                    Icon(imageVector = excel.imageVector, contentDescription = "")
+                    Text(
+                        color = if(chosenFormat.nameId == excel.nameId) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSecondary,
+                        text = stringResource(id = excel.nameId)
+                    )
                 }
             }
-        )
+            Card(
+                colors = CardDefaults.cardColors(
+                    containerColor =if(chosenFormat.nameId == pdf.nameId) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.secondary,
+                ),
+            ) {
+                Row (
+                    modifier = Modifier.padding(horizontal = 10.dp, vertical = 5.dp).clickable {
+                        chosenFormat = pdf
+                        onFormatChosen(pdf)
+                    },
+                    horizontalArrangement = Arrangement.spacedBy(3.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ){
+                    Icon(imageVector = pdf.imageVector, contentDescription = "")
+                    Text(
+                        color = if(chosenFormat.nameId == pdf.nameId) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSecondary,
+                        text = stringResource(id = pdf.nameId)
+                    )
+                }
+            }
+        }
     }
 }
 
@@ -125,6 +138,9 @@ fun ChooseDownloadFolder(
             .fillMaxWidth(),
     ) {
         SectionTitle(title = stringResource(id = R.string.export_path))
+
+        Spacer(modifier = Modifier.height(10.dp))
+
         if(!downloadFolder.isNullOrEmpty())
             Text(
                 text = downloadFolder,
@@ -175,7 +191,7 @@ fun ExportScreen(
     Scaffold {
         Column(
             modifier = Modifier.padding(15.dp),
-            verticalArrangement = Arrangement.spacedBy(15.dp)
+            verticalArrangement = Arrangement.spacedBy(30.dp)
         ) {
             ChooseDateRange(
                 fromDate = fromDate.value,
@@ -280,15 +296,12 @@ fun ChooseDateRange(
             onFromDateChosen(selectedDate)
         }, mYear, mMonth, mDay
     )
+    Column {
+        SectionTitle(title = stringResource(id = R.string.select_date_range))
 
-    SectionTitle(title = stringResource(id = R.string.select_date_range))
-    Card(
-        colors =  CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.onSecondary,
-        )
-    ) {
-        Column(Modifier.padding(10.dp)) {
-            Row(
+        Spacer(modifier = Modifier.height(10.dp))
+
+        Row(
                 modifier = Modifier
                     .fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
@@ -311,7 +324,7 @@ fun ChooseDateRange(
                     text = toDate,
                     modifier = Modifier.clickable { toDatePickerDialog.show() })
             }
-        }
+
     }
 }
 
