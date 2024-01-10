@@ -307,7 +307,7 @@ fun AuthenticatedUser(
                         Spacer(modifier = Modifier.width(10.dp))
                         user?.displayName?.let { it1 ->
                             Column() {
-                                Text(text = "Logged in :", style = MaterialTheme.typography.labelSmall)
+                                Text(text =  stringResource(id = R.string.logged_in), style = MaterialTheme.typography.labelSmall)
                                 Text(text = it1, style = MaterialTheme.typography.labelLarge)
                             }
                         }

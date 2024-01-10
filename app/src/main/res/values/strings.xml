@@ -116,6 +116,8 @@
     <string name="log_out">Logout</string>
     <string name="connection_error">Cannot connect to internet.</string>
     <string name="not_logged_in">Not logged in : </string>
+    <string name="logged_in">Logged in as : </string>
+
     <string name="data_can_be_lost">Data will be lost when application is uninstalled.</string>
     <string name="log_in">Login</string>
     <string name="please_login">Please log in</string>

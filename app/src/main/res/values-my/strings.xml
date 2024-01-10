@@ -109,6 +109,8 @@
     <string name="log_out">အကောင့်မှထွက်မည်</string>
     <string name="connection_error">အင်တာနက်ကို ချိတ်ဆက်လို့မရပါ။</string>
     <string name="not_logged_in">အကောင့်၀င်မထားပါ</string>
+    <string name="logged_in">၀င်ထားသည့်အကောင့်။</string>
+
     <string name="data_can_be_lost">Uninstall လုပ်ပါကဒေတာများပျက်နိုင်ပါသည်။</string>
     <string name="log_in">အကောင့်၀င်မည်</string>
     <string name="please_login">ကျေးဇူးပြုပြီး အကောင့်၀င်ပေးပါ</string>
