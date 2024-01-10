@@ -8,7 +8,6 @@ import android.net.Uri
 import android.provider.DocumentsContract
 import android.widget.DatePicker
 import androidx.activity.result.ActivityResultLauncher
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -18,17 +17,15 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.absolutePadding
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
-import androidx.compose.material3.CardColors
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
@@ -46,13 +43,18 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import compose.icons.FeatherIcons
+import compose.icons.FontAwesomeIcons
+import compose.icons.feathericons.ArrowLeft
 import compose.icons.feathericons.File
+import compose.icons.fontawesomeicons.Regular
+import compose.icons.fontawesomeicons.regular.FileExcel
+import compose.icons.fontawesomeicons.regular.FilePdf
 import lab.justonebyte.simpleexpense.R
+import lab.justonebyte.simpleexpense.ui.MainDestinations
 import lab.justonebyte.simpleexpense.ui.components.SectionTitle
 import lab.justonebyte.simpleexpense.ui.components.SuBuuSnackBar
 import lab.justonebyte.simpleexpense.utils.dateFormatter
@@ -62,8 +64,8 @@ import java.util.Date
 
 data class FileFormat(val imageVector: ImageVector,val nameId:Int)
 
-val excel = FileFormat(FeatherIcons.File,R.string.excel_format)
-val pdf = FileFormat(FeatherIcons.File,R.string.pdf_format)
+val excel = FileFormat(FontAwesomeIcons.Regular.FileExcel,R.string.excel_format)
+val pdf = FileFormat(FontAwesomeIcons.Regular.FilePdf,R.string.pdf_format)
 
 val formats = listOf(
     excel,
@@ -91,14 +93,18 @@ fun ChooseFormat(
                 ),
             ) {
                 Row (
-                    modifier = Modifier.padding(horizontal = 10.dp, vertical = 5.dp).clickable {
-                        chosenFormat = excel
-                        onFormatChosen(excel)
-                    },
+                    modifier = Modifier
+                        .padding(horizontal = 10.dp, vertical = 5.dp)
+                        .clickable {
+                            chosenFormat = excel
+                            onFormatChosen(excel)
+                        },
                     horizontalArrangement = Arrangement.spacedBy(3.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ){
-                    Icon(imageVector = excel.imageVector, contentDescription = "")
+                    Icon(modifier= Modifier
+                        .width(20.dp)
+                        .height(20.dp),imageVector = excel.imageVector, contentDescription = "")
                     Text(
                         color = if(chosenFormat.nameId == excel.nameId) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSecondary,
                         text = stringResource(id = excel.nameId)
@@ -111,14 +117,18 @@ fun ChooseFormat(
                 ),
             ) {
                 Row (
-                    modifier = Modifier.padding(horizontal = 10.dp, vertical = 5.dp).clickable {
-                        chosenFormat = pdf
-                        onFormatChosen(pdf)
-                    },
+                    modifier = Modifier
+                        .padding(horizontal = 10.dp, vertical = 5.dp)
+                        .clickable {
+                            chosenFormat = pdf
+                            onFormatChosen(pdf)
+                        },
                     horizontalArrangement = Arrangement.spacedBy(3.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ){
-                    Icon(imageVector = pdf.imageVector, contentDescription = "")
+                    Icon(modifier= Modifier
+                        .width(20.dp)
+                        .height(20.dp),imageVector = pdf.imageVector, contentDescription = "")
                     Text(
                         color = if(chosenFormat.nameId == pdf.nameId) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSecondary,
                         text = stringResource(id = pdf.nameId)
@@ -194,7 +204,20 @@ fun ExportScreen(
 
 
     Scaffold (
-        snackbarHost = { SnackbarHost(snackbarHostState) }
+        snackbarHost = { SnackbarHost(snackbarHostState) },
+        topBar = {
+                IconButton(
+                    onClick =  {
+                        navController.navigate(MainDestinations.ACCOUNT_ROUTE)
+                    }
+                ) {
+                    Icon(
+                        imageVector = FeatherIcons.ArrowLeft,
+                        contentDescription = "",
+                        tint = MaterialTheme.colorScheme.primary
+                    )
+                }
+        }
     ){
         SuBuuSnackBar(
             snackBarType = uiState.currentSnackBar,
@@ -202,76 +225,81 @@ fun ExportScreen(
             snackbarHostState = snackbarHostState
         )
         Column(
-            modifier = Modifier.padding(15.dp),
-            verticalArrangement = Arrangement.spacedBy(30.dp)
+            modifier = Modifier.padding(it),
         ) {
-            ChooseDateRange(
-                fromDate = fromDate.value,
-                toDate = toDate.value,
-                onFromDateChosen = {
-                    fromDate.value = it
-                },
-                onToDateChosen = {
-                    toDate.value = it
-                }
-            )
-            ChooseFormat(onFormatChosen = {
-                chosenFormat = it
-            })
+            Divider()
+           Column(
+               Modifier.padding(15.dp),
+               verticalArrangement = Arrangement.spacedBy(30.dp)
+           ) {
+               ChooseDateRange(
+                   fromDate = fromDate.value,
+                   toDate = toDate.value,
+                   onFromDateChosen = {
+                       fromDate.value = it
+                   },
+                   onToDateChosen = {
+                       toDate.value = it
+                   }
+               )
+               ChooseFormat(onFormatChosen = {
+                   chosenFormat = it
+               })
 
-            ChooseDownloadFolder(
-                chooseDownloadFolderLauncher = chooseDownloadFolderLauncher,
-                downloadFolder = uiState.readableDownloadFolder
-            )
+               ChooseDownloadFolder(
+                   chooseDownloadFolderLauncher = chooseDownloadFolderLauncher,
+                   downloadFolder = uiState.readableDownloadFolder
+               )
 
-            Spacer(modifier = Modifier.absolutePadding(top = 20.dp))
+               Spacer(modifier = Modifier.absolutePadding(top = 20.dp))
 
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .absolutePadding(left = 50.dp, right = 50.dp),
-            ) {
-                Button(
-                    modifier = Modifier.fillMaxWidth(),
-                    onClick = {
-                        if(!uiState.isExportingFile){
-                            chosenFormat?.let {
-                                settingsViewModel.exportDate(fromDate.value,toDate.value, it)
-                            }
-                        }
-                    }
-                ) {
-                    Box(
-                        contentAlignment = Alignment.Center,
-                        modifier =  Modifier.fillMaxWidth()// Center content within the box
-                        // Expand the box to fill available space
-                    ) {
-                        if (uiState.isExportingFile) {
-                            CircularProgressIndicator(
-                                modifier = Modifier
-                                    .width(15.dp)
-                                    .height(15.dp)
-                                    .align(Alignment.Center),  // Explicitly center the indicator
-                                color = Color.White,
-                                strokeWidth = 3.dp
-                            )
-                        } else {
-                            Row(
-                                horizontalArrangement = Arrangement.Center,
-                                verticalAlignment = Alignment.CenterVertically,
-                                modifier = Modifier.align(Alignment.Center)
-                            ) {
-                                Text(
-                                    text = stringResource(id = R.string.export),
-                                )
-                                Icon(modifier = Modifier
-                                    .absolutePadding(left = 5.dp)
-                                    .width(15.dp),imageVector = FeatherIcons.File, contentDescription = "",tint= MaterialTheme.colorScheme.onPrimary)
-                            }
-                        }
-                    }
-                }
-            }
+               Row(
+                   modifier = Modifier
+                       .fillMaxWidth()
+                       .absolutePadding(left = 50.dp, right = 50.dp),
+               ) {
+                   Button(
+                       modifier = Modifier.fillMaxWidth(),
+                       onClick = {
+                           if(!uiState.isExportingFile){
+                               chosenFormat?.let {
+                                   settingsViewModel.exportDate(fromDate.value,toDate.value, it)
+                               }
+                           }
+                       }
+                   ) {
+                       Box(
+                           contentAlignment = Alignment.Center,
+                           modifier =  Modifier.fillMaxWidth()// Center content within the box
+                           // Expand the box to fill available space
+                       ) {
+                           if (uiState.isExportingFile) {
+                               CircularProgressIndicator(
+                                   modifier = Modifier
+                                       .width(15.dp)
+                                       .height(15.dp)
+                                       .align(Alignment.Center),  // Explicitly center the indicator
+                                   color = Color.White,
+                                   strokeWidth = 3.dp
+                               )
+                           } else {
+                               Row(
+                                   horizontalArrangement = Arrangement.Center,
+                                   verticalAlignment = Alignment.CenterVertically,
+                                   modifier = Modifier.align(Alignment.Center)
+                               ) {
+                                   Text(
+                                       text = stringResource(id = R.string.export),
+                                   )
+                                   Icon(modifier = Modifier
+                                       .absolutePadding(left = 5.dp)
+                                       .width(15.dp),imageVector = FeatherIcons.File, contentDescription = "",tint= MaterialTheme.colorScheme.onPrimary)
+                               }
+                           }
+                       }
+                   }
+               }
+           }
         }
     }
 

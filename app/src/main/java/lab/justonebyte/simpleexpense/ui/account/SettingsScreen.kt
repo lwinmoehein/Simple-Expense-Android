@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
@@ -15,10 +16,13 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.google.accompanist.navigation.animation.*
+import compose.icons.FeatherIcons
+import compose.icons.feathericons.ArrowLeft
 import lab.justonebyte.simpleexpense.R
 import lab.justonebyte.simpleexpense.model.AppLocale
 import lab.justonebyte.simpleexpense.model.Currency
 import lab.justonebyte.simpleexpense.ui.MainActivity
+import lab.justonebyte.simpleexpense.ui.MainDestinations
 import lab.justonebyte.simpleexpense.ui.components.OptionItem
 import lab.justonebyte.simpleexpense.ui.components.SectionTitle
 import lab.justonebyte.simpleexpense.utils.LocaleHelper
@@ -41,33 +45,50 @@ fun SettingsScreen(
         context.startActivity(i)
     }
 
-    Scaffold {
-        Column(Modifier.padding(15.dp)) {
-            SectionTitle(title = stringResource(id = R.string.feat_setting))
-
-            SettingMenu(
-                modifier = Modifier.fillMaxWidth(),
-                settingItemLabel = R.string.select_currency,
-                selectedOption = settingsUiState.selectedCurrency,
-                menuItems = settingCurrencies,
-                onMenuItemChosen = {
-                    settingsViewModel.updateCurrency(it as Currency)
+    Scaffold(
+        topBar = {
+                IconButton(
+                    onClick =  {
+                        navController.navigate(MainDestinations.ACCOUNT_ROUTE)
+                    }
+                ) {
+                    Icon(
+                        imageVector = FeatherIcons.ArrowLeft,
+                        contentDescription = "",
+                        tint = MaterialTheme.colorScheme.primary
+                    )
                 }
-            )
-            Spacer(modifier = Modifier.height(20.dp))
+        }
+    ) {
+        Column(Modifier.padding(it)) {
+            Divider()
+            Column(Modifier.padding(15.dp)) {
+                SectionTitle(title = stringResource(id = R.string.feat_setting))
 
-            SectionTitle(title = stringResource(id = R.string.sys_setting))
+                SettingMenu(
+                    modifier = Modifier.fillMaxWidth(),
+                    settingItemLabel = R.string.select_currency,
+                    selectedOption = settingsUiState.selectedCurrency,
+                    menuItems = settingCurrencies,
+                    onMenuItemChosen = {
+                        settingsViewModel.updateCurrency(it as Currency)
+                    }
+                )
+                Spacer(modifier = Modifier.height(20.dp))
 
-            SettingMenu(
-                modifier = Modifier.fillMaxWidth(),
-                settingItemLabel = R.string.select_lang,
-                selectedOption = settingsUiState.defaultLanguage,
-                menuItems = appLanguages,
-                onMenuItemChosen = {
-                    settingsViewModel.updateLocale(it as AppLocale)
-                    changeLocale(it.value)
-                }
-            )
+                SectionTitle(title = stringResource(id = R.string.sys_setting))
+
+                SettingMenu(
+                    modifier = Modifier.fillMaxWidth(),
+                    settingItemLabel = R.string.select_lang,
+                    selectedOption = settingsUiState.defaultLanguage,
+                    menuItems = appLanguages,
+                    onMenuItemChosen = {
+                        settingsViewModel.updateLocale(it as AppLocale)
+                        changeLocale(it.value)
+                    }
+                )
+            }
         }
     }
 }

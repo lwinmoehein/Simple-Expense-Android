@@ -54,6 +54,7 @@ import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import compose.icons.FeatherIcons
+import compose.icons.feathericons.ArrowLeft
 import compose.icons.feathericons.ArrowRight
 import compose.icons.feathericons.File
 import compose.icons.feathericons.Info
@@ -106,9 +107,8 @@ fun AccountScreen(
         Column (
             Modifier
                 .padding(it)
-                .absolutePadding(top = 20.dp)
         ){
-            Column(Modifier.padding(5.dp)) {
+            Column(Modifier.padding(10.dp).absolutePadding(top = 50.dp)) {
                     AuthenticatedUser(
                         user = user,
                         onUserLogIn = {
@@ -120,17 +120,20 @@ fun AccountScreen(
                             }
                         }
                     )
-                    Spacer(modifier = Modifier.height(10.dp))
+                    Spacer(modifier = Modifier.height(20.dp))
                     Row(
                         horizontalArrangement = Arrangement.SpaceBetween,
                         modifier = Modifier
                             .fillMaxWidth()
                             .clickable {
                                 navController.navigate(MainDestinations.SETTINGS)
-                            }
-                            .padding(10.dp)
+                            },
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
-                       Row{
+                       Row(
+                           modifier = Modifier.absolutePadding(top = 5.dp, bottom = 5.dp),
+                           verticalAlignment = Alignment.CenterVertically
+                        ){
                            Icon(
                                imageVector = FeatherIcons.Settings,
                                contentDescription ="",
@@ -141,7 +144,7 @@ fun AccountScreen(
                        }
                         Icon(imageVector = FeatherIcons.ArrowRight, contentDescription ="", tint = MaterialTheme.colorScheme.primary)
                     }
-                    Spacer(modifier = Modifier.height(10.dp))
+                    Spacer(modifier = Modifier.height(20.dp))
 
                     Row(
                         horizontalArrangement = Arrangement.SpaceBetween,
@@ -153,10 +156,13 @@ fun AccountScreen(
                                 } else {
                                     navController.navigate(MainDestinations.EXPORT)
                                 }
-                            }
-                            .padding(10.dp)
+                            },
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Row {
+                        Row (
+                            modifier = Modifier.absolutePadding(top = 5.dp, bottom = 5.dp),
+                            verticalAlignment = Alignment.CenterVertically,
+                        ){
                             Icon(
                                 imageVector = FeatherIcons.File,
                                 contentDescription ="",
@@ -167,7 +173,7 @@ fun AccountScreen(
                         }
                         Icon(imageVector = FeatherIcons.ArrowRight, contentDescription ="", tint = MaterialTheme.colorScheme.primary)
                     }
-                    Spacer(modifier = Modifier.height(10.dp))
+                    Spacer(modifier = Modifier.height(50.dp))
 
                     user?.let {
                         OutlinedButton(
@@ -226,7 +232,6 @@ private fun rememberFirebaseAuthLauncher(
 
 @Composable
 fun AuthenticatedUser(
-    modifier: Modifier=Modifier.absolutePadding(left = 10.dp, right = 10.dp),
     context: Context = LocalContext.current,
     fetchAndUpdateAccessToken:(googleId:String)->Unit,
     user:FirebaseUser?,
@@ -245,7 +250,7 @@ fun AuthenticatedUser(
         }
     )
 
-    Card(modifier = modifier.fillMaxWidth()) {
+    Card(modifier = Modifier.fillMaxWidth()) {
         Column(Modifier.absolutePadding(left = 10.dp, right = 10.dp, top = 10.dp, bottom = 10.dp)) {
             user?.let {
                 Row(
