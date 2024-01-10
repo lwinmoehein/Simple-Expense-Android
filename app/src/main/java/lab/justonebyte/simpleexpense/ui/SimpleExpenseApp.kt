@@ -48,7 +48,6 @@ fun SimpleExpenseApp(chooseDownloadFolderLauncher: ActivityResultLauncher<Intent
         ProvideWindowInsets {
 
             val navController = rememberNavController()
-            val scaffoldState = rememberScaffoldState()
 
             Scaffold(
 
@@ -87,7 +86,6 @@ fun SimpleExpenseApp(chooseDownloadFolderLauncher: ActivityResultLauncher<Intent
                 SuBuuNavGraph(
                     paddings = it,
                     navController = navController,
-                    scaffoldState = scaffoldState,
                     chooseDownloadFolderLauncher = chooseDownloadFolderLauncher
                 )
             }
