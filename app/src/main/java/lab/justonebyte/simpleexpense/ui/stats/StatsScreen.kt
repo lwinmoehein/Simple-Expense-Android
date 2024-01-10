@@ -52,9 +52,10 @@ fun TransactionTypeTab(
             modifier = Modifier.absolutePadding(top = 5.dp, bottom = 5.dp)
         ){
             Row(
-                modifier = Modifier.weight(1f)
+                modifier = Modifier
+                    .weight(1f)
                     .clip(RoundedCornerShape(5.dp))
-                    .background(if(selectedTransactionType===TransactionType.Expense) MaterialTheme.colorScheme.primary else Color.Transparent)
+                    .background(if (selectedTransactionType === TransactionType.Expense) MaterialTheme.colorScheme.primary else Color.Transparent)
                     .clickable {
                         onTransactionTypeSelected(TransactionType.Expense)
                     }
@@ -64,13 +65,14 @@ fun TransactionTypeTab(
             ) {
                 Icon(imageVector = FeatherIcons.ArrowUp , contentDescription ="", tint = Color.Red )
                 Spacer(modifier = Modifier.width(10.dp))
-                Text(text = "Expense", color =if(selectedTransactionType===TransactionType.Expense) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.primary)
+                Text(text = stringResource(id = R.string.expense), color =if(selectedTransactionType===TransactionType.Expense) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.primary)
             }
             Row(
                 modifier =
-                Modifier.weight(1f)
+                Modifier
+                    .weight(1f)
                     .clip(RoundedCornerShape(5.dp))
-                    .background(if(selectedTransactionType===TransactionType.Income) MaterialTheme.colorScheme.primary else Color.Transparent)
+                    .background(if (selectedTransactionType === TransactionType.Income) MaterialTheme.colorScheme.primary else Color.Transparent)
                     .clickable {
                         onTransactionTypeSelected(TransactionType.Income)
                     },
@@ -79,7 +81,7 @@ fun TransactionTypeTab(
             ) {
                 Icon(imageVector = FeatherIcons.ArrowDown , contentDescription ="", tint = Color.Green )
                 Spacer(modifier = Modifier.width(10.dp))
-                Text(text = "Income", color = if(selectedTransactionType===TransactionType.Income) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.primary)
+                Text(text = stringResource(id = R.string.income), color = if(selectedTransactionType===TransactionType.Income) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.primary)
             }
         }
     }
@@ -171,7 +173,9 @@ fun StatsScreen(goBack:()->Unit) {
 
             Spacer(modifier = Modifier.height(10.dp))
             Card(
-                Modifier.fillMaxSize().padding(10.dp)
+                Modifier
+                    .fillMaxSize()
+                    .padding(10.dp)
             ) {
                 Spacer(modifier = Modifier.height(10.dp))
                 TransactionTypeTab(
