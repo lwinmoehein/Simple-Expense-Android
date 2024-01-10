@@ -108,7 +108,7 @@ class SettingsViewModel @Inject constructor(
                     Log.i("access token:", it.data.token)
                     settingRepository.updateToken(it.data.token)
                     runVersionSync(application,"categories",it.data.token)
-                    runVersionSync(application,"categories",it.data.token)
+                    runVersionSync(application,"transactions",it.data.token)
                 }
             }catch (e:Exception){
                 Log.i("access token fail","cannot fetch access token.")

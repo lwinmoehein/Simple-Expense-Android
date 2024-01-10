@@ -64,7 +64,7 @@ fun CustomPieChartWithData(
                     .weight(1f)
                     .absolutePadding(left = 20.dp)) {
                     Text(
-                        text = stringResource(R.string.total)+" : ",
+                        text = stringResource(R.string.total),
                         style = MaterialTheme.typography.titleSmall
                     )
                     Text(
