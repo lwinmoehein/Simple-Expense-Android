@@ -58,8 +58,8 @@
     <string name="add_income">Add Income</string>
     <string name="add_expense">Add Expense</string>
 
-    <string name="edit_tran">Edit Transaction </string>
-    <string name="delete_tran">Delete Transaction</string>
+    <string name="edit_tran">Edit Record </string>
+    <string name="delete_tran">Delete Record</string>
 
     <string name="add_expense_title">Add new expense</string>
     <string name="add_income_title">Add new income</string>
@@ -79,9 +79,9 @@
     <string name="confirm_edit">Confirm Edit</string>
 
     <string name="r_u_sure">Are you sure ?</string>
-    <string name="r_u_sure_tran_add">Are you sure to record this transaction?</string>
-    <string name="r_u_sure_tran_edit">Are you sure to edit this transaction?</string>
-    <string name="r_u_sure_tran_delete">Are you sure to delete this transaction?</string>
+    <string name="r_u_sure_tran_add">Are you sure to record this Record?</string>
+    <string name="r_u_sure_tran_edit">Are you sure to edit this Record?</string>
+    <string name="r_u_sure_tran_delete">Are you sure to delete this Record?</string>
 
     <string name="r_u_sure_cat_delete">Are you sure to delete this category?</string>
 

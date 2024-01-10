@@ -60,7 +60,7 @@ fun CustomPieChartWithData(
                         sliceDrawer = SimpleSliceDrawer(50f)
                     )
                 }
-                Row(horizontalArrangement = Arrangement.Center, modifier = Modifier
+                Column(verticalArrangement = Arrangement.Center, modifier = Modifier
                     .weight(1f)
                     .absolutePadding(left = 20.dp)) {
                     Text(
@@ -69,7 +69,7 @@ fun CustomPieChartWithData(
                     )
                     Text(
                         text = incomePieSlices.sumOf { it.second.value.toInt() }.toString()+" "+ stringResource(id = currency.name),
-                        style =  MaterialTheme.typography.titleMedium
+                        style =  MaterialTheme.typography.titleLarge
                     )
                 }
             }
