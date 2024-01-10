@@ -38,11 +38,10 @@
     <string name="your_expense">အတွက်ထွက်ငွေ</string>
     <string name="your_income">အတွက်၀င်ငွေ</string>
 
-    <string name="show_data_by">ဒေတာကိုစုပြမယ် : </string>
+    <string name="show_data_by">ဒေတာကိုစုပြမယ် ။ </string>
     <string name="this_year">ယခုနှစ်</string>
     <string name="this_month">ယခုလ</string>
     <string name="this_day">ယနေ့</string>
-    <string name="numbers"></string>
 
 
     <string name="home">မူလနေရာ</string>
@@ -53,9 +52,9 @@
     <string name="history">ထည့်ခဲ့သည့်မှတ်တမ်းများ</string>
 
 
-    <string name="current_balance">လက်ထဲရှိငွေ :</string>
-    <string name="income_balance">တိုးလာသောငွေ :</string>
-    <string name="expense_balance">သုံးထားသောငွေ :</string>
+    <string name="current_balance">လက်ထဲရှိငွေ ။</string>
+    <string name="income_balance">တိုးလာသောငွေ ။</string>
+    <string name="expense_balance">သုံးထားသောငွေ ။</string>
 
     <string name="add_new_record">အသစ်ထည့်မည်</string>
     <string name="add_income">၀င်ငွေထည့်မည်</string>
@@ -103,10 +102,16 @@
     <string name="excel_format">အိတ်စယ်လ်ဖိုင်</string>
     <string name="pdf_format">ပီဒီအက်ပ်ဖိုင်</string>
     <string name="csv_format">စီအက်စ်ဗွီဖိုင်</string>
-    <string name="choose_format">ဖိုင်အမျိုးအစားရွေးပါ : </string>
-    <string name="file_export_failed">Exporting file failed.</string>
-    <string name="file_export_success">File successfully saved to export folder.</string>
-    <string name="select_correct_download_folder">Please select correct export folder.</string>
+    <string name="choose_format">ဖိုင်အမျိုးအစားရွေးပါ ။ </string>
+    <string name="file_export_failed">ဖိုင်ယူခြင်းမအောင်မြင်ပါ။</string>
+    <string name="file_export_success">ဖိုင်အားရွေးချယ်ထားသော ဖိုလ်ဒါထဲ ထည့်လိုက်ပါပြီ။</string>
+    <string name="select_correct_download_folder">ကျေးဇူးပြုပြီး ဖိုင်သိမ်းရန် ဖိုလ်ဒါရွေးပေးပါ။</string>
     <string name="log_out">အကောင့်မှထွက်မည်</string>
-    <string name="connection_error">Cannot connect to internet.</string>
+    <string name="connection_error">အင်တာနက်ကို ချိတ်ဆက်လို့မရပါ။</string>
+    <string name="not_logged_in">အကောင့်၀င်မထားပါ</string>
+    <string name="data_can_be_lost">Uninstall လုပ်ပါကဒေတာများပျက်နိုင်ပါသည်။</string>
+    <string name="log_in">အကောင့်၀င်မည်</string>
+    <string name="please_login">ကျေးဇူးပြုပြီး အကောင့်၀င်ပေးပါ</string>
+    <string name="please_login_first">ဤ feature အားအသုံးပြုရန် Google အကောင့်ဖြင့် အကောင့်၀င်ပေးပါ။</string>
+    <string name="your_wallet">ပိုက်ဆံအိတ်</string>
 </resources>

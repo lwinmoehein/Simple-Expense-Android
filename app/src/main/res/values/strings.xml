@@ -40,8 +40,6 @@
     <string name="this_month">This month</string>
     <string name="this_day">This day</string>
 
-    <string name="numbers">T</string>
-
     <string name="home">Home</string>
     <string name="charts">Charts</string>
     <string name="m_categories">Categories</string>
@@ -115,7 +113,13 @@
     <string name="file_export_success">File successfully saved to export folder.</string>
     <string name="select_correct_download_folder">Please select correct export folder.</string>
 
-    <string name="log_out">Log Out</string>
+    <string name="log_out">Logout</string>
     <string name="connection_error">Cannot connect to internet.</string>
+    <string name="not_logged_in">Not logged in : </string>
+    <string name="data_can_be_lost">Data will be lost when application is uninstalled.</string>
+    <string name="log_in">Login</string>
+    <string name="please_login">Please log in</string>
+    <string name="please_login_first">You must be logged in with a Google account to use this feature.</string>
+    <string name="your_wallet">Your wallet</string>
 
 </resources>

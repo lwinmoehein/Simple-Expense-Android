@@ -71,14 +71,14 @@ fun AccountScreen(
 
     if(isLoginNeededDialogShown){
         AppAlertDialog(
-            title = "Sorry",
+            title = stringResource(id = R.string.please_login),
             negativeBtnText = null,
-            positiveBtnText = "OK",
+            positiveBtnText = stringResource(id = R.string.confirm),
             onPositiveBtnClicked = {
                 isLoginNeededDialogShown = false
             }
         ){
-            Text(text = "Please login first to use this feature.")
+            Text(text = stringResource(id = R.string.please_login_first))
         }
     }
 
@@ -180,7 +180,7 @@ fun AccountScreen(
                             .clickable {
                                 if (user == null) {
                                     isLoginNeededDialogShown = true
-                                }else{
+                                } else {
                                     showExportScreen = true
                                 }
                             }
@@ -315,10 +315,8 @@ fun AuthenticatedUser(
                 }
             }
             if (user == null) {
-                Row(
-                    Modifier.fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceBetween
+                Column(
+                    Modifier.fillMaxWidth()
                 ) {
                     Row(
                         horizontalArrangement = Arrangement.Start,
@@ -332,11 +330,11 @@ fun AuthenticatedUser(
                         Spacer(modifier = Modifier.width(10.dp))
                         Column() {
                             Text(
-                                text = "Not logged in :",
+                                text = stringResource(id = R.string.not_logged_in),
                                 style = MaterialTheme.typography.labelSmall
                             )
                             Text(
-                                text = "Your data can be lost.",
+                                text = stringResource(id = R.string.data_can_be_lost),
                                 style = MaterialTheme.typography.labelLarge
                             )
                         }
@@ -350,7 +348,7 @@ fun AuthenticatedUser(
                         val googleSignInClient = GoogleSignIn.getClient(context, gso)
                         launcher.launch(googleSignInClient.signInIntent)
                     }) {
-                        Text(text = "Login")
+                        Text(text = stringResource(id = R.string.log_in))
                     }
                 }
             }

@@ -26,6 +26,7 @@ import compose.icons.feathericons.ArrowUp
 import compose.icons.feathericons.DollarSign
 import lab.justonebyte.simpleexpense.model.Currency
 import lab.justonebyte.simpleexpense.ui.components.TransactionTypePicker
+import lab.justonebyte.simpleexpense.R
 
 @Composable
 fun BalanceCard(
@@ -48,7 +49,7 @@ fun BalanceCard(
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Text(
-                    text = "Your Wallet",
+                    text = stringResource(id = R.string.your_wallet),
                     style = MaterialTheme.typography.labelLarge,
                     color = LocalContentColor.current
                 )
