@@ -1,13 +1,14 @@
 package lab.justonebyte.simpleexpense.ui.account
 
 import android.annotation.SuppressLint
-import android.app.DatePickerDialog
 import android.content.Context
 import android.content.Intent
+import android.icu.util.LocaleData
 import android.net.Uri
+import android.os.Build
 import android.provider.DocumentsContract
-import android.widget.DatePicker
 import androidx.activity.result.ActivityResultLauncher
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -31,6 +32,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -47,6 +49,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.commandiron.wheel_picker_compose.WheelDatePicker
 import compose.icons.FeatherIcons
 import compose.icons.FontAwesomeIcons
 import compose.icons.feathericons.ArrowLeft
@@ -56,11 +59,11 @@ import compose.icons.fontawesomeicons.regular.FileExcel
 import compose.icons.fontawesomeicons.regular.FilePdf
 import lab.justonebyte.simpleexpense.R
 import lab.justonebyte.simpleexpense.ui.MainDestinations
+import lab.justonebyte.simpleexpense.ui.components.AppAlertDialog
 import lab.justonebyte.simpleexpense.ui.components.SectionTitle
 import lab.justonebyte.simpleexpense.ui.components.SuBuuSnackBar
 import lab.justonebyte.simpleexpense.utils.dateFormatter
-import java.util.Calendar
-import java.util.Date
+import java.time.LocalDate
 
 
 data class FileFormat(val imageVector: ImageVector,val nameId:Int)
@@ -306,6 +309,7 @@ fun ExportScreen(
 
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun ChooseDateRange(
     fromDate: String,
@@ -313,46 +317,65 @@ fun ChooseDateRange(
     onFromDateChosen:(fromDate:String)->Unit,
     onToDateChosen:(toDate:String)->Unit
 ) {
-    val mContext = LocalContext.current
-    val mCalendar = Calendar.getInstance()
 
-    mCalendar.time = Date()
-    val mYear: Int = mCalendar.get(Calendar.YEAR)
-    val mMonth: Int = mCalendar.get(Calendar.MONTH)
-    val mDay: Int = mCalendar.get(Calendar.DAY_OF_MONTH)
-    val toDatePickerDialog = DatePickerDialog(
-        mContext,
-        { _: DatePicker, mYear: Int, mMonth: Int, mDayOfMonth: Int ->
-            val selectedDate = "$mYear-${if (mMonth + 1 >= 10) (mMonth + 1) else ("0" +(mMonth + 1))}-${if (mDayOfMonth + 1 >= 10) mDayOfMonth else ("0$mDayOfMonth")}"
-            onToDateChosen(selectedDate)
-        }, mYear, mMonth, mDay
-    )
+    val isFromDatePickerShown = remember { mutableStateOf(false) }
+    val tempFromDate =  remember { mutableStateOf(LocalDate.now()) }
 
-    toDatePickerDialog.datePicker.maxDate = Date().time
+    val isToDatePickerShown = remember { mutableStateOf(false) }
+    val tempToDate =  remember { mutableStateOf(LocalDate.now()) }
 
-    val fromDatePickerDialog = DatePickerDialog(
-        mContext,
-        { _: DatePicker, mYear: Int, mMonth: Int, mDayOfMonth: Int ->
-            val selectedDate = "$mYear-${if (mMonth + 1 >= 10) (mMonth + 1) else ("0" +(mMonth + 1))}-${if (mDayOfMonth + 1 >= 10) mDayOfMonth else ("0$mDayOfMonth")}"
-            onFromDateChosen(selectedDate)
-        }, mYear, mMonth, mDay
-    )
+
+    if(isFromDatePickerShown.value){
+        AppAlertDialog (
+            onPositiveBtnClicked = {
+                isFromDatePickerShown.value = false
+                onFromDateChosen(tempFromDate.value.toString())
+            },
+            positiveBtnText = stringResource(id = R.string.confirm)
+        ){
+            WheelDatePicker(
+                startDate = tempFromDate.value,
+                onSnappedDate = {
+                    tempFromDate.value = it
+                }
+            )
+        }
+    }
+    if(isToDatePickerShown.value){
+        AppAlertDialog (
+            onPositiveBtnClicked = {
+                isToDatePickerShown.value = false
+                onToDateChosen(tempToDate.value.toString())
+            },
+            positiveBtnText = stringResource(id = R.string.confirm)
+        ){
+            WheelDatePicker(
+                startDate = tempToDate.value,
+                onSnappedDate = {
+                    tempToDate.value = it
+                }
+            )
+        }
+    }
+
     Column {
         SectionTitle(title = stringResource(id = R.string.select_date_range))
 
         Spacer(modifier = Modifier.height(10.dp))
 
-        Row(modifier = Modifier
+            Row(modifier = Modifier
                     .fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(10.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(text = stringResource(id = R.string.from), modifier = Modifier.width(50.dp))
-                Text(
-                    text = fromDate,
-                    modifier = Modifier.clickable { fromDatePickerDialog.show() },
-                    fontWeight = FontWeight.Bold
-                )
+
+                TextButton(onClick = { isFromDatePickerShown.value = true }) {
+                    Text(
+                        text = fromDate,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
             }
 
             Row(
@@ -362,11 +385,12 @@ fun ChooseDateRange(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(text = stringResource(id = R.string.to), modifier = Modifier.width(50.dp))
-                Text(
-                    text = toDate,
-                    modifier = Modifier.clickable { toDatePickerDialog.show() },
-                    fontWeight = FontWeight.Bold
-                )
+                TextButton(onClick = { isToDatePickerShown.value = true  }) {
+                    Text(
+                        text = toDate,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
             }
 
     }

@@ -111,6 +111,8 @@ dependencies {
 
     //number picker
     implementation "com.chargemap.compose:numberpicker:1.0.3"
+    implementation 'com.github.commandiron:WheelPickerCompose:1.1.11'
+
 
     //networking
     implementation ("com.squareup.retrofit2:retrofit:2.9.0")
