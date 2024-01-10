@@ -19,7 +19,7 @@ import lab.justonebyte.simpleexpense.ui.account.AccountScreen
 import lab.justonebyte.simpleexpense.ui.account.ExportScreen
 import lab.justonebyte.simpleexpense.ui.account.SettingsScreen
 import lab.justonebyte.simpleexpense.ui.category.ManageCategoryScreen
-import lab.justonebyte.simpleexpense.ui.home.SuBuuAppHomeScreen
+import lab.justonebyte.simpleexpense.ui.home.HomeScreen
 import lab.justonebyte.simpleexpense.ui.stats.StatsScreen
 
 
@@ -49,7 +49,7 @@ fun NavGraph(
     ) {
 
         composable(MainDestinations.HOME_ROUTE) {
-            SuBuuAppHomeScreen(navController=navController)
+            HomeScreen()
         }
         composable(MainDestinations.STATS_ROUTE) {
             StatsScreen()

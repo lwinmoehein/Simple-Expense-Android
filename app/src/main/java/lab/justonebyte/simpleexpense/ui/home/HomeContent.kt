@@ -1,8 +1,9 @@
 package lab.justonebyte.simpleexpense.ui.home
 
-import androidx.compose.foundation.layout.*
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.absolutePadding
+import androidx.compose.foundation.layout.padding
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -11,7 +12,6 @@ import lab.justonebyte.simpleexpense.model.Transaction
 import lab.justonebyte.simpleexpense.ui.components.SectionTitle
 
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeContent(
     homeUiState: HomeUiState,
