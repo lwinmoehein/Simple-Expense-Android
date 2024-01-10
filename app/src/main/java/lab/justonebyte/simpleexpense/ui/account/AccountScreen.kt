@@ -8,7 +8,6 @@ import android.util.Log
 import androidx.activity.compose.ManagedActivityResultLauncher
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.ActivityResult
-import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
@@ -24,7 +23,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.Icon
 import androidx.compose.material3.Card
-import androidx.compose.material3.Divider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
@@ -42,9 +40,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
@@ -55,7 +53,6 @@ import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import compose.icons.FeatherIcons
-import compose.icons.feathericons.ArrowLeft
 import compose.icons.feathericons.ArrowRight
 import compose.icons.feathericons.File
 import compose.icons.feathericons.Info
@@ -64,6 +61,7 @@ import compose.icons.feathericons.Settings
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import lab.justonebyte.simpleexpense.R
+import lab.justonebyte.simpleexpense.ui.MainDestinations
 import lab.justonebyte.simpleexpense.ui.components.AppAlertDialog
 import lab.justonebyte.simpleexpense.ui.components.SuBuuSnackBar
 
@@ -72,13 +70,11 @@ import lab.justonebyte.simpleexpense.ui.components.SuBuuSnackBar
 @SuppressLint("UnrememberedMutableState", "UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun AccountScreen(
-    context: Context = LocalContext.current,
-    chooseDownloadFolderLauncher: ActivityResultLauncher<Intent>
+    navController: NavController,
+    context: Context = LocalContext.current
 ){
     val settingsViewModel = hiltViewModel<SettingsViewModel>()
     val settingsUiState by settingsViewModel.viewModelUiState.collectAsState()
-    var showSettingsScreen by remember { mutableStateOf(false) }
-    var showExportScreen by remember { mutableStateOf(false) }
     val snackbarHostState = remember { SnackbarHostState() }
     val coroutineScope = rememberCoroutineScope()
     var user by remember { mutableStateOf(Firebase.auth.currentUser) }
@@ -99,49 +95,6 @@ fun AccountScreen(
 
 
     Scaffold(
-        topBar = {
-//           Column {
-//               Row(
-//                   Modifier
-//                       .fillMaxWidth()
-//                       .padding(15.dp),
-//                   horizontalArrangement = Arrangement.SpaceBetween,
-//                   verticalAlignment = Alignment.CenterVertically
-//               ) {
-//                   Row(
-//                       verticalAlignment = Alignment.CenterVertically
-//
-//                   ) {
-//                       if(!showSettingsScreen && !showExportScreen){
-//                           Text(
-//                               text= stringResource(id = R.string.account),
-//                               maxLines = 1,
-//                               overflow = TextOverflow.Ellipsis,
-//                               style = MaterialTheme.typography.titleLarge
-//                           )
-//                       }else{
-//                           Icon(
-//                               imageVector = FeatherIcons.ArrowLeft, contentDescription = "",
-//                               tint = MaterialTheme.colorScheme.primary,
-//                               modifier = Modifier
-//                                   .absolutePadding(right = 5.dp)
-//                                   .clickable {
-//                                       showSettingsScreen = false
-//                                       showExportScreen = false
-//                                   })
-//                           Text(
-//                               text= "Test",
-//                               maxLines = 1,
-//                               overflow = TextOverflow.Ellipsis,
-//                               style = MaterialTheme.typography.titleLarge
-//                           )
-//                       }
-//
-//                   }
-//               }
-//               Divider()
-//           }
-        },
         snackbarHost = { SnackbarHost(snackbarHostState) }
         ) {
         SuBuuSnackBar(
@@ -155,7 +108,6 @@ fun AccountScreen(
                 .absolutePadding(top = 20.dp)
         ){
             Column(Modifier.padding(5.dp)) {
-                if(!showSettingsScreen && !showExportScreen){
                     AuthenticatedUser(
                         user = user,
                         onUserLogIn = {
@@ -172,7 +124,9 @@ fun AccountScreen(
                         horizontalArrangement = Arrangement.SpaceBetween,
                         modifier = Modifier
                             .fillMaxWidth()
-                            .clickable { showSettingsScreen = true }
+                            .clickable {
+                                navController.navigate(MainDestinations.SETTINGS)
+                            }
                             .padding(10.dp)
                     ) {
                        Row{
@@ -196,7 +150,7 @@ fun AccountScreen(
                                 if (user == null) {
                                     isLoginNeededDialogShown = true
                                 } else {
-                                    showExportScreen = true
+                                    navController.navigate(MainDestinations.EXPORT)
                                 }
                             }
                             .padding(10.dp)
@@ -238,19 +192,6 @@ fun AccountScreen(
                             Text(text = stringResource(id = R.string.log_out))
                         }
                     }
-                }
-                if(showSettingsScreen){
-                    SettingsScreen()
-                }
-                if(showExportScreen){
-                    ExportScreen(
-                        onExportClicked = { from, to, format ->
-                            settingsViewModel.exportDate(from,to,format)
-                        },
-                        settingsViewModel = settingsViewModel,
-                        chooseDownloadFolderLauncher = chooseDownloadFolderLauncher
-                    )
-                }
             }
 
         }

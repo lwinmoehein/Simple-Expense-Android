@@ -12,6 +12,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
 import com.google.accompanist.navigation.animation.*
 import lab.justonebyte.simpleexpense.R
 import lab.justonebyte.simpleexpense.model.AppLocale
@@ -23,16 +24,13 @@ import lab.justonebyte.simpleexpense.utils.LocaleHelper
 
 @Composable
 fun SettingsScreen(
+    navController: NavController,
     context: Context = LocalContext.current
 ){
     val settingsViewModel = hiltViewModel<SettingsViewModel>()
     val settingsUiState by settingsViewModel.viewModelUiState.collectAsState()
-
-    var showSettingsScreen by remember { mutableStateOf(false) }
     val settingCurrencies = listOf<OptionItem>(Currency.Kyat,Currency.Dollar)
     val appLanguages = listOf(AppLocale.English,AppLocale.Myanmar)
-    val packageName = context.packageName
-    val coroutineScope = rememberCoroutineScope()
 
     fun changeLocale(localeString: String){
         LocaleHelper().setLocale(context, localeString)

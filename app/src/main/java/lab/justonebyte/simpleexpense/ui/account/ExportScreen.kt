@@ -7,17 +7,14 @@ import android.net.Uri
 import android.provider.DocumentsContract
 import android.widget.DatePicker
 import androidx.activity.result.ActivityResultLauncher
-import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.absolutePadding
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
@@ -31,15 +28,12 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -48,11 +42,12 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
 import compose.icons.FeatherIcons
 import compose.icons.feathericons.File
 import lab.justonebyte.simpleexpense.R
 import lab.justonebyte.simpleexpense.utils.dateFormatter
-import okhttp3.internal.format
 import java.util.Calendar
 import java.util.Date
 
@@ -159,13 +154,13 @@ fun chooseDownloadFolderIntent():Intent{
 
 @Composable
 fun ExportScreen(
-    settingsViewModel: SettingsViewModel,
-    onExportClicked:(from:String,to:String,format:FileFormat)->Unit,
+    navController: NavController,
     chooseDownloadFolderLauncher: ActivityResultLauncher<Intent>
 ) {
 
-    var chosenFormat by remember { mutableStateOf<FileFormat?>(formats[0]) }
+    val settingsViewModel = hiltViewModel<SettingsViewModel>()
     val uiState by settingsViewModel.viewModelUiState.collectAsState()
+    var chosenFormat by remember { mutableStateOf<FileFormat?>(formats[0]) }
     val toDate = remember { mutableStateOf(dateFormatter(System.currentTimeMillis())) }
     val fromDate = remember { mutableStateOf(dateFormatter(System.currentTimeMillis())) }
 
@@ -203,7 +198,9 @@ fun ExportScreen(
                     modifier = Modifier.fillMaxWidth(),
                     onClick = {
                         if(!uiState.isExportingFile){
-                            chosenFormat?.let { onExportClicked(fromDate.value,toDate.value, it) }
+                            chosenFormat?.let {
+                                settingsViewModel.exportDate(fromDate.value,toDate.value, it)
+                            }
                         }
                     }
                 ) {
