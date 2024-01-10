@@ -2,19 +2,24 @@ package lab.justonebyte.simpleexpense.ui
 
 import AppTheme
 import android.content.Intent
-import android.graphics.drawable.Icon
 import android.os.Build
 import androidx.activity.result.ActivityResultLauncher
 import androidx.annotation.RequiresApi
 import androidx.compose.material.rememberScaffoldState
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.core.view.WindowCompat
-import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.insets.ProvideWindowInsets
 import compose.icons.FeatherIcons
@@ -33,9 +38,8 @@ enum class NavItem(val stringResource:Int,val imageVector:ImageVector){
 
 val appContentPadding = 20.dp
 @RequiresApi(Build.VERSION_CODES.O)
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SuBuuApp(chooseDownloadFolderLauncher: ActivityResultLauncher<Intent>) {
+fun SimpleExpenseApp(chooseDownloadFolderLauncher: ActivityResultLauncher<Intent>) {
 
     var selectedItem by remember { mutableStateOf(0) }
     val navItems = listOf(NavItem.HOME,NavItem.CHARTS,NavItem.CATEGORIES,NavItem.ACCOUNT)
@@ -44,14 +48,7 @@ fun SuBuuApp(chooseDownloadFolderLauncher: ActivityResultLauncher<Intent>) {
         ProvideWindowInsets {
 
             val navController = rememberNavController()
-            val coroutineScope = rememberCoroutineScope()
-            // This top level scaffold contains the app drawer, which needs to be accessible
-            // from multiple screens. An event to open the drawer is passed down to each
-            // screen that needs it.
             val scaffoldState = rememberScaffoldState()
-
-            val navBackStackEntry by navController.currentBackStackEntryAsState()
-            val currentRoute = navBackStackEntry?.destination?.route ?: MainDestinations.HOME_ROUTE
 
             Scaffold(
 
