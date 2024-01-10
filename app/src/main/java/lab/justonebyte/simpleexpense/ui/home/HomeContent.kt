@@ -24,7 +24,7 @@ fun HomeContent(
                 homeViewModel = homeViewModel,
                 homeUiState = homeUiState
             )
-            SectionTitle(title = stringResource(id = R.string.history),modifier = Modifier.absolutePadding(top = 15.dp, left = 10.dp, bottom = 15.dp, right = 10.dp))
+            SectionTitle(title = stringResource(id = R.string.history),modifier = Modifier.absolutePadding(top = 30.dp, bottom = 20.dp))
             TransactionsCard(
                 transactions = homeUiState.transactions,
                 currency = homeUiState.currentCurrency,

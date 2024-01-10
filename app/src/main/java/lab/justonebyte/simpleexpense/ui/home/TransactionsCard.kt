@@ -3,10 +3,14 @@ package lab.justonebyte.simpleexpense.ui.home
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.absolutePadding
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.material3.Card
 import androidx.compose.material3.Divider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -17,8 +21,12 @@ import androidx.compose.ui.unit.dp
 import lab.justonebyte.simpleexpense.model.BalanceType
 import lab.justonebyte.simpleexpense.model.Currency
 import lab.justonebyte.simpleexpense.model.Transaction
-import lab.justonebyte.simpleexpense.ui.theme.*
-import lab.justonebyte.simpleexpense.utils.*
+import lab.justonebyte.simpleexpense.utils.formatDateString
+import lab.justonebyte.simpleexpense.utils.formatMonthString
+import lab.justonebyte.simpleexpense.utils.formatYearString
+import lab.justonebyte.simpleexpense.utils.getFormatedDate
+import lab.justonebyte.simpleexpense.utils.getFormatedMonth
+import lab.justonebyte.simpleexpense.utils.getFormatedYear
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -45,13 +53,13 @@ fun TransactionsCard(
     }
 
    Row(
-        //       shape = SuBuuShapes.small,
         modifier = modifier
             .fillMaxWidth()
             .fillMaxHeight()
-            .absolutePadding(left = 10.dp, right = 10.dp)
-          ,
    ) {
+       if(groupedTransactions.isEmpty()){
+           NoData()
+       }
        LazyColumn(
            modifier = Modifier
                .fillMaxSize()
@@ -62,7 +70,10 @@ fun TransactionsCard(
                        text = date,
                        style = MaterialTheme.typography.titleMedium,
                        color= MaterialTheme.colorScheme.onSecondary,
-                       modifier = Modifier.fillMaxWidth().background(MaterialTheme.colorScheme.secondary).absolutePadding(left = 5.dp),
+                       modifier = Modifier
+                           .fillMaxWidth()
+                           .background(MaterialTheme.colorScheme.secondary)
+                           .absolutePadding(left = 5.dp)
                    )
                }
                itemsIndexed(transactions) { index, transaction ->

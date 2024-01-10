@@ -58,11 +58,6 @@ fun HomeScreen(){
     val isSelectedTransactionEditMode = remember { mutableStateOf<Boolean?>(null) }
     val isDeleteTransactionDialogOpen = remember { mutableStateOf(false) }
 
-    Log.i("crrentType:", stringResource(id = homeUiState.currentBalanceType.name))
-
-
-
-
     fun clearStates(){
         isAddOrEditTransactionDialogOpen.value = false
         isChooseAddTransactionTypeOpen.value = false
