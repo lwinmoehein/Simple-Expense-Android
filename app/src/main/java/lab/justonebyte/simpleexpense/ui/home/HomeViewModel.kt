@@ -1,7 +1,9 @@
 package lab.justonebyte.simpleexpense.ui.home
 
 import android.content.Context
+import android.os.Build
 import android.util.Log
+import androidx.annotation.RequiresApi
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -18,6 +20,7 @@ import lab.justonebyte.simpleexpense.model.*
 import lab.justonebyte.simpleexpense.ui.components.SnackBarType
 import lab.justonebyte.simpleexpense.utils.*
 import lab.justonebyte.simpleexpense.workers.runVersionSync
+import java.time.LocalDate
 import java.util.UUID
 import javax.inject.Inject
 
@@ -91,11 +94,6 @@ class HomeViewModel @Inject constructor(
             }
         }
     }
-    private suspend fun collectBalanceTypeFromSetting(){
-        settingsRepository.defaultBalanceType.collect{
-            bindTransactionsFromBalanceType(BalanceType.getFromValue(it))
-        }
-    }
     private suspend fun collectCurrencyFromSetting(){
         settingsRepository.selectedCurrency.collect{
             _viewModelUiState.update { homeUiState ->
@@ -124,20 +122,8 @@ class HomeViewModel @Inject constructor(
             }
         }
     }
-    fun collectWeeklyBalance(dateValue:String =  viewModelUiState.value.selectedWeek){
-        _viewModelUiState.update {
-            it.copy(selectedWeek = dateValue)
-        }
-        viewModelScope.launch {
-            transactionRepository.getWeeklyTransactions(dateValue).collect{ transactions->
-                bindBalanceData(transactions)
-            }
-        }
-    }
 
      fun collectMonthlyBalance(dateValue:String=  viewModelUiState.value.selectedMonth){
-         Log.i("trans:month", dateValue)
-
          _viewModelUiState.update {
              it.copy(selectedMonth = dateValue, currentBalanceType = BalanceType.MONTHLY)
          }
@@ -190,6 +176,7 @@ class HomeViewModel @Inject constructor(
             it.copy(currentSnackBar = null)
         }
     }
+    @RequiresApi(Build.VERSION_CODES.O)
     fun addTransaction(
         transactionCategory: TransactionCategory,
         amount:Int,
@@ -209,7 +196,7 @@ class HomeViewModel @Inject constructor(
                     category = transactionCategory,
                     created_at = date,
                     note = note,
-                    updated_at = getCurrentGlobalTime()
+                    updated_at = LocalDate.now().toString()
                 )
             )
             runVersionSync(application,"transactions",token.value)

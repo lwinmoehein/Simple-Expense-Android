@@ -1,25 +1,34 @@
 package lab.justonebyte.simpleexpense.ui.home
 
-import android.app.DatePickerDialog
+import android.os.Build
 import android.util.Log
-import android.widget.DatePicker
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.annotation.RequiresApi
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.absolutePadding
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.*
+import androidx.compose.material3.Button
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import com.commandiron.wheel_picker_compose.WheelDatePicker
 import compose.icons.FeatherIcons
 import compose.icons.feathericons.DollarSign
 import lab.justonebyte.simpleexpense.R
@@ -27,11 +36,10 @@ import lab.justonebyte.simpleexpense.model.Transaction
 import lab.justonebyte.simpleexpense.model.TransactionCategory
 import lab.justonebyte.simpleexpense.model.TransactionType
 import lab.justonebyte.simpleexpense.ui.components.AppAlertDialog
-import lab.justonebyte.simpleexpense.utils.dateFormatter
-import java.util.*
+import java.time.LocalDate
 
 
-@OptIn(ExperimentalMaterial3Api::class)
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun AddTransactionContent(
     currentType: Int,
@@ -42,30 +50,40 @@ fun AddTransactionContent(
     onAddCategory:(categoryName:String,transactionType:TransactionType)->Unit,
     currentTransaction:Transaction?
 ) {
-    val mContext = LocalContext.current
     val localFocusManage = LocalFocusManager.current
-
-    val mCalendar = Calendar.getInstance()
-    mCalendar.time = Date()
-    val mYear: Int = mCalendar.get(Calendar.YEAR)
-    val mMonth: Int = mCalendar.get(Calendar.MONTH)
-    val mDay: Int = mCalendar.get(Calendar.DAY_OF_MONTH)
-
     val currentType = remember(currentTransaction) { mutableStateOf(currentTransaction?.type?.value ?: currentType) }
     val currentAmount = remember(currentTransaction) { mutableStateOf(currentTransaction?.amount?.toString() ?: "") }
     val note = remember(currentTransaction) { mutableStateOf(currentTransaction?.note ?: "") }
     val currentCategory = remember(currentTransaction) { mutableStateOf(currentTransaction?.category) }
-    val mDate = remember (currentTransaction){ mutableStateOf(currentTransaction?.created_at ?: dateFormatter(System.currentTimeMillis())) }
     val isEditMode = currentTransaction != null
-
     val isAddTransactionConfirmDialogOpen = remember { mutableStateOf(false) }
+
+    val isRecordDatePickerShown = remember { mutableStateOf(false) }
+    val tempRecordDate =  remember { mutableStateOf<LocalDate>(LocalDate.now())}
 
     fun clearTransactionForm() {
         currentAmount.value = ""
         currentType.value = 1
         currentCategory.value = null
-        mDate.value = dateFormatter(System.currentTimeMillis())
+        tempRecordDate.value = LocalDate.now()
         localFocusManage.clearFocus()
+    }
+
+    if(isRecordDatePickerShown.value){
+        AppAlertDialog (
+            onPositiveBtnClicked = {
+                isRecordDatePickerShown.value = false
+                //onFromDateChosen(tempRecordDate.value.toString())
+            },
+            positiveBtnText = stringResource(id = R.string.confirm)
+        ){
+            WheelDatePicker(
+                startDate = tempRecordDate.value,
+                onSnappedDate = {
+                    tempRecordDate.value = it
+                }
+            )
+        }
     }
 
     if (isAddTransactionConfirmDialogOpen.value) {
@@ -86,13 +104,14 @@ fun AddTransactionContent(
                 if (!isValidCategorySelected || amount <= 0) {
                     showIncorrectDataSnack()
                 } else {
+                    val transactionCreatedDate = if(currentTransaction==null) tempRecordDate.value.toString() else currentTransaction.created_at
                     currentCategory.value?.let {
                         onConfirmTransactionForm(
-                            currentType.value,
-                            amount,
-                            it,
-                            mDate.value.replace('/', '-'),
-                             note.value
+                                currentType.value,
+                                amount,
+                                it,
+                                transactionCreatedDate,
+                                note.value
                             )
                         onCloseDialog()
                         clearTransactionForm()
@@ -104,16 +123,6 @@ fun AddTransactionContent(
             }
         )
     }
-
-
-    val mDatePickerDialog = DatePickerDialog(
-        mContext,
-        { _: DatePicker, mYear: Int, mMonth: Int, mDayOfMonth: Int ->
-            var selectedDate = "$mYear-${if (mMonth + 1 >= 10) (mMonth + 1) else ("0" +(mMonth + 1))}-${if (mDayOfMonth + 1 >= 10) mDayOfMonth else ("0$mDayOfMonth")}"
-            mDate.value = selectedDate
-        }, mYear, mMonth, mDay
-    )
-    mDatePickerDialog.datePicker.maxDate = Date().time
 
     Column(
         Modifier
@@ -168,10 +177,16 @@ fun AddTransactionContent(
                     modifier = Modifier.weight(1f)
                 )
                 TextButton(
-                    onClick = { mDatePickerDialog.show() },
+                    onClick = {
+                              isRecordDatePickerShown.value = true
+                    },
                     modifier = Modifier.weight(1f)
                 ) {
-                    Text(text = mDate.value)
+                    Text(
+                        text = tempRecordDate.value.toString(),
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.primary
+                    )
                 }
             }
         }

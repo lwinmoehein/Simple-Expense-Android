@@ -1,7 +1,9 @@
 package lab.justonebyte.simpleexpense.ui.home
 
 import android.annotation.SuppressLint
+import android.os.Build
 import android.util.Log
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -40,6 +42,7 @@ import lab.justonebyte.simpleexpense.utils.getCurrentGlobalTime
 import java.util.UUID
 
 
+@RequiresApi(Build.VERSION_CODES.O)
 @SuppressLint("UnrememberedMutableState", "UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun HomeScreen(){
@@ -141,8 +144,6 @@ fun HomeScreen(){
                                 },
                                 onCloseDialog = {
                                     clearStates()
-                                    coroutineScope.launch {
-                                    }
                                 },
                                 showIncorrectDataSnack = {
                                     homeViewModel.showSnackBar(SnackBarType.INCORRECT_DATA)
