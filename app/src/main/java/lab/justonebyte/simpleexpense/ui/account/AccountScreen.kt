@@ -100,47 +100,47 @@ fun AccountScreen(
 
     Scaffold(
         topBar = {
-           Column {
-               Row(
-                   Modifier
-                       .fillMaxWidth()
-                       .padding(15.dp),
-                   horizontalArrangement = Arrangement.SpaceBetween,
-                   verticalAlignment = Alignment.CenterVertically
-               ) {
-                   Row(
-                       verticalAlignment = Alignment.CenterVertically
-
-                   ) {
-                       if(!showSettingsScreen && !showExportScreen){
-                           Text(
-                               text= stringResource(id = R.string.account),
-                               maxLines = 1,
-                               overflow = TextOverflow.Ellipsis,
-                               style = MaterialTheme.typography.titleLarge
-                           )
-                       }else{
-                           Icon(
-                               imageVector = FeatherIcons.ArrowLeft, contentDescription = "",
-                               tint = MaterialTheme.colorScheme.primary,
-                               modifier = Modifier
-                                   .absolutePadding(right = 5.dp)
-                                   .clickable {
-                                       showSettingsScreen = false
-                                       showExportScreen = false
-                                   })
-                           Text(
-                               text= "Test",
-                               maxLines = 1,
-                               overflow = TextOverflow.Ellipsis,
-                               style = MaterialTheme.typography.titleLarge
-                           )
-                       }
-
-                   }
-               }
-               Divider()
-           }
+//           Column {
+//               Row(
+//                   Modifier
+//                       .fillMaxWidth()
+//                       .padding(15.dp),
+//                   horizontalArrangement = Arrangement.SpaceBetween,
+//                   verticalAlignment = Alignment.CenterVertically
+//               ) {
+//                   Row(
+//                       verticalAlignment = Alignment.CenterVertically
+//
+//                   ) {
+//                       if(!showSettingsScreen && !showExportScreen){
+//                           Text(
+//                               text= stringResource(id = R.string.account),
+//                               maxLines = 1,
+//                               overflow = TextOverflow.Ellipsis,
+//                               style = MaterialTheme.typography.titleLarge
+//                           )
+//                       }else{
+//                           Icon(
+//                               imageVector = FeatherIcons.ArrowLeft, contentDescription = "",
+//                               tint = MaterialTheme.colorScheme.primary,
+//                               modifier = Modifier
+//                                   .absolutePadding(right = 5.dp)
+//                                   .clickable {
+//                                       showSettingsScreen = false
+//                                       showExportScreen = false
+//                                   })
+//                           Text(
+//                               text= "Test",
+//                               maxLines = 1,
+//                               overflow = TextOverflow.Ellipsis,
+//                               style = MaterialTheme.typography.titleLarge
+//                           )
+//                       }
+//
+//                   }
+//               }
+//               Divider()
+//           }
         },
         snackbarHost = { SnackbarHost(snackbarHostState) }
         ) {

@@ -19,22 +19,18 @@ import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Tab
-import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.accompanist.pager.ExperimentalPagerApi
@@ -43,7 +39,6 @@ import compose.icons.feathericons.ArrowDown
 import compose.icons.feathericons.ArrowUp
 import compose.icons.feathericons.Plus
 import lab.justonebyte.simpleexpense.R
-import lab.justonebyte.simpleexpense.model.BalanceType
 import lab.justonebyte.simpleexpense.model.TransactionCategory
 import lab.justonebyte.simpleexpense.model.TransactionType
 import lab.justonebyte.simpleexpense.ui.components.AppAlertDialog
@@ -94,9 +89,7 @@ fun CategoryTabs(
 
 @OptIn(ExperimentalPagerApi::class, ExperimentalMaterial3Api::class)
 @Composable
-fun ManageCategoryScreen(
-    goBack:()->Unit
-){
+fun ManageCategoryScreen(){
     val categoryViewModel = hiltViewModel<CategoryViewModel>()
     val categoryUiState by categoryViewModel.viewModelUiState.collectAsState()
     val currentCategoryTabIndex = remember { mutableStateOf(0) }
@@ -173,30 +166,6 @@ fun ManageCategoryScreen(
     )
 
     Scaffold(
-        topBar =  {
-           Column {
-               Row(
-                   Modifier
-                       .fillMaxWidth()
-                       .padding(10.dp),
-                   horizontalArrangement = Arrangement.SpaceBetween,
-                   verticalAlignment = Alignment.CenterVertically
-               ) {
-                   Row(
-                       verticalAlignment = Alignment.CenterVertically
-
-                   ) {
-                       Text(
-                           stringResource(id = R.string.m_categories),
-                           maxLines = 1,
-                           overflow = TextOverflow.Ellipsis,
-                           style = MaterialTheme.typography.titleLarge
-                       )
-                   }
-               }
-               Divider()
-           }
-        },
         floatingActionButton = {
             if(currentCategoryTabIndex.value==0){
                 FloatingActionButton(

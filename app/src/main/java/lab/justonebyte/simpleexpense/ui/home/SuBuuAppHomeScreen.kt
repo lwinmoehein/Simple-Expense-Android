@@ -4,7 +4,7 @@ import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavController
 
-@OptIn(ExperimentalMaterialApi::class, com.google.accompanist.pager.ExperimentalPagerApi::class)
+@OptIn(com.google.accompanist.pager.ExperimentalPagerApi::class)
 @Composable
 fun SuBuuAppHomeScreen(
     navController: NavController

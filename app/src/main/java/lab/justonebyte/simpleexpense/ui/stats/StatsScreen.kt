@@ -12,7 +12,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import compose.icons.FeatherIcons
@@ -26,9 +25,6 @@ import lab.justonebyte.simpleexpense.ui.components.OptionItem
 import lab.justonebyte.simpleexpense.ui.components.TransactionTypePicker
 import lab.justonebyte.simpleexpense.ui.detail.CustomPieChartWithData
 import lab.justonebyte.simpleexpense.ui.home.*
-import lab.justonebyte.simpleexpense.utils.getCurrentDate
-import lab.justonebyte.simpleexpense.utils.getCurrentMonth
-import lab.justonebyte.simpleexpense.utils.getCurrentYear
 
 sealed class BalanceTypeOption(override val name:Int, override  val value:Any) : OptionItem {
     object MONTHLY: BalanceTypeOption(R.string.monthly,BalanceType.MONTHLY)
@@ -87,10 +83,9 @@ fun TransactionTypeTab(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnrememberedMutableState")
 @Composable
-fun StatsScreen(goBack:()->Unit) {
+fun StatsScreen() {
     val statsViewModel = hiltViewModel<StatsViewModel>()
     val statsUiState by statsViewModel.viewModelUiState.collectAsState()
     val transactions = statsUiState.transactions
@@ -103,33 +98,7 @@ fun StatsScreen(goBack:()->Unit) {
     val selectedBalanceType = remember { mutableStateOf<BalanceType>(BalanceType.MONTHLY) }
     val selectedTransactionType = remember { mutableStateOf<TransactionType>(TransactionType.Expense) }
 
-    Scaffold(
-        topBar =  {
-           Column {
-               Row(
-                   Modifier
-                       .fillMaxWidth()
-                       .padding(10.dp),
-                   horizontalArrangement = Arrangement.SpaceBetween,
-                   verticalAlignment = Alignment.CenterVertically
-               ) {
-                   Row(
-                       verticalAlignment = Alignment.CenterVertically
-
-                   ) {
-                       Text(
-                           stringResource(id = R.string.charts),
-                           maxLines = 1,
-                           overflow = TextOverflow.Ellipsis,
-                           style = MaterialTheme.typography.titleLarge
-                       )
-                   }
-
-               }
-               Divider()
-           }
-        }
-    ) {
+    Scaffold {
         Column(modifier = Modifier
             .padding(it)) {
             Row(

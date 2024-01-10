@@ -5,7 +5,6 @@ import android.content.Intent
 import android.os.Build
 import androidx.activity.result.ActivityResultLauncher
 import androidx.annotation.RequiresApi
-import androidx.compose.material.rememberScaffoldState
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
@@ -83,7 +82,7 @@ fun SimpleExpenseApp(chooseDownloadFolderLauncher: ActivityResultLauncher<Intent
                     }
                 }
             ) {
-                SuBuuNavGraph(
+                NavGraph(
                     paddings = it,
                     navController = navController,
                     chooseDownloadFolderLauncher = chooseDownloadFolderLauncher

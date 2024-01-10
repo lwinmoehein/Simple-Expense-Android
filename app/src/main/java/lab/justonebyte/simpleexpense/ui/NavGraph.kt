@@ -6,16 +6,12 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.ScaffoldState
-import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import kotlinx.coroutines.launch
 import lab.justonebyte.simpleexpense.ui.account.AccountScreen
 import lab.justonebyte.simpleexpense.ui.category.ManageCategoryScreen
 import lab.justonebyte.simpleexpense.ui.home.SuBuuAppHomeScreen
@@ -30,7 +26,7 @@ object MainDestinations {
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun SuBuuNavGraph(
+fun NavGraph(
     paddings: PaddingValues,
     navController: NavHostController = rememberNavController(),
     startDestination: String = MainDestinations.HOME_ROUTE,
@@ -53,10 +49,10 @@ fun SuBuuNavGraph(
             )
         }
         composable(MainDestinations.STATS_ROUTE) {
-            StatsScreen(goBack = {navController.popBackStack()} )
+            StatsScreen()
         }
         composable(MainDestinations.CATEGORY_ROUTE) {
-            ManageCategoryScreen(goBack = {navController.popBackStack()} )
+            ManageCategoryScreen()
         }
     }
 }
