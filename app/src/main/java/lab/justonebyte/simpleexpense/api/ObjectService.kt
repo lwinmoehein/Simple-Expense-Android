@@ -6,10 +6,7 @@ import lab.justonebyte.simpleexpense.model.ServerCategory
 import lab.justonebyte.simpleexpense.model.ServerTransaction
 import retrofit2.Response
 import retrofit2.http.Body
-import retrofit2.http.GET
 import retrofit2.http.POST
-import retrofit2.http.Path
-
 
 
 data class CategoryVersionData(
@@ -45,9 +42,6 @@ data class UploadTransactionBatch(
     @SerializedName("objects") val objects: List<ServerTransaction>,
 )
 interface ObjectService {
-    @GET("get-access-token/{idToken}" )
-    suspend fun getAccessToken(@Path("idToken") idToken: String) : Response<AuthResponse>
-
     @POST("categories/changes" )
     suspend fun getChangedCategories(@Body objectData: ObjectPostData) : Response<CategoryVersionResponse>
 
