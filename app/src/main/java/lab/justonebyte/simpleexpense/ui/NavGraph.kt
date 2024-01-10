@@ -65,7 +65,7 @@ fun NavGraphBuilder.addNestedGraph(
     navController: NavController,
     chooseDownloadFolderLauncher: ActivityResultLauncher<Intent>
 ) {
-    navigation(startDestination = MainDestinations.SETTINGS, route = MainDestinations.ACCOUNT_ROUTE) {
+    navigation(startDestination = MainDestinations.ME_ROUTE, route = MainDestinations.ACCOUNT_ROUTE) {
         composable(MainDestinations.ME_ROUTE) {
             AccountScreen(
                 navController = navController
