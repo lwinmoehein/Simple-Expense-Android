@@ -38,6 +38,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -169,27 +170,27 @@ fun AccountScreen(
                     Spacer(modifier = Modifier.height(10.dp))
 
                     user?.let {
-                        Row(
-                            Modifier
+                        OutlinedButton(
+                            modifier= Modifier
                                 .fillMaxWidth()
-                                .padding(10.dp)
-                                .clickable {
-                                    Firebase.auth.signOut()
-                                    GoogleSignIn
-                                        .getClient(context, GoogleSignInOptions.DEFAULT_SIGN_IN)
-                                        .signOut()
-                                    user = null
-                                    coroutineScope.launch {
-                                        settingsViewModel.logOut()
-                                    }
-                                }) {
+                                .padding(10.dp),
+                            onClick = {
+                                Firebase.auth.signOut()
+                                GoogleSignIn
+                                    .getClient(context, GoogleSignInOptions.DEFAULT_SIGN_IN)
+                                    .signOut()
+                                user = null
+                                coroutineScope.launch {
+                                    settingsViewModel.logOut()
+                                }
+                            }) {
                             Icon(
                                 imageVector = FeatherIcons.LogOut,
                                 contentDescription = "",
                                 modifier = Modifier.absolutePadding(right = 10.dp),
-                                tint = MaterialTheme.colorScheme.primary
+                                tint = Color.Red
                             )
-                            Text(text = stringResource(id = R.string.log_out))
+                            Text(text = stringResource(id = R.string.log_out), color = Color.Red)
                         }
                     }
             }

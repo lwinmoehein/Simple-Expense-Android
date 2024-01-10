@@ -123,5 +123,11 @@
     <string name="please_login">Please log in</string>
     <string name="please_login_first">You must be logged in with a Google account to use this feature.</string>
     <string name="your_wallet">Your wallet</string>
+    <string name="export_file_format">Export File Format</string>
+    <string name="export_path">Export Folder</string>
+    <string name="export_folder_warning">Choose export folder</string>
+    <string name="select_date_range">Export Date Range</string>
+    <string name="from">From</string>
+    <string name="to">To</string>
 
 </resources>

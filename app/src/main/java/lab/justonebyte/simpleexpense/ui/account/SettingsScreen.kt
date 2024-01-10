@@ -1,5 +1,6 @@
 package lab.justonebyte.simpleexpense.ui.account
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
@@ -19,9 +20,10 @@ import lab.justonebyte.simpleexpense.model.AppLocale
 import lab.justonebyte.simpleexpense.model.Currency
 import lab.justonebyte.simpleexpense.ui.MainActivity
 import lab.justonebyte.simpleexpense.ui.components.OptionItem
-import lab.justonebyte.simpleexpense.ui.home.SectionTitle
+import lab.justonebyte.simpleexpense.ui.components.SectionTitle
 import lab.justonebyte.simpleexpense.utils.LocaleHelper
 
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun SettingsScreen(
     navController: NavController,
@@ -39,35 +41,33 @@ fun SettingsScreen(
         context.startActivity(i)
     }
 
-    Column(
-        Modifier.absolutePadding(left = 10.dp, right = 10.dp, top = 5.dp)
-    ) {
-        Column {
+    Scaffold {
+        Column(Modifier.padding(15.dp)) {
             SectionTitle(title = stringResource(id = R.string.feat_setting))
 
             SettingMenu(
                 modifier = Modifier.fillMaxWidth(),
-                settingItemLabel =  R.string.select_currency,
+                settingItemLabel = R.string.select_currency,
                 selectedOption = settingsUiState.selectedCurrency,
                 menuItems = settingCurrencies,
                 onMenuItemChosen = {
                     settingsViewModel.updateCurrency(it as Currency)
                 }
             )
+            Spacer(modifier = Modifier.height(20.dp))
+
+            SectionTitle(title = stringResource(id = R.string.sys_setting))
+
+            SettingMenu(
+                modifier = Modifier.fillMaxWidth(),
+                settingItemLabel = R.string.select_lang,
+                selectedOption = settingsUiState.defaultLanguage,
+                menuItems = appLanguages,
+                onMenuItemChosen = {
+                    settingsViewModel.updateLocale(it as AppLocale)
+                    changeLocale(it.value)
+                }
+            )
         }
-        Spacer(modifier = Modifier.height(20.dp))
-
-        SectionTitle(title = stringResource(id = R.string.sys_setting))
-
-        SettingMenu(
-            modifier = Modifier.fillMaxWidth(),
-            settingItemLabel =  R.string.select_lang,
-            selectedOption = settingsUiState.defaultLanguage,
-            menuItems = appLanguages,
-            onMenuItemChosen = {
-                settingsViewModel.updateLocale(it as AppLocale)
-                changeLocale(it.value)
-            }
-        )
     }
 }

@@ -1,5 +1,6 @@
 package lab.justonebyte.simpleexpense.ui.account
 
+import android.annotation.SuppressLint
 import android.app.DatePickerDialog
 import android.content.Context
 import android.content.Intent
@@ -28,6 +29,7 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -40,6 +42,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -47,6 +50,7 @@ import androidx.navigation.NavController
 import compose.icons.FeatherIcons
 import compose.icons.feathericons.File
 import lab.justonebyte.simpleexpense.R
+import lab.justonebyte.simpleexpense.ui.components.SectionTitle
 import lab.justonebyte.simpleexpense.utils.dateFormatter
 import java.util.Calendar
 import java.util.Date
@@ -69,7 +73,7 @@ fun ChooseFormat(
     var chosenFormat by remember { mutableStateOf<FileFormat?>(formats[0]) }
 
     Column() {
-        ExportScreenTitle(title = "Choose Export File Format : ")
+        SectionTitle(title = stringResource(id = R.string.export_file_format))
         LazyVerticalGrid(
             modifier = Modifier
                 .heightIn(max = 300.dp)
@@ -86,7 +90,10 @@ fun ChooseFormat(
                         modifier = Modifier
                             .fillMaxWidth()
                             .absolutePadding(right = 5.dp)
-                            .border(width=if(isSelected == true) 2.dp else 0.dp,color=Color.Transparent)
+                            .border(
+                                width = if (isSelected == true) 2.dp else 0.dp,
+                                color = Color.Transparent
+                            )
                             .clickable {
                                 chosenFormat = formats[index]
                                 onFormatChosen(chosenFormat!!)
@@ -117,7 +124,7 @@ fun ChooseDownloadFolder(
         modifier = Modifier
             .fillMaxWidth(),
     ) {
-        ExportScreenTitle(title = "Export To :")
+        SectionTitle(title = stringResource(id = R.string.export_path))
         if(!downloadFolder.isNullOrEmpty())
             Text(
                 text = downloadFolder,
@@ -129,7 +136,7 @@ fun ChooseDownloadFolder(
             )
         else
             Text(
-                text =  "warning : please click to choose a folder for saving exported file.",
+                text = stringResource(id = R.string.export_folder_warning),
                 color = Color.Red,
                 modifier = Modifier.clickable {
                     val intent = chooseDownloadFolderIntent()
@@ -152,6 +159,7 @@ fun chooseDownloadFolderIntent():Intent{
 }
 
 
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun ExportScreen(
     navController: NavController,
@@ -164,10 +172,9 @@ fun ExportScreen(
     val toDate = remember { mutableStateOf(dateFormatter(System.currentTimeMillis())) }
     val fromDate = remember { mutableStateOf(dateFormatter(System.currentTimeMillis())) }
 
+    Scaffold {
         Column(
-            modifier = Modifier
-                .absolutePadding(top = 5.dp)
-                .padding(16.dp),
+            modifier = Modifier.padding(15.dp),
             verticalArrangement = Arrangement.spacedBy(15.dp)
         ) {
             ChooseDateRange(
@@ -192,7 +199,9 @@ fun ExportScreen(
             Spacer(modifier = Modifier.absolutePadding(top = 20.dp))
 
             Row(
-                modifier = Modifier.fillMaxWidth().absolutePadding(left = 50.dp, right = 50.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .absolutePadding(left = 50.dp, right = 50.dp),
             ) {
                 Button(
                     modifier = Modifier.fillMaxWidth(),
@@ -227,13 +236,16 @@ fun ExportScreen(
                                 Text(
                                     text = stringResource(id = R.string.export),
                                 )
-                                Icon(modifier = Modifier.absolutePadding(left = 5.dp).width(15.dp),imageVector = FeatherIcons.File, contentDescription = "",tint= MaterialTheme.colorScheme.onPrimary)
+                                Icon(modifier = Modifier
+                                    .absolutePadding(left = 5.dp)
+                                    .width(15.dp),imageVector = FeatherIcons.File, contentDescription = "",tint= MaterialTheme.colorScheme.onPrimary)
                             }
                         }
                     }
                 }
             }
         }
+    }
 
 }
 
@@ -269,7 +281,7 @@ fun ChooseDateRange(
         }, mYear, mMonth, mDay
     )
 
-    ExportScreenTitle(title = "Select Export Date Range : ")
+    SectionTitle(title = stringResource(id = R.string.select_date_range))
     Card(
         colors =  CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.onSecondary,
@@ -282,7 +294,7 @@ fun ChooseDateRange(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text(text = "From")
+                Text(text = stringResource(id = R.string.from))
                 Text(
                     text = fromDate,
                     modifier = Modifier.clickable { fromDatePickerDialog.show() })
@@ -294,7 +306,7 @@ fun ChooseDateRange(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text(text = "To")
+                Text(text = stringResource(id = R.string.to))
                 Text(
                     text = toDate,
                     modifier = Modifier.clickable { toDatePickerDialog.show() })
@@ -303,7 +315,4 @@ fun ChooseDateRange(
     }
 }
 
-@Composable
-fun ExportScreenTitle(title:String){
-    Text(text = title, style = MaterialTheme.typography.labelLarge, modifier = Modifier.padding(bottom = 5.dp))
-}
+

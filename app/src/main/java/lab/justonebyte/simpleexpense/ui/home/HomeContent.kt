@@ -8,6 +8,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import lab.justonebyte.simpleexpense.R
 import lab.justonebyte.simpleexpense.model.Transaction
+import lab.justonebyte.simpleexpense.ui.components.SectionTitle
 
 
 @OptIn(ExperimentalMaterial3Api::class)
