@@ -12,6 +12,7 @@ fun SectionTitle(title:String,modifier: Modifier=Modifier){
         text = title,
         style = MaterialTheme.typography.titleMedium,
         fontWeight = FontWeight.Bold,
-        modifier = modifier
+        modifier = modifier,
+        color = MaterialTheme.colorScheme.primary
     )
 }

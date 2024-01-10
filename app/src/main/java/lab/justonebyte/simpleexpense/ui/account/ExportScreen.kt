@@ -43,6 +43,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
@@ -341,28 +342,31 @@ fun ChooseDateRange(
 
         Spacer(modifier = Modifier.height(10.dp))
 
-        Row(
-                modifier = Modifier
+        Row(modifier = Modifier
                     .fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
+                horizontalArrangement = Arrangement.spacedBy(10.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text(text = stringResource(id = R.string.from))
+                Text(text = stringResource(id = R.string.from), modifier = Modifier.width(50.dp))
                 Text(
                     text = fromDate,
-                    modifier = Modifier.clickable { fromDatePickerDialog.show() })
+                    modifier = Modifier.clickable { fromDatePickerDialog.show() },
+                    fontWeight = FontWeight.Bold
+                )
             }
 
             Row(
                 modifier = Modifier
                     .fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
+                horizontalArrangement = Arrangement.spacedBy(10.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text(text = stringResource(id = R.string.to))
+                Text(text = stringResource(id = R.string.to), modifier = Modifier.width(50.dp))
                 Text(
                     text = toDate,
-                    modifier = Modifier.clickable { toDatePickerDialog.show() })
+                    modifier = Modifier.clickable { toDatePickerDialog.show() },
+                    fontWeight = FontWeight.Bold
+                )
             }
 
     }
