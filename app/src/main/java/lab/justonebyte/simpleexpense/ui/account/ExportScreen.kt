@@ -31,6 +31,8 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -52,6 +54,7 @@ import compose.icons.FeatherIcons
 import compose.icons.feathericons.File
 import lab.justonebyte.simpleexpense.R
 import lab.justonebyte.simpleexpense.ui.components.SectionTitle
+import lab.justonebyte.simpleexpense.ui.components.SuBuuSnackBar
 import lab.justonebyte.simpleexpense.utils.dateFormatter
 import java.util.Calendar
 import java.util.Date
@@ -187,8 +190,17 @@ fun ExportScreen(
     var chosenFormat by remember { mutableStateOf<FileFormat?>(formats[0]) }
     val toDate = remember { mutableStateOf(dateFormatter(System.currentTimeMillis())) }
     val fromDate = remember { mutableStateOf(dateFormatter(System.currentTimeMillis())) }
+    val snackbarHostState = remember { SnackbarHostState() }
 
-    Scaffold {
+
+    Scaffold (
+        snackbarHost = { SnackbarHost(snackbarHostState) }
+    ){
+        SuBuuSnackBar(
+            snackBarType = uiState.currentSnackBar,
+            onDismissSnackBar = { settingsViewModel.clearSnackBar() },
+            snackbarHostState = snackbarHostState
+        )
         Column(
             modifier = Modifier.padding(15.dp),
             verticalArrangement = Arrangement.spacedBy(30.dp)
