@@ -338,6 +338,7 @@ fun ChooseDateRange(
                 startDate = tempFromDate.value,
                 onSnappedDate = {
                     tempFromDate.value = it
+                    onFromDateChosen(it.toString())
                 }
             )
         }
@@ -354,6 +355,7 @@ fun ChooseDateRange(
                 startDate = tempToDate.value,
                 onSnappedDate = {
                     tempToDate.value = it
+                    onToDateChosen(it.toString())
                 }
             )
         }
