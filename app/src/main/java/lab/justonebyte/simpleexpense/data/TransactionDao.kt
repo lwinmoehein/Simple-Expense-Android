@@ -3,76 +3,44 @@ package lab.justonebyte.simpleexpense.data
 import androidx.room.*
 import kotlinx.coroutines.flow.Flow
 import lab.justonebyte.simpleexpense.model.ServerTransaction
-import lab.justonebyte.simpleexpense.utils.monthFormatter
-import lab.justonebyte.simpleexpense.utils.weekFormatter
-import lab.justonebyte.simpleexpense.utils.yearFormatter
+import lab.justonebyte.simpleexpense.utils.getCurrentMonth
+import lab.justonebyte.simpleexpense.utils.getCurrentYear
 
+
+const val transactionWithCategorySelectQuery = "SELECT transaction_table.unique_id as unique_id, transaction_table.amount as amount,transaction_table.created_at as created_at," +"transaction_table.updated_at as updated_at,"+
+        "transaction_table.type as type,transaction_table.category_id as category_id," +
+        "transaction_table.note as note,"+
+        "category_table.name as category_name,category_table.created_at as category_created_at" +",category_table.updated_at as category_updated_at"+
+        " FROM transaction_table,category_table "
 @Dao
 interface TransactionDao {
 
-    @Query("SELECT transaction_table.unique_id as unique_id, transaction_table.amount as amount,transaction_table.created_at as created_at," +
-            "transaction_table.type as type,transaction_table.category_id as category_id," +
-            "transaction_table.note as note,"+
-            "transaction_table.updated_at as updated_at,"+
-            "category_table.updated_at as category_updated_at,"+
-            "category_table.name as category_name,category_table.created_at as category_created_at" +
-            " FROM transaction_table,category_table where category_table.unique_id==transaction_table.category_id" +
+    @Query(transactionWithCategorySelectQuery+"where category_table.unique_id==transaction_table.category_id" +
             " and date(transaction_table.created_at)==:date" +
             " and transaction_table.deleted_at is  null")
     fun getTransactions(date:String): Flow<List<TransactionWithCategory>>
 
 
 
-
-
-    @Query("SELECT transaction_table.unique_id as unique_id,  transaction_table.amount as amount,transaction_table.created_at as created_at," +
-            "transaction_table.note as note,"+
-            "transaction_table.updated_at as updated_at,"+
-            "category_table.updated_at as category_updated_at,"+
-            "transaction_table.type as type,transaction_table.category_id as category_id," +
-            "category_table.name as category_name,category_table.created_at as category_created_at" +
-            " FROM transaction_table,category_table where category_table.unique_id==transaction_table.category_id" +
-            " and  strftime('%W', transaction_table.created_at)==:dateOfTheWeek" +
-            " and transaction_table.deleted_at is  null")
-    fun getTransactionsByWeek(dateOfTheWeek:String = weekFormatter(System.currentTimeMillis())): Flow<List<TransactionWithCategory>>
-
-
-
-    @Query("SELECT  transaction_table.unique_id as unique_id, transaction_table.amount as amount,transaction_table.created_at as created_at," +
-            "transaction_table.note as note,"+
-            "transaction_table.updated_at as updated_at,"+
-            "category_table.updated_at as category_updated_at,"+
-            "transaction_table.type as type,transaction_table.category_id as category_id," +
-            "category_table.name as category_name,category_table.created_at as category_created_at" +
-            " FROM transaction_table,category_table where category_table.unique_id==transaction_table.category_id" +
+    @Query(
+        transactionWithCategorySelectQuery+"where category_table.unique_id==transaction_table.category_id" +
             " and  strftime('%Y-%m', transaction_table.created_at)==:month" +
             " and transaction_table.deleted_at is  null")
-    fun getTransactionsByMonth(month:String = monthFormatter(System.currentTimeMillis())): Flow<List<TransactionWithCategory>>
+    fun getTransactionsByMonth(month:String = getCurrentMonth()): Flow<List<TransactionWithCategory>>
 
 
 
 
-    @Query("SELECT transaction_table.unique_id as unique_id, transaction_table.amount as amount,transaction_table.created_at as created_at," +
-            "transaction_table.note as note,"+
-            "transaction_table.updated_at as updated_at,"+
-            "category_table.updated_at as category_updated_at,"+
-            "transaction_table.type as type,transaction_table.category_id as category_id," +
-            "category_table.name as category_name,category_table.created_at as category_created_at" +
-            " FROM transaction_table,category_table where category_table.unique_id==transaction_table.category_id" +
+    @Query(
+        transactionWithCategorySelectQuery+"where category_table.unique_id==transaction_table.category_id" +
             " and transaction_table.deleted_at is null" +
             " and  strftime('%Y', transaction_table.created_at)==:year" )
-    fun getTransactionsByYear(year:String = yearFormatter(System.currentTimeMillis())): Flow<List<TransactionWithCategory>>
+    fun getTransactionsByYear(year:String = getCurrentYear()): Flow<List<TransactionWithCategory>>
 
 
 
 
-    @Query("SELECT transaction_table.unique_id as unique_id, transaction_table.amount as amount,transaction_table.created_at as created_at," +
-            "transaction_table.note as note,"+
-            "transaction_table.updated_at as updated_at,"+
-            "category_table.updated_at as category_updated_at,"+
-            "transaction_table.type as type,transaction_table.category_id as category_id," +
-            "category_table.name as category_name,category_table.created_at as category_created_at" +
-            " FROM transaction_table,category_table where category_table.unique_id==transaction_table.category_id and transaction_table.deleted_at is  null" )
+    @Query(transactionWithCategorySelectQuery+"where category_table.unique_id==transaction_table.category_id and transaction_table.deleted_at is  null" )
     fun getTotalTransactions(): Flow<List<TransactionWithCategory>>
 
     @Query("SELECT * FROM transaction_table")
@@ -98,6 +66,6 @@ interface TransactionDao {
     @Query("SELECT * FROM transaction_table where unique_id=:id limit 1")
     suspend fun get(id:String): TransactionEntity
 
-    @Query("SELECT unique_id,version,updated_at from transaction_table")
+    @Query("SELECT unique_id,version,created_at from transaction_table")
     suspend fun getUniqueIdsWithVersions(): List<UniqueIdWithVersion>
 }

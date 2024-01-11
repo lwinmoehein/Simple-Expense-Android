@@ -4,7 +4,7 @@ import androidx.room.*
 import kotlinx.coroutines.flow.Flow
 import lab.justonebyte.simpleexpense.model.ServerCategory
 
-data class UniqueIdWithVersion(val unique_id:String?,val version:Int?,val updated_at:String)
+data class UniqueIdWithVersion(val unique_id:String?,val version:Int?,val updated_at:Long)
 @Dao
 interface CategoryDao {
     @Query("SELECT * FROM category_table where category_table.deleted_at is null ORDER BY created_at DESC")

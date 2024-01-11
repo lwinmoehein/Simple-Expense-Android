@@ -14,9 +14,9 @@ data class Transaction(
         val amount:Int,
         val type: TransactionType,
         val category: TransactionCategory,
-        val created_at:String,
-        val note:String?,
-        val updated_at:String
+        val created_at:Long,
+        val updated_at:Long,
+        val note:String?
     ){
     object  Mapper {
         fun mapToDomain(transactionEntity: TransactionWithCategory):Transaction{
@@ -28,12 +28,12 @@ data class Transaction(
                     name = transactionEntity.category_name,
                     transaction_type = TransactionCategory.Mapper.mapTransactionType(transactionEntity.type),
                     created_at = transactionEntity.category_created_at,
-                    unique_id = transactionEntity.category_id,
-                    updated_at = transactionEntity.category_updated_at
+                    updated_at = transactionEntity.category_updated_at,
+                    unique_id = transactionEntity.category_id
                 ),
                 created_at = transactionEntity.created_at,
-                note = transactionEntity.note,
-                updated_at = transactionEntity.updated_at
+                updated_at = transactionEntity.updated_at,
+                note = transactionEntity.note
             )
         }
         fun mapToEntity(transaction:Transaction):TransactionEntity{
@@ -43,9 +43,9 @@ data class Transaction(
                 type = transaction.type.value,
                 category_id=transaction.category.unique_id,
                 created_at = transaction.created_at,
+                updated_at = transaction.updated_at,
                 version = 1,
-                note = transaction.note,
-                updated_at = transaction.updated_at
+                note = transaction.note
             )
         }
         fun mapToEntityFromServer(transaction:ServerTransaction):TransactionEntity{
@@ -55,10 +55,10 @@ data class Transaction(
                 type = transaction.type,
                 category_id=transaction.category_id,
                 created_at = transaction.created_at,
+                updated_at = transaction.updated_at,
                 deleted_at = transaction.deleted_at,
                 version = transaction.version,
-                note = transaction.note,
-                updated_at = transaction.updated_at
+                note = transaction.note
             )
         }
 

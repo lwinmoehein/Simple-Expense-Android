@@ -21,12 +21,9 @@ import androidx.compose.ui.unit.dp
 import lab.justonebyte.simpleexpense.model.BalanceType
 import lab.justonebyte.simpleexpense.model.Currency
 import lab.justonebyte.simpleexpense.model.Transaction
-import lab.justonebyte.simpleexpense.utils.formatDateString
-import lab.justonebyte.simpleexpense.utils.formatMonthString
-import lab.justonebyte.simpleexpense.utils.formatYearString
-import lab.justonebyte.simpleexpense.utils.getFormatedDate
-import lab.justonebyte.simpleexpense.utils.getFormatedMonth
-import lab.justonebyte.simpleexpense.utils.getFormatedYear
+import lab.justonebyte.simpleexpense.utils.getFormattedDay
+import lab.justonebyte.simpleexpense.utils.getFormattedMonth
+import lab.justonebyte.simpleexpense.utils.getFormattedYear
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -40,17 +37,12 @@ fun TransactionsCard(
 
     val groupedTransactions = transactions.groupBy {
         when(transactionGroupType){
-            BalanceType.YEARLY-> formatMonthString(it.created_at)
-            BalanceType.TOTAL-> formatYearString(it.created_at)
-            else-> formatDateString(it.created_at)
+            BalanceType.YEARLY-> getFormattedYear(it.created_at)
+            BalanceType.TOTAL-> getFormattedMonth(it.created_at)
+            else-> getFormattedDay(it.created_at)
         }
-    }.map { it.key to it.value.sortedByDescending{ value-> getFormatedDate(value.updated_at,"yyyy-MM-dd HH:mm:ss") } }.sortedByDescending {
-        when(transactionGroupType){
-            BalanceType.YEARLY-> getFormatedMonth(it.first)
-            BalanceType.TOTAL-> getFormatedYear(it.first)
-            else-> getFormatedDate(it.first)
-        }
-    }
+    }.map { it.key to it.value.sortedByDescending{ value-> value.created_at } }
+
 
    Row(
         modifier = modifier

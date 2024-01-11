@@ -42,7 +42,6 @@ import lab.justonebyte.simpleexpense.R
 import lab.justonebyte.simpleexpense.model.TransactionCategory
 import lab.justonebyte.simpleexpense.model.TransactionType
 import lab.justonebyte.simpleexpense.ui.components.AppAlertDialog
-import lab.justonebyte.simpleexpense.utils.getCurrentGlobalTime
 import java.util.UUID
 
 sealed class CategoryTab(val index:Int,val title:Int,val icon:ImageVector){
@@ -87,7 +86,7 @@ fun CategoryTabs(
     }
 }
 
-@OptIn(ExperimentalPagerApi::class, ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalPagerApi::class)
 @Composable
 fun ManageCategoryScreen(){
     val categoryViewModel = hiltViewModel<CategoryViewModel>()
@@ -153,8 +152,8 @@ fun ManageCategoryScreen(){
                     unique_id = UUID.randomUUID().toString(),
                     name = it,
                     transaction_type = if(currentCategoryTabIndex.value==1) TransactionType.Income else TransactionType.Expense,
-                    created_at =  getCurrentGlobalTime(),
-                    updated_at = getCurrentGlobalTime()
+                    created_at =  System.currentTimeMillis(),
+                    updated_at =  System.currentTimeMillis()
                 )
                 categoryViewModel.addCategory(category)
             }else{

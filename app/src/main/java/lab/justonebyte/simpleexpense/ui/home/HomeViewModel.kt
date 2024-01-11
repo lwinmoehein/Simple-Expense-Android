@@ -16,11 +16,16 @@ import kotlinx.coroutines.launch
 import lab.justonebyte.simpleexpense.data.CategoryRepository
 import lab.justonebyte.simpleexpense.data.SettingPrefRepository
 import lab.justonebyte.simpleexpense.data.TransactionRepository
-import lab.justonebyte.simpleexpense.model.*
+import lab.justonebyte.simpleexpense.model.BalanceType
+import lab.justonebyte.simpleexpense.model.Currency
+import lab.justonebyte.simpleexpense.model.Transaction
+import lab.justonebyte.simpleexpense.model.TransactionCategory
+import lab.justonebyte.simpleexpense.model.TransactionType
 import lab.justonebyte.simpleexpense.ui.components.SnackBarType
-import lab.justonebyte.simpleexpense.utils.*
+import lab.justonebyte.simpleexpense.utils.getCurrentDay
+import lab.justonebyte.simpleexpense.utils.getCurrentMonth
+import lab.justonebyte.simpleexpense.utils.getCurrentYear
 import lab.justonebyte.simpleexpense.workers.runVersionSync
-import java.time.LocalDate
 import java.util.UUID
 import javax.inject.Inject
 
@@ -34,11 +39,9 @@ data class HomeUiState(
     val categories:List<TransactionCategory>  = emptyList(),
     val transactions:List<Transaction> = emptyList(),
     val currentSnackBar : SnackBarType? = null,
-    val selectedDay:String = dateFormatter(System.currentTimeMillis()),
-    val selectedWeek:String = weekFormatter(System.currentTimeMillis()),
-    val selectedMonth:String = monthFormatter(System.currentTimeMillis()),
-    val selectedYear:String = yearFormatter(System.currentTimeMillis())
-
+    val selectedDay:String = getCurrentDay(),
+    val selectedMonth:String = getCurrentMonth(),
+    val selectedYear:String = getCurrentYear()
 )
 
 @HiltViewModel
@@ -176,12 +179,11 @@ class HomeViewModel @Inject constructor(
             it.copy(currentSnackBar = null)
         }
     }
-    @RequiresApi(Build.VERSION_CODES.O)
     fun addTransaction(
         transactionCategory: TransactionCategory,
         amount:Int,
         type:Int,
-        date:String,
+        date:Long,
         note:String?
     ){
         if (note != null) {
@@ -195,8 +197,8 @@ class HomeViewModel @Inject constructor(
                     type = if(type==TransactionType.Income.value) TransactionType.Income else TransactionType.Expense,
                     category = transactionCategory,
                     created_at = date,
-                    note = note,
-                    updated_at = LocalDate.now().toString()
+                    updated_at = System.currentTimeMillis(),
+                    note = note
                 )
             )
             runVersionSync(application,"transactions",token.value)
@@ -210,7 +212,7 @@ class HomeViewModel @Inject constructor(
         transactionCategory: TransactionCategory,
         amount:Int,
         type:Int,
-        date:String,
+        date:Long,
         note:String?
     ){
         viewModelScope.launch {
@@ -221,8 +223,8 @@ class HomeViewModel @Inject constructor(
                     type = if(type==1) TransactionType.Income else TransactionType.Expense,
                     category = transactionCategory,
                     created_at = date,
-                    note = note,
-                    updated_at = getCurrentGlobalTime()
+                    updated_at = System.currentTimeMillis(),
+                    note = note
                 )
             )
             Log.i("crrentType:update", _viewModelUiState.value.currentBalanceType.value.toString())

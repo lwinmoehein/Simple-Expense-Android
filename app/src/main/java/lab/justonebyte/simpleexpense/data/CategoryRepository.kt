@@ -1,10 +1,11 @@
 package lab.justonebyte.simpleexpense.data
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import lab.justonebyte.simpleexpense.model.ServerCategory
 import lab.justonebyte.simpleexpense.model.TransactionCategory
-import lab.justonebyte.simpleexpense.utils.getCurrentGlobalTime
 import javax.inject.Inject
 
 interface CategoryRepository {
@@ -32,8 +33,8 @@ class  CategoryRepositoryImpl @Inject constructor(val categoryDao: CategoryDao) 
     override suspend fun insert(transactionCategory: TransactionCategory) {
         return categoryDao.insert(TransactionCategory.Mapper.mapToEntity(transactionCategory))
     }
-    override suspend fun insertAll(categoriesList:List<ServerCategory>) {
-        return categoryDao.insertAll(categoriesList.map { TransactionCategory.Mapper.mapToEntityFromServer(it) })
+    override suspend fun insertAll(transactions:List<ServerCategory>) {
+        return categoryDao.insertAll(transactions.map { TransactionCategory.Mapper.mapToEntityFromServer(it) })
     }
 
     override suspend fun update(transactionCategory: TransactionCategory) {
@@ -42,7 +43,6 @@ class  CategoryRepositoryImpl @Inject constructor(val categoryDao: CategoryDao) 
         val categoryEntity = TransactionCategory.Mapper.mapToEntity(transactionCategory)
         if(existingCategory.version!! <= existingCategory.latest_server_version!!){
             categoryEntity.version = existingCategory.version!! +1
-            categoryEntity.updated_at = getCurrentGlobalTime()
         }else{
             categoryEntity.version = existingCategory.version!!
         }
@@ -52,14 +52,11 @@ class  CategoryRepositoryImpl @Inject constructor(val categoryDao: CategoryDao) 
     }
 
     override suspend fun delete(id: String) {
-        var existingCategory = categoryDao.get(id)
-        if (existingCategory != null) {
-            existingCategory.deleted_at = getCurrentGlobalTime()
-            existingCategory.version = existingCategory.version!!+1;
-            existingCategory.updated_at = getCurrentGlobalTime()
+        val existingCategory = categoryDao.get(id)
+        existingCategory.deleted_at = System.currentTimeMillis()
+        existingCategory.version = existingCategory.version!!+1;
 
-            categoryDao.update(category = existingCategory)
-        }
+        categoryDao.update(category = existingCategory)
     }
 
     override suspend fun deleteAll() {
@@ -70,6 +67,7 @@ class  CategoryRepositoryImpl @Inject constructor(val categoryDao: CategoryDao) 
         return categoryDao.getUniqueIdsWithVersions()
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override suspend fun populateCategories() {
        populateCategories(categoryDao)
     }

@@ -125,6 +125,7 @@ fun HomeScreen(){
     )
 
 
+
     if (isAddOrEditTransactionDialogOpen.value || isSelectedTransactionEditMode.value == true) {
         AppAlertDialog(
             title = if(isSelectedTransactionEditMode.value == true) if(currentType.value==2) stringResource(id = R.string.edit_expense_title) else stringResource(id = R.string.edit_income_title)  else (if(currentType.value==2) stringResource(

@@ -15,7 +15,6 @@ import lab.justonebyte.simpleexpense.data.CategoryRepository
 import lab.justonebyte.simpleexpense.data.SettingPrefRepository
 import lab.justonebyte.simpleexpense.model.TransactionCategory
 import lab.justonebyte.simpleexpense.ui.components.SnackBarType
-import lab.justonebyte.simpleexpense.utils.getCurrentGlobalTime
 import lab.justonebyte.simpleexpense.workers.runVersionSync
 import javax.inject.Inject
 
@@ -75,7 +74,7 @@ class CategoryViewModel @Inject constructor(
             unique_id = transactinCategory.unique_id,
             transaction_type = transactinCategory.transaction_type,
             created_at = transactinCategory.created_at,
-            updated_at = getCurrentGlobalTime()
+            updated_at = System.currentTimeMillis()
         )
         viewModelScope.launch {
             categoryRepository.update(transactionCategory = category)

@@ -4,7 +4,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import lab.justonebyte.simpleexpense.model.ServerTransaction
 import lab.justonebyte.simpleexpense.model.Transaction
-import lab.justonebyte.simpleexpense.utils.getCurrentGlobalTime
 import javax.inject.Inject
 
 interface TransactionRepository {
@@ -73,23 +72,16 @@ class TransactionRepositoryImpl @Inject constructor(val transactionDao: Transact
         val existingTransaction = transactionDao.get(transaction.unique_id)
 
         val transactionEntity = Transaction.Mapper.mapToEntity(transaction = transaction)
-        if (existingTransaction != null) {
-            transactionEntity.version = existingTransaction.version!! +1
-            transactionEntity.updated_at = getCurrentGlobalTime()
+        transactionEntity.version = existingTransaction.version!! +1
+        transactionDao.update(transactionEntity = transactionEntity)
 
-            transactionDao.update(transactionEntity = transactionEntity)
-
-        }
     }
 
     override suspend fun delete(transaction: Transaction) {
-        var existingTransaction = transactionDao.get(transaction.unique_id)
-        if (existingTransaction != null) {
-            existingTransaction.version = existingTransaction.version!!+1
-            existingTransaction.updated_at = getCurrentGlobalTime()
-            existingTransaction.deleted_at = getCurrentGlobalTime()
-            transactionDao.update(transactionEntity = existingTransaction)
-        }
+        val existingTransaction = transactionDao.get(transaction.unique_id)
+        existingTransaction.version = existingTransaction.version!!+1
+        existingTransaction.deleted_at = System.currentTimeMillis()
+        transactionDao.update(transactionEntity = existingTransaction)
     }
 
     override suspend fun deleteAll() {
