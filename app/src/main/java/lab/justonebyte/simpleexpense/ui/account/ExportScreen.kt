@@ -62,7 +62,8 @@ import lab.justonebyte.simpleexpense.ui.MainDestinations
 import lab.justonebyte.simpleexpense.ui.components.AppAlertDialog
 import lab.justonebyte.simpleexpense.ui.components.SectionTitle
 import lab.justonebyte.simpleexpense.ui.components.SuBuuSnackBar
-import lab.justonebyte.simpleexpense.utils.dateFormatter
+import lab.justonebyte.simpleexpense.utils.getCurrentDay
+import lab.justonebyte.simpleexpense.utils.getCurrentMonth
 import java.time.LocalDate
 
 
@@ -202,8 +203,8 @@ fun ExportScreen(
     val settingsViewModel = hiltViewModel<SettingsViewModel>()
     val uiState by settingsViewModel.viewModelUiState.collectAsState()
     var chosenFormat by remember { mutableStateOf<FileFormat?>(formats[0]) }
-    val toDate = remember { mutableStateOf(dateFormatter(System.currentTimeMillis())) }
-    val fromDate = remember { mutableStateOf(dateFormatter(System.currentTimeMillis())) }
+    val toDate = remember { mutableStateOf(getCurrentDay()) }
+    val fromDate = remember { mutableStateOf(getCurrentDay()) }
     val snackbarHostState = remember { SnackbarHostState() }
 
 

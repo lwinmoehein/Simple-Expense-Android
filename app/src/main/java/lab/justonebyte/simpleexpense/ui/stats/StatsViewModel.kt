@@ -13,9 +13,9 @@ import lab.justonebyte.simpleexpense.data.SettingPrefRepository
 import lab.justonebyte.simpleexpense.data.TransactionRepository
 import lab.justonebyte.simpleexpense.model.*
 import lab.justonebyte.simpleexpense.ui.components.SnackBarType
-import lab.justonebyte.simpleexpense.utils.dateFormatter
-import lab.justonebyte.simpleexpense.utils.monthFormatter
-import lab.justonebyte.simpleexpense.utils.yearFormatter
+import lab.justonebyte.simpleexpense.utils.getCurrentDay
+import lab.justonebyte.simpleexpense.utils.getCurrentMonth
+import lab.justonebyte.simpleexpense.utils.getCurrentYear
 import javax.inject.Inject
 
 
@@ -25,9 +25,9 @@ data class StatsUiState(
     val currentBalanceType: BalanceType = BalanceType.MONTHLY,
     val currentCurrency: Currency = Currency.Kyat,
     val currentSnackBar : SnackBarType? = null,
-    val selectedDay:String = dateFormatter(System.currentTimeMillis()),
-    val selectedMonth:String = monthFormatter(System.currentTimeMillis()),
-    val selectedYear:String = yearFormatter(System.currentTimeMillis())
+    val selectedDay:String = getCurrentDay(),
+    val selectedMonth:String = getCurrentMonth(),
+    val selectedYear:String = getCurrentYear()
 )
 
 @HiltViewModel

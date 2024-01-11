@@ -24,18 +24,18 @@ interface TransactionDao {
 
     @Query(
         transactionWithCategorySelectQuery+"where category_table.unique_id==transaction_table.category_id" +
-            " and  strftime('%Y-%m', transaction_table.created_at)==:month" +
+                " and transaction_table.created_at BETWEEN :startYearTimeStamp AND :endYearTimestamp" +
             " and transaction_table.deleted_at is  null")
-    fun getTransactionsByMonth(month:String = getCurrentMonth()): Flow<List<TransactionWithCategory>>
-
+    fun getTransactionsByMonth(startYearTimeStamp:Long,endYearTimestamp:Long): Flow<List<TransactionWithCategory>>
 
 
 
     @Query(
         transactionWithCategorySelectQuery+"where category_table.unique_id==transaction_table.category_id" +
             " and transaction_table.deleted_at is null" +
-            " and  strftime('%Y', transaction_table.created_at)==:year" )
-    fun getTransactionsByYear(year:String = getCurrentYear()): Flow<List<TransactionWithCategory>>
+                " and transaction_table.created_at BETWEEN :startYearTimeStamp AND :endYearTimestamp"
+    )
+    fun getTransactionsByYear(startYearTimeStamp:Long,endYearTimestamp:Long): Flow<List<TransactionWithCategory>>
 
 
 
@@ -66,6 +66,6 @@ interface TransactionDao {
     @Query("SELECT * FROM transaction_table where unique_id=:id limit 1")
     suspend fun get(id:String): TransactionEntity
 
-    @Query("SELECT unique_id,version,created_at from transaction_table")
+    @Query("SELECT unique_id,version,updated_at from transaction_table")
     suspend fun getUniqueIdsWithVersions(): List<UniqueIdWithVersion>
 }

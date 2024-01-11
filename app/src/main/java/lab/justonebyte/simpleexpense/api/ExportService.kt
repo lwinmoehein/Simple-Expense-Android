@@ -1,7 +1,7 @@
 package lab.justonebyte.simpleexpense.api
 
 import com.google.gson.annotations.SerializedName
-import lab.justonebyte.simpleexpense.utils.getCurrentDate
+import lab.justonebyte.simpleexpense.utils.getCurrentDay
 import okhttp3.ResponseBody
 import retrofit2.Response
 import retrofit2.http.Body
@@ -10,8 +10,8 @@ import retrofit2.http.Streaming
 
 
 data class BetweenPostData(
-    @SerializedName("start") val from: String= getCurrentDate(),
-    @SerializedName("end") val to:String = getCurrentDate(),
+    @SerializedName("start") val from: String= getCurrentDay(),
+    @SerializedName("end") val to:String = getCurrentDay(),
 )
 
 interface ExportService {

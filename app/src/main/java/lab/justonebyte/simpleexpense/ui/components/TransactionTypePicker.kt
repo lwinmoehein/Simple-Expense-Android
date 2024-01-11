@@ -18,7 +18,7 @@ import compose.icons.feathericons.Calendar
 import lab.justonebyte.simpleexpense.R
 import lab.justonebyte.simpleexpense.model.BalanceType
 import lab.justonebyte.simpleexpense.ui.home.MonthPicker
-import lab.justonebyte.simpleexpense.utils.getCurrentDate
+import lab.justonebyte.simpleexpense.utils.getCurrentDay
 import lab.justonebyte.simpleexpense.utils.getCurrentMonth
 import lab.justonebyte.simpleexpense.utils.getCurrentYear
 import java.util.*
@@ -37,7 +37,7 @@ fun TransactionTypePicker(
 ){
     val mContext = LocalContext.current
 
-    val currentDay = getCurrentDate()
+    val currentDay = getCurrentDay()
     val currentMonth = getCurrentMonth()
     val currentYear = getCurrentYear()
 

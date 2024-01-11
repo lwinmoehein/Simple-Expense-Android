@@ -46,7 +46,7 @@ fun AddTransactionContent(
     onCloseDialog:()->Unit,
     categories:List<TransactionCategory>,
     showIncorrectDataSnack:()->Unit,
-    onConfirmTransactionForm:(type:Int,amount:Int,category: TransactionCategory,date:String,note:String?)->Unit,
+    onConfirmTransactionForm:(type:Int,amount:Int,category: TransactionCategory,date:Long,note:String?)->Unit,
     onAddCategory:(categoryName:String,transactionType:TransactionType)->Unit,
     currentTransaction:Transaction?
 ) {
@@ -104,7 +104,7 @@ fun AddTransactionContent(
                 if (!isValidCategorySelected || amount <= 0) {
                     showIncorrectDataSnack()
                 } else {
-                    val transactionCreatedDate = if(currentTransaction==null) tempRecordDate.value.toString() else currentTransaction.created_at
+                    val transactionCreatedDate  = System.currentTimeMillis()
                     currentCategory.value?.let {
                         onConfirmTransactionForm(
                                 currentType.value,

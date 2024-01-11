@@ -4,11 +4,14 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import lab.justonebyte.simpleexpense.model.ServerTransaction
 import lab.justonebyte.simpleexpense.model.Transaction
+import lab.justonebyte.simpleexpense.utils.getTimeStampForYearEnd
+import lab.justonebyte.simpleexpense.utils.getTimeStampForYearStart
+import lab.justonebyte.simpleexpense.utils.getTimestampForMonthEnd
+import lab.justonebyte.simpleexpense.utils.getTimestampForMonthStart
 import javax.inject.Inject
 
 interface TransactionRepository {
     fun getDailyTransactions(day:String): Flow<List<Transaction>>
-    fun getWeeklyTransactions(week:String): Flow<List<Transaction>>
     fun getMonthlyTransactions(month:String): Flow<List<Transaction>>
     fun getYearlyTransactions(year:String): Flow<List<Transaction>>
     fun getTotalTransactions(): Flow<List<Transaction>>
@@ -30,19 +33,18 @@ class TransactionRepositoryImpl @Inject constructor(val transactionDao: Transact
         return transactionEntities.map { list -> list.map { Transaction.Mapper.mapToDomain(it) } }
     }
 
-    override fun getWeeklyTransactions(week: String): Flow<List<Transaction>> {
-        println("week:$week")
-        val transactionEntities = transactionDao.getTransactionsByWeek(week)
-        return transactionEntities.map { list -> list.map { Transaction.Mapper.mapToDomain(it) } }
-    }
-
     override fun getMonthlyTransactions(month:String): Flow<List<Transaction>> {
-        val transactionEntities = transactionDao.getTransactionsByMonth(month)
+        val startMonthTimeStamp = getTimestampForMonthStart(month)
+        val endMonthTimeStamp = getTimestampForMonthEnd(month)
+
+        val transactionEntities = transactionDao.getTransactionsByMonth(startMonthTimeStamp,endMonthTimeStamp)
         return transactionEntities.map { list -> list.map { Transaction.Mapper.mapToDomain(it) } }
     }
 
     override fun getYearlyTransactions(year:String): Flow<List<Transaction>> {
-        val transactionEntities = transactionDao.getTransactionsByYear(year)
+        val startYearTimeStamp = getTimeStampForYearStart(year.toInt())
+        val endYearTimeStamp = getTimeStampForYearEnd(year.toInt())
+        val transactionEntities = transactionDao.getTransactionsByYear(startYearTimeStamp,endYearTimeStamp)
         return transactionEntities.map { list -> list.map { Transaction.Mapper.mapToDomain(it) } }
     }
 

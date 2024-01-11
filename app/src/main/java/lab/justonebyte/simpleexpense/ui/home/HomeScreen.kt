@@ -38,7 +38,6 @@ import lab.justonebyte.simpleexpense.model.TransactionCategory
 import lab.justonebyte.simpleexpense.ui.components.AppAlertDialog
 import lab.justonebyte.simpleexpense.ui.components.ChooseTransactionTypeTab
 import lab.justonebyte.simpleexpense.ui.components.SnackBarType
-import lab.justonebyte.simpleexpense.utils.getCurrentGlobalTime
 import java.util.UUID
 
 
@@ -73,7 +72,7 @@ fun HomeScreen(){
         type:Int,
         amount:Int,
         category:TransactionCategory,
-        date:String,
+        date:Long,
         note:String?
     ){
         if(currentTransaction.value==null) {
@@ -155,8 +154,8 @@ fun HomeScreen(){
                                             unique_id = UUID.randomUUID().toString()+"_"+System.currentTimeMillis(),
                                             transaction_type = type,
                                             name = name,
-                                            created_at = getCurrentGlobalTime(),
-                                            updated_at = getCurrentGlobalTime()
+                                            created_at = System.currentTimeMillis(),
+                                            updated_at = System.currentTimeMillis()
                                         )
                                     )
                                 }
