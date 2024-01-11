@@ -24,6 +24,8 @@ import lab.justonebyte.simpleexpense.model.Transaction
 import lab.justonebyte.simpleexpense.utils.getFormattedDay
 import lab.justonebyte.simpleexpense.utils.getFormattedMonth
 import lab.justonebyte.simpleexpense.utils.getFormattedYear
+import lab.justonebyte.simpleexpense.utils.getReadableFormattedDay
+import lab.justonebyte.simpleexpense.utils.getReadableFormattedMonth
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -38,8 +40,8 @@ fun TransactionsCard(
     val groupedTransactions = transactions.groupBy {
         when(transactionGroupType){
             BalanceType.YEARLY-> getFormattedYear(it.created_at)
-            BalanceType.TOTAL-> getFormattedMonth(it.created_at)
-            else-> getFormattedDay(it.created_at)
+            BalanceType.TOTAL-> getReadableFormattedMonth(it.created_at)
+            else-> getReadableFormattedDay(it.created_at)
         }
     }.map { it.key to it.value.sortedByDescending{ value-> value.created_at } }
 

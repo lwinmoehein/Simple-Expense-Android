@@ -15,6 +15,13 @@ fun getFormattedYear(timestamp:Long):String{
 @SuppressLint("SimpleDateFormat")
 fun getFormattedMonth(timestamp: Long): String {
     val date = Date(timestamp)
+    val formatter = SimpleDateFormat("yyyy-MM")
+    return formatter.format(date)
+}
+
+@SuppressLint("SimpleDateFormat")
+fun getReadableFormattedMonth(timestamp: Long): String {
+    val date = Date(timestamp)
     val formatter = SimpleDateFormat("MMMM yyyy")
     return formatter.format(date)
 }
@@ -22,6 +29,13 @@ fun getFormattedMonth(timestamp: Long): String {
 fun getFormattedDay(timestamp: Long): String {
     val date = Date(timestamp)
     val formatter = SimpleDateFormat("yyyy-MM-dd")
+    return formatter.format(date)
+}
+
+@SuppressLint("SimpleDateFormat")
+fun getReadableFormattedDay(timestamp: Long): String {
+    val date = Date(timestamp)
+    val formatter = SimpleDateFormat("MMMM dd yyyy")
     return formatter.format(date)
 }
 
@@ -35,7 +49,7 @@ fun getCurrentYear():String{
 @SuppressLint("SimpleDateFormat")
 fun getCurrentMonth(): String {
     val date = Date(System.currentTimeMillis())
-    val formatter = SimpleDateFormat("MMMM yyyy")
+    val formatter = SimpleDateFormat("yyyy-MM")
     return formatter.format(date)
 }
 
