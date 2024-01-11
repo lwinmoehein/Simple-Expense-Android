@@ -80,7 +80,7 @@ fun BalanceCard(
                     icon = FeatherIcons.DollarSign,
                     text = "",
                     amount = homeUiState.currentBalance,
-                    color = MaterialTheme.colorScheme.primary,
+                    color = MaterialTheme.colorScheme.secondary,
                     currency = homeUiState.currentCurrency
                 )
                 BalanceItem(
@@ -94,7 +94,7 @@ fun BalanceCard(
                     icon = FeatherIcons.ArrowDown,
                     text = "",
                     amount = homeUiState.incomeBalance,
-                    color = Color.Green,
+                    color = MaterialTheme.colorScheme.primary,
                     currency = homeUiState.currentCurrency
                 )
             }

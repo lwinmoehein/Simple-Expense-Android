@@ -186,9 +186,7 @@ class HomeViewModel @Inject constructor(
         date:Long,
         note:String?
     ){
-        if (note != null) {
-            Log.i("note:",note)
-        }
+
         viewModelScope.launch {
             transactionRepository.insert(
                 Transaction(

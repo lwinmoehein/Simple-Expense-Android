@@ -36,6 +36,8 @@ import lab.justonebyte.simpleexpense.model.Transaction
 import lab.justonebyte.simpleexpense.model.TransactionCategory
 import lab.justonebyte.simpleexpense.model.TransactionType
 import lab.justonebyte.simpleexpense.ui.components.AppAlertDialog
+import lab.justonebyte.simpleexpense.utils.convertDateStringToTimestamp
+import lab.justonebyte.simpleexpense.utils.getCurrentDayTimeMillisecond
 import java.time.LocalDate
 
 
@@ -100,11 +102,14 @@ fun AddTransactionContent(
                 val isValidCategorySelected =if(category==null) false else !categories.filter { it.transaction_type.value == currentType.value && it.unique_id== category.unique_id  }.isEmpty()
                 val amount =
                     if (currentAmount.value.isEmpty()) 0 else currentAmount.value.toInt()
-                Log.i("note:incompose",note.value)
                 if (!isValidCategorySelected || amount <= 0) {
                     showIncorrectDataSnack()
                 } else {
-                    val transactionCreatedDate  = System.currentTimeMillis()
+                    Log.i("date:temp",tempRecordDate.value.toString())
+                    Log.i("date:converted", convertDateStringToTimestamp(tempRecordDate.value.toString()).toString())
+                    Log.i("date:cdaytime",getCurrentDayTimeMillisecond().toString())
+
+                    val transactionCreatedDate  = convertDateStringToTimestamp(tempRecordDate.value.toString())+getCurrentDayTimeMillisecond()
                     currentCategory.value?.let {
                         onConfirmTransactionForm(
                                 currentType.value,
