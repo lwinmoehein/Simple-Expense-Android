@@ -1,6 +1,7 @@
 package lab.justonebyte.simpleexpense.model
 
 import lab.justonebyte.simpleexpense.data.CategoryEntity
+import lab.justonebyte.simpleexpense.utils.getTimestampFromDateTimeString
 import java.util.UUID
 
 data class TransactionCategory(
@@ -35,9 +36,9 @@ data class TransactionCategory(
             return CategoryEntity(
                 unique_id =  transactionCategory.unique_id,
                 name = transactionCategory.name,
-                created_at = transactionCategory.created_at,
-                updated_at = transactionCategory.updated_at,
-                deleted_at = transactionCategory.deleted_at,
+                created_at = getTimestampFromDateTimeString(transactionCategory.created_at),
+                updated_at = getTimestampFromDateTimeString(transactionCategory.updated_at),
+                deleted_at = transactionCategory.deleted_at?.let { getTimestampFromDateTimeString(it) },
                 version = transactionCategory.version,
                 transaction_type = transactionCategory.transaction_type
             )

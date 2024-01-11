@@ -114,3 +114,12 @@ fun convertDateStringToTimestamp(dateString: String): Long {
     calendar.time = date
     return calendar.timeInMillis
 }
+
+fun getTimestampFromDateTimeString(dateTimeString: String): Long {
+    val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
+    val date = dateFormat.parse(dateTimeString) ?: return 0 // Handle potential parsing errors
+
+    val calendar = Calendar.getInstance()
+    calendar.time = date
+    return calendar.timeInMillis
+}

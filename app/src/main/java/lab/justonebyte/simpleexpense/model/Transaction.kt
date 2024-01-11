@@ -2,6 +2,7 @@ package lab.justonebyte.simpleexpense.model
 
 import lab.justonebyte.simpleexpense.data.TransactionEntity
 import lab.justonebyte.simpleexpense.data.TransactionWithCategory
+import lab.justonebyte.simpleexpense.utils.getTimestampFromDateTimeString
 
 enum class TransactionType(val value:Int){
     Income(1),
@@ -54,9 +55,9 @@ data class Transaction(
                 amount = transaction.amount,
                 type = transaction.type,
                 category_id=transaction.category_id,
-                created_at = transaction.created_at,
-                updated_at = transaction.updated_at,
-                deleted_at = transaction.deleted_at,
+                created_at = getTimestampFromDateTimeString(transaction.created_at),
+                updated_at = getTimestampFromDateTimeString(transaction.updated_at),
+                deleted_at = transaction.deleted_at?.let { getTimestampFromDateTimeString(it) },
                 version = transaction.version,
                 note = transaction.note
             )
