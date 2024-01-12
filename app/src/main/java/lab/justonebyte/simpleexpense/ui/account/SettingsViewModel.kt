@@ -119,7 +119,8 @@ class SettingsViewModel @Inject constructor(
                     _viewModelUiState.update {uiState->
                         uiState.copy(
                             isLoggingIn = false,
-                            firebaseUser =  FirebaseAuth.getInstance().currentUser
+                            firebaseUser =  FirebaseAuth.getInstance().currentUser,
+                            currentSnackBar = SnackBarType.LOGIN_SUCCESS
                         )
                     }
                 }
@@ -129,7 +130,8 @@ class SettingsViewModel @Inject constructor(
                 _viewModelUiState.update {
                     it.copy(
                         isLoggingIn = false,
-                        firebaseUser =  null
+                        firebaseUser =  null,
+                        currentSnackBar = SnackBarType.LOGIN_ERROR
                     )
                 }
             }
@@ -207,7 +209,8 @@ class SettingsViewModel @Inject constructor(
         viewModelScope.launch {
             _viewModelUiState.update { uiState->
                 uiState.copy(
-                    firebaseUser = null
+                    firebaseUser = null,
+                    currentSnackBar = SnackBarType.LOGOUT_SUCCESS
                 )
             }
             transactionRepository.deleteAll()

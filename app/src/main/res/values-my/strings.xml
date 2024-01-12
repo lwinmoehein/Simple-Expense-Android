@@ -122,5 +122,8 @@
     <string name="select_date_range">နေ့ရက်</string>
     <string name="from">မှ</string>
     <string name="to">အထိ</string>
-    <string name="logging_in">လော့အင်၀င်နေသည်</string>
+    <string name="logging_in">အကောင့်၀င်နေသည်</string>
+    <string name="login_success">အကောင့်၀င်ခြင်း အောင်မြင်ပါသည်။</string>
+    <string name="login_error">အကောင့်၀င်ခြင်း မအောင်မြင်ပါ။ ထပ်ပြီး၀င်ပေးပါ။</string>
+    <string name="logout_success">အကောင့်မှ ထွက်လိုက်ပါပြီ။</string>
 </resources>
