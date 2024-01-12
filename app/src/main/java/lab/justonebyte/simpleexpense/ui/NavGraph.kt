@@ -18,6 +18,7 @@ import androidx.navigation.compose.rememberNavController
 import lab.justonebyte.simpleexpense.ui.account.AccountScreen
 import lab.justonebyte.simpleexpense.ui.account.AcknowledgeScreen
 import lab.justonebyte.simpleexpense.ui.account.ExportScreen
+import lab.justonebyte.simpleexpense.ui.account.PrivacyPolicyScreen
 import lab.justonebyte.simpleexpense.ui.account.SettingsScreen
 import lab.justonebyte.simpleexpense.ui.category.ManageCategoryScreen
 import lab.justonebyte.simpleexpense.ui.home.HomeScreen
@@ -33,6 +34,7 @@ object MainDestinations {
     const val SETTINGS = "settings"
     const val EXPORT = "export"
     const val ACKNOWLEDGEMENT = "acknowledgement"
+    const val PRIVACY_POLICY = "privacy_policy"
 }
 
 @Composable
@@ -84,6 +86,11 @@ fun NavGraphBuilder.addNestedGraph(
         }
         composable(MainDestinations.ACKNOWLEDGEMENT) {
             AcknowledgeScreen(
+                navController = navController
+            )
+        }
+        composable(MainDestinations.PRIVACY_POLICY) {
+            PrivacyPolicyScreen(
                 navController = navController
             )
         }

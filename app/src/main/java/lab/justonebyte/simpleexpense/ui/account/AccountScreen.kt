@@ -222,7 +222,7 @@ fun AccountScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .clickable {
-                            navController.navigate(MainDestinations.ACKNOWLEDGEMENT)
+                            navController.navigate(MainDestinations.PRIVACY_POLICY)
                         },
                     verticalAlignment = Alignment.CenterVertically
                 ) {

@@ -43,9 +43,8 @@ fun AcknowledgeScreen(
         Column(Modifier.padding(it)) {
             Divider()
             Column(Modifier.padding(15.dp)) {
-                SectionTitle(title = stringResource(id = R.string.feat_setting))
-
-
+                SectionTitle(title = stringResource(id = R.string.acknowledgements))
+                Text("This app acknowledges the following libraries and services it used ,")
             }
         }
     }
