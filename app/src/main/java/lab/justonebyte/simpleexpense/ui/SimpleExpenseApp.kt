@@ -36,7 +36,6 @@ enum class NavItem(val stringResource:Int,val imageVector:ImageVector){
 }
 
 val appContentPadding = 20.dp
-@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun SimpleExpenseApp(chooseDownloadFolderLauncher: ActivityResultLauncher<Intent>) {
 

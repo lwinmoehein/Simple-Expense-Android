@@ -310,7 +310,6 @@ fun ExportScreen(
 
 }
 
-@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun ChooseDateRange(
     fromDate: String,
@@ -320,10 +319,10 @@ fun ChooseDateRange(
 ) {
 
     val isFromDatePickerShown = remember { mutableStateOf(false) }
-    val tempFromDate =  remember { mutableStateOf(LocalDate.now()) }
+    val tempFromDate =  remember { mutableStateOf<LocalDate?>(null) }
 
     val isToDatePickerShown = remember { mutableStateOf(false) }
-    val tempToDate =  remember { mutableStateOf(LocalDate.now()) }
+    val tempToDate =  remember { mutableStateOf<LocalDate?>(null) }
 
 
     if(isFromDatePickerShown.value){
@@ -335,7 +334,6 @@ fun ChooseDateRange(
             positiveBtnText = stringResource(id = R.string.confirm)
         ){
             WheelDatePicker(
-                startDate = tempFromDate.value,
                 onSnappedDate = {
                     tempFromDate.value = it
                     onFromDateChosen(it.toString())
@@ -352,7 +350,6 @@ fun ChooseDateRange(
             positiveBtnText = stringResource(id = R.string.confirm)
         ){
             WheelDatePicker(
-                startDate = tempToDate.value,
                 onSnappedDate = {
                     tempToDate.value = it
                     onToDateChosen(it.toString())

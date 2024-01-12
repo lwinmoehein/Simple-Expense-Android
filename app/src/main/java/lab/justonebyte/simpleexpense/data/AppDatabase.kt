@@ -35,7 +35,6 @@ abstract class AppDatabase : RoomDatabase() {
                     AppDatabase::class.java,
                     "su_buu_database"
                 ).addCallback( object : Callback() {
-                    @RequiresApi(Build.VERSION_CODES.O)
                     override fun onCreate(db: SupportSQLiteDatabase) {
                                         INSTANCE?.let { database ->
                     scope.launch {
@@ -52,7 +51,6 @@ abstract class AppDatabase : RoomDatabase() {
         }
     }
 }
-@RequiresApi(Build.VERSION_CODES.O)
 suspend fun populateCategories(dao: CategoryDao) {
     dao.let {
         it.insert(CategoryEntity(name = "မနက်စာ", unique_id ="one", transaction_type = TransactionType.Expense.value, created_at = System.currentTimeMillis(), updated_at = System.currentTimeMillis()))

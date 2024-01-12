@@ -67,7 +67,6 @@ class  CategoryRepositoryImpl @Inject constructor(val categoryDao: CategoryDao) 
         return categoryDao.getUniqueIdsWithVersions()
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     override suspend fun populateCategories() {
        populateCategories(categoryDao)
     }

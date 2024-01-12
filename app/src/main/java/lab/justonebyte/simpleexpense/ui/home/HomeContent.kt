@@ -31,7 +31,7 @@ fun HomeContent(
                 onTransactionClick = {
                     onTransactionClick(it)
                 },
-                transactionGroupType = homeUiState.currentBalanceType
+                transactionGroupType = homeUiState.currentBalanceType,
             )
         }
 }

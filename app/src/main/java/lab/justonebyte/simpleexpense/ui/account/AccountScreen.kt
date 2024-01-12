@@ -76,7 +76,6 @@ import lab.justonebyte.simpleexpense.ui.components.ProgressDialog
 import lab.justonebyte.simpleexpense.ui.components.SuBuuSnackBar
 
 
-@RequiresApi(Build.VERSION_CODES.O)
 @SuppressLint("UnrememberedMutableState", "UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun AccountScreen(

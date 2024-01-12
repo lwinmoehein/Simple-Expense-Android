@@ -44,7 +44,6 @@ import lab.justonebyte.simpleexpense.utils.getCurrentDayTimeMillisecond
 import java.time.LocalDate
 
 
-@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun AddTransactionContent(
     currentCurrency: Currency,
@@ -65,14 +64,14 @@ fun AddTransactionContent(
     val isAddTransactionConfirmDialogOpen = remember { mutableStateOf(false) }
 
     val isRecordDatePickerShown = remember { mutableStateOf(false) }
-    val tempRecordDate =  remember { mutableStateOf<LocalDate>(LocalDate.now())}
+    val tempRecordDate =  remember { mutableStateOf<LocalDate?>(null)}
     val isNumberKeyboardShown = remember { mutableStateOf(false) }
 
     fun clearTransactionForm() {
         currentAmount.value = ""
         currentType.value = 1
         currentCategory.value = null
-        tempRecordDate.value = LocalDate.now()
+        tempRecordDate.value = null
         localFocusManage.clearFocus()
     }
 
@@ -85,7 +84,6 @@ fun AddTransactionContent(
             positiveBtnText = stringResource(id = R.string.confirm)
         ){
             WheelDatePicker(
-                startDate = tempRecordDate.value,
                 onSnappedDate = {
                     tempRecordDate.value = it
                 }

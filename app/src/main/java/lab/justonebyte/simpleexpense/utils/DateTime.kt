@@ -9,58 +9,58 @@ import java.util.Date
 import java.util.Locale
 
 @SuppressLint("SimpleDateFormat")
-fun getFormattedYear(timestamp:Long):String{
+fun getFormattedYear(timestamp:Long,locale: Locale? = Locale.ENGLISH):String{
     val date = Date(timestamp)
-    val formatter = SimpleDateFormat("yyyy")
+    val formatter = SimpleDateFormat("yyyy",locale)
     return formatter.format(date)
 }
 
 @SuppressLint("SimpleDateFormat")
-fun getFormattedMonth(timestamp: Long): String {
+fun getFormattedMonth(timestamp: Long,locale: Locale? = Locale.ENGLISH): String {
     val date = Date(timestamp)
-    val formatter = SimpleDateFormat("yyyy-MM")
+    val formatter = SimpleDateFormat("yyyy-MM",locale)
     return formatter.format(date)
 }
 
 @SuppressLint("SimpleDateFormat")
-fun getReadableFormattedMonth(timestamp: Long): String {
+fun getReadableFormattedMonth(timestamp: Long,locale: Locale? = Locale.ENGLISH): String {
     val date = Date(timestamp)
-    val formatter = SimpleDateFormat("MMMM")
+    val formatter = SimpleDateFormat("MMMM",locale)
     return formatter.format(date)
 }
 @SuppressLint("SimpleDateFormat")
-fun getFormattedDay(timestamp: Long): String {
+fun getFormattedDay(timestamp: Long,locale: Locale? = Locale.ENGLISH): String {
     val date = Date(timestamp)
-    val formatter = SimpleDateFormat("yyyy-MM-dd")
-    return formatter.format(date)
-}
-
-@SuppressLint("SimpleDateFormat")
-fun getReadableFormattedDay(timestamp: Long): String {
-    val date = Date(timestamp)
-    val formatter = SimpleDateFormat("MMMM dd yyyy")
+    val formatter = SimpleDateFormat("yyyy-MM-dd",locale)
     return formatter.format(date)
 }
 
 @SuppressLint("SimpleDateFormat")
-fun getCurrentYear():String{
+fun getReadableFormattedDay(timestamp: Long,locale: Locale? = Locale.ENGLISH): String {
+    val date = Date(timestamp)
+    val formatter = SimpleDateFormat("MMMM dd yyyy",locale)
+    return formatter.format(date)
+}
+
+@SuppressLint("SimpleDateFormat")
+fun getCurrentYear(locale: Locale? = Locale.ENGLISH):String{
     val date = Date(System.currentTimeMillis())
-    val formatter = SimpleDateFormat("yyyy")
+    val formatter = SimpleDateFormat("yyyy",locale)
     return formatter.format(date)
 }
 
 @SuppressLint("SimpleDateFormat")
-fun getCurrentMonth(): String {
+fun getCurrentMonth(locale: Locale? = Locale.ENGLISH): String {
     val date = Date(System.currentTimeMillis())
-    val formatter = SimpleDateFormat("yyyy-MM")
+    val formatter = SimpleDateFormat("yyyy-MM",locale)
     return formatter.format(date)
 }
 
 
 @SuppressLint("SimpleDateFormat")
-fun getCurrentDay(): String {
+fun getCurrentDay(locale: Locale? = Locale.ENGLISH): String {
     val date = Date(System.currentTimeMillis())
-    val formatter = SimpleDateFormat("yyyy-MM-dd")
+    val formatter = SimpleDateFormat("yyyy-MM-dd",locale)
     return formatter.format(date)
 }
 
@@ -106,8 +106,8 @@ fun getCurrentDayTimeMillisecond():Long{
     val currentTimeMillis = System.currentTimeMillis()
     return currentTimeMillis - dayStartTime
 }
-fun convertDateStringToTimestamp(dateString: String): Long {
-    val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+fun convertDateStringToTimestamp(dateString: String,locale: Locale? = Locale.ENGLISH): Long {
+    val dateFormat = SimpleDateFormat("yyyy-MM-dd",locale)
     val date = dateFormat.parse(dateString) ?: return 0
 
     val calendar = Calendar.getInstance()
@@ -115,9 +115,9 @@ fun convertDateStringToTimestamp(dateString: String): Long {
     return calendar.timeInMillis
 }
 
-fun getTimestampFromDateTimeString(dateTimeString: String): Long {
-    val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
-    val date = dateFormat.parse(dateTimeString) ?: return 0 // Handle potential parsing errors
+fun getTimestampFromDateTimeString(dateTimeString: String,locale: Locale? = Locale.ENGLISH): Long {
+    val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", locale)
+    val date = dateFormat.parse(dateTimeString) ?: return 0
 
     val calendar = Calendar.getInstance()
     calendar.time = date

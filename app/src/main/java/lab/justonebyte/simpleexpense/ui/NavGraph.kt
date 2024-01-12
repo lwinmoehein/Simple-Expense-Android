@@ -33,7 +33,6 @@ object MainDestinations {
     const val EXPORT = "export"
 }
 
-@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun NavGraph(
     paddings: PaddingValues,
@@ -60,7 +59,6 @@ fun NavGraph(
         addNestedGraph(navController,chooseDownloadFolderLauncher)
     }
 }
-@RequiresApi(Build.VERSION_CODES.O)
 fun NavGraphBuilder.addNestedGraph(
     navController: NavController,
     chooseDownloadFolderLauncher: ActivityResultLauncher<Intent>

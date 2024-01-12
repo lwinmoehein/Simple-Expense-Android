@@ -41,7 +41,6 @@ import lab.justonebyte.simpleexpense.ui.components.SnackBarType
 import java.util.UUID
 
 
-@RequiresApi(Build.VERSION_CODES.O)
 @SuppressLint("UnrememberedMutableState", "UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun HomeScreen(){
