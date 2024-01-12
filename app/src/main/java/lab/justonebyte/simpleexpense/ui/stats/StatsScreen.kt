@@ -96,7 +96,7 @@ fun StatsScreen() {
         BalanceTypeOption.TOTAL
     )
     val selectedBalanceType = remember { mutableStateOf<BalanceType>(BalanceType.MONTHLY) }
-    val selectedTransactionType = remember { mutableStateOf<TransactionType>(TransactionType.Expense) }
+    val selectedTransactionType = remember { mutableStateOf(TransactionType.Expense) }
 
     Scaffold {
         Column(modifier = Modifier
@@ -155,6 +155,7 @@ fun StatsScreen() {
                 )
                 Spacer(modifier = Modifier.height(20.dp))
                 CustomPieChartWithData(
+                    transactionType = selectedTransactionType.value,
                     currency = statsUiState.currentCurrency,
                     transactions = transactions.filter { it.type===selectedTransactionType.value }
                 )

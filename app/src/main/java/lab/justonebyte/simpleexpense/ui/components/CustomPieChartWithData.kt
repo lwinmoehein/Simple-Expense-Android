@@ -19,11 +19,13 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import lab.justonebyte.simpleexpense.R
 import lab.justonebyte.simpleexpense.model.Currency
 import lab.justonebyte.simpleexpense.model.Transaction
+import lab.justonebyte.simpleexpense.model.TransactionType
 import lab.justonebyte.simpleexpense.ui.components.FormattedCurrency
 import lab.justonebyte.simpleexpense.ui.home.NoData
 import lab.justonebyte.simpleexpense.ui.theme.bar1
@@ -60,7 +62,7 @@ fun CustomPieChartWithData(
     modifier: Modifier=Modifier,
     currency: Currency,
     transactions:List<Transaction>,
-
+    transactionType: TransactionType
 ){
     val groupByCategoryTransactions = transactions.groupBy { it.category }.map { it.key to it.value.sumOf { it.amount } }.sortedByDescending { it.second }
     val incomePieSlices = groupByCategoryTransactions.map { map->
@@ -96,8 +98,8 @@ fun CustomPieChartWithData(
                         style = MaterialTheme.typography.titleSmall
                     )
                     FormattedCurrency(
-                         amount =incomePieSlices.sumOf { it.second.value.toLong() }
-                        , color = MaterialTheme.colorScheme.primary,
+                         amount =incomePieSlices.sumOf { it.second.value.toLong() },
+                        color =if(transactionType==TransactionType.Income) MaterialTheme.colorScheme.primary  else Color.Red,
                         currencyCode = if(currency==Currency.Kyat) "MMK" else "USD"
                     )
                 }
@@ -115,12 +117,14 @@ fun CustomPieChartWithData(
                             ) {
                                 Row(
                                     verticalAlignment = Alignment.CenterVertically,
-                                    horizontalArrangement = Arrangement.SpaceBetween,
                                     modifier = Modifier
                                         .padding(10.dp)
                                         .fillMaxWidth()
                                 ){
-                                    Row(verticalAlignment = Alignment.CenterVertically) {
+                                    Row(
+                                        modifier = Modifier.weight(1f),
+                                        verticalAlignment = Alignment.CenterVertically
+                                    ) {
                                         Spacer(modifier = Modifier
                                             .absolutePadding(right = 4.dp)
                                             .width(10.dp)
@@ -129,8 +133,9 @@ fun CustomPieChartWithData(
                                         Text(text = it.first.name)
                                     }
                                     FormattedCurrency(
+                                        modifier = Modifier.weight(1f),
                                         amount = it.second.value.toLong(),
-                                        color = MaterialTheme.colorScheme.primary ,
+                                        color =if(transactionType==TransactionType.Income) MaterialTheme.colorScheme.primary  else Color.Red,
                                         currencyCode = if(currency==Currency.Kyat) "MMK" else "USD"
                                     )
                                 }

@@ -18,6 +18,7 @@ import java.util.Currency
 
 @Composable
 fun FormattedCurrency(
+    modifier: Modifier = Modifier,
     amount: Long,
     color:Color,
     currencyCode: String = "USD"
@@ -27,7 +28,7 @@ fun FormattedCurrency(
         color = color,
         text =currencyCode+(if(color==Color.Red) " -" else " ")+formatLongWithCommas(amount),
         style = MaterialTheme.typography.titleSmall,
-        modifier = Modifier.padding(horizontal = 2.dp)
+        modifier = modifier.padding(horizontal = 2.dp)
     )
 }
 fun formatLongWithCommas(number: Long): String {
