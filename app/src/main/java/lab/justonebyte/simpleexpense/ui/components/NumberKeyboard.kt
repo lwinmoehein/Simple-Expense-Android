@@ -1,6 +1,7 @@
 package lab.justonebyte.simpleexpense.ui.components
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -39,21 +40,26 @@ import lab.justonebyte.simpleexpense.model.Currency
 
 @Composable
 fun NumberKeyboard(
+    isKeyboardShown:Boolean,
     onNumberConfirm: (Int) -> Unit,
+    onKeyboardToggled:(isShown:Boolean)->Unit,
     currency: Currency
 ) {
     var currentNumber by remember { mutableStateOf("") }
+    val isNumbersShown = remember { mutableStateOf(isKeyboardShown) }
 
     Column(
         modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 15.dp, vertical = 30.dp),
+            .fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(5.dp, Alignment.CenterVertically)
     ) {
         Row(
             modifier = Modifier
-                .fillMaxWidth(),
+                .fillMaxWidth().clickable {
+                    isNumbersShown.value = !isNumbersShown.value
+                    onKeyboardToggled(isNumbersShown.value)
+                },
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -90,52 +96,54 @@ fun NumberKeyboard(
                 }
             }
         }
-
-        NumberButtonRow(
-            numbers = listOf(1, 2, 3,10),
-            onNumberClick = {
-                if(!(currentNumber.isEmpty() && it==0)){
-                    currentNumber += it.toString()
+        if(isNumbersShown.value){
+            NumberButtonRow(
+                numbers = listOf(1, 2, 3,10),
+                onNumberClick = {
+                    if(!(currentNumber.isEmpty() && it==0)){
+                        currentNumber += it.toString()
+                    }
+                },
+                onDelete = {
+                    currentNumber = currentNumber.dropLast(1)
+                },
+                onConfirm = {
+                    isNumbersShown.value = false
+                    onNumberConfirm(currentNumber.toInt())
                 }
-            },
-            onDelete = {
-                currentNumber = currentNumber.dropLast(1)
-            },
-            onConfirm = {
-                onNumberConfirm(currentNumber.toInt())
-            }
-        )
-        NumberButtonRow(
-            numbers = listOf(4, 5, 6,0),
-            onNumberClick = {
-                if(!(currentNumber.isEmpty() && it==0)){
-                    currentNumber += it.toString()
+            )
+            NumberButtonRow(
+                numbers = listOf(4, 5, 6,0),
+                onNumberClick = {
+                    if(!(currentNumber.isEmpty() && it==0)){
+                        currentNumber += it.toString()
+                    }
+                },
+                onDelete = {
+                    currentNumber = currentNumber.dropLast(1)
+                },
+                onConfirm = {
+                    isNumbersShown.value = false
+                    onNumberConfirm(currentNumber.toInt())
                 }
-            },
-            onDelete = {
-                currentNumber = currentNumber.dropLast(1)
-            },
-            onConfirm = {
-                onNumberConfirm(currentNumber.toInt())
-            }
-        )
-        NumberButtonRow(
-            numbers = listOf(7, 8, 9,11),
-            onNumberClick = {
-                if(!(currentNumber.isEmpty() && it==0)){
-                    currentNumber += it.toString()
+            )
+            NumberButtonRow(
+                numbers = listOf(7, 8, 9,11),
+                onNumberClick = {
+                    if(!(currentNumber.isEmpty() && it==0)){
+                        currentNumber += it.toString()
+                    }
+                },
+                onDelete = {
+                    currentNumber = currentNumber.dropLast(1)
+                },
+                onConfirm = {
+                    isNumbersShown.value = false
+                    onNumberConfirm(currentNumber.toInt())
                 }
-            },
-            onDelete = {
-                currentNumber = currentNumber.dropLast(1)
-            },
-            onConfirm = {
-                onNumberConfirm(currentNumber.toInt())
-            }
-        )
-
-
-        Spacer(modifier = Modifier.height(16.dp))
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+        }
 
 //        Row(
 //            modifier = Modifier.fillMaxWidth(),
@@ -214,7 +222,7 @@ private fun NumberButtonRow(
                     IconButton(
                         modifier = Modifier.fillMaxSize(),
                         onClick = {
-                            onConfirm
+                            onConfirm()
                         }
                     ) {
                         Row (

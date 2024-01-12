@@ -3,6 +3,7 @@ package lab.justonebyte.simpleexpense.ui.home
 import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -32,10 +33,12 @@ import com.commandiron.wheel_picker_compose.WheelDatePicker
 import compose.icons.FeatherIcons
 import compose.icons.feathericons.DollarSign
 import lab.justonebyte.simpleexpense.R
+import lab.justonebyte.simpleexpense.model.Currency
 import lab.justonebyte.simpleexpense.model.Transaction
 import lab.justonebyte.simpleexpense.model.TransactionCategory
 import lab.justonebyte.simpleexpense.model.TransactionType
 import lab.justonebyte.simpleexpense.ui.components.AppAlertDialog
+import lab.justonebyte.simpleexpense.ui.components.NumberKeyboard
 import lab.justonebyte.simpleexpense.utils.convertDateStringToTimestamp
 import lab.justonebyte.simpleexpense.utils.getCurrentDayTimeMillisecond
 import java.time.LocalDate
@@ -62,6 +65,7 @@ fun AddTransactionContent(
 
     val isRecordDatePickerShown = remember { mutableStateOf(false) }
     val tempRecordDate =  remember { mutableStateOf<LocalDate>(LocalDate.now())}
+    val isNumberKeyboardShown = remember { mutableStateOf(false) }
 
     fun clearTransactionForm() {
         currentAmount.value = ""
@@ -137,96 +141,87 @@ fun AddTransactionContent(
         Spacer(modifier = Modifier.height(20.dp))
 
         Column {
-            Row(
-                horizontalArrangement = Arrangement.Center,
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier
-                    .fillMaxWidth()
-            ) {
-
-                TextField(
-                    shape = MaterialTheme.shapes.small,
-                    singleLine = true,
-                    leadingIcon = {
-                        Icon(imageVector = FeatherIcons.DollarSign, contentDescription = "",tint=MaterialTheme.colorScheme.primary)
-                    } ,
-                    modifier = Modifier.fillMaxWidth(),
-                    value = currentAmount.value,
-                    onValueChange = { currentAmount.value = it },
-                    label = { Text(stringResource(id = R.string.enter_amount)) },
-                    keyboardOptions = KeyboardOptions(
-                        keyboardType = KeyboardType.Number
-                    )
+                NumberKeyboard(
+                    isKeyboardShown=isNumberKeyboardShown.value,
+                    onNumberConfirm = {
+                            currentAmount.value = it.toString()
+                            isNumberKeyboardShown.value = false
+                                      } ,
+                    currency = Currency.Dollar,
+                    onKeyboardToggled = {
+                        isNumberKeyboardShown.value = it
+                    }
                 )
-
-            }
         }
-        AddCategoriesCard(
-            onAddCategory = {
-                onAddCategory(
-                    it,
-                    if (currentType.value == TransactionType.Income.value) TransactionType.Income else TransactionType.Expense
-                )
-            },
-            categories = categories,
-            currentCategory = currentCategory.value,
-            onCategoryChosen = {
-                currentCategory.value = it
-            },
-            currentTransactionType = if (currentType.value == TransactionType.Income.value) TransactionType.Income else TransactionType.Expense
-        )
-        if(!isEditMode){
-            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.SpaceBetween) {
-                Text(
-                    text =  stringResource(id = R.string.enter_date),
-                    modifier = Modifier.weight(1f)
-                )
-                TextButton(
-                    onClick = {
-                              isRecordDatePickerShown.value = true
-                    },
-                    modifier = Modifier.weight(1f)
-                ) {
-                    Text(
-                        text = tempRecordDate.value.toString(),
-                        fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.primary
+
+        if(!isNumberKeyboardShown.value){
+            AddCategoriesCard(
+                onAddCategory = {
+                    onAddCategory(
+                        it,
+                        if (currentType.value == TransactionType.Income.value) TransactionType.Income else TransactionType.Expense
                     )
+                },
+                categories = categories,
+                currentCategory = currentCategory.value,
+                onCategoryChosen = {
+                    currentCategory.value = it
+                },
+                currentTransactionType = if (currentType.value == TransactionType.Income.value) TransactionType.Income else TransactionType.Expense
+            )
+            if(!isEditMode){
+                Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.SpaceBetween) {
+                    Text(
+                        text =  stringResource(id = R.string.enter_date),
+                        modifier = Modifier.weight(1f)
+                    )
+                    TextButton(
+                        onClick = {
+                            isRecordDatePickerShown.value = true
+                        },
+                        modifier = Modifier.weight(1f)
+                    ) {
+                        Text(
+                            text = tempRecordDate.value.toString(),
+                            fontWeight = FontWeight.Bold,
+                            color = MaterialTheme.colorScheme.primary
+                        )
+                    }
                 }
             }
-        }
-        Row(
-            verticalAlignment = Alignment.Top,
-            horizontalArrangement = Arrangement.Center
-        ) {
-            TextField(
-                modifier = Modifier.fillMaxWidth(),
-                shape = MaterialTheme.shapes.small,
-                singleLine = false,
-                value = note.value,
-                label = { Text(stringResource(id = R.string.enter_note)) },
-                onValueChange = { note.value = it },
-                keyboardOptions = KeyboardOptions(
-                    keyboardType = KeyboardType.Text
+            Row(
+                verticalAlignment = Alignment.Top,
+                horizontalArrangement = Arrangement.Center
+            ) {
+                TextField(
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = MaterialTheme.shapes.small,
+                    singleLine = false,
+                    value = note.value,
+                    label = { Text(stringResource(id = R.string.enter_note)) },
+                    onValueChange = { note.value = it },
+                    keyboardOptions = KeyboardOptions(
+                        keyboardType = KeyboardType.Text
+                    )
                 )
-            )
-        }
-        Row(
-            horizontalArrangement = Arrangement.End,
-            modifier = Modifier
-                .fillMaxWidth()
-                .absolutePadding(top = 50.dp)
-        ) {
-            TextButton(
-                modifier = Modifier.absolutePadding(left = 10.dp, right = 10.dp),
-                onClick = { onCloseDialog() }
-            ) {
-                Text(text = stringResource(id = R.string.cancel))
             }
-            Button(
-                onClick = { isAddTransactionConfirmDialogOpen.value = true }
+            Row(
+                horizontalArrangement = Arrangement.End,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .absolutePadding(top = 50.dp)
             ) {
-                Text(text = if(isEditMode) stringResource(id = R.string.confirm_edit) else stringResource(id = R.string.confirm))
+                TextButton(
+                    modifier = Modifier.absolutePadding(left = 10.dp, right = 10.dp),
+                    onClick = { onCloseDialog() }
+                ) {
+                    Text(text = stringResource(id = R.string.cancel))
+                }
+                Button(
+                    onClick = { isAddTransactionConfirmDialogOpen.value = true }
+                ) {
+                    Text(text = if(isEditMode) stringResource(id = R.string.confirm_edit) else stringResource(id = R.string.confirm))
+                }
             }
         }
     }
