@@ -40,12 +40,13 @@ import lab.justonebyte.simpleexpense.model.Currency
 
 @Composable
 fun NumberKeyboard(
+    initialNumber:String = "",
     isKeyboardShown:Boolean,
     onNumberConfirm: (Int) -> Unit,
     onKeyboardToggled:(isShown:Boolean)->Unit,
     currency: Currency
 ) {
-    var currentNumber by remember { mutableStateOf("") }
+    var currentNumber by remember { mutableStateOf(initialNumber) }
     val isNumbersShown = remember { mutableStateOf(isKeyboardShown) }
 
     Column(

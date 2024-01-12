@@ -142,6 +142,7 @@ fun AddTransactionContent(
 
         Column {
                 NumberKeyboard(
+                    initialNumber = currentAmount.value,
                     isKeyboardShown=isNumberKeyboardShown.value,
                     onNumberConfirm = {
                             currentAmount.value = it.toString()
