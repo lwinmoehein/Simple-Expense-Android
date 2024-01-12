@@ -7,7 +7,8 @@ import lab.justonebyte.simpleexpense.ui.components.AppAlertDialog
 fun ChooseTransactionTypeDialog(
     isOpen:Boolean = false,
     onAddIncome:()->Unit,
-    onAddExpense:()->Unit
+    onAddExpense:()->Unit,
+    onDismiss:()->Unit
 ){
     if (isOpen) {
         AppAlertDialog(
@@ -23,12 +24,16 @@ fun ChooseTransactionTypeDialog(
                                 onAddExpense()
                             }
                         )
+            },
+            onNegativeBtnClicked = {
+                onDismiss()
             }
         )
     }
 }
 @Composable
 fun ChooseTransactionActionDialog(
+    onDismiss: () -> Unit,
     isOpen:Boolean = false,
     onEdit:()->Unit,
     onDelete:()->Unit
@@ -47,6 +52,9 @@ fun ChooseTransactionActionDialog(
                         onEdit()
                     }
                 )
+            },
+            onNegativeBtnClicked = {
+                onDismiss()
             }
         )
     }

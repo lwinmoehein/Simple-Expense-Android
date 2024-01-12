@@ -115,12 +115,18 @@ fun HomeScreen(){
         onAddIncome =  {
             currentType.value = 1
             isAddOrEditTransactionDialogOpen.value = true
+        },
+        onDismiss = {
+            isChooseAddTransactionTypeOpen.value = false
         }
     )
     ChooseTransactionActionDialog(
         isOpen = (currentTransaction.value!=null) && (isSelectedTransactionEditMode.value != true && !isDeleteTransactionDialogOpen.value),
         onEdit = {  isSelectedTransactionEditMode.value = true  },
-        onDelete = { isDeleteTransactionDialogOpen.value = true }
+        onDelete = { isDeleteTransactionDialogOpen.value = true },
+        onDismiss = {
+            currentTransaction.value = null
+        }
     )
 
 
