@@ -11,18 +11,21 @@ import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.absolutePadding
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.Icon
 import androidx.compose.material3.Card
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
@@ -38,6 +41,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -49,6 +53,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import com.google.firebase.auth.AuthResult
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.ktx.auth
@@ -65,6 +70,9 @@ import kotlinx.coroutines.tasks.await
 import lab.justonebyte.simpleexpense.R
 import lab.justonebyte.simpleexpense.ui.MainDestinations
 import lab.justonebyte.simpleexpense.ui.components.AppAlertDialog
+import lab.justonebyte.simpleexpense.ui.components.IndeterminateCircularIndicator
+import lab.justonebyte.simpleexpense.ui.components.MinimalDialog
+import lab.justonebyte.simpleexpense.ui.components.ProgressDialog
 import lab.justonebyte.simpleexpense.ui.components.SuBuuSnackBar
 
 
@@ -79,8 +87,15 @@ fun AccountScreen(
     val settingsUiState by settingsViewModel.viewModelUiState.collectAsState()
     val snackbarHostState = remember { SnackbarHostState() }
     val coroutineScope = rememberCoroutineScope()
-    var user by remember { mutableStateOf(Firebase.auth.currentUser) }
     var isLoginNeededDialogShown by remember { mutableStateOf(false) }
+
+    val isLoggingIn = settingsUiState.isLoggingIn
+    var user = settingsUiState.firebaseUser
+
+
+    if(isLoggingIn){
+        ProgressDialog(onDismissRequest = {}, text = stringResource(id = R.string.logging_in) )
+    }
 
     if(isLoginNeededDialogShown){
         AppAlertDialog(
@@ -95,7 +110,6 @@ fun AccountScreen(
         }
     }
 
-
     Scaffold(
         snackbarHost = { SnackbarHost(snackbarHostState) }
         ) {
@@ -108,12 +122,12 @@ fun AccountScreen(
             Modifier
                 .padding(it)
         ){
-            Column(Modifier.padding(10.dp).absolutePadding(top = 50.dp)) {
+            Column(
+                Modifier
+                    .padding(10.dp)
+                    .absolutePadding(top = 50.dp)) {
                     AuthenticatedUser(
                         user = user,
-                        onUserLogIn = {
-                            user = it
-                        },
                         fetchAndUpdateAccessToken = {
                             coroutineScope.launch {
                                 settingsViewModel.fetchAccessTokenByGoogleId(it)
@@ -234,21 +248,18 @@ private fun rememberFirebaseAuthLauncher(
 fun AuthenticatedUser(
     context: Context = LocalContext.current,
     fetchAndUpdateAccessToken:(googleId:String)->Unit,
-    user:FirebaseUser?,
-    onUserLogIn:(user:FirebaseUser?)->Unit
+    user:FirebaseUser?
 ) {
     val token = stringResource(R.string.web_client_id)
 
     val launcher = rememberFirebaseAuthLauncher(
         onAuthComplete = { result,idToken ->
-            onUserLogIn(result.user)
             result.user?.let { fetchAndUpdateAccessToken(idToken) }
         },
         onAuthError = {
-            onUserLogIn(null)
-            Log.i("gerror:", it.localizedMessage)
         }
     )
+
 
     Card(modifier = Modifier.fillMaxWidth()) {
         Column(Modifier.absolutePadding(left = 10.dp, right = 10.dp, top = 10.dp, bottom = 10.dp)) {

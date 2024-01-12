@@ -129,5 +129,6 @@
     <string name="select_date_range">Export Date Range</string>
     <string name="from">From</string>
     <string name="to">To</string>
+    <string name="logging_in">Loggin in</string>
 
 </resources>

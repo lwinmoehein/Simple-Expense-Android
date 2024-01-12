@@ -7,6 +7,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.documentfile.provider.DocumentFile
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
@@ -41,7 +43,9 @@ data class SettingUiState(
     val companionApps: AppList? = null,
     val downloadFolder:String? = null,
     val readableDownloadFolder:String? = null,
-    val isExportingFile:Boolean = false
+    val isExportingFile:Boolean = false,
+    val isLoggingIn:Boolean = false,
+    val firebaseUser: FirebaseUser? = FirebaseAuth.getInstance().currentUser
 )
 
 
@@ -99,6 +103,9 @@ class SettingsViewModel @Inject constructor(
 //        }
     }
     suspend fun fetchAccessTokenByGoogleId(googleId:String){
+        _viewModelUiState.update {
+            it.copy(isLoggingIn = true)
+        }
         Log.i("access token:fetch",googleId)
         val companionAppService = RetrofitHelper.getInstance("").create(AuthService::class.java)
         viewModelScope.launch {
@@ -109,9 +116,22 @@ class SettingsViewModel @Inject constructor(
                     settingRepository.updateToken(it.data.token)
                     runVersionSync(application,"categories",it.data.token)
                     runVersionSync(application,"transactions",it.data.token)
+                    _viewModelUiState.update {uiState->
+                        uiState.copy(
+                            isLoggingIn = false,
+                            firebaseUser =  FirebaseAuth.getInstance().currentUser
+                        )
+                    }
                 }
             }catch (e:Exception){
                 Log.i("access token fail","cannot fetch access token.")
+                FirebaseAuth.getInstance().signOut()
+                _viewModelUiState.update {
+                    it.copy(
+                        isLoggingIn = false,
+                        firebaseUser =  null
+                    )
+                }
             }
         }
     }
@@ -185,6 +205,11 @@ class SettingsViewModel @Inject constructor(
 
     suspend fun logOut(){
         viewModelScope.launch {
+            _viewModelUiState.update { uiState->
+                uiState.copy(
+                    firebaseUser = null
+                )
+            }
             transactionRepository.deleteAll()
             categoryRepository.deleteAll()
             settingRepository.updateToken("")
