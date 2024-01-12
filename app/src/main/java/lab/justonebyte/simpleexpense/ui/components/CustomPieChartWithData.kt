@@ -24,6 +24,7 @@ import androidx.compose.ui.unit.dp
 import lab.justonebyte.simpleexpense.R
 import lab.justonebyte.simpleexpense.model.Currency
 import lab.justonebyte.simpleexpense.model.Transaction
+import lab.justonebyte.simpleexpense.ui.components.FormattedCurrency
 import lab.justonebyte.simpleexpense.ui.home.NoData
 import lab.justonebyte.simpleexpense.ui.theme.bar1
 import lab.justonebyte.simpleexpense.ui.theme.bar10
@@ -94,9 +95,10 @@ fun CustomPieChartWithData(
                         text = stringResource(R.string.total),
                         style = MaterialTheme.typography.titleSmall
                     )
-                    Text(
-                        text = incomePieSlices.sumOf { it.second.value.toInt() }.toString()+" "+ stringResource(id = currency.name),
-                        style =  MaterialTheme.typography.titleLarge
+                    FormattedCurrency(
+                         amount =incomePieSlices.sumOf { it.second.value.toLong() }
+                        , color = MaterialTheme.colorScheme.primary,
+                        currencyCode = if(currency==Currency.Kyat) "MMK" else "USD"
                     )
                 }
             }
@@ -126,7 +128,11 @@ fun CustomPieChartWithData(
                                             .background(it.second.color))
                                         Text(text = it.first.name)
                                     }
-                                    Text(text =  "${it.second.value.toInt()}"+" "+ stringResource(id = currency.name))
+                                    FormattedCurrency(
+                                        amount = it.second.value.toLong(),
+                                        color = MaterialTheme.colorScheme.primary ,
+                                        currencyCode = if(currency==Currency.Kyat) "MMK" else "USD"
+                                    )
                                 }
                             }
                         }

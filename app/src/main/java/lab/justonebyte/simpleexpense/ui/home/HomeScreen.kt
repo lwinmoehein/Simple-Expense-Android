@@ -142,6 +142,7 @@ fun HomeScreen(){
 
                 Column() {
                             AddTransactionContent(
+                                currentCurrency = homeUiState.currentCurrency,
                                 currentType = currentType.value,
                                 currentTransaction = currentTransaction.value,
                                 categories =  homeUiState.categories,

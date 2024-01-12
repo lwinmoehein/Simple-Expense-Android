@@ -27,6 +27,7 @@ import compose.icons.feathericons.DollarSign
 import lab.justonebyte.simpleexpense.model.Currency
 import lab.justonebyte.simpleexpense.ui.components.TransactionTypePicker
 import lab.justonebyte.simpleexpense.R
+import lab.justonebyte.simpleexpense.ui.components.FormattedCurrency
 
 @Composable
 fun BalanceCard(
@@ -106,14 +107,15 @@ fun BalanceCard(
 private fun BalanceItem(
     icon: ImageVector,
     text: String,
-    amount: Int,
+    amount: Long,
     color: Color,
     modifier: Modifier = Modifier,
     currency: Currency
 ) {
     Column(
         modifier = modifier,
-        verticalArrangement = Arrangement.spacedBy(5.dp)
+        verticalArrangement = Arrangement.spacedBy(5.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Icon(
             imageVector = icon,
@@ -121,11 +123,11 @@ private fun BalanceItem(
             contentDescription = text,
             modifier = Modifier.align(Alignment.CenterHorizontally)
         )
-        Text(
-            text = amount.toString()+" "+ stringResource(id = currency.name),
-            color = LocalContentColor.current,
-            style = MaterialTheme.typography.labelLarge,
-            modifier = Modifier.align(Alignment.CenterHorizontally)
-        )
+        Text(text = if(currency==Currency.Kyat) "MMK" else "USD")
+
+        FormattedCurrency(
+            amount = amount,
+            color = color,
+            currencyCode = "")
     }
 }

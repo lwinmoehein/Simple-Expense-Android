@@ -31,6 +31,7 @@ import lab.justonebyte.simpleexpense.model.BalanceType
 import lab.justonebyte.simpleexpense.model.Currency
 import lab.justonebyte.simpleexpense.model.Transaction
 import lab.justonebyte.simpleexpense.model.TransactionType
+import lab.justonebyte.simpleexpense.ui.components.FormattedCurrency
 import lab.justonebyte.simpleexpense.utils.getFormattedYear
 import lab.justonebyte.simpleexpense.utils.getReadableFormattedDay
 import lab.justonebyte.simpleexpense.utils.getReadableFormattedMonth
@@ -102,9 +103,10 @@ fun TransactionItem(transaction:Transaction,modifier: Modifier=Modifier,currency
             horizontalArrangement = Arrangement.spacedBy(5.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Text(
+            FormattedCurrency(
                 color=if(transaction.type==TransactionType.Income) MaterialTheme.colorScheme.primary else Color.Red,
-                text = transaction.amount.toString() +" " + stringResource(id = currency.name),
+                amount = transaction.amount.toLong(),
+                currencyCode = if(currency==Currency.Kyat) "MMK" else "USD"
             )
         }
     }

@@ -47,6 +47,7 @@ import java.time.LocalDate
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun AddTransactionContent(
+    currentCurrency: Currency,
     currentType: Int,
     onCloseDialog:()->Unit,
     categories:List<TransactionCategory>,
@@ -142,6 +143,7 @@ fun AddTransactionContent(
 
         Column {
                 NumberKeyboard(
+                    currency = currentCurrency,
                     initialNumber = currentAmount.value,
                     isKeyboardShown=isNumberKeyboardShown.value,
                     onNumberConfirm = {
@@ -151,7 +153,6 @@ fun AddTransactionContent(
                         }else{
                             currentAmount.value = it.toString()
                         } },
-                    currency = Currency.Dollar,
                     onKeyboardToggled = {
                         isNumberKeyboardShown.value = it
                     }

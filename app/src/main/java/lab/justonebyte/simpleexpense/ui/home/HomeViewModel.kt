@@ -1,9 +1,7 @@
 package lab.justonebyte.simpleexpense.ui.home
 
 import android.content.Context
-import android.os.Build
 import android.util.Log
-import androidx.annotation.RequiresApi
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -30,10 +28,10 @@ import java.util.UUID
 import javax.inject.Inject
 
 data class HomeUiState(
-    val currentBalance:Int,
-    val incomeBalance:Int,
-    val expenseBalance:Int,
-    val totalBalance:Int,
+    val currentBalance:Long,
+    val incomeBalance:Long,
+    val expenseBalance:Long,
+    val totalBalance:Long,
     val currentBalanceType:BalanceType = BalanceType.MONTHLY,
     val currentCurrency: Currency = Currency.Kyat,
     val categories:List<TransactionCategory>  = emptyList(),
@@ -150,8 +148,8 @@ class HomeViewModel @Inject constructor(
     }
 
     private fun bindBalanceData(transactions: List<Transaction>) {
-        val income = transactions.filter { it.type==TransactionType.Income }.sumOf{ it.amount }
-        val expense = transactions.filter { it.type==TransactionType.Expense }.sumOf { it.amount }
+        val income = transactions.filter { it.type==TransactionType.Income }.sumOf{ it.amount }.toLong()
+        val expense = transactions.filter { it.type==TransactionType.Expense }.sumOf { it.amount }.toLong()
         val sum = income-expense
 
         _viewModelUiState.update {
