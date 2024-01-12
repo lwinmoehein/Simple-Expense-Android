@@ -16,7 +16,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material.Text
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -33,7 +32,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import compose.icons.FeatherIcons
 import compose.icons.feathericons.Check
-import compose.icons.feathericons.CheckSquare
 import compose.icons.feathericons.Delete
 import lab.justonebyte.simpleexpense.R
 import lab.justonebyte.simpleexpense.model.Currency
@@ -41,7 +39,7 @@ import lab.justonebyte.simpleexpense.model.Currency
 @Composable
 fun NumberKeyboard(
     initialNumber:String = "",
-    isKeyboardShown:Boolean,
+    isKeyboardShown:Boolean = false,
     onNumberConfirm: (Int) -> Unit,
     onKeyboardToggled:(isShown:Boolean)->Unit,
     currency: Currency
@@ -49,6 +47,23 @@ fun NumberKeyboard(
     var currentNumber by remember { mutableStateOf(initialNumber) }
     val isNumbersShown = remember { mutableStateOf(isKeyboardShown) }
 
+    fun appendNumber(number: Int){
+        if(number==0) return
+        currentNumber = currentNumber.plus(number.toString())
+    }
+    fun clearLastNumber() {
+        if (currentNumber.isNotEmpty()) {
+            currentNumber = currentNumber.dropLast(1)
+        }
+    }
+    fun onConfirmClick(){
+        if(currentNumber.isEmpty()){
+            onNumberConfirm(-1)
+        }else{
+            onNumberConfirm(currentNumber.toInt())
+        }
+        isNumbersShown.value = false
+    }
     Column(
         modifier = Modifier
             .fillMaxWidth(),
@@ -57,7 +72,8 @@ fun NumberKeyboard(
     ) {
         Row(
             modifier = Modifier
-                .fillMaxWidth().clickable {
+                .fillMaxWidth()
+                .clickable {
                     isNumbersShown.value = !isNumbersShown.value
                     onKeyboardToggled(isNumbersShown.value)
                 },
@@ -97,70 +113,50 @@ fun NumberKeyboard(
                 }
             }
         }
-        if(isNumbersShown.value){
-            NumberButtonRow(
-                numbers = listOf(1, 2, 3,10),
-                onNumberClick = {
-                    if(!(currentNumber.isEmpty() && it==0)){
-                        currentNumber += it.toString()
-                    }
-                },
-                onDelete = {
-                    currentNumber = currentNumber.dropLast(1)
-                },
-                onConfirm = {
-                    isNumbersShown.value = false
-                    onNumberConfirm(currentNumber.toInt())
-                }
-            )
-            NumberButtonRow(
-                numbers = listOf(4, 5, 6,0),
-                onNumberClick = {
-                    if(!(currentNumber.isEmpty() && it==0)){
-                        currentNumber += it.toString()
-                    }
-                },
-                onDelete = {
-                    currentNumber = currentNumber.dropLast(1)
-                },
-                onConfirm = {
-                    isNumbersShown.value = false
-                    onNumberConfirm(currentNumber.toInt())
-                }
-            )
-            NumberButtonRow(
-                numbers = listOf(7, 8, 9,11),
-                onNumberClick = {
-                    if(!(currentNumber.isEmpty() && it==0)){
-                        currentNumber += it.toString()
-                    }
-                },
-                onDelete = {
-                    currentNumber = currentNumber.dropLast(1)
-                },
-                onConfirm = {
-                    isNumbersShown.value = false
-                    onNumberConfirm(currentNumber.toInt())
-                }
-            )
-            Spacer(modifier = Modifier.height(16.dp))
-        }
 
-//        Row(
-//            modifier = Modifier.fillMaxWidth(),
-//            horizontalArrangement = Arrangement.SpaceEvenly
-//        ) {
-//            Button(
-//                modifier = Modifier.weight(1f),
-//                colors = ButtonDefaults.elevatedButtonColors(
-//                    containerColor = MaterialTheme.colorScheme.primary,
-//                    contentColor = MaterialTheme.colorScheme.onPrimary
-//                ),
-//                onClick = onOkClick
-//            ) {
-//                Text("OK", style = MaterialTheme.typography.labelMedium)
-//            }
-//        }
+        if(isNumbersShown.value){
+            Column(
+                verticalArrangement = Arrangement.spacedBy(5.dp)
+            ) {
+                NumberButtonRow(
+                    numbers = listOf(1, 2, 3,10),
+                    onNumberClick = {
+                        appendNumber(it)
+                    },
+                    onDelete = {
+                        clearLastNumber()
+                    },
+                    onConfirm = {
+                        onConfirmClick()
+                    }
+                )
+                NumberButtonRow(
+                    numbers = listOf(4, 5, 6,0),
+                    onNumberClick = {
+                       appendNumber(it)
+                    },
+                    onDelete = {
+                       clearLastNumber()
+                    },
+                    onConfirm = {
+                        onConfirmClick()
+                    }
+                )
+                NumberButtonRow(
+                    numbers = listOf(7, 8, 9,11),
+                    onNumberClick = {
+                       appendNumber(it)
+                    },
+                    onDelete = {
+                        clearLastNumber()
+                    },
+                    onConfirm = {
+                        onConfirmClick()
+                    }
+                )
+                Spacer(modifier = Modifier.height(16.dp))
+            }
+        }
     }
 }
 

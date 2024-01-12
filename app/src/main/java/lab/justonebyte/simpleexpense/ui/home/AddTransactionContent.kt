@@ -145,9 +145,12 @@ fun AddTransactionContent(
                     initialNumber = currentAmount.value,
                     isKeyboardShown=isNumberKeyboardShown.value,
                     onNumberConfirm = {
+                        isNumberKeyboardShown.value = false
+                        if(it<0){
+                            currentAmount.value = ""
+                        }else{
                             currentAmount.value = it.toString()
-                            isNumberKeyboardShown.value = false
-                                      } ,
+                        } },
                     currency = Currency.Dollar,
                     onKeyboardToggled = {
                         isNumberKeyboardShown.value = it
