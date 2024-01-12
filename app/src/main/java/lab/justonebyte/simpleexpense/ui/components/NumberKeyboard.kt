@@ -40,7 +40,7 @@ import lab.justonebyte.simpleexpense.model.Currency
 fun NumberKeyboard(
     initialNumber:String = "",
     isKeyboardShown:Boolean = false,
-    onNumberConfirm: (Int) -> Unit,
+    onNumberConfirm: (number:Int) -> Unit,
     onKeyboardToggled:(isShown:Boolean)->Unit,
     currency: Currency
 ) {
@@ -48,8 +48,14 @@ fun NumberKeyboard(
     val isNumbersShown = remember { mutableStateOf(isKeyboardShown) }
 
     fun appendNumber(number: Int){
-        if(number==0) return
+        if(number==0 && currentNumber.isEmpty()) return
         currentNumber = currentNumber.plus(number.toString())
+    }
+
+    fun willCurrentNumberExceed(appendNumber:Int):Boolean{
+        if(currentNumber.isEmpty()) return false
+        val appendedNumber = currentNumber.plus(appendNumber.toString()).toLong()
+        return appendedNumber>Int.MAX_VALUE
     }
     fun clearLastNumber() {
         if (currentNumber.isNotEmpty()) {
@@ -121,7 +127,7 @@ fun NumberKeyboard(
                 NumberButtonRow(
                     numbers = listOf(1, 2, 3,10),
                     onNumberClick = {
-                        appendNumber(it)
+                        if(!willCurrentNumberExceed(it)) appendNumber(it)
                     },
                     onDelete = {
                         clearLastNumber()
@@ -133,7 +139,7 @@ fun NumberKeyboard(
                 NumberButtonRow(
                     numbers = listOf(4, 5, 6,0),
                     onNumberClick = {
-                       appendNumber(it)
+                        if(!willCurrentNumberExceed(it)) appendNumber(it)
                     },
                     onDelete = {
                        clearLastNumber()
@@ -145,7 +151,7 @@ fun NumberKeyboard(
                 NumberButtonRow(
                     numbers = listOf(7, 8, 9,11),
                     onNumberClick = {
-                       appendNumber(it)
+                        if(!willCurrentNumberExceed(it)) appendNumber(it)
                     },
                     onDelete = {
                         clearLastNumber()
