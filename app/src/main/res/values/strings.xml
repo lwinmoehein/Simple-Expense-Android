@@ -133,5 +133,7 @@
     <string name="login_success">Successfully logged in.</string>
     <string name="login_error">Login failed, please try again.</string>
     <string name="logout_success">Successfully logged out.</string>
+    <string name="acknowledgements">Acknowledgments</string>
+    <string name="rate_app">Rate Application</string>
 
 </resources>

@@ -65,6 +65,7 @@ import compose.icons.feathericons.File
 import compose.icons.feathericons.Info
 import compose.icons.feathericons.LogOut
 import compose.icons.feathericons.Settings
+import compose.icons.feathericons.Star
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import lab.justonebyte.simpleexpense.R
@@ -186,7 +187,56 @@ fun AccountScreen(
                         }
                         Icon(imageVector = FeatherIcons.ArrowRight, contentDescription ="", tint = MaterialTheme.colorScheme.primary)
                     }
-                    Spacer(modifier = Modifier.height(50.dp))
+                    Spacer(modifier = Modifier.height(20.dp))
+
+                Row(
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clickable {
+                                navController.navigate(MainDestinations.ACKNOWLEDGEMENT)
+                        },
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Row (
+                        modifier = Modifier.absolutePadding(top = 5.dp, bottom = 5.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                    ){
+                        Icon(
+                            imageVector = FeatherIcons.Info,
+                            contentDescription ="",
+                            modifier = Modifier.absolutePadding(right = 10.dp),
+                            tint = MaterialTheme.colorScheme.primary
+                        )
+                        Text(text = stringResource(id = R.string.acknowledgements))
+                    }
+                    Icon(imageVector = FeatherIcons.ArrowRight, contentDescription ="", tint = MaterialTheme.colorScheme.primary)
+                }
+                Spacer(modifier = Modifier.height(20.dp))
+
+                Row(
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clickable {
+                            navController.navigate(MainDestinations.ACKNOWLEDGEMENT)
+                        },
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Row (
+                        modifier = Modifier.absolutePadding(top = 5.dp, bottom = 5.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                    ){
+                        Icon(
+                            imageVector = FeatherIcons.Star,
+                            contentDescription ="",
+                            modifier = Modifier.absolutePadding(right = 10.dp),
+                            tint = MaterialTheme.colorScheme.primary
+                        )
+                        Text(text = stringResource(id = R.string.rate_app))
+                    }
+                }
+                Spacer(modifier = Modifier.height(50.dp))
 
                     user?.let {
                         OutlinedButton(
