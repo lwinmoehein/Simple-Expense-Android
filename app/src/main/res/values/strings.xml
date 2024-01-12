@@ -135,5 +135,6 @@
     <string name="logout_success">Successfully logged out.</string>
     <string name="acknowledgements">Acknowledgments</string>
     <string name="rate_app">Rate Application</string>
+    <string name="privacy_policy">Privacy Policy</string>
 
 </resources>

@@ -128,4 +128,5 @@
     <string name="logout_success">အကောင့်မှ ထွက်လိုက်ပါပြီ။</string>
     <string name="acknowledgements">အသိအမှတ်ပြုမှုများ</string>
     <string name="rate_app">ရီဗျူးရေးမည်</string>
+    <string name="privacy_policy">ဒေတာအသုံးပြုမှုပေါ်လစီ</string>
 </resources>
