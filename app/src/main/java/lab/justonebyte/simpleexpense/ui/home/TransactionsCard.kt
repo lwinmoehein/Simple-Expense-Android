@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.Divider
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -22,11 +21,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import compose.icons.FeatherIcons
-import compose.icons.feathericons.ArrowDown
-import compose.icons.feathericons.ArrowUp
-import compose.icons.feathericons.Minus
-import compose.icons.feathericons.Plus
 import lab.justonebyte.simpleexpense.model.BalanceType
 import lab.justonebyte.simpleexpense.model.Currency
 import lab.justonebyte.simpleexpense.model.Transaction
@@ -35,6 +29,8 @@ import lab.justonebyte.simpleexpense.ui.components.FormattedCurrency
 import lab.justonebyte.simpleexpense.utils.getFormattedYear
 import lab.justonebyte.simpleexpense.utils.getReadableFormattedDay
 import lab.justonebyte.simpleexpense.utils.getReadableFormattedMonth
+import lab.justonebyte.simpleexpense.R
+
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -106,7 +102,7 @@ fun TransactionItem(transaction:Transaction,modifier: Modifier=Modifier,currency
             FormattedCurrency(
                 color=if(transaction.type==TransactionType.Income) MaterialTheme.colorScheme.primary else Color.Red,
                 amount = transaction.amount.toLong(),
-                currencyCode = if(currency==Currency.Kyat) "MMK" else "USD"
+                currencyCode = if(currency==Currency.Kyat) stringResource(id = R.string.kyat) else stringResource(R.string.dollar)
             )
         }
     }

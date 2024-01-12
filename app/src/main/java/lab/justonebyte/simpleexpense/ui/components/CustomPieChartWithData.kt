@@ -100,7 +100,7 @@ fun CustomPieChartWithData(
                     FormattedCurrency(
                          amount =incomePieSlices.sumOf { it.second.value.toLong() },
                         color =if(transactionType==TransactionType.Income) MaterialTheme.colorScheme.primary  else Color.Red,
-                        currencyCode = if(currency==Currency.Kyat) "MMK" else "USD"
+                        currencyCode = if(currency==Currency.Kyat) stringResource(id = R.string.kyat) else stringResource(R.string.dollar)
                     )
                 }
             }
@@ -136,7 +136,9 @@ fun CustomPieChartWithData(
                                         modifier = Modifier.weight(1f),
                                         amount = it.second.value.toLong(),
                                         color =if(transactionType==TransactionType.Income) MaterialTheme.colorScheme.primary  else Color.Red,
-                                        currencyCode = if(currency==Currency.Kyat) "MMK" else "USD"
+                                        currencyCode = if(currency==Currency.Kyat) stringResource(id = R.string.kyat) else stringResource(
+                                            id = R.string.dollar
+                                        )
                                     )
                                 }
                             }

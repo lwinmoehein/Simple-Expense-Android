@@ -123,7 +123,9 @@ private fun BalanceItem(
             contentDescription = text,
             modifier = Modifier.align(Alignment.CenterHorizontally)
         )
-        Text(text = if(currency==Currency.Kyat) "MMK" else "USD")
+        Text(text = if(currency==Currency.Kyat) stringResource(id = R.string.kyat) else stringResource(
+            id = R.string.dollar
+        ))
 
         FormattedCurrency(
             amount = amount,
