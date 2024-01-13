@@ -64,11 +64,13 @@ import compose.icons.feathericons.ArrowLeft
 import compose.icons.feathericons.ArrowRight
 import compose.icons.feathericons.EyeOff
 import compose.icons.feathericons.File
+import compose.icons.feathericons.FileText
 import compose.icons.feathericons.Info
 import compose.icons.feathericons.LogOut
 import compose.icons.feathericons.Settings
 import compose.icons.feathericons.Star
 import compose.icons.fontawesomeicons.Regular
+import compose.icons.fontawesomeicons.regular.FileWord
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import lab.justonebyte.simpleexpense.R
@@ -237,6 +239,31 @@ fun AccountScreen(
                             tint = MaterialTheme.colorScheme.primary
                         )
                         Text(text = stringResource(id = R.string.privacy_policy))
+                    }
+                    Icon(imageVector = FeatherIcons.ArrowRight, contentDescription ="", tint = MaterialTheme.colorScheme.primary)
+                }
+                Spacer(modifier = Modifier.height(20.dp))
+
+                Row(
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clickable {
+                            navController.navigate(MainDestinations.TERM_AND_SERVICE)
+                        },
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Row (
+                        modifier = Modifier.absolutePadding(top = 5.dp, bottom = 5.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                    ){
+                        Icon(
+                            imageVector = FeatherIcons.FileText,
+                            contentDescription ="",
+                            modifier = Modifier.absolutePadding(right = 10.dp),
+                            tint = MaterialTheme.colorScheme.primary
+                        )
+                        Text(text = stringResource(id = R.string.terms_and_conditions))
                     }
                     Icon(imageVector = FeatherIcons.ArrowRight, contentDescription ="", tint = MaterialTheme.colorScheme.primary)
                 }

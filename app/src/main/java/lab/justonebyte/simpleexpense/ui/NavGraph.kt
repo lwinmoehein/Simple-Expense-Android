@@ -20,6 +20,7 @@ import lab.justonebyte.simpleexpense.ui.account.AcknowledgeScreen
 import lab.justonebyte.simpleexpense.ui.account.ExportScreen
 import lab.justonebyte.simpleexpense.ui.account.PrivacyPolicyScreen
 import lab.justonebyte.simpleexpense.ui.account.SettingsScreen
+import lab.justonebyte.simpleexpense.ui.account.TermsAndServicesScreen
 import lab.justonebyte.simpleexpense.ui.category.ManageCategoryScreen
 import lab.justonebyte.simpleexpense.ui.home.HomeScreen
 import lab.justonebyte.simpleexpense.ui.stats.StatsScreen
@@ -35,6 +36,7 @@ object MainDestinations {
     const val EXPORT = "export"
     const val ACKNOWLEDGEMENT = "acknowledgement"
     const val PRIVACY_POLICY = "privacy_policy"
+    const val TERM_AND_SERVICE = "terms_and_services"
 }
 
 @Composable
@@ -91,6 +93,11 @@ fun NavGraphBuilder.addNestedGraph(
         }
         composable(MainDestinations.PRIVACY_POLICY) {
             PrivacyPolicyScreen(
+                navController = navController
+            )
+        }
+        composable(MainDestinations.TERM_AND_SERVICE) {
+            TermsAndServicesScreen(
                 navController = navController
             )
         }
