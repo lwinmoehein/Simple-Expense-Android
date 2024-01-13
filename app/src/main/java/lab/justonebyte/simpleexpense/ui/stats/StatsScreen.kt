@@ -23,7 +23,7 @@ import lab.justonebyte.simpleexpense.model.TransactionType
 import lab.justonebyte.simpleexpense.ui.components.AppOption
 import lab.justonebyte.simpleexpense.ui.components.OptionItem
 import lab.justonebyte.simpleexpense.ui.components.TransactionTypePicker
-import lab.justonebyte.simpleexpense.ui.detail.CustomPieChartWithData
+import lab.justonebyte.simpleexpense.ui.components.CustomPieChartWithData
 import lab.justonebyte.simpleexpense.ui.home.*
 
 sealed class BalanceTypeOption(override val name:Int, override  val value:Any) : OptionItem {

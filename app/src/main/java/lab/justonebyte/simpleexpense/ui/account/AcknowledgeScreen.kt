@@ -43,8 +43,17 @@ fun AcknowledgeScreen(
         Column(Modifier.padding(it)) {
             Divider()
             Column(Modifier.padding(15.dp)) {
-                SectionTitle(title = stringResource(id = R.string.acknowledgements))
-                Text("This app acknowledges the following libraries and services it used ,")
+                SectionTitle(title = stringResource(id = R.string.acknowledgements), style = MaterialTheme.typography.titleLarge)
+                Text(modifier = Modifier.absolutePadding(top = 10.dp),text="We would like to express our gratitude to the following individuals and organizations whose contributions have played a significant role in the development of Simple Expense:\n" +
+                        "\n")
+                Column {
+                    Text(text = "* Dagger dependency injection by square")
+                    Text(text = "* Compose charts by bytebeats")
+                    Text("* number-picker by charge-map")
+                    Text("* wheel-picker-compose by commandiron")
+                    Text(text = "* retrofit by square")
+                    Text("* compose-feather-icons devsrsouza")
+                }
             }
         }
     }
