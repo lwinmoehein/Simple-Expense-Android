@@ -24,7 +24,10 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.DatePicker
+import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.Divider
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -33,6 +36,7 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -64,8 +68,11 @@ import lab.justonebyte.simpleexpense.ui.MainDestinations
 import lab.justonebyte.simpleexpense.ui.components.AppAlertDialog
 import lab.justonebyte.simpleexpense.ui.components.SectionTitle
 import lab.justonebyte.simpleexpense.ui.components.SuBuuSnackBar
+import lab.justonebyte.simpleexpense.ui.components.getLocale
 import lab.justonebyte.simpleexpense.utils.getCurrentDay
 import lab.justonebyte.simpleexpense.utils.getCurrentMonth
+import lab.justonebyte.simpleexpense.utils.getCurrentYear
+import lab.justonebyte.simpleexpense.utils.getFormattedDay
 import java.time.LocalDate
 
 
@@ -195,6 +202,7 @@ fun chooseDownloadFolderIntent():Intent{
 }
 
 
+@OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun ExportScreen(
@@ -209,6 +217,8 @@ fun ExportScreen(
     val fromDate = remember { mutableStateOf(getCurrentDay()) }
     val snackbarHostState = remember { SnackbarHostState() }
     val coroutineScope = rememberCoroutineScope()
+
+
 
     Scaffold (
         snackbarHost = { SnackbarHost(snackbarHostState) },
@@ -242,8 +252,6 @@ fun ExportScreen(
                verticalArrangement = Arrangement.spacedBy(30.dp)
            ) {
                ChooseDateRange(
-                   fromDate = fromDate.value,
-                   toDate = toDate.value,
                    onFromDateChosen = {
                        fromDate.value = it
                    },
@@ -314,50 +322,86 @@ fun ExportScreen(
 
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ChooseDateRange(
-    fromDate: String,
-    toDate:String,
     onFromDateChosen:(fromDate:String)->Unit,
     onToDateChosen:(toDate:String)->Unit
 ) {
+    val currentTimeInMillis = System.currentTimeMillis()
+    val oneDayInMillis = 24 * 60 * 60 * 1000 // 86400000 milliseconds in a day
+    val tomorrowInMillis = currentTimeInMillis + oneDayInMillis
 
     val isFromDatePickerShown = remember { mutableStateOf(false) }
-    val tempFromDate =  remember { mutableStateOf<LocalDate?>(null) }
+    val tempFromDate =  remember { mutableStateOf(System.currentTimeMillis()) }
 
     val isToDatePickerShown = remember { mutableStateOf(false) }
-    val tempToDate =  remember { mutableStateOf<LocalDate?>(null) }
+    val tempToDate =  remember { mutableStateOf(System.currentTimeMillis()) }
+
+    val startDateState = rememberDatePickerState(initialSelectedDateMillis = tomorrowInMillis, yearRange = 2020..getCurrentYear().toInt())
+    val endDateState = rememberDatePickerState(initialSelectedDateMillis = tomorrowInMillis, yearRange = 2020..getCurrentYear().toInt())
+
 
 
     if(isFromDatePickerShown.value){
-        AppAlertDialog (
-            onPositiveBtnClicked = {
-                isFromDatePickerShown.value = false
-                onFromDateChosen(tempFromDate.value.toString())
+        DatePickerDialog(
+            onDismissRequest = {
+
             },
-            positiveBtnText = stringResource(id = R.string.confirm)
-        ){
-            WheelDatePicker(
-                onSnappedDate = {
-                    tempFromDate.value = it
-                    onFromDateChosen(it.toString())
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        tempFromDate.value = startDateState.selectedDateMillis!!
+                        onFromDateChosen(getFormattedDay(tempFromDate.value))
+                        isFromDatePickerShown.value = false
+                    }
+                ) {
+                    Text(stringResource(id = R.string.confirm))
                 }
+            },
+            dismissButton = {
+                TextButton(
+                    onClick = {
+                        isFromDatePickerShown.value = false
+                    }
+                ) {
+                    Text(stringResource(id = R.string.cancel))
+                }
+            }
+        ) {
+            DatePicker(
+                state = startDateState
             )
         }
     }
     if(isToDatePickerShown.value){
-        AppAlertDialog (
-            onPositiveBtnClicked = {
-                isToDatePickerShown.value = false
-                onToDateChosen(tempToDate.value.toString())
+        DatePickerDialog(
+            onDismissRequest = {
+
             },
-            positiveBtnText = stringResource(id = R.string.confirm)
-        ){
-            WheelDatePicker(
-                onSnappedDate = {
-                    tempToDate.value = it
-                    onToDateChosen(it.toString())
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        tempToDate.value = endDateState.selectedDateMillis!!
+                        onToDateChosen(getFormattedDay(tempToDate.value))
+                        isToDatePickerShown.value = false
+                    }
+                ) {
+                    Text(stringResource(id = R.string.confirm))
                 }
+            },
+            dismissButton = {
+                TextButton(
+                    onClick = {
+                        isToDatePickerShown.value = false
+                    }
+                ) {
+                    Text(stringResource(id = R.string.cancel))
+                }
+            }
+        ) {
+            DatePicker(
+                state = endDateState
             )
         }
     }
@@ -376,7 +420,7 @@ fun ChooseDateRange(
 
                 TextButton(onClick = { isFromDatePickerShown.value = true }) {
                     Text(
-                        text = fromDate,
+                        text = getFormattedDay(tempFromDate.value, getLocale()),
                         fontWeight = FontWeight.Bold
                     )
                 }
@@ -391,7 +435,7 @@ fun ChooseDateRange(
                 Text(text = stringResource(id = R.string.to), modifier = Modifier.width(50.dp))
                 TextButton(onClick = { isToDatePickerShown.value = true  }) {
                     Text(
-                        text = toDate,
+                        text = getFormattedDay(tempToDate.value, getLocale()),
                         fontWeight = FontWeight.Bold
                     )
                 }
