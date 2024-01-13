@@ -130,4 +130,20 @@
     <string name="rate_app">ရီဗျူးရေးမည်</string>
     <string name="privacy_policy">ဒေတာအသုံးပြုမှုပေါ်လစီ</string>
     <string name="terms_and_conditions">စည်းကမ်းနှင့်သတ်မှတ်ချက်များ</string>
+
+    <string name="showcase_add_transaction">မှတ်တမ်းအသစ်ထည့်ခြင်း</string>
+    <string name="showcase_add_transaction_description">မှတ်တမ်းအသစ်အား ဤအပေါင်းခလုပ်နှိပ်ပြီးထည့်ပါ။</string>
+
+    <string name="showcase_balance_card">ပိုက်ဆံအရေအတွက်</string>
+    <string name="showcase_balance_card_description">ဤနေရာတွင် ပိုက်ဆံအရေအတွက်များအား လစဥ် ၊ နှစ်စဥ် ၊ စုစုပေါင်းအဖြစ်ကြည့်နိုင်ပါသည်။</string>
+
+    <string name="showcase_chart">ဇယားကွက်များ</string>
+    <string name="showcase_chart_description">ဤခလုပ်အားနှိပ်ပြီး ဒေတာများအား ဇယားကွက်အဖြစ်ကြည့်နိုင်ပါသည်။</string>
+
+    <string name="showcase_manage_category">အမျိုးအစားများစီမံခြင်း</string>
+    <string name="showcase_manage_category_description">မှတ်တမ်းအမျိုးအစားများအား ဤခလုပ်နှိပ်ကာ စီမံနိုင်ပါသည်။</string>
+
+    <string name="showcase_settings">အကောင့်</string>
+    <string name="showcase_settings_description">ဤခလုပ်နှိပ်ကာ အကောင့်၀င်ခြင်း ၊ ဒေတာများအားဖိုင်အဖြစ်ပြောင်းခြင်း ၊ ဆော့၀ဲလ်အားစီမံခြင်းများလုပ်နိုင်ပါသည်။</string>
+
 </resources>

@@ -138,4 +138,20 @@
     <string name="privacy_policy">Privacy Policy</string>
     <string name="terms_and_conditions">Terms And Conditions</string>
 
+    <string name="showcase_add_transaction">Add A New Record</string>
+    <string name="showcase_add_transaction_description">Click here to add expense and income records.</string>
+
+    <string name="showcase_balance_card">Balance Card</string>
+    <string name="showcase_balance_card_description">You can see your wallet balance per month,year and total.</string>
+
+    <string name="showcase_chart">Charts</string>
+    <string name="showcase_chart_description">You can see your records as PieCharts by clicking here.</string>
+
+    <string name="showcase_manage_category">Manage Categories</string>
+    <string name="showcase_manage_category_description">You can manage your expense,income categories here.</string>
+
+    <string name="showcase_settings">Account</string>
+    <string name="showcase_settings_description">You can login,export files and manage settings here.</string>
+
+
 </resources>
