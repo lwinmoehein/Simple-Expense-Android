@@ -1,27 +1,37 @@
 package lab.justonebyte.simpleexpense.ui.detail
 
 
-import androidx.compose.foundation.background
+import android.graphics.Typeface
+import android.view.ViewGroup
+import android.widget.LinearLayout
+import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.absolutePadding
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.viewinterop.AndroidView
+import com.github.mikephil.charting.charts.PieChart
+import com.github.mikephil.charting.components.Legend
+import com.github.mikephil.charting.data.PieData
+import com.github.mikephil.charting.data.PieDataSet
+import com.github.mikephil.charting.data.PieEntry
+import compose.icons.FeatherIcons
+import compose.icons.feathericons.Tablet
 import lab.justonebyte.simpleexpense.R
 import lab.justonebyte.simpleexpense.model.Currency
 import lab.justonebyte.simpleexpense.model.Transaction
@@ -48,14 +58,10 @@ import lab.justonebyte.simpleexpense.ui.theme.bar6
 import lab.justonebyte.simpleexpense.ui.theme.bar7
 import lab.justonebyte.simpleexpense.ui.theme.bar8
 import lab.justonebyte.simpleexpense.ui.theme.bar9
-import me.bytebeats.views.charts.pie.PieChart
-import me.bytebeats.views.charts.pie.PieChartData
-import me.bytebeats.views.charts.pie.render.SimpleSliceDrawer
-import me.bytebeats.views.charts.simpleChartAnimation
 
-fun randomColor() = listOf(
+val colors = listOf(
     bar1,bar2,bar3,bar4,bar5,bar6,bar7,bar8,bar9,bar10,bar11,bar12,bar13,bar14,bar15,bar16,bar17,bar18,bar19,bar20
-).random()
+)
 
 @Composable
 fun CustomPieChartWithData(
@@ -64,90 +70,90 @@ fun CustomPieChartWithData(
     transactions:List<Transaction>,
     transactionType: TransactionType
 ){
-    val groupByCategoryTransactions = transactions.groupBy { it.category }.map { it.key to it.value.sumOf { it.amount } }.sortedByDescending { it.second }
-    val incomePieSlices = groupByCategoryTransactions.map { map->
-        map.first to PieChartData.Slice((map.second ).toFloat(), randomColor())
-    }
+    val materialColor =  MaterialTheme.colorScheme.primary.toArgb()
+    val pieEntries = transactions.groupBy { it.category }.map { PieEntry(it.value.sumOf { s-> s.amount }.toFloat(),it.key.name) }.sortedByDescending { it.value }
 
-    if(incomePieSlices.isNotEmpty()){
+    if(pieEntries.isNotEmpty()){
         Column(
             modifier = modifier
                 .fillMaxWidth(),
-            verticalArrangement = Arrangement.Center,
+            verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Row(verticalAlignment = Alignment.CenterVertically) {
+            Row(verticalAlignment = Alignment.Top) {
                 Row(modifier= Modifier
-                    .weight(1f)
-                    .width(140.dp)
-                    .height(140.dp)){
-                    PieChart(
-                        pieChartData = PieChartData(
-                            slices = incomePieSlices.map{it.second}
-                        ),
-                        // Optional properties.
-                        animation = simpleChartAnimation(),
-                        sliceDrawer = SimpleSliceDrawer(50f)
-                    )
+                    .width(260.dp).height(260.dp).padding(5.dp)){
+                    Crossfade(targetState = pieEntries, label = "") { pieEntries ->
+                        AndroidView(factory = { context ->
+                          PieChart(context).apply {
+                                layoutParams = LinearLayout.LayoutParams(
+                                    ViewGroup.LayoutParams.MATCH_PARENT,
+                                    ViewGroup.LayoutParams.MATCH_PARENT,
+                                )
+                                this.minAngleForSlices = 10f
+                                this.description.isEnabled = false
+                                this.isDrawHoleEnabled = false
+                                this.legend.isEnabled = true
+                                this.legend.isWordWrapEnabled = true
+                                this.legend.textSize = 13F
+                                this.legend.textColor = materialColor
+
+                                this.legend.horizontalAlignment =
+                                    Legend.LegendHorizontalAlignment.CENTER
+                               this.setEntryLabelColor(resources.getColor(R.color.white))
+                            }
+                        },
+                            modifier = Modifier
+                                .padding(5.dp)
+                                , update = {
+                                    updatePieChartWithData(it,pieEntries)
+                            })
+                    }
                 }
                 Column(verticalArrangement = Arrangement.Center, modifier = Modifier
                     .weight(1f)
-                    .absolutePadding(left = 20.dp)) {
+                    .absolutePadding(top = 30.dp, left = 5.dp)) {
                     Text(
                         text = stringResource(R.string.total),
-                        style = MaterialTheme.typography.titleSmall
+                        style = MaterialTheme.typography.titleLarge
                     )
                     FormattedCurrency(
-                         amount =incomePieSlices.sumOf { it.second.value.toLong() },
+                        amount = pieEntries.sumOf { it.value.toLong() },
                         color =if(transactionType==TransactionType.Income) MaterialTheme.colorScheme.primary  else Color.Red,
                         currencyCode = if(currency==Currency.Kyat) stringResource(id = R.string.kyat) else stringResource(R.string.dollar)
                     )
                 }
             }
-            LazyColumn(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .absolutePadding(top = 30.dp),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                content = {
-                    items(incomePieSlices){
-                        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
-                            Row(
-                                modifier = Modifier.absolutePadding(top=3.dp, bottom = 3.dp)
-                            ) {
-                                Row(
-                                    verticalAlignment = Alignment.CenterVertically,
-                                    modifier = Modifier
-                                        .padding(10.dp)
-                                        .fillMaxWidth()
-                                ){
-                                    Row(
-                                        modifier = Modifier.weight(1f),
-                                        verticalAlignment = Alignment.CenterVertically
-                                    ) {
-                                        Spacer(modifier = Modifier
-                                            .absolutePadding(right = 4.dp)
-                                            .width(10.dp)
-                                            .height(10.dp)
-                                            .background(it.second.color))
-                                        Text(text = it.first.name)
-                                    }
-                                    FormattedCurrency(
-                                        modifier = Modifier.weight(1f),
-                                        amount = it.second.value.toLong(),
-                                        color =if(transactionType==TransactionType.Income) MaterialTheme.colorScheme.primary  else Color.Red,
-                                        currencyCode = if(currency==Currency.Kyat) stringResource(id = R.string.kyat) else stringResource(
-                                            id = R.string.dollar
-                                        )
-                                    )
-                                }
-                            }
-                        }
-                    }
-                }
-            )
         }
     }else{
         NoData(modifier = Modifier.fillMaxSize())
     }
+}
+fun updatePieChartWithData(
+    chart: PieChart,
+    entries: List<PieEntry>
+) {
+    val ds = PieDataSet(entries, "")
+
+
+    // on below line we are specifying position for value
+    ds.yValuePosition = PieDataSet.ValuePosition.INSIDE_SLICE
+
+    // on below line we are specifying position for value inside the slice.
+    ds.xValuePosition = PieDataSet.ValuePosition.INSIDE_SLICE
+
+
+    ds.sliceSpace = 2f
+
+    ds.colors =  colors.map { it.toArgb() }
+
+    ds.valueTextSize = 12f
+
+    ds.valueTypeface = Typeface.DEFAULT_BOLD
+
+    val d = PieData(ds)
+
+    chart.data = d
+
+    chart.invalidate()
 }
