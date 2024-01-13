@@ -191,8 +191,8 @@ fun HomeScreen(){
     Scaffold(
         floatingActionButton = {
             IntroShowcase(
-                showIntroShowCase = true,
-                dismissOnClickOutside = false,
+                showIntroShowCase = false,
+                dismissOnClickOutside = true,
                 onShowCaseCompleted = {
                     //App Intro finished!!
                 },
