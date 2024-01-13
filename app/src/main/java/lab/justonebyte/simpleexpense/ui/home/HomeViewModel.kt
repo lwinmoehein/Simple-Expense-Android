@@ -64,8 +64,7 @@ class HomeViewModel @Inject constructor(
 
         viewModelScope.launch {
             launch {
-                collectIsAppIntroduced()
-                changeStepIfAppNotIntroduced()
+                collectAndUpdateIsAppIntroduced()
             }
             launch {
                 collectToken()
@@ -82,19 +81,16 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    private suspend fun collectIsAppIntroduced(){
+    private suspend fun collectAndUpdateIsAppIntroduced(){
             settingsRepository.isAppIntroduced.collect{isIntroduced->
                 _viewModelUiState.update {
                     it.copy(isAppAlreadyIntroduced = isIntroduced)
                 }
+                if(!isIntroduced){
+                    updateAppIntroStep(1)
+                }
             }
     }
-    private  fun changeStepIfAppNotIntroduced(){
-        if(_viewModelUiState.value.isAppAlreadyIntroduced==false){
-            updateAppIntroStep(1)
-        }
-    }
-
     private suspend fun collectToken() {
         settingsRepository.accessToken.collect{
             Log.i("saved:token",it)
