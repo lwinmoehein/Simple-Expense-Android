@@ -7,8 +7,12 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.documentfile.provider.DocumentFile
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
@@ -126,7 +130,10 @@ class SettingsViewModel @Inject constructor(
                 }
             }catch (e:Exception){
                 Log.i("access token fail","cannot fetch access token.")
-                logOut()
+                Firebase.auth.signOut()
+                GoogleSignIn
+                    .getClient(application, GoogleSignInOptions.DEFAULT_SIGN_IN)
+                    .signOut()
                 _viewModelUiState.update {
                     it.copy(
                         isLoggingIn = false,
