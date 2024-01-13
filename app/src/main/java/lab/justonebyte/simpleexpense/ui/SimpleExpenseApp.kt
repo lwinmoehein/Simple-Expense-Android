@@ -15,6 +15,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -33,6 +34,7 @@ import compose.icons.feathericons.Home
 import compose.icons.feathericons.List
 import compose.icons.feathericons.PieChart
 import compose.icons.feathericons.User
+import kotlinx.coroutines.launch
 import lab.justonebyte.simpleexpense.R
 import lab.justonebyte.simpleexpense.model.ShowCase
 import lab.justonebyte.simpleexpense.ui.home.HomeViewModel
@@ -52,6 +54,7 @@ fun SimpleExpenseApp(chooseDownloadFolderLauncher: ActivityResultLauncher<Intent
     val navItems = listOf(NavItem.HOME,NavItem.CHARTS,NavItem.CATEGORIES,NavItem.ACCOUNT)
     val homeViewModel = hiltViewModel<HomeViewModel>()
     val homeUiState by homeViewModel.viewModelUiState.collectAsState()
+    val coroutineScope = rememberCoroutineScope()
 
 
     AppTheme() {
@@ -84,6 +87,11 @@ fun SimpleExpenseApp(chooseDownloadFolderLauncher: ActivityResultLauncher<Intent
                                                     homeViewModel.updateAppIntroStep(
                                                         it
                                                     )
+                                                }
+                                            }
+                                            if(item.showCase==ShowCase.ACCOUNT){
+                                                coroutineScope.launch {
+                                                    homeViewModel.changeIsAppIntroducedToTrue()
                                                 }
                                             }
                                         },

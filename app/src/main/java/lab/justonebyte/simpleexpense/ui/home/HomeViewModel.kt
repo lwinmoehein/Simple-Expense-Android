@@ -269,4 +269,9 @@ class HomeViewModel @Inject constructor(
     fun updateAppIntroStep(showCase: ShowCase){
         _viewModelUiState.update { it.copy(currentAppShowcaseStep = showCase) }
     }
+    suspend fun changeIsAppIntroducedToTrue(){
+       viewModelScope.launch {
+           settingsRepository.updateIsAppIntroduced(true)
+       }
+    }
 }
