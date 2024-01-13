@@ -3,6 +3,7 @@ package lab.justonebyte.simpleexpense.ui
 import AppTheme
 import android.content.Intent
 import androidx.activity.result.ActivityResultLauncher
+import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
@@ -14,10 +15,16 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.compose.rememberNavController
+import com.canopas.lib.showcase.IntroShowcase
+import com.canopas.lib.showcase.component.ShowcaseStyle
 import com.google.accompanist.insets.ProvideWindowInsets
 import compose.icons.FeatherIcons
 import compose.icons.feathericons.Home
@@ -50,31 +57,93 @@ fun SimpleExpenseApp(chooseDownloadFolderLauncher: ActivityResultLauncher<Intent
                 bottomBar = {
                     NavigationBar {
                         navItems.forEachIndexed { index, item ->
-                                NavigationBarItem(
-                                    icon = {
-                                        Icon(
-                                            imageVector = item.imageVector,
-                                            contentDescription = "",
-                                            tint = if (selectedItem == index) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.secondary
+                                if(index==1){
+                                    IntroShowcase(
+                                        showIntroShowCase = true,
+                                        dismissOnClickOutside = true,
+                                        onShowCaseCompleted = {
+                                            //App Intro finished!!
+                                        },
+                                    ){
+                                        NavigationBarItem(
+                                            modifier = Modifier.introShowCaseTarget(
+                                                index = 0,
+                                                style = ShowcaseStyle.Default.copy(
+                                                    backgroundColor = MaterialTheme.colorScheme.primary, // specify color of background
+                                                    backgroundAlpha = 0.98f, // specify transparency of background
+                                                    targetCircleColor = Color.White // specify color of target circle
+                                                ),
+                                                // specify the content to show to introduce app feature
+                                                content = {
+                                                    Column {
+                                                        Text(
+                                                            text = stringResource(id = R.string.showcase_chart),
+                                                            color = Color.White,
+                                                            fontSize = 24.sp,
+                                                            fontWeight = FontWeight.Bold
+                                                        )
+                                                        Text(
+                                                            text = stringResource(R.string.showcase_chart_description),
+                                                            color = Color.White,
+                                                            fontSize = 16.sp
+                                                        )
+
+                                                    }
+                                                }
+                                            ),
+                                            icon = {
+                                                Icon(
+                                                    imageVector = item.imageVector,
+                                                    contentDescription = "",
+                                                    tint = if (selectedItem == index) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.secondary
+                                                )
+                                            },
+                                            label = {
+                                                Text(
+                                                    text = stringResource(id = item.stringResource),
+                                                    color = if (selectedItem == index) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.secondary
+                                                )
+                                            },
+                                            selected = selectedItem == index,
+                                            onClick = {
+                                                selectedItem = index
+                                                when (selectedItem) {
+                                                    0 -> navController.navigate(MainDestinations.HOME_ROUTE)
+                                                    1 -> navController.navigate(MainDestinations.STATS_ROUTE)
+                                                    2 -> navController.navigate(MainDestinations.CATEGORY_ROUTE)
+                                                    else -> navController.navigate(MainDestinations.ACCOUNT_ROUTE)
+                                                }
+                                            }
                                         )
-                                    },
-                                    label = {
-                                        Text(
-                                            text = stringResource(id = item.stringResource),
-                                            color = if (selectedItem == index) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.secondary
-                                        )
-                                    },
-                                    selected = selectedItem == index,
-                                    onClick = {
-                                        selectedItem = index
-                                        when (selectedItem) {
-                                            0 -> navController.navigate(MainDestinations.HOME_ROUTE)
-                                            1 -> navController.navigate(MainDestinations.STATS_ROUTE)
-                                            2 -> navController.navigate(MainDestinations.CATEGORY_ROUTE)
-                                            else -> navController.navigate(MainDestinations.ACCOUNT_ROUTE)
-                                        }
                                     }
-                                )
+                                }else{
+                                    NavigationBarItem(
+                                        icon = {
+                                            Icon(
+                                                imageVector = item.imageVector,
+                                                contentDescription = "",
+                                                tint = if (selectedItem == index) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.secondary
+                                            )
+                                        },
+                                        label = {
+                                            Text(
+                                                text = stringResource(id = item.stringResource),
+                                                color = if (selectedItem == index) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.secondary
+                                            )
+                                        },
+                                        selected = selectedItem == index,
+                                        onClick = {
+                                            selectedItem = index
+                                            when (selectedItem) {
+                                                0 -> navController.navigate(MainDestinations.HOME_ROUTE)
+                                                1 -> navController.navigate(MainDestinations.STATS_ROUTE)
+                                                2 -> navController.navigate(MainDestinations.CATEGORY_ROUTE)
+                                                else -> navController.navigate(MainDestinations.ACCOUNT_ROUTE)
+                                            }
+                                        }
+                                    )
+                                }
+
                         }
                     }
                 }

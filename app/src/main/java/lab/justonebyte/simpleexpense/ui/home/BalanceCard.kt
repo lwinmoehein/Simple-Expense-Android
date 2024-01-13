@@ -87,7 +87,7 @@ fun BalanceCard(
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     IntroShowcase(
-                        showIntroShowCase = true,
+                        showIntroShowCase = false,
                         dismissOnClickOutside = true,
                         onShowCaseCompleted = {
                             //App Intro finished!!
