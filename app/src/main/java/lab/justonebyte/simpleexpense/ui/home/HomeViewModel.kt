@@ -95,10 +95,11 @@ class HomeViewModel @Inject constructor(
     }
     private suspend fun collectToken() {
         settingsRepository.accessToken.collect{
-            Log.i("saved:token",it)
-            token.value = it
-            runVersionSync(application,"categories",token.value)
-            runVersionSync(application,"transactions",token.value)
+            if(it.isNotEmpty()){
+                token.value = it
+                runVersionSync(application,"categories",token.value)
+                runVersionSync(application,"transactions",token.value)
+            }
         }
     }
 
@@ -214,7 +215,7 @@ class HomeViewModel @Inject constructor(
                     note = note
                 )
             )
-            runVersionSync(application,"transactions",token.value)
+            if(token.value.isNotEmpty()) runVersionSync(application,"transactions",token.value)
         }
         viewModelScope.launch {
             bindTransactionsFromBalanceType(_viewModelUiState.value.currentBalanceType)
@@ -240,8 +241,7 @@ class HomeViewModel @Inject constructor(
                     note = note
                 )
             )
-            Log.i("crrentType:update", _viewModelUiState.value.currentBalanceType.value.toString())
-            runVersionSync(application,"transactions",token.value)
+            if(token.value.isNotEmpty()) runVersionSync(application,"transactions",token.value)
         }
         viewModelScope.launch {
             bindTransactionsFromBalanceType(_viewModelUiState.value.currentBalanceType)
@@ -252,7 +252,7 @@ class HomeViewModel @Inject constructor(
 
         viewModelScope.launch {
             transactionRepository.delete(transaction)
-            runVersionSync(application,"transactions",token.value)
+            if(token.value.isNotEmpty()) runVersionSync(application,"transactions",token.value)
         }
         viewModelScope.launch {
             bindTransactionsFromBalanceType(_viewModelUiState.value.currentBalanceType)
@@ -262,7 +262,7 @@ class HomeViewModel @Inject constructor(
     fun addCategory(transactinCategory:TransactionCategory){
         viewModelScope.launch {
             categoryRepository.insert(transactionCategory = transactinCategory)
-            runVersionSync(application,"categories",token.value)
+            if(token.value.isNotEmpty()) runVersionSync(application,"categories",token.value)
         }
     }
 
