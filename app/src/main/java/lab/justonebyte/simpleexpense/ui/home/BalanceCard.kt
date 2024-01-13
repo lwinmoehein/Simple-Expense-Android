@@ -30,6 +30,7 @@ import compose.icons.feathericons.ArrowUp
 import compose.icons.feathericons.DollarSign
 import lab.justonebyte.simpleexpense.R
 import lab.justonebyte.simpleexpense.model.Currency
+import lab.justonebyte.simpleexpense.model.ShowCase
 import lab.justonebyte.simpleexpense.ui.components.FormattedCurrency
 import lab.justonebyte.simpleexpense.ui.components.TransactionTypePicker
 
@@ -87,10 +88,10 @@ fun BalanceCard(
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     IntroShowcase(
-                        showIntroShowCase = false,
+                        showIntroShowCase = homeUiState.currentAppShowcaseStep==ShowCase.BALANCE_CARD,
                         dismissOnClickOutside = true,
                         onShowCaseCompleted = {
-                            //App Intro finished!!
+                            homeViewModel.updateAppIntroStep(ShowCase.CHARTS)
                         },
                     ) {
                         BalanceItem(

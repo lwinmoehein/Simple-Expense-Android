@@ -34,13 +34,14 @@ import compose.icons.feathericons.List
 import compose.icons.feathericons.PieChart
 import compose.icons.feathericons.User
 import lab.justonebyte.simpleexpense.R
+import lab.justonebyte.simpleexpense.model.ShowCase
 import lab.justonebyte.simpleexpense.ui.home.HomeViewModel
 
-enum class NavItem(val stringResource:Int,val imageVector:ImageVector){
+enum class NavItem(val stringResource:Int,val imageVector:ImageVector,val showCase: ShowCase?=null){
     HOME(R.string.home,FeatherIcons.Home),
-    CHARTS(R.string.charts,FeatherIcons.PieChart),
-    CATEGORIES(R.string.m_categories,FeatherIcons.List),
-    ACCOUNT(R.string.account,FeatherIcons.User)
+    CHARTS(R.string.charts,FeatherIcons.PieChart,ShowCase.CHARTS),
+    CATEGORIES(R.string.m_categories,FeatherIcons.List,ShowCase.MANAGE_CATEGORIES),
+    ACCOUNT(R.string.account,FeatherIcons.User,ShowCase.ACCOUNT)
 }
 
 val appContentPadding = 20.dp
@@ -50,7 +51,7 @@ fun SimpleExpenseApp(chooseDownloadFolderLauncher: ActivityResultLauncher<Intent
     var selectedItem by remember { mutableStateOf(0) }
     val navItems = listOf(NavItem.HOME,NavItem.CHARTS,NavItem.CATEGORIES,NavItem.ACCOUNT)
     val homeViewModel = hiltViewModel<HomeViewModel>()
-    val homeUiState = homeViewModel.viewModelUiState.collectAsState()
+    val homeUiState by homeViewModel.viewModelUiState.collectAsState()
 
 
     AppTheme() {
@@ -75,10 +76,14 @@ fun SimpleExpenseApp(chooseDownloadFolderLauncher: ActivityResultLauncher<Intent
                                         else -> stringResource(id = R.string.showcase_settings_description)
                                     }
                                     IntroShowcase(
-                                        showIntroShowCase = index==homeUiState.value.currentAppShowcaseStep,
+                                        showIntroShowCase = item.showCase==homeUiState.currentAppShowcaseStep,
                                         dismissOnClickOutside = true,
                                         onShowCaseCompleted = {
-                                            homeViewModel.updateAppIntroStep(index+1)
+                                            navItems[index+1].showCase?.let {
+                                                homeViewModel.updateAppIntroStep(
+                                                    it
+                                                )
+                                            }
                                         },
                                     ){
                                         NavigationBarItem(

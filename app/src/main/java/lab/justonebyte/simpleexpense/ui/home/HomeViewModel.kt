@@ -16,6 +16,7 @@ import lab.justonebyte.simpleexpense.data.SettingPrefRepository
 import lab.justonebyte.simpleexpense.data.TransactionRepository
 import lab.justonebyte.simpleexpense.model.BalanceType
 import lab.justonebyte.simpleexpense.model.Currency
+import lab.justonebyte.simpleexpense.model.ShowCase
 import lab.justonebyte.simpleexpense.model.Transaction
 import lab.justonebyte.simpleexpense.model.TransactionCategory
 import lab.justonebyte.simpleexpense.model.TransactionType
@@ -29,7 +30,7 @@ import javax.inject.Inject
 
 data class HomeUiState(
     val isAppAlreadyIntroduced:Boolean?=null,
-    val currentAppShowcaseStep:Int?=null,
+    val currentAppShowcaseStep:ShowCase?=null,
     val currentBalance:Long,
     val incomeBalance:Long,
     val expenseBalance:Long,
@@ -87,8 +88,9 @@ class HomeViewModel @Inject constructor(
                     it.copy(isAppAlreadyIntroduced = isIntroduced)
                 }
                 if(!isIntroduced){
-                    updateAppIntroStep(1)
+                    updateAppIntroStep(ShowCase.ADD_TRANSACTION)
                 }
+                Log.i("isIntroduced:",isIntroduced.toString())
             }
     }
     private suspend fun collectToken() {
@@ -264,7 +266,7 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    fun updateAppIntroStep(step:Int){
-        _viewModelUiState.update { it.copy(currentAppShowcaseStep = step) }
+    fun updateAppIntroStep(showCase: ShowCase){
+        _viewModelUiState.update { it.copy(currentAppShowcaseStep = showCase) }
     }
 }

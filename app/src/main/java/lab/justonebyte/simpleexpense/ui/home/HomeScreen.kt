@@ -35,6 +35,7 @@ import compose.icons.FeatherIcons
 import compose.icons.feathericons.Plus
 import lab.justonebyte.simpleexpense.R
 import lab.justonebyte.simpleexpense.model.BalanceType
+import lab.justonebyte.simpleexpense.model.ShowCase
 import lab.justonebyte.simpleexpense.model.Transaction
 import lab.justonebyte.simpleexpense.model.TransactionCategory
 import lab.justonebyte.simpleexpense.ui.components.AppAlertDialog
@@ -191,10 +192,10 @@ fun HomeScreen(){
     Scaffold(
         floatingActionButton = {
             IntroShowcase(
-                showIntroShowCase = false,
+                showIntroShowCase = homeUiState.currentAppShowcaseStep==ShowCase.ADD_TRANSACTION,
                 dismissOnClickOutside = true,
                 onShowCaseCompleted = {
-
+                    homeViewModel.updateAppIntroStep(ShowCase.BALANCE_CARD)
                 },
             ) {
                 FloatingActionButton(

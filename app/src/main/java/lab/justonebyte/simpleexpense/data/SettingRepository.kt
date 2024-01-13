@@ -57,7 +57,7 @@ class SettingPreferencesRepositoryImpl @Inject constructor
 
     override val selectedTheme: Flow<Int> = dataStore.data.map { it[THEME] ?: Theme.SYSTEM.id }
     override val selectedLocale: Flow<String> = dataStore.data.map { it[LOCALE] ?: AppLocale.English.value }
-    override val isAppIntroduced: Flow<Boolean> = dataStore.data.map { it[IS_FIRST_TIME]?:true }
+    override val isAppIntroduced: Flow<Boolean> = dataStore.data.map { it[IS_FIRST_TIME]?:false }
     override val defaultBalanceType: Flow<Int> = dataStore.data.map { it[DEFAULT_BALANCE_TYPE]?:BalanceType.MONTHLY.value }
     override val selectedCurrency: Flow<Int> = dataStore.data.map { it[SELECTED_CURRENCY]?:Currency.Kyat.value }
     override val accessToken: Flow<String> = dataStore.data.map { it[ACCESS_TOKEN]?:"" }
