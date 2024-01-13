@@ -23,6 +23,7 @@ import lab.justonebyte.simpleexpense.ui.account.SettingsScreen
 import lab.justonebyte.simpleexpense.ui.account.TermsAndServicesScreen
 import lab.justonebyte.simpleexpense.ui.category.ManageCategoryScreen
 import lab.justonebyte.simpleexpense.ui.home.HomeScreen
+import lab.justonebyte.simpleexpense.ui.home.HomeViewModel
 import lab.justonebyte.simpleexpense.ui.stats.StatsScreen
 
 
@@ -44,7 +45,8 @@ fun NavGraph(
     paddings: PaddingValues,
     navController: NavHostController = rememberNavController(),
     startDestination: String = MainDestinations.HOME_ROUTE,
-    chooseDownloadFolderLauncher: ActivityResultLauncher<Intent>
+    chooseDownloadFolderLauncher: ActivityResultLauncher<Intent>,
+    homeViewModel: HomeViewModel
 ) {
 
     NavHost(
@@ -54,7 +56,9 @@ fun NavGraph(
     ) {
 
         composable(MainDestinations.HOME_ROUTE) {
-            HomeScreen()
+            HomeScreen(
+                homeViewModel = homeViewModel
+            )
         }
         composable(MainDestinations.STATS_ROUTE) {
             StatsScreen()

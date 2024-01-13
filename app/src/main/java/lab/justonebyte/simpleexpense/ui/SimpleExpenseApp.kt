@@ -79,10 +79,12 @@ fun SimpleExpenseApp(chooseDownloadFolderLauncher: ActivityResultLauncher<Intent
                                         showIntroShowCase = item.showCase==homeUiState.currentAppShowcaseStep,
                                         dismissOnClickOutside = true,
                                         onShowCaseCompleted = {
-                                            navItems[index+1].showCase?.let {
-                                                homeViewModel.updateAppIntroStep(
-                                                    it
-                                                )
+                                            if(item.showCase!=ShowCase.ACCOUNT){
+                                                navItems[index+1].showCase?.let {
+                                                    homeViewModel.updateAppIntroStep(
+                                                        it
+                                                    )
+                                                }
                                             }
                                         },
                                     ){
@@ -172,7 +174,8 @@ fun SimpleExpenseApp(chooseDownloadFolderLauncher: ActivityResultLauncher<Intent
                 NavGraph(
                     paddings = it,
                     navController = navController,
-                    chooseDownloadFolderLauncher = chooseDownloadFolderLauncher
+                    chooseDownloadFolderLauncher = chooseDownloadFolderLauncher,
+                    homeViewModel = homeViewModel
                 )
             }
         }

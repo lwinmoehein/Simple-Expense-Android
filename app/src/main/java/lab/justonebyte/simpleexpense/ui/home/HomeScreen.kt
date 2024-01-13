@@ -46,8 +46,9 @@ import java.util.UUID
 
 @SuppressLint("UnrememberedMutableState", "UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun HomeScreen(){
-    val homeViewModel = hiltViewModel<HomeViewModel>()
+fun HomeScreen(
+    homeViewModel: HomeViewModel
+){
     val homeUiState by homeViewModel.viewModelUiState.collectAsState()
     val snackbarHostState = remember { SnackbarHostState() }
     val coroutineScope = rememberCoroutineScope()
