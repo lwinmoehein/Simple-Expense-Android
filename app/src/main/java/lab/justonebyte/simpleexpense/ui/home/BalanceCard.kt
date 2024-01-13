@@ -39,39 +39,8 @@ fun BalanceCard(
     homeUiState:HomeUiState,
     homeViewModel: HomeViewModel
 ){
-    IntroShowcase(
-        showIntroShowCase = true,
-        dismissOnClickOutside = true,
-        onShowCaseCompleted = {
-            //App Intro finished!!
-        },
-    ) {
         Card(
-            modifier = modifier.fillMaxWidth().introShowCaseTarget(
-                index = 0,
-                style = ShowcaseStyle.Default.copy(
-                    backgroundColor = MaterialTheme.colorScheme.primary, // specify color of background
-                    backgroundAlpha = 0.98f, // specify transparency of background
-                    targetCircleColor = Color.White // specify color of target circle
-                ),
-                // specify the content to show to introduce app feature
-                content = {
-                    Column {
-                        Text(
-                            text = stringResource(id = R.string.showcase_balance_card),
-                            color = Color.White,
-                            fontSize = 24.sp,
-                            fontWeight = FontWeight.Bold
-                        )
-                        Text(
-                            text = stringResource(R.string.showcase_balance_card_description),
-                            color = Color.White,
-                            fontSize = 16.sp
-                        )
-
-                    }
-                }
-            ),
+            modifier = modifier.fillMaxWidth(),
             shape = RoundedCornerShape(10.dp)
         ) {
             Column(
@@ -117,13 +86,47 @@ fun BalanceCard(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
-                    BalanceItem(
-                        icon = FeatherIcons.DollarSign,
-                        text = "",
-                        amount = homeUiState.currentBalance,
-                        color = MaterialTheme.colorScheme.secondary,
-                        currency = homeUiState.currentCurrency
-                    )
+                    IntroShowcase(
+                        showIntroShowCase = true,
+                        dismissOnClickOutside = true,
+                        onShowCaseCompleted = {
+                            //App Intro finished!!
+                        },
+                    ) {
+                        BalanceItem(
+                            modifier = Modifier.introShowCaseTarget(
+                                index = 0,
+                                style = ShowcaseStyle.Default.copy(
+                                    backgroundColor = MaterialTheme.colorScheme.primary, // specify color of background
+                                    backgroundAlpha = 0.98f, // specify transparency of background
+                                    targetCircleColor = Color.White // specify color of target circle
+                                ),
+                                // specify the content to show to introduce app feature
+                                content = {
+                                    Column {
+                                        Text(
+                                            text = stringResource(id = R.string.showcase_balance_card),
+                                            color = Color.White,
+                                            fontSize = 24.sp,
+                                            fontWeight = FontWeight.Bold
+                                        )
+                                        Text(
+                                            text = stringResource(R.string.showcase_balance_card_description),
+                                            color = Color.White,
+                                            fontSize = 16.sp
+                                        )
+
+                                    }
+                                }
+                            ),
+                            icon = FeatherIcons.DollarSign,
+                            text = "",
+                            amount = homeUiState.currentBalance,
+                            color = MaterialTheme.colorScheme.secondary,
+                            currency = homeUiState.currentCurrency
+                        )
+                    }
+
                     BalanceItem(
                         icon = FeatherIcons.ArrowUp,
                         text = "",
@@ -141,7 +144,7 @@ fun BalanceCard(
                 }
             }
         }
-    }
+
 }
 
 @Composable
