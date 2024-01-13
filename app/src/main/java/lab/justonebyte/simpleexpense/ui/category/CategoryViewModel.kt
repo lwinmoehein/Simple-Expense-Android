@@ -62,10 +62,9 @@ class CategoryViewModel @Inject constructor(
         }
     }
     fun addCategory(transactinCategory:TransactionCategory){
-        Log.i("addCategory:",transactinCategory.name)
         viewModelScope.launch {
             categoryRepository.insert(transactionCategory = transactinCategory)
-            runVersionSync(application,"categories",token.value)
+            if(token.value.isNotEmpty()) runVersionSync(application,"categories",token.value)
         }
     }
     fun updateCategory(transactinCategory:TransactionCategory,name:String){
@@ -78,14 +77,13 @@ class CategoryViewModel @Inject constructor(
         )
         viewModelScope.launch {
             categoryRepository.update(transactionCategory = category)
-            runVersionSync(application,"categories",token.value)
+            if(token.value.isNotEmpty()) runVersionSync(application,"categories",token.value)
         }
     }
     fun removeCategory(transactinCategory:TransactionCategory){
         viewModelScope.launch {
             categoryRepository.delete(id = transactinCategory.unique_id)
-            runVersionSync(application,"categories",token.value)
-
+            if(token.value.isNotEmpty()) runVersionSync(application,"categories",token.value)
         }
     }
 
