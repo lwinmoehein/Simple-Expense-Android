@@ -38,6 +38,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -57,6 +58,7 @@ import compose.icons.feathericons.File
 import compose.icons.fontawesomeicons.Regular
 import compose.icons.fontawesomeicons.regular.FileExcel
 import compose.icons.fontawesomeicons.regular.FilePdf
+import kotlinx.coroutines.launch
 import lab.justonebyte.simpleexpense.R
 import lab.justonebyte.simpleexpense.ui.MainDestinations
 import lab.justonebyte.simpleexpense.ui.components.AppAlertDialog
@@ -206,14 +208,16 @@ fun ExportScreen(
     val toDate = remember { mutableStateOf(getCurrentDay()) }
     val fromDate = remember { mutableStateOf(getCurrentDay()) }
     val snackbarHostState = remember { SnackbarHostState() }
-
+    val coroutineScope = rememberCoroutineScope()
 
     Scaffold (
         snackbarHost = { SnackbarHost(snackbarHostState) },
         topBar = {
                 IconButton(
                     onClick =  {
-                        navController.navigate(MainDestinations.ACCOUNT_ROUTE)
+                        coroutineScope.launch {
+                            navController.popBackStack()
+                        }
                     }
                 ) {
                     Icon(

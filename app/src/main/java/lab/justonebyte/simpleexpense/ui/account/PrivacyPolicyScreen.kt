@@ -77,11 +77,13 @@ fun PrivacyPolicyScreen(
     context: Context = LocalContext.current
 ){
 
+    val coroutineScope = rememberCoroutineScope()
+
     Scaffold(
         topBar = {
                 IconButton(
                     onClick =  {
-                        navController.navigate(MainDestinations.ACCOUNT_ROUTE)
+                        navController.popBackStack()
                     }
                 ) {
                     Icon(

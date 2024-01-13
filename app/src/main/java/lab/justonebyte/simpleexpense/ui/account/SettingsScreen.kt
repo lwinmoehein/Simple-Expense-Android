@@ -17,6 +17,7 @@ import androidx.navigation.NavController
 import com.google.accompanist.navigation.animation.*
 import compose.icons.FeatherIcons
 import compose.icons.feathericons.ArrowLeft
+import kotlinx.coroutines.launch
 import lab.justonebyte.simpleexpense.R
 import lab.justonebyte.simpleexpense.model.AppLocale
 import lab.justonebyte.simpleexpense.model.Currency
@@ -36,6 +37,7 @@ fun SettingsScreen(
     val settingsUiState by settingsViewModel.viewModelUiState.collectAsState()
     val settingCurrencies = listOf<OptionItem>(Currency.Kyat,Currency.Dollar)
     val appLanguages = listOf(AppLocale.English,AppLocale.Myanmar)
+    val coroutineScope = rememberCoroutineScope()
 
     fun changeLocale(localeString: String){
         LocaleHelper().setLocale(context, localeString)
@@ -48,7 +50,9 @@ fun SettingsScreen(
         topBar = {
                 IconButton(
                     onClick =  {
-                        navController.navigate(MainDestinations.ACCOUNT_ROUTE)
+                        coroutineScope.launch {
+                            navController.popBackStack()
+                        }
                     }
                 ) {
                     Icon(

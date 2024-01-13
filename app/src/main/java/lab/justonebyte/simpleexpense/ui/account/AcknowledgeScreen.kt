@@ -14,6 +14,7 @@ import androidx.navigation.NavController
 import com.google.accompanist.navigation.animation.*
 import compose.icons.FeatherIcons
 import compose.icons.feathericons.ArrowLeft
+import kotlinx.coroutines.launch
 import lab.justonebyte.simpleexpense.R
 import lab.justonebyte.simpleexpense.ui.MainDestinations
 import lab.justonebyte.simpleexpense.ui.components.SectionTitle
@@ -25,11 +26,14 @@ fun AcknowledgeScreen(
     context: Context = LocalContext.current
 ){
 
+    val  coroutineScope = rememberCoroutineScope()
     Scaffold(
         topBar = {
                 IconButton(
                     onClick =  {
-                        navController.navigate(MainDestinations.ACCOUNT_ROUTE)
+                        coroutineScope.launch {
+                            navController.popBackStack()
+                        }
                     }
                 ) {
                     Icon(
