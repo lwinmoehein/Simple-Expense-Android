@@ -1,9 +1,6 @@
 package lab.justonebyte.simpleexpense.ui.home
 
 import android.annotation.SuppressLint
-import android.os.Build
-import android.util.Log
-import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -16,6 +13,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
@@ -24,13 +22,17 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.DialogProperties
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.canopas.lib.showcase.IntroShowcase
+import com.canopas.lib.showcase.component.ShowcaseStyle
 import compose.icons.FeatherIcons
 import compose.icons.feathericons.Plus
-import kotlinx.coroutines.launch
 import lab.justonebyte.simpleexpense.R
 import lab.justonebyte.simpleexpense.model.BalanceType
 import lab.justonebyte.simpleexpense.model.Transaction
@@ -188,14 +190,47 @@ fun HomeScreen(){
 
     Scaffold(
         floatingActionButton = {
-            FloatingActionButton(
-                onClick = {
-                    clearStates()
-                    isChooseAddTransactionTypeOpen.value = true
+            IntroShowcase(
+                showIntroShowCase = true,
+                dismissOnClickOutside = false,
+                onShowCaseCompleted = {
+                    //App Intro finished!!
                 },
-                shape = MaterialTheme.shapes.extraLarge
             ) {
-                Icon(imageVector = FeatherIcons.Plus, "Localized description")
+                FloatingActionButton(
+                    onClick = {
+                        clearStates()
+                        isChooseAddTransactionTypeOpen.value = true
+                    },
+                    shape = MaterialTheme.shapes.extraLarge,
+                    modifier =  Modifier.introShowCaseTarget(
+                        index = 0,
+                        style = ShowcaseStyle.Default.copy(
+                            backgroundColor = MaterialTheme.colorScheme.primary, // specify color of background
+                            backgroundAlpha = 0.98f, // specify transparency of background
+                            targetCircleColor = Color.White // specify color of target circle
+                        ),
+                        // specify the content to show to introduce app feature
+                        content = {
+                            Column {
+                                Text(
+                                    text = stringResource(id = R.string.showcase_add_transaction),
+                                    color = Color.White,
+                                    fontSize = 24.sp,
+                                    fontWeight = FontWeight.Bold
+                                )
+                                Text(
+                                    text = stringResource(R.string.showcase_add_transaction_description),
+                                    color = Color.White,
+                                    fontSize = 16.sp
+                                )
+
+                            }
+                        }
+                    )
+                ) {
+                    Icon(imageVector = FeatherIcons.Plus, "Localized description")
+                }
             }
         },
         snackbarHost = { SnackbarHost(snackbarHostState) },
@@ -204,7 +239,9 @@ fun HomeScreen(){
         Column(Modifier.padding(it)) {
             Row(
                 horizontalArrangement = Arrangement.Center,
-                modifier = Modifier.absolutePadding(top = 30.dp, bottom = 20.dp).fillMaxWidth()
+                modifier = Modifier
+                    .absolutePadding(top = 30.dp, bottom = 20.dp)
+                    .fillMaxWidth()
             ) {
                     ChooseTransactionTypeTab(
                         balanceType =  homeUiState.currentBalanceType,
