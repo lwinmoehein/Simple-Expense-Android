@@ -60,12 +60,12 @@ fun SimpleExpenseApp(chooseDownloadFolderLauncher: ActivityResultLauncher<Intent
                                 if(index!=0){
                                     val showcaseTitle = when(index){
                                         1-> stringResource(id = R.string.showcase_chart)
-                                        1-> stringResource(id = R.string.showcase_manage_category)
+                                        2-> stringResource(id = R.string.showcase_manage_category)
                                         else -> stringResource(id = R.string.showcase_settings)
                                     }
                                     val showcaseDescription = when(index){
                                         1-> stringResource(id = R.string.showcase_chart_description)
-                                        1-> stringResource(id = R.string.showcase_manage_category_description)
+                                        2-> stringResource(id = R.string.showcase_manage_category_description)
                                         else -> stringResource(id = R.string.showcase_settings_description)
                                     }
                                     IntroShowcase(
