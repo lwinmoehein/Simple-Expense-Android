@@ -1,8 +1,10 @@
 package lab.justonebyte.simpleexpense.ui.account
 
 import android.annotation.SuppressLint
+import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.os.Build
 import android.util.Log
 import androidx.activity.compose.ManagedActivityResultLauncher
@@ -88,6 +90,7 @@ fun AccountScreen(
     navController: NavController,
     context: Context = LocalContext.current
 ){
+    val packageName = context.packageName
     val settingsViewModel = hiltViewModel<SettingsViewModel>()
     val settingsUiState by settingsViewModel.viewModelUiState.collectAsState()
     val snackbarHostState = remember { SnackbarHostState() }
@@ -274,7 +277,11 @@ fun AccountScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .clickable {
-                            navController.navigate(MainDestinations.ACKNOWLEDGEMENT)
+                            try {
+                                context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=$packageName")))
+                            } catch (e: ActivityNotFoundException) {
+                                context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=$packageName")))
+                            }
                         },
                     verticalAlignment = Alignment.CenterVertically
                 ) {
@@ -293,7 +300,7 @@ fun AccountScreen(
                 }
                 Spacer(modifier = Modifier.height(50.dp))
 
-                    user?.let {
+                user?.let {
                         OutlinedButton(
                             modifier= Modifier
                                 .fillMaxWidth()
