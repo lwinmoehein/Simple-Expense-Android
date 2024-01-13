@@ -63,6 +63,17 @@ fun getCurrentDay(locale: Locale? = Locale.ENGLISH): String {
     val formatter = SimpleDateFormat("yyyy-MM-dd",locale)
     return formatter.format(date)
 }
+fun getCurrentDayFromTimestamp(timestampMillis: Long, locale: Locale = Locale.ENGLISH): String {
+    val calendar = Calendar.getInstance(locale)
+    calendar.timeInMillis = timestampMillis
+    calendar.set(Calendar.HOUR_OF_DAY, 0)
+    calendar.set(Calendar.MINUTE, 0)
+    calendar.set(Calendar.SECOND, 0)
+    calendar.set(Calendar.MILLISECOND, 0)
+
+    val formatter = SimpleDateFormat("yyyy-MM-dd", locale)
+    return formatter.format(calendar.time)
+}
 
 fun getTimeStampForYearStart(year: Int): Long {
     val calendar = Calendar.getInstance()

@@ -14,12 +14,17 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
+import androidx.compose.material3.DatePicker
+import androidx.compose.material3.DatePickerDialog
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
+import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -30,6 +35,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.commandiron.wheel_picker_compose.WheelDatePicker
+import com.google.android.material.datepicker.MaterialDatePicker
 import compose.icons.FeatherIcons
 import compose.icons.feathericons.DollarSign
 import lab.justonebyte.simpleexpense.R
@@ -39,11 +45,17 @@ import lab.justonebyte.simpleexpense.model.TransactionCategory
 import lab.justonebyte.simpleexpense.model.TransactionType
 import lab.justonebyte.simpleexpense.ui.components.AppAlertDialog
 import lab.justonebyte.simpleexpense.ui.components.NumberKeyboard
+import lab.justonebyte.simpleexpense.ui.components.getLocale
 import lab.justonebyte.simpleexpense.utils.convertDateStringToTimestamp
+import lab.justonebyte.simpleexpense.utils.getCurrentDay
+import lab.justonebyte.simpleexpense.utils.getCurrentDayFromTimestamp
 import lab.justonebyte.simpleexpense.utils.getCurrentDayTimeMillisecond
+import lab.justonebyte.simpleexpense.utils.getCurrentYear
 import java.time.LocalDate
+import java.util.Locale
 
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddTransactionContent(
     currentCurrency: Currency,
@@ -55,6 +67,10 @@ fun AddTransactionContent(
     onAddCategory:(categoryName:String,transactionType:TransactionType)->Unit,
     currentTransaction:Transaction?
 ) {
+    val currentTimeInMillis = System.currentTimeMillis()
+    val oneDayInMillis = 24 * 60 * 60 * 1000 // 86400000 milliseconds in a day
+    val tomorrowInMillis = currentTimeInMillis + oneDayInMillis
+
     val localFocusManage = LocalFocusManager.current
     val currentType = remember(currentTransaction) { mutableStateOf(currentTransaction?.type?.value ?: currentType) }
     val currentAmount = remember(currentTransaction) { mutableStateOf(currentTransaction?.amount?.toString() ?: "") }
@@ -64,30 +80,47 @@ fun AddTransactionContent(
     val isAddTransactionConfirmDialogOpen = remember { mutableStateOf(false) }
 
     val isRecordDatePickerShown = remember { mutableStateOf(false) }
-    val tempRecordDate =  remember { mutableStateOf<LocalDate?>(null)}
+    val tempRecordDate =  remember { mutableStateOf(System.currentTimeMillis()) }
     val isNumberKeyboardShown = remember { mutableStateOf(false) }
+    val state = rememberDatePickerState(initialSelectedDateMillis = tomorrowInMillis, yearRange = 2020..getCurrentYear().toInt())
 
     fun clearTransactionForm() {
         currentAmount.value = ""
         currentType.value = 1
         currentCategory.value = null
-        tempRecordDate.value = null
+        tempRecordDate.value = System.currentTimeMillis()
         localFocusManage.clearFocus()
     }
 
+
     if(isRecordDatePickerShown.value){
-        AppAlertDialog (
-            onPositiveBtnClicked = {
-                isRecordDatePickerShown.value = false
-                //onFromDateChosen(tempRecordDate.value.toString())
-            },
-            positiveBtnText = stringResource(id = R.string.confirm)
-        ){
-            WheelDatePicker(
-                onSnappedDate = {
-                    tempRecordDate.value = it
+            DatePickerDialog(
+                onDismissRequest = {
+
+                },
+                confirmButton = {
+                    TextButton(
+                        onClick = {
+                           tempRecordDate.value = state.selectedDateMillis!!
+                           isRecordDatePickerShown.value = false
+                        }
+                    ) {
+                        Text(stringResource(id = R.string.confirm))
+                    }
+                },
+                dismissButton = {
+                    TextButton(
+                        onClick = {
+                           isRecordDatePickerShown.value = false
+                        }
+                    ) {
+                        Text(stringResource(id = R.string.cancel))
+                    }
                 }
-            )
+            ) {
+                DatePicker(
+                    state = state
+                )
         }
     }
 
@@ -108,17 +141,12 @@ fun AddTransactionContent(
                 if (!isValidCategorySelected || amount <= 0) {
                     showIncorrectDataSnack()
                 } else {
-                    Log.i("date:temp",tempRecordDate.value.toString())
-                    Log.i("date:converted", convertDateStringToTimestamp(tempRecordDate.value.toString()).toString())
-                    Log.i("date:cdaytime",getCurrentDayTimeMillisecond().toString())
-
-                    val transactionCreatedDate  = convertDateStringToTimestamp(tempRecordDate.value.toString())+getCurrentDayTimeMillisecond()
                     currentCategory.value?.let {
                         onConfirmTransactionForm(
                                 currentType.value,
                                 amount,
                                 it,
-                                transactionCreatedDate,
+                                tempRecordDate.value,
                                 note.value
                             )
                         onCloseDialog()
@@ -185,7 +213,7 @@ fun AddTransactionContent(
                         modifier = Modifier.weight(1f)
                     ) {
                         Text(
-                            text = tempRecordDate.value.toString(),
+                            text = getCurrentDayFromTimestamp(tempRecordDate.value, getLocale()?: Locale.ENGLISH),
                             fontWeight = FontWeight.Bold,
                             color = MaterialTheme.colorScheme.primary
                         )
