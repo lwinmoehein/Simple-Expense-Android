@@ -107,7 +107,7 @@
     <string name="file_export_success">ဖိုင်အားရွေးချယ်ထားသော ဖိုလ်ဒါထဲ ထည့်လိုက်ပါပြီ။</string>
     <string name="select_correct_download_folder">ကျေးဇူးပြုပြီး ဖိုင်သိမ်းရန် ဖိုလ်ဒါရွေးပေးပါ။</string>
     <string name="log_out">အကောင့်မှထွက်မည်</string>
-    <string name="connection_error">အင်တာနက်ကို ချိတ်ဆက်လို့မရပါ။</string>
+    <string name="connection_error">ဆာဗာကို ချိတ်ဆက်လို့မရပါ။</string>
     <string name="not_logged_in">အကောင့်၀င်မထားပါ</string>
     <string name="logged_in">၀င်ထားသည့်အကောင့်။</string>
 

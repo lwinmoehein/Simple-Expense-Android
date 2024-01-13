@@ -114,7 +114,7 @@
     <string name="select_correct_download_folder">Please select correct export folder.</string>
 
     <string name="log_out">Logout</string>
-    <string name="connection_error">Cannot connect to internet.</string>
+    <string name="connection_error">Cannot connect to server. Please try again later.</string>
     <string name="not_logged_in">Not logged in : </string>
     <string name="logged_in">Logged in as : </string>
 

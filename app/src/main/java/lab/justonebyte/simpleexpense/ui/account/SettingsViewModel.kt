@@ -126,7 +126,7 @@ class SettingsViewModel @Inject constructor(
                 }
             }catch (e:Exception){
                 Log.i("access token fail","cannot fetch access token.")
-                FirebaseAuth.getInstance().signOut()
+                logOut()
                 _viewModelUiState.update {
                     it.copy(
                         isLoggingIn = false,

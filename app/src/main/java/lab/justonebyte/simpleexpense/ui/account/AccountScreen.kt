@@ -416,7 +416,9 @@ fun AuthenticatedUser(
                             )
                         }
                     }
-                    OutlinedButton(onClick = {
+                    OutlinedButton(
+                        modifier = Modifier.padding(horizontal = 25.dp),
+                        onClick = {
                         val gso =
                             GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                                 .requestIdToken(token)
@@ -425,7 +427,10 @@ fun AuthenticatedUser(
                         val googleSignInClient = GoogleSignIn.getClient(context, gso)
                         launcher.launch(googleSignInClient.signInIntent)
                     }) {
-                        Text(text = stringResource(id = R.string.log_in))
+                        Text(
+                            modifier = Modifier.padding(horizontal = 20.dp),
+                            text = stringResource(id = R.string.log_in)
+                        )
                     }
                 }
             }
