@@ -57,7 +57,17 @@ fun SimpleExpenseApp(chooseDownloadFolderLauncher: ActivityResultLauncher<Intent
                 bottomBar = {
                     NavigationBar {
                         navItems.forEachIndexed { index, item ->
-                                if(index==1){
+                                if(index!=0){
+                                    val showcaseTitle = when(index){
+                                        1-> stringResource(id = R.string.showcase_chart)
+                                        1-> stringResource(id = R.string.showcase_manage_category)
+                                        else -> stringResource(id = R.string.showcase_settings)
+                                    }
+                                    val showcaseDescription = when(index){
+                                        1-> stringResource(id = R.string.showcase_chart_description)
+                                        1-> stringResource(id = R.string.showcase_manage_category_description)
+                                        else -> stringResource(id = R.string.showcase_settings_description)
+                                    }
                                     IntroShowcase(
                                         showIntroShowCase = true,
                                         dismissOnClickOutside = true,
@@ -77,13 +87,13 @@ fun SimpleExpenseApp(chooseDownloadFolderLauncher: ActivityResultLauncher<Intent
                                                 content = {
                                                     Column {
                                                         Text(
-                                                            text = stringResource(id = R.string.showcase_chart),
+                                                            text = showcaseTitle,
                                                             color = Color.White,
                                                             fontSize = 24.sp,
                                                             fontWeight = FontWeight.Bold
                                                         )
                                                         Text(
-                                                            text = stringResource(R.string.showcase_chart_description),
+                                                            text = showcaseDescription,
                                                             color = Color.White,
                                                             fontSize = 16.sp
                                                         )
