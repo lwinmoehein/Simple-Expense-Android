@@ -11,6 +11,7 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -22,6 +23,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.rememberNavController
 import com.canopas.lib.showcase.IntroShowcase
 import com.canopas.lib.showcase.component.ShowcaseStyle
@@ -32,6 +34,7 @@ import compose.icons.feathericons.List
 import compose.icons.feathericons.PieChart
 import compose.icons.feathericons.User
 import lab.justonebyte.simpleexpense.R
+import lab.justonebyte.simpleexpense.ui.home.HomeViewModel
 
 enum class NavItem(val stringResource:Int,val imageVector:ImageVector){
     HOME(R.string.home,FeatherIcons.Home),
@@ -46,6 +49,9 @@ fun SimpleExpenseApp(chooseDownloadFolderLauncher: ActivityResultLauncher<Intent
 
     var selectedItem by remember { mutableStateOf(0) }
     val navItems = listOf(NavItem.HOME,NavItem.CHARTS,NavItem.CATEGORIES,NavItem.ACCOUNT)
+    val homeViewModel = hiltViewModel<HomeViewModel>()
+    val homeUiState = homeViewModel.viewModelUiState.collectAsState()
+
 
     AppTheme() {
         ProvideWindowInsets {
@@ -69,10 +75,10 @@ fun SimpleExpenseApp(chooseDownloadFolderLauncher: ActivityResultLauncher<Intent
                                         else -> stringResource(id = R.string.showcase_settings_description)
                                     }
                                     IntroShowcase(
-                                        showIntroShowCase = true,
+                                        showIntroShowCase = index==homeUiState.value.currentAppShowcaseStep,
                                         dismissOnClickOutside = true,
                                         onShowCaseCompleted = {
-                                            //App Intro finished!!
+                                            homeViewModel.updateAppIntroStep(index+1)
                                         },
                                     ){
                                         NavigationBarItem(

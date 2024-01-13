@@ -28,6 +28,8 @@ import java.util.UUID
 import javax.inject.Inject
 
 data class HomeUiState(
+    val isAppAlreadyIntroduced:Boolean?=null,
+    val currentAppShowcaseStep:Int?=null,
     val currentBalance:Long,
     val incomeBalance:Long,
     val expenseBalance:Long,
@@ -59,7 +61,12 @@ class HomeViewModel @Inject constructor(
         get() =  _viewModelUiState
 
     init {
+
         viewModelScope.launch {
+            launch {
+                collectIsAppIntroduced()
+                changeStepIfAppNotIntroduced()
+            }
             launch {
                 collectToken()
             }
@@ -72,7 +79,19 @@ class HomeViewModel @Inject constructor(
             launch {
                 collectCurrencyFromSetting()
             }
+        }
+    }
 
+    private suspend fun collectIsAppIntroduced(){
+            settingsRepository.isAppIntroduced.collect{isIntroduced->
+                _viewModelUiState.update {
+                    it.copy(isAppAlreadyIntroduced = isIntroduced)
+                }
+            }
+    }
+    private  fun changeStepIfAppNotIntroduced(){
+        if(_viewModelUiState.value.isAppAlreadyIntroduced==false){
+            updateAppIntroStep(1)
         }
     }
 
@@ -247,5 +266,9 @@ class HomeViewModel @Inject constructor(
             categoryRepository.insert(transactionCategory = transactinCategory)
             runVersionSync(application,"categories",token.value)
         }
+    }
+
+    fun updateAppIntroStep(step:Int){
+        _viewModelUiState.update { it.copy(currentAppShowcaseStep = step) }
     }
 }

@@ -141,7 +141,7 @@ fun HomeScreen(){
             negativeBtnText = null,
             content = {
 
-                Column() {
+                Column {
                             AddTransactionContent(
                                 currentCurrency = homeUiState.currentCurrency,
                                 currentType = currentType.value,
@@ -194,7 +194,7 @@ fun HomeScreen(){
                 showIntroShowCase = false,
                 dismissOnClickOutside = true,
                 onShowCaseCompleted = {
-                    //App Intro finished!!
+
                 },
             ) {
                 FloatingActionButton(
