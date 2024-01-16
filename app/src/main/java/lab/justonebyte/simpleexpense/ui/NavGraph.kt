@@ -24,6 +24,7 @@ import lab.justonebyte.simpleexpense.ui.account.TermsAndServicesScreen
 import lab.justonebyte.simpleexpense.ui.category.ManageCategoryScreen
 import lab.justonebyte.simpleexpense.ui.home.HomeScreen
 import lab.justonebyte.simpleexpense.ui.home.HomeViewModel
+import lab.justonebyte.simpleexpense.ui.onboarding.OnBoarding
 import lab.justonebyte.simpleexpense.ui.stats.StatsScreen
 
 
@@ -54,7 +55,6 @@ fun NavGraph(
         navController = navController,
         startDestination = startDestination,
     ) {
-
         composable(MainDestinations.HOME_ROUTE) {
             HomeScreen(
                 homeViewModel = homeViewModel

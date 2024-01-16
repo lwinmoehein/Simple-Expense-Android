@@ -64,7 +64,7 @@ val md_theme_dark_scrim = Color(0xFF000000)
 
 
 val seed = Color(0xFF6750A4)
-val CustomColor1 = Color(0xFF8AE184)
+val onboardBackgroundColor = Color(0xFF8AE184)
 val light_CustomColor1 = Color(0xFF136D20)
 val light_onCustomColor1 = Color(0xFFFFFFFF)
 val light_CustomColor1Container = Color(0xFF9FF798)

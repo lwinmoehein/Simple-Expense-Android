@@ -38,6 +38,7 @@ import kotlinx.coroutines.launch
 import lab.justonebyte.simpleexpense.R
 import lab.justonebyte.simpleexpense.model.ShowCase
 import lab.justonebyte.simpleexpense.ui.home.HomeViewModel
+import lab.justonebyte.simpleexpense.ui.onboarding.OnBoarding
 
 enum class NavItem(val stringResource:Int,val imageVector:ImageVector,val showCase: ShowCase?=null){
     HOME(R.string.home,FeatherIcons.Home),
@@ -62,11 +63,14 @@ fun SimpleExpenseApp(chooseDownloadFolderLauncher: ActivityResultLauncher<Intent
 
             val navController = rememberNavController()
 
-            Scaffold(
+            if(homeUiState.isAppAlreadyIntroduced != true){
+                OnBoarding()
+            }else{
+                Scaffold(
 
-                bottomBar = {
-                    NavigationBar {
-                        navItems.forEachIndexed { index, item ->
+                    bottomBar = {
+                        NavigationBar {
+                            navItems.forEachIndexed { index, item ->
                                 if(index!=0){
                                     val showcaseTitle = when(index){
                                         1-> stringResource(id = R.string.showcase_chart)
@@ -175,16 +179,17 @@ fun SimpleExpenseApp(chooseDownloadFolderLauncher: ActivityResultLauncher<Intent
                                     )
                                 }
 
+                            }
                         }
                     }
+                ) {
+                    NavGraph(
+                        paddings = it,
+                        navController = navController,
+                        chooseDownloadFolderLauncher = chooseDownloadFolderLauncher,
+                        homeViewModel = homeViewModel
+                    )
                 }
-            ) {
-                NavGraph(
-                    paddings = it,
-                    navController = navController,
-                    chooseDownloadFolderLauncher = chooseDownloadFolderLauncher,
-                    homeViewModel = homeViewModel
-                )
             }
         }
     }
