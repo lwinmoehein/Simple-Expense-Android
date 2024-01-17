@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
@@ -12,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.core.os.LocaleListCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.google.accompanist.navigation.animation.*
@@ -26,6 +28,7 @@ import lab.justonebyte.simpleexpense.ui.MainDestinations
 import lab.justonebyte.simpleexpense.ui.components.OptionItem
 import lab.justonebyte.simpleexpense.ui.components.SectionTitle
 import lab.justonebyte.simpleexpense.utils.LocaleHelper
+import java.util.Locale
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
@@ -40,10 +43,9 @@ fun SettingsScreen(
     val coroutineScope = rememberCoroutineScope()
 
     fun changeLocale(localeString: String){
-        LocaleHelper().setLocale(context, localeString)
-        val i = Intent(context as Activity, MainActivity::class.java)
-        context.finish()
-        context.startActivity(i)
+        val configuration = context.resources.configuration
+        configuration.setLocale(Locale(localeString))
+        context.resources.updateConfiguration(configuration, context.resources.displayMetrics)
     }
 
     Scaffold(

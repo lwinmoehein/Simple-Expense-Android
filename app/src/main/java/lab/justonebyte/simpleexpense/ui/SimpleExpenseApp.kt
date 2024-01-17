@@ -11,6 +11,7 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -18,8 +19,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.composed
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -37,8 +40,10 @@ import compose.icons.feathericons.User
 import kotlinx.coroutines.launch
 import lab.justonebyte.simpleexpense.R
 import lab.justonebyte.simpleexpense.model.ShowCase
+import lab.justonebyte.simpleexpense.ui.account.SettingsViewModel
 import lab.justonebyte.simpleexpense.ui.home.HomeViewModel
 import lab.justonebyte.simpleexpense.ui.onboarding.OnBoarding
+import java.util.Locale
 
 enum class NavItem(val stringResource:Int,val imageVector:ImageVector,val showCase: ShowCase?=null){
     HOME(R.string.home,FeatherIcons.Home),
@@ -49,12 +54,16 @@ enum class NavItem(val stringResource:Int,val imageVector:ImageVector,val showCa
 
 val appContentPadding = 20.dp
 @Composable
-fun SimpleExpenseApp(chooseDownloadFolderLauncher: ActivityResultLauncher<Intent>) {
+fun SimpleExpenseApp(
+    chooseDownloadFolderLauncher: ActivityResultLauncher<Intent>,
 
+) {
+    val configuration = LocalConfiguration.current
     var selectedItem by remember { mutableStateOf(0) }
     val navItems = listOf(NavItem.HOME,NavItem.CHARTS,NavItem.CATEGORIES,NavItem.ACCOUNT)
     val homeViewModel = hiltViewModel<HomeViewModel>()
     val homeUiState by homeViewModel.viewModelUiState.collectAsState()
+
     val coroutineScope = rememberCoroutineScope()
 
 
@@ -67,7 +76,6 @@ fun SimpleExpenseApp(chooseDownloadFolderLauncher: ActivityResultLauncher<Intent
                 OnBoarding()
             }else{
                 Scaffold(
-
                     bottomBar = {
                         NavigationBar {
                             navItems.forEachIndexed { index, item ->
@@ -183,12 +191,12 @@ fun SimpleExpenseApp(chooseDownloadFolderLauncher: ActivityResultLauncher<Intent
                         }
                     }
                 ) {
-                    NavGraph(
-                        paddings = it,
-                        navController = navController,
-                        chooseDownloadFolderLauncher = chooseDownloadFolderLauncher,
-                        homeViewModel = homeViewModel
-                    )
+                        NavGraph(
+                            paddings = it,
+                            navController = navController,
+                            chooseDownloadFolderLauncher = chooseDownloadFolderLauncher,
+                            homeViewModel = homeViewModel
+                        )
                 }
             }
         }

@@ -153,7 +153,7 @@
     <string name="showcase_settings">Account</string>
     <string name="showcase_settings_description">You can login,export files and manage settings here.</string>
 
-    <string name="onboarding_record_expense">Record Income and Expense</string>
+    <string name="onboarding_record_expense">Income and Expense</string>
     <string name="onboarding_cloud_login">Save To Cloud</string>
     <string name="onboarding_export_file">Export Data</string>
 
