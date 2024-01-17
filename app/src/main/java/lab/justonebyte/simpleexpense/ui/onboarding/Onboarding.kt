@@ -49,7 +49,7 @@ import lab.justonebyte.simpleexpense.ui.home.HomeViewModel
 @OptIn(ExperimentalPagerApi::class)
 @Composable
 fun OnBoarding(
-    homeViewModel: HomeViewModel
+    onStartClick: ()->Unit
 ) {
     val items = OnBoardingItem.getData()
     val scope = rememberCoroutineScope()
@@ -79,7 +79,7 @@ fun OnBoarding(
                size = items.size, index = pageState.currentPage,
                onButtonClick = {
                    scope.launch {
-                       homeViewModel.changeIsAppOnboardingShowed()
+                      onStartClick()
                    }
                }
            )

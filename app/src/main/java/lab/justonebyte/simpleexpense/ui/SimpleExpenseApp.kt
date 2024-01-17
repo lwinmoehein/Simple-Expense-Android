@@ -1,6 +1,7 @@
 package lab.justonebyte.simpleexpense.ui
 
 import AppTheme
+import android.content.Context
 import android.content.Intent
 import androidx.activity.result.ActivityResultLauncher
 import androidx.compose.foundation.layout.Column
@@ -23,6 +24,7 @@ import androidx.compose.ui.composed
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -44,6 +46,7 @@ import lab.justonebyte.simpleexpense.model.ShowCase
 import lab.justonebyte.simpleexpense.ui.account.SettingsViewModel
 import lab.justonebyte.simpleexpense.ui.home.HomeViewModel
 import lab.justonebyte.simpleexpense.ui.onboarding.OnBoarding
+import lab.justonebyte.simpleexpense.utils.createFile
 import java.util.Locale
 
 enum class NavItem(val stringResource:Int,val imageVector:ImageVector,val showCase: ShowCase?=null){
@@ -57,14 +60,14 @@ val appContentPadding = 20.dp
 @Composable
 fun SimpleExpenseApp(
     chooseDownloadFolderLauncher: ActivityResultLauncher<Intent>,
-    isOnboardingShowed:MutableStateFlow<Boolean>,
+    isAppOnboardingShowed:Boolean,
+    context:Context = LocalContext.current
 ) {
-    val configuration = LocalConfiguration.current
     var selectedItem by remember { mutableStateOf(0) }
     val navItems = listOf(NavItem.HOME,NavItem.CHARTS,NavItem.CATEGORIES,NavItem.ACCOUNT)
     val homeViewModel = hiltViewModel<HomeViewModel>()
     val homeUiState by homeViewModel.viewModelUiState.collectAsState()
-    val isshow by isOnboardingShowed.collectAsState()
+    val isOnboardShowed = remember { mutableStateOf(isAppOnboardingShowed) }
 
     val coroutineScope = rememberCoroutineScope()
 
@@ -74,9 +77,14 @@ fun SimpleExpenseApp(
 
             val navController = rememberNavController()
 
-            if(!isshow){
+            if(!isOnboardShowed.value){
                 OnBoarding(
-                    homeViewModel = homeViewModel
+                    onStartClick = {
+                        coroutineScope.launch {
+                            createFile(context)
+                            isOnboardShowed.value =  true
+                        }
+                    }
                 )
             }else{
                 Scaffold(

@@ -14,9 +14,11 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.last
 import kotlinx.coroutines.launch
 import lab.justonebyte.simpleexpense.data.SettingPrefRepository
 import lab.justonebyte.simpleexpense.utils.LocaleHelper
+import lab.justonebyte.simpleexpense.utils.isFileExists
 import javax.inject.Inject
 
 
@@ -27,7 +29,7 @@ class MainActivity : ComponentActivity() {
     @Inject
     lateinit var settingRepository: SettingPrefRepository
 
-    private var isOnboardingShowed = MutableStateFlow<Boolean>(false)
+    private var isOnboardingShowed = true
 
     private val chooseDownloadFolderLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
 
@@ -54,16 +56,10 @@ class MainActivity : ComponentActivity() {
 
         WindowCompat.setDecorFitsSystemWindows(window, true)
 
-        lifecycleScope.launchWhenStarted {
-            settingRepository.isAppOnboardingShowed.collect { isShowed ->
-              isOnboardingShowed.value = isShowed
-            }
-        }
-
         setContent {
             SimpleExpenseApp(
-                chooseDownloadFolderLauncher,
-                isOnboardingShowed
+                chooseDownloadFolderLauncher = chooseDownloadFolderLauncher,
+                isAppOnboardingShowed = isFileExists(applicationContext)
             )
         }
 
