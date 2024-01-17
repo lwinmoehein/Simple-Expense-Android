@@ -17,7 +17,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.KeyboardArrowLeft
 import androidx.compose.material.icons.outlined.KeyboardArrowRight
@@ -43,12 +42,13 @@ import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
 import kotlinx.coroutines.launch
-import lab.justonebyte.simpleexpense.model.OnBoardingItems
+import lab.justonebyte.simpleexpense.R
+import lab.justonebyte.simpleexpense.model.OnBoardingItem
 
 @OptIn(ExperimentalPagerApi::class)
 @Composable
 fun OnBoarding() {
-    val items = OnBoardingItems.getData()
+    val items = OnBoardingItem.getData()
     val scope = rememberCoroutineScope()
     val pageState = rememberPagerState()
 
@@ -68,7 +68,7 @@ fun OnBoarding() {
                    verticalArrangement = Arrangement.Center,
                    horizontalAlignment = Alignment.CenterHorizontally
                ) {
-                   OnBoardingItem(items = items[page])
+                   OnBoardingItem(item = items[page])
                }
            }
            BottomSection(
@@ -170,21 +170,21 @@ fun Indicator(isSelected: Boolean) {
 }
 
 @Composable
-fun OnBoardingItem(items: OnBoardingItems) {
+fun OnBoardingItem(item: OnBoardingItem) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center,
         ) {
             Image(
-                painter = painterResource(id = items.image),
+                painter = painterResource(id = item.image),
                 contentDescription = "Image1",
-                modifier = Modifier.width(150.dp).height(150.dp)
+                modifier = Modifier.width(if(item.image == R.drawable.exports) 300.dp else 300.dp).height(if(item.image == R.drawable.exports) 300.dp else 300.dp)
             )
 
             Spacer(modifier = Modifier.height(5.dp))
 
             Text(
-                text = stringResource(id = items.title),
+                text = stringResource(id = item.title),
                 style = MaterialTheme.typography.headlineLarge,
                 // fontSize = 24.sp,
                 fontWeight = FontWeight.Bold,
@@ -195,7 +195,7 @@ fun OnBoardingItem(items: OnBoardingItems) {
             Spacer(modifier = Modifier.height(8.dp))
 
             Text(
-                text = stringResource(id = items.desc),
+                text = stringResource(id = item.desc),
                 style = MaterialTheme.typography.bodyLarge,
                 fontWeight = FontWeight.Light,
                 textAlign = TextAlign.Center,
