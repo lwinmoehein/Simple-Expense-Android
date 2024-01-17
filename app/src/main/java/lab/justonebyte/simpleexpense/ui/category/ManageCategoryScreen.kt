@@ -190,7 +190,6 @@ fun ManageCategoryScreen(){
         }
     ) {
          Column(Modifier.padding(it)) {
-             Spacer(modifier = Modifier.height(30.dp))
              Row(
                  modifier  = Modifier.fillMaxWidth(),
                  horizontalArrangement = Arrangement.Center

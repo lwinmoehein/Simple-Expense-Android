@@ -20,6 +20,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.KeyboardArrowLeft
 import androidx.compose.material.icons.outlined.KeyboardArrowRight
+import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -32,6 +33,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -48,14 +50,24 @@ import lab.justonebyte.simpleexpense.ui.home.HomeViewModel
 
 @OptIn(ExperimentalPagerApi::class)
 @Composable
-fun OnBoarding(
+fun OnBoardingScreen(
     onStartClick: ()->Unit
 ) {
     val items = OnBoardingItem.getData()
     val scope = rememberCoroutineScope()
     val pageState = rememberPagerState()
 
-    Column(modifier = Modifier.fillMaxSize()) {
+
+    Box(modifier = Modifier.fillMaxSize()) {
+        Image(
+            painter = painterResource(id = R.drawable.onboard_bg),
+            contentDescription = null, // You can provide a description here
+            modifier = Modifier
+                .fillMaxSize()
+                .background(MaterialTheme.colorScheme.primary)
+                .clip(MaterialTheme.shapes.medium),
+            contentScale = ContentScale.Crop
+        )
        Column(
            modifier = Modifier.fillMaxSize(),
        ) {
@@ -83,12 +95,6 @@ fun OnBoarding(
                    }
                }
            )
-
-//           {
-//               if (pageState.currentPage + 1 < items.size) scope.launch {
-//                   pageState.scrollToPage(pageState.currentPage + 1)
-//               }
-//           }
        }
 
     }
@@ -127,21 +133,23 @@ fun BottomSection(modifier: Modifier,size: Int, index: Int, onButtonClick: () ->
     ) {
         // Indicators
         Indicators(size, index)
-        Spacer(modifier = Modifier.height(10.dp))
-        OutlinedButton(
+
+        Spacer(modifier = Modifier.height(20.dp))
+
+        Button(
             onClick = {
                       onButtonClick()
             },
         ) {
             Row(
-                Modifier.padding(horizontal = 20.dp),
+                Modifier.padding(horizontal = 30.dp),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.Center
             ) {
-                Text(text = "START", fontWeight = FontWeight.ExtraBold)
+                Text(style = MaterialTheme.typography.labelLarge,text = "START", color = Color.White, fontWeight = FontWeight.ExtraBold)
                 Icon(
                     Icons.Outlined.KeyboardArrowRight,
-                    tint = MaterialTheme.colorScheme.primary,
+                    tint = Color.White,
                     contentDescription = "Localized description"
                 )
             }
@@ -174,7 +182,7 @@ fun Indicator(isSelected: Boolean) {
             .width(width.value)
             .clip(CircleShape)
             .background(
-                color = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.secondary
+                color = if (isSelected) Color.White else MaterialTheme.colorScheme.secondary
             )
     ) {
 

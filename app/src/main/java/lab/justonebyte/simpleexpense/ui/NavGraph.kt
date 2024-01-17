@@ -1,9 +1,7 @@
 package lab.justonebyte.simpleexpense.ui
 
 import android.content.Intent
-import android.os.Build
 import androidx.activity.result.ActivityResultLauncher
-import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
@@ -24,11 +22,14 @@ import lab.justonebyte.simpleexpense.ui.account.TermsAndServicesScreen
 import lab.justonebyte.simpleexpense.ui.category.ManageCategoryScreen
 import lab.justonebyte.simpleexpense.ui.home.HomeScreen
 import lab.justonebyte.simpleexpense.ui.home.HomeViewModel
-import lab.justonebyte.simpleexpense.ui.onboarding.OnBoarding
+import lab.justonebyte.simpleexpense.ui.onboarding.LoginScreen
+import lab.justonebyte.simpleexpense.ui.onboarding.OnBoardingScreen
 import lab.justonebyte.simpleexpense.ui.stats.StatsScreen
 
 
 object MainDestinations {
+    const val ONBOARDING = "onboard"
+    const val LOGIN = "login"
     const val HOME_ROUTE = "home"
     const val STATS_ROUTE = "stats"
     const val CATEGORY_ROUTE = "category"
@@ -45,9 +46,10 @@ object MainDestinations {
 fun NavGraph(
     paddings: PaddingValues,
     navController: NavHostController = rememberNavController(),
-    startDestination: String = MainDestinations.HOME_ROUTE,
+    startDestination: String = MainDestinations.ONBOARDING,
     chooseDownloadFolderLauncher: ActivityResultLauncher<Intent>,
-    homeViewModel: HomeViewModel
+    homeViewModel: HomeViewModel,
+    onOnboardStartClick:()->Unit
 ) {
 
     NavHost(
@@ -55,6 +57,19 @@ fun NavGraph(
         navController = navController,
         startDestination = startDestination,
     ) {
+        composable(MainDestinations.ONBOARDING) {
+            OnBoardingScreen(
+                onStartClick = {
+                               onOnboardStartClick()
+                },
+            )
+        }
+
+        composable(MainDestinations.LOGIN) {
+            LoginScreen(
+                navController = navController
+            )
+        }
         composable(MainDestinations.HOME_ROUTE) {
             HomeScreen(
                 homeViewModel = homeViewModel

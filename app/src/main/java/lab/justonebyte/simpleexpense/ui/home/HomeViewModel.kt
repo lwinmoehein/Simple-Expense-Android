@@ -33,7 +33,7 @@ import javax.inject.Inject
 
 data class HomeUiState(
     val isAppAlreadyIntroduced:Boolean?=null,
-    val isOnboardingShowed:Boolean?=null,
+    val isOnboardingShowed:Boolean=true,
     val currentAppShowcaseStep:ShowCase?=null,
     val currentBalance:Long,
     val incomeBalance:Long,
@@ -310,10 +310,5 @@ class HomeViewModel @Inject constructor(
        viewModelScope.launch {
            settingsRepository.updateIsAppIntroduced(true)
        }
-    }
-    suspend fun changeIsAppOnboardingShowed(){
-        viewModelScope.launch {
-            settingsRepository.updateIsAppOnboardingShowed(true)
-        }
     }
 }

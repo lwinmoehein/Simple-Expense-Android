@@ -105,7 +105,7 @@ fun StatsScreen() {
                 horizontalArrangement = Arrangement.SpaceBetween,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .absolutePadding(right = 10.dp, left = 10.dp, top = 20.dp),
+                    .absolutePadding(right = 10.dp, left = 10.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 AppOption(

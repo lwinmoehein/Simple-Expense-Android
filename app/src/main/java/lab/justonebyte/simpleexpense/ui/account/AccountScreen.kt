@@ -133,7 +133,7 @@ fun AccountScreen(
             Column(
                 Modifier
                     .padding(10.dp)
-                    .absolutePadding(top = 50.dp)) {
+                   ) {
                     AuthenticatedUser(
                         user = user,
                         fetchAndUpdateAccessToken = {
@@ -332,7 +332,7 @@ fun AccountScreen(
 
 
 @Composable
-private fun rememberFirebaseAuthLauncher(
+fun rememberFirebaseAuthLauncher(
     onAuthComplete: (AuthResult,idToken:String) -> Unit,
     onAuthError: (ApiException) -> Unit
 ): ManagedActivityResultLauncher<Intent, ActivityResult> {
