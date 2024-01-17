@@ -37,6 +37,7 @@ import compose.icons.feathericons.Home
 import compose.icons.feathericons.List
 import compose.icons.feathericons.PieChart
 import compose.icons.feathericons.User
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import lab.justonebyte.simpleexpense.R
 import lab.justonebyte.simpleexpense.model.ShowCase
@@ -56,13 +57,14 @@ val appContentPadding = 20.dp
 @Composable
 fun SimpleExpenseApp(
     chooseDownloadFolderLauncher: ActivityResultLauncher<Intent>,
-
+    isOnboardingShowed:MutableStateFlow<Boolean>,
 ) {
     val configuration = LocalConfiguration.current
     var selectedItem by remember { mutableStateOf(0) }
     val navItems = listOf(NavItem.HOME,NavItem.CHARTS,NavItem.CATEGORIES,NavItem.ACCOUNT)
     val homeViewModel = hiltViewModel<HomeViewModel>()
     val homeUiState by homeViewModel.viewModelUiState.collectAsState()
+    val isshow by isOnboardingShowed.collectAsState()
 
     val coroutineScope = rememberCoroutineScope()
 
@@ -72,8 +74,10 @@ fun SimpleExpenseApp(
 
             val navController = rememberNavController()
 
-            if(homeUiState.isAppAlreadyIntroduced != true){
-                OnBoarding()
+            if(!isshow){
+                OnBoarding(
+                    homeViewModel = homeViewModel
+                )
             }else{
                 Scaffold(
                     bottomBar = {

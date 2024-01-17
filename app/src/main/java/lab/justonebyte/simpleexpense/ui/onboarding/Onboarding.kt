@@ -44,10 +44,13 @@ import com.google.accompanist.pager.rememberPagerState
 import kotlinx.coroutines.launch
 import lab.justonebyte.simpleexpense.R
 import lab.justonebyte.simpleexpense.model.OnBoardingItem
+import lab.justonebyte.simpleexpense.ui.home.HomeViewModel
 
 @OptIn(ExperimentalPagerApi::class)
 @Composable
-fun OnBoarding() {
+fun OnBoarding(
+    homeViewModel: HomeViewModel
+) {
     val items = OnBoardingItem.getData()
     val scope = rememberCoroutineScope()
     val pageState = rememberPagerState()
@@ -73,12 +76,19 @@ fun OnBoarding() {
            }
            BottomSection(
                modifier = Modifier.weight(1f),
-               size = items.size, index = pageState.currentPage
-           ) {
-               if (pageState.currentPage + 1 < items.size) scope.launch {
-                   pageState.scrollToPage(pageState.currentPage + 1)
+               size = items.size, index = pageState.currentPage,
+               onButtonClick = {
+                   scope.launch {
+                       homeViewModel.changeIsAppOnboardingShowed()
+                   }
                }
-           }
+           )
+
+//           {
+//               if (pageState.currentPage + 1 < items.size) scope.launch {
+//                   pageState.scrollToPage(pageState.currentPage + 1)
+//               }
+//           }
        }
 
     }
@@ -119,7 +129,9 @@ fun BottomSection(modifier: Modifier,size: Int, index: Int, onButtonClick: () ->
         Indicators(size, index)
         Spacer(modifier = Modifier.height(10.dp))
         OutlinedButton(
-            onClick = { /* do something */ },
+            onClick = {
+                      onButtonClick()
+            },
         ) {
             Row(
                 Modifier.padding(horizontal = 20.dp),

@@ -9,6 +9,8 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.last
+import kotlinx.coroutines.flow.lastOrNull
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import lab.justonebyte.simpleexpense.data.CategoryRepository
@@ -65,13 +67,15 @@ class HomeViewModel @Inject constructor(
         get() =  _viewModelUiState
 
     init {
-
         viewModelScope.launch {
+            launch {
+                updateIsOnboardingShowed()
+            }
             launch {
                 collectLanguage()
             }
             launch {
-                collectIsAppOnboardingShowed()
+                collectAndUpdateIsAppOnboardingShowed()
             }
             launch {
                 collectAndUpdateIsAppIntroduced()
@@ -91,7 +95,15 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    private suspend fun collectIsAppOnboardingShowed(){
+    private suspend fun updateIsOnboardingShowed() {
+        _viewModelUiState.update { uiState->
+            uiState.copy(
+                isOnboardingShowed = settingsRepository.isAppOnboardingShowed.last()
+            )
+        }
+    }
+
+    private suspend fun collectAndUpdateIsAppOnboardingShowed(){
         settingsRepository.isAppOnboardingShowed.collect{isShowed->
             _viewModelUiState.update {
                 it.copy(isOnboardingShowed = isShowed)

@@ -43,7 +43,9 @@ fun SettingsScreen(
     val coroutineScope = rememberCoroutineScope()
 
     fun changeLocale(localeString: String){
-        val configuration = context.resources.configuration
+        LocaleHelper().setLocale(context, localeString)
+       val configuration = context.resources.configuration
+
         configuration.setLocale(Locale(localeString))
         context.resources.updateConfiguration(configuration, context.resources.displayMetrics)
     }

@@ -9,9 +9,11 @@ import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.core.view.WindowCompat
+import androidx.lifecycle.lifecycleScope
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import lab.justonebyte.simpleexpense.data.SettingPrefRepository
 import lab.justonebyte.simpleexpense.utils.LocaleHelper
@@ -21,8 +23,11 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
+
     @Inject
     lateinit var settingRepository: SettingPrefRepository
+
+    private var isOnboardingShowed = MutableStateFlow<Boolean>(false)
 
     private val chooseDownloadFolderLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
 
@@ -49,9 +54,16 @@ class MainActivity : ComponentActivity() {
 
         WindowCompat.setDecorFitsSystemWindows(window, true)
 
+        lifecycleScope.launchWhenStarted {
+            settingRepository.isAppOnboardingShowed.collect { isShowed ->
+              isOnboardingShowed.value = isShowed
+            }
+        }
+
         setContent {
             SimpleExpenseApp(
-                chooseDownloadFolderLauncher
+                chooseDownloadFolderLauncher,
+                isOnboardingShowed
             )
         }
 
