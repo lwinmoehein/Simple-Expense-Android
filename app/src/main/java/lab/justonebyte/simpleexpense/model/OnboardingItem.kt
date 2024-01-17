@@ -10,9 +10,9 @@ class OnBoardingItem(
     companion object{
         fun getData(): List<OnBoardingItem>{
             return listOf(
-                OnBoardingItem(R.drawable.record, R.string.confirm, R.string.showcase_settings),
-                OnBoardingItem(R.drawable.cloud, R.string.cancel, R.string.showcase_add_transaction),
-                OnBoardingItem(R.drawable.exports, R.string.confirm, R.string.showcase_balance_card)
+                OnBoardingItem(R.drawable.record, R.string.onboarding_record_expense, R.string.onboarding_record_expense_desc),
+                OnBoardingItem(R.drawable.cloud, R.string.onboarding_cloud_login, R.string.onboarding_cloud_login_desc),
+                OnBoardingItem(R.drawable.exports, R.string.onboarding_export_file, R.string.onboarding_export_file_desc)
             )
         }
     }

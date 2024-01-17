@@ -30,6 +30,7 @@ import javax.inject.Inject
 
 data class HomeUiState(
     val isAppAlreadyIntroduced:Boolean?=null,
+    val isOnboardingShowed:Boolean?=null,
     val currentAppShowcaseStep:ShowCase?=null,
     val currentBalance:Long,
     val incomeBalance:Long,
@@ -65,6 +66,9 @@ class HomeViewModel @Inject constructor(
 
         viewModelScope.launch {
             launch {
+                collectIsAppOnboardingShowed()
+            }
+            launch {
                 collectAndUpdateIsAppIntroduced()
             }
             launch {
@@ -82,6 +86,13 @@ class HomeViewModel @Inject constructor(
         }
     }
 
+    private suspend fun collectIsAppOnboardingShowed(){
+        settingsRepository.isAppOnboardingShowed.collect{isShowed->
+            _viewModelUiState.update {
+                it.copy(isOnboardingShowed = isShowed)
+            }
+        }
+    }
     private suspend fun collectAndUpdateIsAppIntroduced(){
             settingsRepository.isAppIntroduced.collect{isIntroduced->
                 _viewModelUiState.update {
@@ -273,5 +284,10 @@ class HomeViewModel @Inject constructor(
        viewModelScope.launch {
            settingsRepository.updateIsAppIntroduced(true)
        }
+    }
+    suspend fun changeIsAppOnboardingShowed(){
+        viewModelScope.launch {
+            settingsRepository.updateIsAppOnboardingShowed(true)
+        }
     }
 }

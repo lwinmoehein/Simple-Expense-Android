@@ -9,6 +9,7 @@ import lab.justonebyte.simpleexpense.data.SettingPreferencesRepositoryImpl.Prefe
 import lab.justonebyte.simpleexpense.data.SettingPreferencesRepositoryImpl.PreferencesKeys.DEFAULT_BALANCE_TYPE
 import lab.justonebyte.simpleexpense.data.SettingPreferencesRepositoryImpl.PreferencesKeys.DOWNLOAD_FOLDER
 import lab.justonebyte.simpleexpense.data.SettingPreferencesRepositoryImpl.PreferencesKeys.IS_FIRST_TIME
+import lab.justonebyte.simpleexpense.data.SettingPreferencesRepositoryImpl.PreferencesKeys.IS_ONBOARDING_SHOWED
 import lab.justonebyte.simpleexpense.data.SettingPreferencesRepositoryImpl.PreferencesKeys.LOCALE
 import lab.justonebyte.simpleexpense.data.SettingPreferencesRepositoryImpl.PreferencesKeys.SELECTED_CURRENCY
 import lab.justonebyte.simpleexpense.data.SettingPreferencesRepositoryImpl.PreferencesKeys.THEME
@@ -27,6 +28,7 @@ interface SettingPrefRepository {
     val defaultBalanceType: Flow<Int>
     val selectedCurrency: Flow<Int>
     val isAppIntroduced:Flow<Boolean>
+    val isAppOnboardingShowed:Flow<Boolean>
     val accessToken:Flow<String>
     val downloadFolder:Flow<String>
 
@@ -34,6 +36,9 @@ interface SettingPrefRepository {
     suspend fun updateLocale(locale:String)
     suspend fun updateBalanceType(type:Int)
     suspend fun updateIsAppIntroduced(introduced:Boolean)
+
+    suspend fun updateIsAppOnboardingShowed(isShowed:Boolean)
+
     suspend fun updateSelectedCurrency(currency:Int)
     suspend fun updateToken(token: String)
     suspend fun updateDownloadFolder(folderUri: String)
@@ -48,6 +53,7 @@ class SettingPreferencesRepositoryImpl @Inject constructor
     private object PreferencesKeys {
         val THEME = intPreferencesKey("theme")
         val IS_FIRST_TIME = booleanPreferencesKey("is_first_time")
+        val IS_ONBOARDING_SHOWED = booleanPreferencesKey("is_onboarding_showed")
         val LOCALE = stringPreferencesKey("locale")
         val DEFAULT_BALANCE_TYPE = intPreferencesKey("balance_type")
         val SELECTED_CURRENCY = intPreferencesKey("currency")
@@ -58,6 +64,7 @@ class SettingPreferencesRepositoryImpl @Inject constructor
     override val selectedTheme: Flow<Int> = dataStore.data.map { it[THEME] ?: Theme.SYSTEM.id }
     override val selectedLocale: Flow<String> = dataStore.data.map { it[LOCALE] ?: AppLocale.English.value }
     override val isAppIntroduced: Flow<Boolean> = dataStore.data.map { it[IS_FIRST_TIME]?:false }
+    override val isAppOnboardingShowed: Flow<Boolean> = dataStore.data.map { it[IS_ONBOARDING_SHOWED]?:false }
     override val defaultBalanceType: Flow<Int> = dataStore.data.map { it[DEFAULT_BALANCE_TYPE]?:BalanceType.MONTHLY.value }
     override val selectedCurrency: Flow<Int> = dataStore.data.map { it[SELECTED_CURRENCY]?:Currency.Kyat.value }
     override val accessToken: Flow<String> = dataStore.data.map { it[ACCESS_TOKEN]?:"" }
@@ -83,6 +90,12 @@ class SettingPreferencesRepositoryImpl @Inject constructor
     override suspend fun updateIsAppIntroduced(introduced: Boolean) {
         dataStore.edit { preferences ->
             preferences[IS_FIRST_TIME] = introduced
+        }
+    }
+
+    override suspend fun updateIsAppOnboardingShowed(isShowed: Boolean) {
+        dataStore.edit { preferences ->
+            preferences[IS_ONBOARDING_SHOWED] = isShowed
         }
     }
 
