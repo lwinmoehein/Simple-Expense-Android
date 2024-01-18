@@ -16,7 +16,8 @@ import lab.justonebyte.simpleexpense.ui.components.AppAlertDialog
 fun ChooseCategoryActionDialog(
     isOpen:Boolean = false,
     onDeleteCategory:()->Unit,
-    onEditCategory:()->Unit
+    onEditCategory:()->Unit,
+    onDismissClicked:()->Unit
 ){
     if (isOpen) {
         AppAlertDialog(
@@ -32,6 +33,9 @@ fun ChooseCategoryActionDialog(
                         onEditCategory()
                     }
                 )
+            },
+            onNegativeBtnClicked = {
+                onDismissClicked()
             }
         )
     }

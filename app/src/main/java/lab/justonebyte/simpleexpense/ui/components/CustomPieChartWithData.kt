@@ -121,6 +121,7 @@ fun CustomPieChartWithData(
                                 this.legend.textColor = materialColor
                                 this.legend.horizontalAlignment =
                                     Legend.LegendHorizontalAlignment.CENTER
+                                
                                 this.setEntryLabelColor(Color.Transparent.toArgb())
                             }
                         },

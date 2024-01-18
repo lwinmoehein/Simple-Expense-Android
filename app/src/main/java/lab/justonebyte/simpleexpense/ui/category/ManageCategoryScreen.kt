@@ -114,6 +114,9 @@ fun ManageCategoryScreen(){
         onEditCategory =  {
             isChooseCategoryActionDialogOpen.value = false
             isReusableInputDialogShown.value = true
+        },
+        onDismissClicked = {
+            isChooseCategoryActionDialogOpen.value = false
         }
     )
     if(isConfirmDeleteCategoryDialogShown.value){
