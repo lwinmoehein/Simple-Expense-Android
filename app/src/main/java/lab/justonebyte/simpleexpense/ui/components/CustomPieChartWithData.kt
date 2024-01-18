@@ -14,7 +14,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -27,11 +26,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import com.github.mikephil.charting.charts.PieChart
 import com.github.mikephil.charting.components.Legend
+import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
-import compose.icons.FeatherIcons
-import compose.icons.feathericons.Tablet
+import com.github.mikephil.charting.formatter.IValueFormatter
+import com.github.mikephil.charting.formatter.PercentFormatter
+import com.github.mikephil.charting.formatter.ValueFormatter
+import com.github.mikephil.charting.utils.ViewPortHandler
 import lab.justonebyte.simpleexpense.R
 import lab.justonebyte.simpleexpense.model.Currency
 import lab.justonebyte.simpleexpense.model.Transaction
@@ -58,10 +60,24 @@ import lab.justonebyte.simpleexpense.ui.theme.bar6
 import lab.justonebyte.simpleexpense.ui.theme.bar7
 import lab.justonebyte.simpleexpense.ui.theme.bar8
 import lab.justonebyte.simpleexpense.ui.theme.bar9
+import java.text.DecimalFormat
+
+class MyValueFormatter : ValueFormatter() {
+    private val format = DecimalFormat("###,##0.0")
+
+
+    override fun getPieLabel(value: Float, pieEntry: PieEntry?): String {
+        return format.format(value)+"%"
+    }
+}
+
 
 val colors = listOf(
     bar1,bar2,bar3,bar4,bar5,bar6,bar7,bar8,bar9,bar10,bar11,bar12,bar13,bar14,bar15,bar16,bar17,bar18,bar19,bar20
 )
+fun calculatePercentage(part: Int, whole: Int): Double {
+    return (part.toDouble() / whole.toDouble()) * 100
+}
 
 @Composable
 fun CustomPieChartWithData(
@@ -71,7 +87,8 @@ fun CustomPieChartWithData(
     transactionType: TransactionType
 ){
     val materialColor =  MaterialTheme.colorScheme.primary.toArgb()
-    val pieEntries = transactions.groupBy { it.category }.map { PieEntry(it.value.sumOf { s-> s.amount }.toFloat(),it.key.name) }.sortedByDescending { it.value }
+    val totalAmount = transactions.sumOf { it.amount }
+    val pieEntries = transactions.groupBy { it.category }.map { PieEntry(calculatePercentage(it.value.sumOf { s-> s.amount },totalAmount).toFloat(),it.key.name) }.sortedByDescending { it.value }
 
     if(pieEntries.isNotEmpty()){
         Column(
@@ -82,7 +99,9 @@ fun CustomPieChartWithData(
         ) {
             Row(verticalAlignment = Alignment.Top) {
                 Row(modifier= Modifier
-                    .width(260.dp).height(260.dp).padding(5.dp)){
+                    .width(260.dp)
+                    .height(260.dp)
+                    .padding(5.dp)){
                     Crossfade(targetState = pieEntries, label = "") { pieEntries ->
                         AndroidView(factory = { context ->
                           PieChart(context).apply {
@@ -90,17 +109,19 @@ fun CustomPieChartWithData(
                                     ViewGroup.LayoutParams.MATCH_PARENT,
                                     ViewGroup.LayoutParams.MATCH_PARENT,
                                 )
-                                this.minAngleForSlices = 10f
+
+                                this.minAngleForSlices = 30f
                                 this.description.isEnabled = false
-                                this.isDrawHoleEnabled = false
+                                this.isDrawHoleEnabled = true
+                                this.setHoleColor(Color.Transparent.toArgb())
+
                                 this.legend.isEnabled = true
                                 this.legend.isWordWrapEnabled = true
                                 this.legend.textSize = 13F
                                 this.legend.textColor = materialColor
-
                                 this.legend.horizontalAlignment =
                                     Legend.LegendHorizontalAlignment.CENTER
-                               this.setEntryLabelColor(resources.getColor(R.color.white))
+                                this.setEntryLabelColor(Color.Transparent.toArgb())
                             }
                         },
                             modifier = Modifier
@@ -118,7 +139,7 @@ fun CustomPieChartWithData(
                         style = MaterialTheme.typography.titleLarge
                     )
                     FormattedCurrency(
-                        amount = pieEntries.sumOf { it.value.toLong() },
+                        amount = totalAmount.toLong(),
                         color =if(transactionType==TransactionType.Income) MaterialTheme.colorScheme.primary  else Color.Red,
                         currencyCode = if(currency==Currency.Kyat) stringResource(id = R.string.kyat) else stringResource(R.string.dollar)
                     )
@@ -133,7 +154,7 @@ fun updatePieChartWithData(
     chart: PieChart,
     entries: List<PieEntry>
 ) {
-    val ds = PieDataSet(entries, "")
+    val ds = PieDataSet(entries,"")
 
 
     // on below line we are specifying position for value
@@ -143,17 +164,22 @@ fun updatePieChartWithData(
     ds.xValuePosition = PieDataSet.ValuePosition.INSIDE_SLICE
 
 
-    ds.sliceSpace = 2f
+    ds.sliceSpace = 1f
 
     ds.colors =  colors.map { it.toArgb() }
 
     ds.valueTextSize = 12f
 
+
     ds.valueTypeface = Typeface.DEFAULT_BOLD
 
     val d = PieData(ds)
 
+    d.setValueFormatter(MyValueFormatter())
+    d.setValueTextColor(Color.White.toArgb())
+
     chart.data = d
+
 
     chart.invalidate()
 }
