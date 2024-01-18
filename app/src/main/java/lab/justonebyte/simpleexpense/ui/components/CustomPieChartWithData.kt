@@ -95,13 +95,13 @@ fun CustomPieChartWithData(
             modifier = modifier
                 .fillMaxWidth(),
             verticalArrangement = Arrangement.Top,
-            horizontalAlignment = Alignment.CenterHorizontally
+            horizontalAlignment = Alignment.Start
         ) {
-            Row(verticalAlignment = Alignment.Top) {
+            Row(verticalAlignment = Alignment.Top, horizontalArrangement = Arrangement.Start) {
                 Row(modifier= Modifier
                     .width(260.dp)
                     .height(260.dp)
-                    .padding(5.dp)){
+                   ){
                     Crossfade(targetState = pieEntries, label = "") { pieEntries ->
                         AndroidView(factory = { context ->
                           PieChart(context).apply {

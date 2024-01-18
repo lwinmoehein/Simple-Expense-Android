@@ -14,6 +14,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -25,6 +26,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Icon
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
@@ -43,6 +45,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -71,7 +74,9 @@ import compose.icons.feathericons.Info
 import compose.icons.feathericons.LogOut
 import compose.icons.feathericons.Settings
 import compose.icons.feathericons.Star
+import compose.icons.fontawesomeicons.Brands
 import compose.icons.fontawesomeicons.Regular
+import compose.icons.fontawesomeicons.brands.Google
 import compose.icons.fontawesomeicons.regular.FileWord
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
@@ -164,7 +169,6 @@ fun AccountScreen(
                            )
                            Text(text = stringResource(id = R.string.settings))
                        }
-                        Icon(imageVector = FeatherIcons.ArrowRight, contentDescription ="", tint = MaterialTheme.colorScheme.primary)
                     }
                     Spacer(modifier = Modifier.height(20.dp))
 
@@ -193,7 +197,6 @@ fun AccountScreen(
                             )
                             Text(text = stringResource(id = R.string.export))
                         }
-                        Icon(imageVector = FeatherIcons.ArrowRight, contentDescription ="", tint = MaterialTheme.colorScheme.primary)
                     }
                     Spacer(modifier = Modifier.height(20.dp))
 
@@ -202,7 +205,7 @@ fun AccountScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .clickable {
-                                navController.navigate(MainDestinations.ACKNOWLEDGEMENT)
+                            navController.navigate(MainDestinations.ACKNOWLEDGEMENT)
                         },
                     verticalAlignment = Alignment.CenterVertically
                 ) {
@@ -218,7 +221,6 @@ fun AccountScreen(
                         )
                         Text(text = stringResource(id = R.string.acknowledgements))
                     }
-                    Icon(imageVector = FeatherIcons.ArrowRight, contentDescription ="", tint = MaterialTheme.colorScheme.primary)
                 }
                 Spacer(modifier = Modifier.height(20.dp))
 
@@ -243,7 +245,6 @@ fun AccountScreen(
                         )
                         Text(text = stringResource(id = R.string.privacy_policy))
                     }
-                    Icon(imageVector = FeatherIcons.ArrowRight, contentDescription ="", tint = MaterialTheme.colorScheme.primary)
                 }
                 Spacer(modifier = Modifier.height(20.dp))
 
@@ -268,7 +269,6 @@ fun AccountScreen(
                         )
                         Text(text = stringResource(id = R.string.terms_and_conditions))
                     }
-                    Icon(imageVector = FeatherIcons.ArrowRight, contentDescription ="", tint = MaterialTheme.colorScheme.primary)
                 }
                 Spacer(modifier = Modifier.height(20.dp))
 
@@ -278,9 +278,19 @@ fun AccountScreen(
                         .fillMaxWidth()
                         .clickable {
                             try {
-                                context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=$packageName")))
+                                context.startActivity(
+                                    Intent(
+                                        Intent.ACTION_VIEW,
+                                        Uri.parse("market://details?id=$packageName")
+                                    )
+                                )
                             } catch (e: ActivityNotFoundException) {
-                                context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=$packageName")))
+                                context.startActivity(
+                                    Intent(
+                                        Intent.ACTION_VIEW,
+                                        Uri.parse("https://play.google.com/store/apps/details?id=$packageName")
+                                    )
+                                )
                             }
                         },
                     verticalAlignment = Alignment.CenterVertically
@@ -371,76 +381,93 @@ fun AuthenticatedUser(
         }
     )
 
-
-    Card(modifier = Modifier.fillMaxWidth()) {
-        Column(Modifier.absolutePadding(left = 10.dp, right = 10.dp, top = 10.dp, bottom = 10.dp)) {
-            user?.let {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Row() {
-                        Image(
-                            painter = rememberAsyncImagePainter(user?.photoUrl),
-                            contentDescription = null,
-                            modifier = Modifier
-                                .width(50.dp)
-                                .height(50.dp)
-                        )
-                        Spacer(modifier = Modifier.width(10.dp))
-                        user?.displayName?.let { it1 ->
-                            Column() {
-                                Text(text =  stringResource(id = R.string.logged_in), style = MaterialTheme.typography.labelSmall)
-                                Text(text = it1, style = MaterialTheme.typography.labelLarge)
+        Card(Modifier.fillMaxWidth()) {
+            Column(Modifier.absolutePadding(left = 10.dp, right = 10.dp, top = 10.dp, bottom = 10.dp)) {
+                user?.let {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.Start,
+                    ) {
+                        Row(
+                            horizontalArrangement = Arrangement.spacedBy(5.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Image(
+                                painter = rememberAsyncImagePainter(user?.photoUrl),
+                                contentDescription = null,
+                                modifier = Modifier
+                                    .width(50.dp)
+                                    .height(50.dp)
+                                    .clip(RoundedCornerShape(100))
+                            )
+                            user.let { user ->
+                                Column(
+                                    verticalArrangement = Arrangement.Top
+                                ) {
+                                    user.displayName?.let { name -> Text(text = name, style = MaterialTheme.typography.titleLarge) }
+                                    user.email?.let { email -> Text(text = email, style = MaterialTheme.typography.labelMedium) }
+                                }
                             }
                         }
                     }
                 }
-            }
-            if (user == null) {
-                Column(
-                    Modifier.fillMaxWidth()
-                ) {
-                    Row(
-                        horizontalArrangement = Arrangement.Start,
-                        verticalAlignment = Alignment.CenterVertically
+                if (user == null) {
+                    Column(
+                        Modifier.fillMaxWidth()
                     ) {
-                        Icon(
-                            imageVector = FeatherIcons.Info,
-                            contentDescription = "",
-                            tint = MaterialTheme.colorScheme.primary
-                        )
-                        Spacer(modifier = Modifier.width(10.dp))
-                        Column() {
-                            Text(
-                                text = stringResource(id = R.string.not_logged_in),
-                                style = MaterialTheme.typography.labelSmall
+                        Row(
+                            horizontalArrangement = Arrangement.Start,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Icon(
+                                imageVector = FeatherIcons.Info,
+                                contentDescription = "",
+                                tint = MaterialTheme.colorScheme.primary,
+                                modifier = Modifier
+                                    .width(20.dp)
+                                    .height(20.dp)
                             )
-                            Text(
-                                text = stringResource(id = R.string.data_can_be_lost),
-                                style = MaterialTheme.typography.labelLarge
-                            )
+                            Spacer(modifier = Modifier.width(10.dp))
+                            Column() {
+                                Text(
+                                    text = stringResource(id = R.string.data_can_be_lost),
+                                    style = MaterialTheme.typography.labelMedium
+                                )
+                            }
                         }
-                    }
-                    OutlinedButton(
-                        modifier = Modifier.padding(horizontal = 25.dp),
-                        onClick = {
-                        val gso =
-                            GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                                .requestIdToken(token)
-                                .requestEmail()
-                                .build()
-                        val googleSignInClient = GoogleSignIn.getClient(context, gso)
-                        launcher.launch(googleSignInClient.signInIntent)
-                    }) {
-                        Text(
-                            modifier = Modifier.padding(horizontal = 20.dp),
-                            text = stringResource(id = R.string.log_in)
-                        )
+                        Spacer(modifier = Modifier.height(10.dp))
+                        OutlinedButton(
+                            modifier = Modifier.padding(horizontal = 25.dp),
+                            onClick = {
+                                val gso =
+                                    GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                                        .requestIdToken(token)
+                                        .requestEmail()
+                                        .build()
+                                val googleSignInClient = GoogleSignIn.getClient(context, gso)
+                                launcher.launch(googleSignInClient.signInIntent)
+                            }) {
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                modifier = Modifier.padding(horizontal = 20.dp)
+                            ) {
+                                Text(
+                                    text = stringResource(id = R.string.login_with_google)
+                                )
+                                Spacer(modifier = Modifier.width(5.dp))
+                                Icon(
+                                    modifier= Modifier
+                                        .height(15.dp)
+                                        .width(15.dp),
+                                    imageVector = FontAwesomeIcons.Brands.Google,
+                                    contentDescription = "",
+                                    tint = MaterialTheme.colorScheme.primary
+                                )
+                            }
+                             }
                     }
                 }
+
             }
         }
-    }
 }
