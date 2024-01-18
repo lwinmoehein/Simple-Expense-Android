@@ -17,10 +17,15 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -43,6 +48,7 @@ import lab.justonebyte.simpleexpense.R
 import lab.justonebyte.simpleexpense.ui.MainDestinations
 import lab.justonebyte.simpleexpense.ui.account.rememberFirebaseAuthLauncher
 import lab.justonebyte.simpleexpense.ui.components.ProgressDialog
+import lab.justonebyte.simpleexpense.ui.components.SuBuuSnackBar
 
 @Composable
 fun LoginScreen(
@@ -52,13 +58,16 @@ fun LoginScreen(
     val token = stringResource(R.string.web_client_id)
 
     val loginViewModel = hiltViewModel<LoginViewModel>()
-    val loginUiState = loginViewModel.viewModelUiState.collectAsState()
+    val loginUiState by loginViewModel.viewModelUiState.collectAsState()
+
+    val snackbarHostState = remember { SnackbarHostState() }
+
 
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
 
 
-    if(loginUiState.value.firebaseUser!=null){
+    if(loginUiState.firebaseUser!=null){
        onOnboardDone()
     }
 
@@ -73,11 +82,19 @@ fun LoginScreen(
         onAuthError = {
         }
     )
-    if(loginUiState.value.isLoggingIn){
+    if(loginUiState.isLoggingIn){
         ProgressDialog(onDismissRequest = {}, text = stringResource(id = R.string.logging_in) )
     }
 
-    Box(modifier = Modifier.fillMaxSize()) {
+    Scaffold(
+        snackbarHost =  { SnackbarHost(snackbarHostState) }
+    ) {
+        SuBuuSnackBar(
+            snackBarType = loginUiState.currentSnackBar,
+            onDismissSnackBar = { loginViewModel.clearSnackBar() },
+            snackbarHostState = snackbarHostState
+        )
+        Box(modifier = Modifier.padding(it).fillMaxSize()) {
             Image(
                 painter = painterResource(id = R.drawable.onboard_bg),
                 contentDescription = null, // You can provide a description here
@@ -105,9 +122,9 @@ fun LoginScreen(
                     Button(
                         onClick = {
                             val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                            .requestIdToken(token)
-                            .requestEmail()
-                            .build()
+                                .requestIdToken(token)
+                                .requestEmail()
+                                .build()
                             val googleSignInClient = GoogleSignIn.getClient(context, gso)
                             launcher.launch(googleSignInClient.signInIntent)
                         },
@@ -118,10 +135,10 @@ fun LoginScreen(
                             contentColor = MaterialTheme.colorScheme.primary
                         )
                     ) { Text(text = "Login with Google", color = MaterialTheme.colorScheme.primary)
-                   Spacer(modifier = Modifier.width(5.dp))
-                   Icon(tint = MaterialTheme.colorScheme.primary,imageVector = FontAwesomeIcons.Brands.Google,modifier = Modifier
-                       .width(20.dp)
-                       .height(20.dp), contentDescription ="" )
+                        Spacer(modifier = Modifier.width(5.dp))
+                        Icon(tint = MaterialTheme.colorScheme.primary,imageVector = FontAwesomeIcons.Brands.Google,modifier = Modifier
+                            .width(20.dp)
+                            .height(20.dp), contentDescription ="" )
                     }
                 }
 
@@ -143,4 +160,5 @@ fun LoginScreen(
                 }
             }
         }
+    }
 }

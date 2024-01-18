@@ -29,7 +29,8 @@ import javax.inject.Inject
 data class LoginUiState(
     val currentSnackBar : SnackBarType? = null,
     val isLoggingIn:Boolean = false,
-    val firebaseUser: FirebaseUser? = null
+    val firebaseUser: FirebaseUser? = null,
+
 )
 
 @HiltViewModel
