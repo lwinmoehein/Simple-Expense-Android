@@ -160,5 +160,7 @@
     <string name="onboarding_record_expense_desc">Simple record your expense and income.</string>
     <string name="onboarding_cloud_login_desc">Login with google to save your data.</string>
     <string name="onboarding_export_file_desc">Export data as your desired file formats.</string>
+    <string name="select_language">Please select language</string>
+    <string name="start">START</string>
 
 </resources>

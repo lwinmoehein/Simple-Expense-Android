@@ -22,7 +22,6 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -37,7 +36,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavHostController
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import compose.icons.FontAwesomeIcons
@@ -45,7 +43,6 @@ import compose.icons.fontawesomeicons.Brands
 import compose.icons.fontawesomeicons.brands.Google
 import kotlinx.coroutines.launch
 import lab.justonebyte.simpleexpense.R
-import lab.justonebyte.simpleexpense.ui.MainDestinations
 import lab.justonebyte.simpleexpense.ui.account.rememberFirebaseAuthLauncher
 import lab.justonebyte.simpleexpense.ui.components.ProgressDialog
 import lab.justonebyte.simpleexpense.ui.components.SuBuuSnackBar
@@ -57,17 +54,18 @@ fun LoginScreen(
 ){
     val token = stringResource(R.string.web_client_id)
 
-    val loginViewModel = hiltViewModel<LoginViewModel>()
-    val loginUiState by loginViewModel.viewModelUiState.collectAsState()
+    val onBoardViewModel = hiltViewModel<OnBoardViewModel>()
+    val onBoardUiState by onBoardViewModel.viewModelUiState.collectAsState()
 
     val snackbarHostState = remember { SnackbarHostState() }
 
 
     val context = LocalContext.current
+
     val scope = rememberCoroutineScope()
 
 
-    if(loginUiState.firebaseUser!=null){
+    if(onBoardUiState.firebaseUser!=null){
        onOnboardDone()
     }
 
@@ -75,14 +73,14 @@ fun LoginScreen(
         onAuthComplete = { result,idToken ->
             result.user?.let {
                 scope.launch {
-                    loginViewModel.fetchAccessTokenByGoogleId(idToken)
+                    onBoardViewModel.fetchAccessTokenByGoogleId(idToken)
                 }
             }
         },
         onAuthError = {
         }
     )
-    if(loginUiState.isLoggingIn){
+    if(onBoardUiState.isLoggingIn){
         ProgressDialog(onDismissRequest = {}, text = stringResource(id = R.string.logging_in) )
     }
 
@@ -90,8 +88,8 @@ fun LoginScreen(
         snackbarHost =  { SnackbarHost(snackbarHostState) }
     ) {
         SuBuuSnackBar(
-            snackBarType = loginUiState.currentSnackBar,
-            onDismissSnackBar = { loginViewModel.clearSnackBar() },
+            snackBarType = onBoardUiState.currentSnackBar,
+            onDismissSnackBar = { onBoardViewModel.clearSnackBar() },
             snackbarHostState = snackbarHostState
         )
         Box(modifier = Modifier

@@ -153,6 +153,8 @@
     <string name="onboarding_record_expense_desc">၀င်ငွေထွက်ငွေအား ရိုးရှင်းစွာမှတ်သားနိုင်ပါသည်။</string>
     <string name="onboarding_cloud_login_desc">Google ဖြင့်အကောင့်၀င်ပြီး ဒေတာမပျောက်ပျက်စေရန် အင်တာနက်ပေါ်တွင်သိမ်းနိုင်ပါသည်။</string>
     <string name="onboarding_export_file_desc">ဒေတာများကို မိမိနှစ်သက်ရာဖိုင်ဖောမက်အဖြစ် သိမ်းဆည်းနိုင်ပါသည်။</string>
+    <string name="select_language">ဘာသာစကား ရွေးချယ်ပါ</string>
+    <string name="start">စတင်အသုံးပြုမည်</string>
 
 
 </resources>

@@ -84,9 +84,7 @@ fun SimpleExpenseApp(
         ProvideWindowInsets {
                 if(!isAppOnboardingShowed.value){
                     if(!isLoginShown.value)
-                        OnBoardingScreen {
-                            isLoginShown.value = true
-                        }
+                        OnBoardingScreen(onStartClick = { isLoginShown.value = true })
                     else
                         LoginScreen {
                             isAppOnboardingShowed.value = true

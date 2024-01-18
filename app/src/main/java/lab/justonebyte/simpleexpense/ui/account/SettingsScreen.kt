@@ -28,6 +28,7 @@ import lab.justonebyte.simpleexpense.ui.MainDestinations
 import lab.justonebyte.simpleexpense.ui.components.OptionItem
 import lab.justonebyte.simpleexpense.ui.components.SectionTitle
 import lab.justonebyte.simpleexpense.utils.LocaleHelper
+import lab.justonebyte.simpleexpense.utils.changeLocale
 import java.util.Locale
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -42,13 +43,7 @@ fun SettingsScreen(
     val appLanguages = listOf(AppLocale.English,AppLocale.Myanmar)
     val coroutineScope = rememberCoroutineScope()
 
-    fun changeLocale(localeString: String){
-        LocaleHelper().setLocale(context, localeString)
-       val configuration = context.resources.configuration
 
-        configuration.setLocale(Locale(localeString))
-        context.resources.updateConfiguration(configuration, context.resources.displayMetrics)
-    }
 
     Scaffold(
         topBar = {
@@ -92,7 +87,7 @@ fun SettingsScreen(
                     menuItems = appLanguages,
                     onMenuItemChosen = {
                         settingsViewModel.updateLocale(it as AppLocale)
-                        changeLocale(it.value)
+                        changeLocale(context,it.value)
                     }
                 )
             }

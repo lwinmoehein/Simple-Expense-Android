@@ -79,3 +79,9 @@ class LocaleHelper {
         return context
     }
 }
+fun changeLocale(context:Context,localeString: String){
+    LocaleHelper().setLocale(context, localeString)
+    val configuration = context.resources.configuration
+    configuration.setLocale(Locale(localeString))
+    context.resources.updateConfiguration(configuration, context.resources.displayMetrics)
+}
