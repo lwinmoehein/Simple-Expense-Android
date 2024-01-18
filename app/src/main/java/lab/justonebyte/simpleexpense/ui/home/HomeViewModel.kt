@@ -33,7 +33,7 @@ import javax.inject.Inject
 
 data class HomeUiState(
     val isAppAlreadyIntroduced:Boolean?=null,
-    val isOnboardingShowed:Boolean=true,
+    val isOnboardingShowed:Boolean=false,
     val currentAppShowcaseStep:ShowCase?=null,
     val currentBalance:Long,
     val incomeBalance:Long,

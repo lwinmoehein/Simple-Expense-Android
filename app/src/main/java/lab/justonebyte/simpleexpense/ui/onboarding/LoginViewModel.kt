@@ -21,6 +21,7 @@ import lab.justonebyte.simpleexpense.api.AuthService
 import lab.justonebyte.simpleexpense.data.SettingPrefRepository
 import lab.justonebyte.simpleexpense.ui.components.SnackBarType
 import lab.justonebyte.simpleexpense.utils.RetrofitHelper
+import lab.justonebyte.simpleexpense.utils.createIsOnboardDoneFlagFile
 import lab.justonebyte.simpleexpense.workers.runVersionSync
 import javax.inject.Inject
 
@@ -70,6 +71,7 @@ class LoginViewModel @Inject constructor(
 
     suspend fun changeIsAppOnboardingShowed(){
         viewModelScope.launch {
+            createIsOnboardDoneFlagFile(application)
             settingsRepository.updateIsAppOnboardingShowed(true)
         }
     }
@@ -95,7 +97,6 @@ class LoginViewModel @Inject constructor(
                             currentSnackBar = SnackBarType.LOGIN_SUCCESS
                         )
                     }
-                    changeIsAppOnboardingShowed()
                 }
             }catch (e:Exception){
                 Log.i("access token fail","cannot fetch access token.")

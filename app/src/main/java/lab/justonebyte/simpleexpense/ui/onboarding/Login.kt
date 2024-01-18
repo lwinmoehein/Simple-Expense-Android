@@ -47,7 +47,7 @@ import lab.justonebyte.simpleexpense.ui.components.ProgressDialog
 @Composable
 fun LoginScreen(
     modifier: Modifier = Modifier,
-    navController: NavHostController
+    onOnboardDone:()->Unit
 ){
     val token = stringResource(R.string.web_client_id)
 
@@ -59,7 +59,7 @@ fun LoginScreen(
 
 
     if(loginUiState.value.firebaseUser!=null){
-        navController.navigate(MainDestinations.HOME_ROUTE)
+       onOnboardDone()
     }
 
     val launcher = rememberFirebaseAuthLauncher(

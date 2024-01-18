@@ -28,8 +28,6 @@ import lab.justonebyte.simpleexpense.ui.stats.StatsScreen
 
 
 object MainDestinations {
-    const val ONBOARDING = "onboard"
-    const val LOGIN = "login"
     const val HOME_ROUTE = "home"
     const val STATS_ROUTE = "stats"
     const val CATEGORY_ROUTE = "category"
@@ -46,10 +44,9 @@ object MainDestinations {
 fun NavGraph(
     paddings: PaddingValues,
     navController: NavHostController = rememberNavController(),
-    startDestination: String = MainDestinations.ONBOARDING,
+    startDestination: String = MainDestinations.HOME_ROUTE,
     chooseDownloadFolderLauncher: ActivityResultLauncher<Intent>,
-    homeViewModel: HomeViewModel,
-    onOnboardStartClick:()->Unit
+    homeViewModel: HomeViewModel
 ) {
 
     NavHost(
@@ -57,19 +54,6 @@ fun NavGraph(
         navController = navController,
         startDestination = startDestination,
     ) {
-        composable(MainDestinations.ONBOARDING) {
-            OnBoardingScreen(
-                onStartClick = {
-                               onOnboardStartClick()
-                },
-            )
-        }
-
-        composable(MainDestinations.LOGIN) {
-            LoginScreen(
-                navController = navController
-            )
-        }
         composable(MainDestinations.HOME_ROUTE) {
             HomeScreen(
                 homeViewModel = homeViewModel

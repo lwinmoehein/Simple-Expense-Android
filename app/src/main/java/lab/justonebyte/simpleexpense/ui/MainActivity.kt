@@ -2,23 +2,18 @@ package lab.justonebyte.simpleexpense.ui
 
 import android.content.Context
 import android.content.Intent
-import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.annotation.RequiresApi
 import androidx.core.view.WindowCompat
-import androidx.lifecycle.lifecycleScope
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.last
 import kotlinx.coroutines.launch
 import lab.justonebyte.simpleexpense.data.SettingPrefRepository
 import lab.justonebyte.simpleexpense.utils.LocaleHelper
-import lab.justonebyte.simpleexpense.utils.isFileExists
+import lab.justonebyte.simpleexpense.utils.isOnboardingDoneFlagExist
 import javax.inject.Inject
 
 
@@ -58,8 +53,7 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             SimpleExpenseApp(
-                chooseDownloadFolderLauncher = chooseDownloadFolderLauncher,
-                isAppOnboardingShowed = isFileExists(applicationContext)
+                chooseDownloadFolderLauncher = chooseDownloadFolderLauncher
             )
         }
 

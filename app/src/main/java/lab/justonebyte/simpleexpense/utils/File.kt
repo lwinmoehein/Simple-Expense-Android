@@ -5,7 +5,7 @@ import java.io.File
 import java.io.IOException
 
 val defaultFileName = "is_onboarding_done.txt"
-fun createFile(context: Context, fileName: String= defaultFileName): File {
+fun createIsOnboardDoneFlagFile(context: Context, fileName: String= defaultFileName): File {
     val file = File(context.filesDir, fileName)
     try {
         if (!file.exists()) {
@@ -17,7 +17,7 @@ fun createFile(context: Context, fileName: String= defaultFileName): File {
     }
 }
 
-fun isFileExists(context: Context, fileName: String = defaultFileName): Boolean {
+fun isOnboardingDoneFlagExist(context: Context, fileName: String = defaultFileName): Boolean {
     val file = File(context.filesDir, fileName)
     return file.exists()
 }
