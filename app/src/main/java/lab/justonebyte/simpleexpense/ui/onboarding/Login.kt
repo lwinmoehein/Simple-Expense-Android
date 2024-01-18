@@ -113,7 +113,7 @@ fun LoginScreen(
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Image(painter = painterResource(id = R.drawable.cloud), contentDescription = "")
+                Image(painter = painterResource(id = R.drawable.ic_launcher), contentDescription = "")
                 Spacer(modifier = Modifier.height(50.dp))
                 
                 Text(modifier = Modifier.padding(horizontal = 16.dp),text = "Please sign in with google to save your data to cloud.",style=MaterialTheme.typography.labelMedium,color = MaterialTheme.colorScheme.onPrimary)
@@ -156,7 +156,9 @@ fun LoginScreen(
                         .padding(horizontal = 16.dp)
                 ) {
                     OutlinedButton(
-                        onClick = { /* Handle skip action */ },
+                        onClick = {
+                            onOnboardDone()
+                        },
                         modifier = Modifier.fillMaxWidth(), // Occupy full row width
                         enabled = true
                     ) {
