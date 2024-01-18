@@ -94,7 +94,9 @@ fun LoginScreen(
             onDismissSnackBar = { loginViewModel.clearSnackBar() },
             snackbarHostState = snackbarHostState
         )
-        Box(modifier = Modifier.padding(it).fillMaxSize()) {
+        Box(modifier = Modifier
+            .padding(it)
+            .fillMaxSize()) {
             Image(
                 painter = painterResource(id = R.drawable.onboard_bg),
                 contentDescription = null, // You can provide a description here
@@ -111,9 +113,12 @@ fun LoginScreen(
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                // ... (logo and spacing as before)
-
+                Image(painter = painterResource(id = R.drawable.cloud), contentDescription = "")
+                Spacer(modifier = Modifier.height(50.dp))
+                
+                Text(modifier = Modifier.padding(horizontal = 16.dp),text = "Please sign in with google to save your data to cloud.",style=MaterialTheme.typography.labelMedium,color = MaterialTheme.colorScheme.onPrimary)
                 // Google sign-in button
+                Spacer(modifier = Modifier.height(10.dp))
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
