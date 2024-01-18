@@ -16,7 +16,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MoneySuBuu"
         android:localeConfig="@xml/locales_config"
-       >
+        android:usesCleartextTraffic="true"
+        >
 
         <activity
             android:name="lab.justonebyte.simpleexpense.ui.MainActivity"

@@ -111,10 +111,10 @@ class SettingsViewModel @Inject constructor(
             it.copy(isLoggingIn = true)
         }
         Log.i("access token:fetch",googleId)
-        val companionAppService = RetrofitHelper.getInstance("").create(AuthService::class.java)
+        val authService = RetrofitHelper.getInstance("").create(AuthService::class.java)
         viewModelScope.launch {
             try{
-                val result = companionAppService.getAccessToken(googleId)
+                val result = authService.getAccessToken(googleId)
                 result.body()?.let {
                     Log.i("access token:", it.data.token)
                     settingRepository.updateToken(it.data.token)
