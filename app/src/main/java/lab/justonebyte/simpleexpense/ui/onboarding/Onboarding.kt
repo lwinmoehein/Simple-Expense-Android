@@ -10,7 +10,6 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -20,19 +19,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.KeyboardArrowLeft
 import androidx.compose.material.icons.outlined.KeyboardArrowRight
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.RadioButton
-import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -52,20 +44,17 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
 import compose.icons.FeatherIcons
-import compose.icons.feathericons.ArrowDown
 import compose.icons.feathericons.ChevronDown
 import kotlinx.coroutines.launch
 import lab.justonebyte.simpleexpense.R
 import lab.justonebyte.simpleexpense.model.AppLocale
 import lab.justonebyte.simpleexpense.model.OnBoardingItem
 import lab.justonebyte.simpleexpense.ui.components.AppAlertDialog
-import lab.justonebyte.simpleexpense.ui.home.HomeViewModel
 import lab.justonebyte.simpleexpense.utils.changeLocale
 
 @OptIn(ExperimentalPagerApi::class)
@@ -95,7 +84,7 @@ fun OnBoardingScreen(
        Column(
            modifier = Modifier.fillMaxSize(),
        ) {
-           TopSection(currentLocale = onBoardUiState.currentLocale,onChangeLocale = { locale->
+           TopLocaleSection(currentLocale = onBoardUiState.currentLocale,onChangeLocale = { locale->
                scope.launch {
                    onBoardViewModel.changeLocale(locale)
                    changeLocale(context,locale.value)
@@ -123,74 +112,16 @@ fun OnBoardingScreen(
                    scope.launch {
                       onStartClick()
                    }
-               },
-               currentLocale = onBoardUiState.currentLocale
+               }
            )
        }
 
     }
 }
 
-@ExperimentalPagerApi
-@Composable
-fun TopSection(
-     currentLocale: AppLocale,
-     onChangeLocale:(locale:AppLocale)->Unit
-) {
-    var isDialogShown by remember { mutableStateOf(false) }
-
-    if(isDialogShown){
-        AppAlertDialog(
-            title = stringResource(id = R.string.select_language)
-        ) {
-            Column {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.clickable{
-                        onChangeLocale(AppLocale.Myanmar)
-                        isDialogShown = false
-                    }
-                ) {
-                    RadioButton(selected = currentLocale==AppLocale.Myanmar, onClick = null)
-                    Text(text = stringResource(id = AppLocale.Myanmar.name))
-                }
-                Spacer(modifier = Modifier.height(10.dp))
-                Row (
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.clickable {
-                            onChangeLocale(AppLocale.English)
-                            isDialogShown = false
-                    }
-                ){
-                    RadioButton(selected = currentLocale==AppLocale.English, onClick = null)
-                    Text(text = stringResource(id = AppLocale.English.name ))
-                }
-            }
-        }
-    }
-
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 16.dp, vertical = 50.dp),
-        horizontalArrangement = Arrangement.End
-    ) {
-        Row (
-            horizontalArrangement = Arrangement.spacedBy(3.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.clickable {
-                isDialogShown = true
-            }
-        ){
-            Text(text = stringResource(id = currentLocale.name), fontWeight = FontWeight.Bold)
-            Icon(imageVector = FeatherIcons.ChevronDown, contentDescription ="" )
-        }
-    }
-}
 
 @Composable
 fun BottomSection(
-    currentLocale: AppLocale,
     modifier: Modifier,size: Int, index: Int, onButtonClick: () -> Unit = {}
 ) {
     Column(
@@ -203,7 +134,6 @@ fun BottomSection(
 
         Spacer(modifier = Modifier.height(20.dp))
 
-        if(currentLocale==AppLocale.English){
             Button(
                 onClick = {
                     onButtonClick()
@@ -222,26 +152,6 @@ fun BottomSection(
                     )
                 }
             }
-        }else{
-            Button(
-                onClick = {
-                    onButtonClick()
-                },
-            ) {
-                Row(
-                    Modifier.padding(horizontal = 30.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.Center
-                ) {
-                    Text(style = MaterialTheme.typography.labelLarge,text = stringResource(id = R.string.start), color = Color.White, fontWeight = FontWeight.ExtraBold)
-                    Icon(
-                        Icons.Outlined.KeyboardArrowRight,
-                        tint = Color.White,
-                        contentDescription = "Localized description"
-                    )
-                }
-            }
-        }
     }
 }
 

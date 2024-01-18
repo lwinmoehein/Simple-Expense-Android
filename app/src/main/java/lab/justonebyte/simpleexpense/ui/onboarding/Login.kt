@@ -114,7 +114,7 @@ fun LoginScreen(
                 Image(painter = painterResource(id = R.drawable.ic_launcher), contentDescription = "")
                 Spacer(modifier = Modifier.height(50.dp))
                 
-                Text(modifier = Modifier.padding(horizontal = 16.dp),text = "Please sign in with google to save your data to cloud.",style=MaterialTheme.typography.labelMedium,color = MaterialTheme.colorScheme.onPrimary)
+                Text(modifier = Modifier.padding(horizontal = 16.dp),text = stringResource(id = R.string.please_sign_in_with_google),style=MaterialTheme.typography.labelMedium,color = MaterialTheme.colorScheme.onPrimary)
                 // Google sign-in button
                 Spacer(modifier = Modifier.height(10.dp))
                 Row(
@@ -137,7 +137,7 @@ fun LoginScreen(
                             containerColor = Color.White,
                             contentColor = MaterialTheme.colorScheme.primary
                         )
-                    ) { Text(text = "Login with Google", color = MaterialTheme.colorScheme.primary)
+                    ) { Text(text = stringResource(id = R.string.login_with_google), color = MaterialTheme.colorScheme.primary)
                         Spacer(modifier = Modifier.width(5.dp))
                         Icon(tint = MaterialTheme.colorScheme.primary,imageVector = FontAwesomeIcons.Brands.Google,modifier = Modifier
                             .width(20.dp)
@@ -160,7 +160,7 @@ fun LoginScreen(
                         modifier = Modifier.fillMaxWidth(), // Occupy full row width
                         enabled = true
                     ) {
-                        Text("Skip", color = MaterialTheme.colorScheme.onPrimary)
+                        Text(stringResource(id = R.string.skip), color = MaterialTheme.colorScheme.onPrimary)
                     }
                 }
             }

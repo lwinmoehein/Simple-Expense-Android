@@ -1,9 +1,12 @@
 package lab.justonebyte.simpleexpense.utils
 
 import android.annotation.TargetApi
+import android.app.Activity
 import android.content.Context
+import android.content.Intent
 import android.os.Build
 import android.preference.PreferenceManager
+import lab.justonebyte.simpleexpense.ui.MainActivity
 import java.util.*
 
 /**
@@ -81,7 +84,7 @@ class LocaleHelper {
 }
 fun changeLocale(context:Context,localeString: String){
     LocaleHelper().setLocale(context, localeString)
-    val configuration = context.resources.configuration
-    configuration.setLocale(Locale(localeString))
-    context.resources.updateConfiguration(configuration, context.resources.displayMetrics)
+    val i = Intent(context as Activity, MainActivity::class.java)
+    context.finish()
+    context.startActivity(i)
 }
