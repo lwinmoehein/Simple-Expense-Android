@@ -79,13 +79,8 @@ class SettingsViewModel @Inject constructor(
             launch { collectDefaultBalanceType() }
             launch { collectLanguage() }
 //            launch { getCompanionApps() }
-            launch { getTransactions() }
             launch { collectToken() }
             launch { collectDownloadFolder() }
-        }
-    }
-    private suspend fun getTransactions(){
-        transactionRepository.getTotalTransactions().collect{ transactions->
         }
     }
 

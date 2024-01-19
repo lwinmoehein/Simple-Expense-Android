@@ -18,7 +18,7 @@ interface TransactionDao {
     @Query(transactionWithCategorySelectQuery+"where category_table.unique_id==transaction_table.category_id" +
             " and date(transaction_table.created_at)==:date" +
             " and transaction_table.deleted_at is  null")
-    fun getTransactions(date:String): Flow<List<TransactionWithCategory>>
+    fun getTransactions(date:String): List<TransactionWithCategory>
 
 
 
@@ -26,7 +26,7 @@ interface TransactionDao {
         transactionWithCategorySelectQuery+"where category_table.unique_id==transaction_table.category_id" +
                 " and transaction_table.created_at BETWEEN :startYearTimeStamp AND :endYearTimestamp" +
             " and transaction_table.deleted_at is  null")
-    fun getTransactionsByMonth(startYearTimeStamp:Long,endYearTimestamp:Long): Flow<List<TransactionWithCategory>>
+    suspend fun getTransactionsByMonth(startYearTimeStamp:Long,endYearTimestamp:Long): List<TransactionWithCategory>
 
 
 
@@ -35,13 +35,13 @@ interface TransactionDao {
             " and transaction_table.deleted_at is null" +
                 " and transaction_table.created_at BETWEEN :startYearTimeStamp AND :endYearTimestamp"
     )
-    fun getTransactionsByYear(startYearTimeStamp:Long,endYearTimestamp:Long): Flow<List<TransactionWithCategory>>
+    fun getTransactionsByYear(startYearTimeStamp:Long,endYearTimestamp:Long): List<TransactionWithCategory>
 
 
 
 
     @Query(transactionWithCategorySelectQuery+"where category_table.unique_id==transaction_table.category_id and transaction_table.deleted_at is  null" )
-    fun getTotalTransactions(): Flow<List<TransactionWithCategory>>
+    fun getTotalTransactions(): List<TransactionWithCategory>
 
     @Query("SELECT * FROM transaction_table")
     fun getAllTransactions():List<ServerTransaction>

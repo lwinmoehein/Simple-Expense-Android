@@ -1,7 +1,5 @@
 package lab.justonebyte.simpleexpense.data
 
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
 import lab.justonebyte.simpleexpense.model.ServerTransaction
 import lab.justonebyte.simpleexpense.model.Transaction
 import lab.justonebyte.simpleexpense.utils.getTimeStampForYearEnd
@@ -11,10 +9,10 @@ import lab.justonebyte.simpleexpense.utils.getTimestampForMonthStart
 import javax.inject.Inject
 
 interface TransactionRepository {
-    fun getDailyTransactions(day:String): Flow<List<Transaction>>
-    fun getMonthlyTransactions(month:String): Flow<List<Transaction>>
-    fun getYearlyTransactions(year:String): Flow<List<Transaction>>
-    fun getTotalTransactions(): Flow<List<Transaction>>
+    suspend fun getDailyTransactions(day:String): List<Transaction>
+    suspend fun getMonthlyTransactions(month:String): List<Transaction>
+    suspend fun getYearlyTransactions(year:String): List<Transaction>
+    suspend fun getTotalTransactions(): List<Transaction>
     fun getServerTransactions(): List<ServerTransaction>
     suspend fun getUniqueIdsWithVersions():List<UniqueIdWithVersion>
 
@@ -28,29 +26,29 @@ interface TransactionRepository {
 }
 class TransactionRepositoryImpl @Inject constructor(val transactionDao: TransactionDao):TransactionRepository {
 
-    override fun getDailyTransactions(day:String): Flow<List<Transaction>> {
+    override suspend fun getDailyTransactions(day:String): List<Transaction> {
         val transactionEntities = transactionDao.getTransactions(day)
-        return transactionEntities.map { list -> list.map { Transaction.Mapper.mapToDomain(it) } }
+        return transactionEntities.map { Transaction.Mapper.mapToDomain(it) }
     }
 
-    override fun getMonthlyTransactions(month:String): Flow<List<Transaction>> {
+    override suspend fun getMonthlyTransactions(month:String): List<Transaction> {
         val startMonthTimeStamp = getTimestampForMonthStart(month)
         val endMonthTimeStamp = getTimestampForMonthEnd(month)
 
         val transactionEntities = transactionDao.getTransactionsByMonth(startMonthTimeStamp,endMonthTimeStamp)
-        return transactionEntities.map { list -> list.map { Transaction.Mapper.mapToDomain(it) } }
+        return transactionEntities.map { Transaction.Mapper.mapToDomain(it)  }
     }
 
-    override fun getYearlyTransactions(year:String): Flow<List<Transaction>> {
+    override suspend fun getYearlyTransactions(year:String): List<Transaction> {
         val startYearTimeStamp = getTimeStampForYearStart(year.toInt())
         val endYearTimeStamp = getTimeStampForYearEnd(year.toInt())
         val transactionEntities = transactionDao.getTransactionsByYear(startYearTimeStamp,endYearTimeStamp)
-        return transactionEntities.map { list -> list.map { Transaction.Mapper.mapToDomain(it) } }
+        return transactionEntities.map {  Transaction.Mapper.mapToDomain(it)  }
     }
 
-    override fun getTotalTransactions(): Flow<List<Transaction>> {
+    override suspend fun getTotalTransactions(): List<Transaction> {
         val transactionEntities = transactionDao.getTotalTransactions()
-        return transactionEntities.map { list -> list.map { Transaction.Mapper.mapToDomain(it) } }
+        return transactionEntities.map { Transaction.Mapper.mapToDomain(it)  }
     }
 
     override fun getServerTransactions(): List<ServerTransaction> {
