@@ -258,7 +258,7 @@ class HomeViewModel @Inject constructor(
         date:Long,
         note:String?
     ){
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             transactionRepository.update(
                 Transaction(
                     unique_id = transactionId,
@@ -270,21 +270,18 @@ class HomeViewModel @Inject constructor(
                     note = note
                 )
             )
-            if(token.value.isNotEmpty()) runVersionSync(application,"transactions",token.value)
-        }
-        viewModelScope.launch {
             bindTransactionsFromBalanceType(_viewModelUiState.value.currentBalanceType)
+            if(token.value.isNotEmpty()) runVersionSync(application,"transactions",token.value)
         }
     }
 
     fun deleteTransaction(transaction: Transaction){
 
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             transactionRepository.delete(transaction)
-            if(token.value.isNotEmpty()) runVersionSync(application,"transactions",token.value)
-        }
-        viewModelScope.launch {
             bindTransactionsFromBalanceType(_viewModelUiState.value.currentBalanceType)
+
+            if(token.value.isNotEmpty()) runVersionSync(application,"transactions",token.value)
         }
     }
 
