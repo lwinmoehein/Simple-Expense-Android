@@ -67,7 +67,7 @@ class HomeViewModel @Inject constructor(
         get() =  _viewModelUiState
 
     init {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             launch {
                 updateIsOnboardingShowed()
             }

@@ -59,8 +59,8 @@ class UploadOrUpdateClientObjectsWorker (
            Log.i("work manager:","cats size:"+allServerCategories.size.toString())
 
         val objectsToUpload = when(tableName){
-            "transactions" -> allServerTransactions.filterIsInstance<ServerTransaction>().filter { transaction -> newClientIds.contains(transaction.unique_id) }
-            else -> allServerCategories.filterIsInstance<ServerCategory>().filter { category -> newClientIds.contains(category.unique_id) }
+            "transactions" -> allServerTransactions.filter { transaction -> newClientIds.contains(transaction.unique_id) }
+            else -> allServerCategories.filter { category -> newClientIds.contains(category.unique_id) }
         }
 
 
