@@ -33,6 +33,7 @@ import com.canopas.lib.showcase.IntroShowcase
 import com.canopas.lib.showcase.component.ShowcaseStyle
 import compose.icons.FeatherIcons
 import compose.icons.feathericons.Plus
+import kotlinx.coroutines.launch
 import lab.justonebyte.simpleexpense.R
 import lab.justonebyte.simpleexpense.model.BalanceType
 import lab.justonebyte.simpleexpense.model.ShowCase
@@ -248,12 +249,9 @@ fun HomeScreen(
                     ChooseTransactionTypeTab(
                         balanceType =  homeUiState.currentBalanceType,
                         onTypeChanged = { type->
-                            when(type){
-                                BalanceType.DAILY->homeViewModel.collectDailyBalance()
-                                BalanceType.MONTHLY->homeViewModel.collectMonthlyBalance()
-                                BalanceType.YEARLY->homeViewModel.collectYearlyBalance()
-                                else->homeViewModel.collectTotalBalance()
-                            }
+                           coroutineScope.launch {
+                               homeViewModel.bindTransactionsFromBalanceType(type)
+                           }
                         }
                     )
 

@@ -14,6 +14,7 @@ import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -28,6 +29,8 @@ import compose.icons.FeatherIcons
 import compose.icons.feathericons.ArrowDown
 import compose.icons.feathericons.ArrowUp
 import compose.icons.feathericons.DollarSign
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.launch
 import lab.justonebyte.simpleexpense.R
 import lab.justonebyte.simpleexpense.model.Currency
 import lab.justonebyte.simpleexpense.model.ShowCase
@@ -40,6 +43,7 @@ fun BalanceCard(
     homeUiState:HomeUiState,
     homeViewModel: HomeViewModel
 ){
+        val coroutineScope = rememberCoroutineScope()
         Card(
             modifier = modifier.fillMaxWidth(),
             shape = RoundedCornerShape(10.dp)
@@ -66,14 +70,14 @@ fun BalanceCard(
                     )
                     TransactionTypePicker(
                         onDatePicked = { date ->
-                            homeViewModel.collectDailyBalance(date)
+                             coroutineScope.launch { homeViewModel.updateCurrentDay(date) }
                         },
                         balanceType = homeUiState.currentBalanceType,
                         onMonthPicked = { month ->
-                            homeViewModel.collectMonthlyBalance(month)
+                            coroutineScope.launch { homeViewModel.updateCurrentMonth(month)}
                         },
                         onYearPicked = { year ->
-                            homeViewModel.collectYearlyBalance(year)
+                            coroutineScope.launch { homeViewModel.updateCurrentYear(year) }
                         },
                         selectedYear = homeUiState.selectedYear,
                         selectedMonth = homeUiState.selectedMonth,

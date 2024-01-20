@@ -7,10 +7,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.last
-import kotlinx.coroutines.flow.lastOrNull
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import lab.justonebyte.simpleexpense.data.CategoryRepository
@@ -49,6 +49,7 @@ data class HomeUiState(
     val selectedYear:String = getCurrentYear(),
     val defaultLanguage: AppLocale = AppLocale.English,
     )
+val DEBUGE_BALANCE_BUG="debug_balance"
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
@@ -58,6 +59,8 @@ class HomeViewModel @Inject constructor(
     @ApplicationContext private val application: Context
 ):ViewModel()
 {
+    private var transactionCollectJobs:Job? = null
+
     private val _viewModelUiState  = MutableStateFlow(
         HomeUiState(currentBalance = 0, incomeBalance = 0, expenseBalance = 0, totalBalance = 0)
     )
@@ -65,6 +68,7 @@ class HomeViewModel @Inject constructor(
 
     val viewModelUiState: StateFlow<HomeUiState>
         get() =  _viewModelUiState
+
 
     init {
         viewModelScope.launch {
@@ -110,6 +114,7 @@ class HomeViewModel @Inject constructor(
             }
         }
     }
+
     private suspend fun collectAndUpdateIsAppIntroduced(){
             settingsRepository.isAppIntroduced.collect{isIntroduced->
                 _viewModelUiState.update {
@@ -140,14 +145,19 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    fun collectTotalBalance(){
+    suspend fun collectTotalBalance(){
         _viewModelUiState.update {
             it.copy(currentBalanceType = BalanceType.TOTAL)
         }
-        viewModelScope.launch {
             transactionRepository.getTotalTransactions().collect{ transactions->
-                bindBalanceData(transactions)
-            }
+                if(viewModelUiState.value.currentBalanceType==BalanceType.TOTAL) {
+                    Log.i(
+                        DEBUGE_BALANCE_BUG,
+                        ":total:before:" + _viewModelUiState.value.transactions.size
+                    )
+                    Log.i(DEBUGE_BALANCE_BUG, ":total:" + transactions.size)
+                    bindBalanceData(transactions)
+                }
         }
     }
     private suspend fun collectCurrencyFromSetting(){
@@ -157,8 +167,14 @@ class HomeViewModel @Inject constructor(
             }
         }
     }
-     private fun bindTransactionsFromBalanceType(balanceType: BalanceType){
-         viewModelScope.launch {
+     suspend fun bindTransactionsFromBalanceType(balanceType: BalanceType=viewModelUiState.value.currentBalanceType){
+         _viewModelUiState.update { homeUiState ->
+             homeUiState.copy(currentBalanceType = balanceType)
+         }
+
+         transactionCollectJobs?.cancel()
+
+         transactionCollectJobs = viewModelScope.launch {
              when(balanceType){
                  BalanceType.DAILY->collectDailyBalance()
                  BalanceType.MONTHLY->collectMonthlyBalance()
@@ -167,38 +183,65 @@ class HomeViewModel @Inject constructor(
              }
          }
      }
-     fun collectDailyBalance(dateValue:String = viewModelUiState.value.selectedDay){
+     suspend fun updateCurrentDay(dateValue:String = viewModelUiState.value.selectedDay){
+         _viewModelUiState.update {
+             it.copy(selectedDay = dateValue, currentBalanceType = BalanceType.DAILY)
+         }
+         viewModelScope.launch {
+             bindTransactionsFromBalanceType()
+         }
+     }
+     suspend fun collectDailyBalance(){
+             transactionRepository.getDailyTransactions(viewModelUiState.value.selectedDay).collect{ transactions->
+                if(viewModelUiState.value.currentBalanceType==BalanceType.DAILY) {
+                    Log.i(
+                        DEBUGE_BALANCE_BUG,
+                        ":daily:before:" + _viewModelUiState.value.transactions.size
+                    )
+                    Log.i(DEBUGE_BALANCE_BUG, ":daily:" + transactions.size)
+                    bindBalanceData(transactions)
+                }
+        }
+    }
+
+    suspend fun updateCurrentMonth(monthValue:String=  viewModelUiState.value.selectedMonth){
         _viewModelUiState.update {
-            it.copy(selectedDay = dateValue, currentBalanceType = BalanceType.DAILY)
+            it.copy(selectedMonth = monthValue, currentBalanceType = BalanceType.MONTHLY)
         }
-
         viewModelScope.launch {
-            transactionRepository.getDailyTransactions(dateValue).collect{ transactions->
-                bindBalanceData(transactions)
-            }
+            bindTransactionsFromBalanceType()
         }
     }
 
-     fun collectMonthlyBalance(dateValue:String=  viewModelUiState.value.selectedMonth){
-         _viewModelUiState.update {
-             it.copy(selectedMonth = dateValue, currentBalanceType = BalanceType.MONTHLY)
-         }
-        viewModelScope.launch {
-            transactionRepository.getMonthlyTransactions(dateValue).collect{ transactions->
-                Log.i("trans:",transactions.size.toString())
-                bindBalanceData(transactions)
-            }
+     suspend fun collectMonthlyBalance(){
+            transactionRepository.getMonthlyTransactions(viewModelUiState.value.selectedMonth).collect{ transactions->
+                if(viewModelUiState.value.currentBalanceType==BalanceType.MONTHLY) {
+                    Log.i(
+                        DEBUGE_BALANCE_BUG,
+                        ":monthly:before:" + _viewModelUiState.value.transactions.size
+                    )
+                    Log.i(DEBUGE_BALANCE_BUG, ":monthly:" + transactions.size)
+                    bindBalanceData(transactions)
+                }
         }
     }
 
-     fun collectYearlyBalance(dateValue:String= viewModelUiState.value.selectedYear){
-         _viewModelUiState.update {
-             it.copy(selectedYear = dateValue, currentBalanceType = BalanceType.YEARLY)
-         }
+    suspend fun updateCurrentYear(year:String= viewModelUiState.value.selectedYear){
+        _viewModelUiState.update {
+            it.copy(selectedYear = year, currentBalanceType = BalanceType.YEARLY)
+        }
         viewModelScope.launch {
-            transactionRepository.getYearlyTransactions(dateValue).collect{ transactions->
-                bindBalanceData(transactions)
-            }
+            bindTransactionsFromBalanceType()
+        }
+
+    }
+     suspend fun collectYearlyBalance(){
+            transactionRepository.getYearlyTransactions(viewModelUiState.value.selectedYear).collect{ transactions->
+                if(viewModelUiState.value.currentBalanceType==BalanceType.YEARLY){
+                    Log.i(DEBUGE_BALANCE_BUG,":yearly:before:"+_viewModelUiState.value.transactions.size)
+                    Log.i(DEBUGE_BALANCE_BUG,":yearly:"+transactions.size)
+                    bindBalanceData(transactions)
+                }
         }
     }
 
