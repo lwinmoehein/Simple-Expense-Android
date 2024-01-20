@@ -20,7 +20,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.unit.dp
 import lab.justonebyte.simpleexpense.model.BalanceType
 import lab.justonebyte.simpleexpense.model.Currency
@@ -32,6 +31,7 @@ import lab.justonebyte.simpleexpense.utils.getReadableFormattedDay
 import lab.justonebyte.simpleexpense.utils.getReadableFormattedMonth
 import lab.justonebyte.simpleexpense.R
 import lab.justonebyte.simpleexpense.ui.components.getLocale
+import java.util.Locale
 
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -41,10 +41,9 @@ fun TransactionsCard(
     transactions:List<Transaction> = emptyList(),
     currency: Currency,
     onTransactionClick:(transaction:Transaction)->Unit,
-    transactionGroupType:BalanceType
+    transactionGroupType:BalanceType,
+    currentLocale: Locale
 ){
-    val currentLocale = getLocale()
-
     val groupedTransactions = transactions.sortedByDescending { it.created_at }.groupBy {
         when(transactionGroupType){
             BalanceType.YEARLY-> getReadableFormattedMonth(it.created_at, locale = currentLocale)

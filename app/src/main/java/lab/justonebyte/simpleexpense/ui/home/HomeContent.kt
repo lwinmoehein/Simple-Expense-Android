@@ -10,6 +10,7 @@ import androidx.compose.ui.unit.dp
 import lab.justonebyte.simpleexpense.R
 import lab.justonebyte.simpleexpense.model.Transaction
 import lab.justonebyte.simpleexpense.ui.components.SectionTitle
+import java.util.Locale
 
 
 @Composable
@@ -32,6 +33,7 @@ fun HomeContent(
                     onTransactionClick(it)
                 },
                 transactionGroupType = homeUiState.currentBalanceType,
+                currentLocale = Locale.forLanguageTag(homeUiState.defaultLanguage.value)
             )
         }
 }

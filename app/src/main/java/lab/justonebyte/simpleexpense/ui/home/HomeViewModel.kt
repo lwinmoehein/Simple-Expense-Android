@@ -67,7 +67,7 @@ class HomeViewModel @Inject constructor(
         get() =  _viewModelUiState
 
     init {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
             launch {
                 updateIsOnboardingShowed()
             }
@@ -266,7 +266,7 @@ class HomeViewModel @Inject constructor(
         date:Long,
         note:String?
     ){
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
             transactionRepository.update(
                 Transaction(
                     unique_id = transactionId,
@@ -285,7 +285,7 @@ class HomeViewModel @Inject constructor(
 
     fun deleteTransaction(transaction: Transaction){
 
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
             transactionRepository.delete(transaction)
             bindTransactionsFromBalanceType(_viewModelUiState.value.currentBalanceType)
 
