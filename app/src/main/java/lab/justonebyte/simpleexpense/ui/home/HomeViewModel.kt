@@ -7,10 +7,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.last
+import kotlinx.coroutines.flow.lastOrNull
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import lab.justonebyte.simpleexpense.data.CategoryRepository
@@ -144,8 +144,10 @@ class HomeViewModel @Inject constructor(
         _viewModelUiState.update {
             it.copy(currentBalanceType = BalanceType.TOTAL)
         }
-        viewModelScope.launch(Dispatchers.IO) {
-                 bindBalanceData(transactionRepository.getTotalTransactions())
+        viewModelScope.launch {
+            transactionRepository.getTotalTransactions().collect{ transactions->
+                bindBalanceData(transactions)
+            }
         }
     }
     private suspend fun collectCurrencyFromSetting(){
@@ -170,18 +172,22 @@ class HomeViewModel @Inject constructor(
             it.copy(selectedDay = dateValue, currentBalanceType = BalanceType.DAILY)
         }
 
-         viewModelScope.launch(Dispatchers.IO) {
-                 bindBalanceData(transactionRepository.getDailyTransactions(dateValue))
+        viewModelScope.launch {
+            transactionRepository.getDailyTransactions(dateValue).collect{ transactions->
+                bindBalanceData(transactions)
+            }
         }
     }
 
      fun collectMonthlyBalance(dateValue:String=  viewModelUiState.value.selectedMonth){
-         Log.i("collect:month",dateValue)
          _viewModelUiState.update {
              it.copy(selectedMonth = dateValue, currentBalanceType = BalanceType.MONTHLY)
          }
-         viewModelScope.launch(Dispatchers.IO) {
-           bindBalanceData(transactionRepository.getMonthlyTransactions(dateValue))
+        viewModelScope.launch {
+            transactionRepository.getMonthlyTransactions(dateValue).collect{ transactions->
+                Log.i("trans:",transactions.size.toString())
+                bindBalanceData(transactions)
+            }
         }
     }
 
@@ -189,8 +195,10 @@ class HomeViewModel @Inject constructor(
          _viewModelUiState.update {
              it.copy(selectedYear = dateValue, currentBalanceType = BalanceType.YEARLY)
          }
-        viewModelScope.launch(Dispatchers.IO) {
-                 bindBalanceData(  transactionRepository.getYearlyTransactions(dateValue))
+        viewModelScope.launch {
+            transactionRepository.getYearlyTransactions(dateValue).collect{ transactions->
+                bindBalanceData(transactions)
+            }
         }
     }
 

@@ -4,7 +4,6 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
@@ -45,22 +44,28 @@ class StatsViewModel @Inject constructor(
 
 
     init {
-            viewModelScope.launch(Dispatchers.IO) {
+
+        viewModelScope.launch {
+            launch {
                 collectCategories()
             }
-            viewModelScope.launch(Dispatchers.IO) {
+            launch {
                 bindTransactionsFromBalanceType(_viewModelUiState.value.currentBalanceType)
             }
-            viewModelScope.launch(Dispatchers.IO) {
+            launch {
                 collectCurrencyFromSetting()
             }
+        }
     }
     fun collectTotalBalance(){
         _viewModelUiState.update {
             it.copy(currentBalanceType = BalanceType.TOTAL)
         }
-        viewModelScope.launch(Dispatchers.IO) {
-                bindBalanceData(transactionRepository.getTotalTransactions())
+        viewModelScope.launch {
+            transactionRepository.getTotalTransactions().collect{ transactions->
+                Log.i("stats:trans",transactions.size.toString())
+                bindBalanceData(transactions)
+            }
         }
     }
     private suspend fun collectBalanceTypeFromSetting(){
@@ -76,7 +81,7 @@ class StatsViewModel @Inject constructor(
         }
     }
     private fun bindTransactionsFromBalanceType(balanceType: BalanceType){
-        viewModelScope.launch(Dispatchers.IO){
+        viewModelScope.launch {
             when(balanceType){
                 BalanceType.DAILY->collectDailyBalance()
                 BalanceType.MONTHLY->collectMonthlyBalance()
@@ -90,8 +95,10 @@ class StatsViewModel @Inject constructor(
             it.copy(selectedDay = dateValue, currentBalanceType = BalanceType.DAILY)
         }
 
-        viewModelScope.launch(Dispatchers.IO){
-                 bindBalanceData(transactionRepository.getDailyTransactions(dateValue))
+        viewModelScope.launch {
+            transactionRepository.getDailyTransactions(dateValue).collect{ transactions->
+                bindBalanceData(transactions)
+            }
         }
     }
 
@@ -99,8 +106,10 @@ class StatsViewModel @Inject constructor(
         _viewModelUiState.update {
             it.copy(selectedMonth = dateValue, currentBalanceType = BalanceType.MONTHLY)
         }
-        viewModelScope.launch(Dispatchers.IO) {
-                 bindBalanceData(transactionRepository.getMonthlyTransactions(dateValue))
+        viewModelScope.launch {
+            transactionRepository.getMonthlyTransactions(dateValue).collect{ transactions->
+                bindBalanceData(transactions)
+            }
         }
     }
 
@@ -108,8 +117,10 @@ class StatsViewModel @Inject constructor(
         _viewModelUiState.update {
             it.copy(selectedYear = dateValue, currentBalanceType = BalanceType.YEARLY)
         }
-        viewModelScope.launch(Dispatchers.IO) {
-                 bindBalanceData( transactionRepository.getYearlyTransactions(dateValue))
+        viewModelScope.launch {
+            transactionRepository.getYearlyTransactions(dateValue).collect{ transactions->
+                bindBalanceData(transactions)
+            }
         }
     }
 
