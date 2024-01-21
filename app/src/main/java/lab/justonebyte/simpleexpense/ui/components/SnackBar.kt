@@ -24,7 +24,7 @@ import lab.justonebyte.simpleexpense.R
      LOGOUT_SUCCESS
 }
 @Composable
-fun SuBuuSnackBar(
+fun SimpleExpenseSnackBar(
     snackBarType: SnackBarType?=null,
     onDismissSnackBar:()->Unit,
     snackbarHostState: SnackbarHostState,

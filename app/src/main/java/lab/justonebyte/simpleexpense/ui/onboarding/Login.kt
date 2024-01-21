@@ -45,7 +45,7 @@ import kotlinx.coroutines.launch
 import lab.justonebyte.simpleexpense.R
 import lab.justonebyte.simpleexpense.ui.account.rememberFirebaseAuthLauncher
 import lab.justonebyte.simpleexpense.ui.components.ProgressDialog
-import lab.justonebyte.simpleexpense.ui.components.SuBuuSnackBar
+import lab.justonebyte.simpleexpense.ui.components.SimpleExpenseSnackBar
 
 @Composable
 fun LoginScreen(
@@ -87,7 +87,7 @@ fun LoginScreen(
     Scaffold(
         snackbarHost =  { SnackbarHost(snackbarHostState) }
     ) {
-        SuBuuSnackBar(
+        SimpleExpenseSnackBar(
             snackBarType = onBoardUiState.currentSnackBar,
             onDismissSnackBar = { onBoardViewModel.clearSnackBar() },
             snackbarHostState = snackbarHostState

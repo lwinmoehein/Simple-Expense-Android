@@ -5,23 +5,18 @@ import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
-import android.os.Build
 import android.util.Log
 import androidx.activity.compose.ManagedActivityResultLauncher
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.absolutePadding
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -29,7 +24,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Icon
 import androidx.compose.material3.Card
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
@@ -46,7 +40,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -58,15 +51,12 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import com.google.firebase.auth.AuthResult
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import compose.icons.FeatherIcons
 import compose.icons.FontAwesomeIcons
-import compose.icons.feathericons.ArrowLeft
-import compose.icons.feathericons.ArrowRight
 import compose.icons.feathericons.EyeOff
 import compose.icons.feathericons.File
 import compose.icons.feathericons.FileText
@@ -75,18 +65,14 @@ import compose.icons.feathericons.LogOut
 import compose.icons.feathericons.Settings
 import compose.icons.feathericons.Star
 import compose.icons.fontawesomeicons.Brands
-import compose.icons.fontawesomeicons.Regular
 import compose.icons.fontawesomeicons.brands.Google
-import compose.icons.fontawesomeicons.regular.FileWord
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import lab.justonebyte.simpleexpense.R
 import lab.justonebyte.simpleexpense.ui.MainDestinations
 import lab.justonebyte.simpleexpense.ui.components.AppAlertDialog
-import lab.justonebyte.simpleexpense.ui.components.IndeterminateCircularIndicator
-import lab.justonebyte.simpleexpense.ui.components.MinimalDialog
 import lab.justonebyte.simpleexpense.ui.components.ProgressDialog
-import lab.justonebyte.simpleexpense.ui.components.SuBuuSnackBar
+import lab.justonebyte.simpleexpense.ui.components.SimpleExpenseSnackBar
 
 
 @SuppressLint("UnrememberedMutableState", "UnusedMaterial3ScaffoldPaddingParameter")
@@ -126,7 +112,7 @@ fun AccountScreen(
     Scaffold(
         snackbarHost = { SnackbarHost(snackbarHostState) }
         ) {
-        SuBuuSnackBar(
+        SimpleExpenseSnackBar(
             snackBarType = settingsUiState.currentSnackBar,
             onDismissSnackBar = { settingsViewModel.clearSnackBar() },
             snackbarHostState = snackbarHostState

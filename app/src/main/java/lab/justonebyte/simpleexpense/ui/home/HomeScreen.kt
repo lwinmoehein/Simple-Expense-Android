@@ -28,20 +28,19 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.DialogProperties
-import androidx.hilt.navigation.compose.hiltViewModel
 import com.canopas.lib.showcase.IntroShowcase
 import com.canopas.lib.showcase.component.ShowcaseStyle
 import compose.icons.FeatherIcons
 import compose.icons.feathericons.Plus
 import kotlinx.coroutines.launch
 import lab.justonebyte.simpleexpense.R
-import lab.justonebyte.simpleexpense.model.BalanceType
 import lab.justonebyte.simpleexpense.model.ShowCase
 import lab.justonebyte.simpleexpense.model.Transaction
 import lab.justonebyte.simpleexpense.model.TransactionCategory
 import lab.justonebyte.simpleexpense.ui.components.AppAlertDialog
 import lab.justonebyte.simpleexpense.ui.components.ChooseTransactionTypeTab
 import lab.justonebyte.simpleexpense.ui.components.SnackBarType
+import lab.justonebyte.simpleexpense.ui.components.SimpleExpenseSnackBar
 import java.util.UUID
 
 
@@ -237,7 +236,6 @@ fun HomeScreen(
             }
         },
         snackbarHost = { SnackbarHost(snackbarHostState) },
-
         ) {
         Column(Modifier.padding(it)) {
             Row(

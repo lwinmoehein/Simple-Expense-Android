@@ -3,12 +3,9 @@ package lab.justonebyte.simpleexpense.ui.account
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
-import android.icu.util.LocaleData
 import android.net.Uri
-import android.os.Build
 import android.provider.DocumentsContract
 import androidx.activity.result.ActivityResultLauncher
-import androidx.annotation.RequiresApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -54,7 +51,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.commandiron.wheel_picker_compose.WheelDatePicker
 import compose.icons.FeatherIcons
 import compose.icons.FontAwesomeIcons
 import compose.icons.feathericons.ArrowLeft
@@ -64,16 +60,12 @@ import compose.icons.fontawesomeicons.regular.FileExcel
 import compose.icons.fontawesomeicons.regular.FilePdf
 import kotlinx.coroutines.launch
 import lab.justonebyte.simpleexpense.R
-import lab.justonebyte.simpleexpense.ui.MainDestinations
-import lab.justonebyte.simpleexpense.ui.components.AppAlertDialog
 import lab.justonebyte.simpleexpense.ui.components.SectionTitle
-import lab.justonebyte.simpleexpense.ui.components.SuBuuSnackBar
+import lab.justonebyte.simpleexpense.ui.components.SimpleExpenseSnackBar
 import lab.justonebyte.simpleexpense.ui.components.getLocale
 import lab.justonebyte.simpleexpense.utils.getCurrentDay
-import lab.justonebyte.simpleexpense.utils.getCurrentMonth
 import lab.justonebyte.simpleexpense.utils.getCurrentYear
 import lab.justonebyte.simpleexpense.utils.getFormattedDay
-import java.time.LocalDate
 
 
 data class FileFormat(val imageVector: ImageVector,val nameId:Int)
@@ -238,7 +230,7 @@ fun ExportScreen(
                 }
         }
     ){
-        SuBuuSnackBar(
+        SimpleExpenseSnackBar(
             snackBarType = uiState.currentSnackBar,
             onDismissSnackBar = { settingsViewModel.clearSnackBar() },
             snackbarHostState = snackbarHostState
