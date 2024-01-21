@@ -17,7 +17,7 @@ import lab.justonebyte.simpleexpense.utils.RetrofitHelper
 val KEY_NEW_CLIENTS_IDS = "new_client_ids"
 val KEY_TABLE_NAME = "table_name"
 val TOKEN = "token"
-
+val OBJECTS_STRING = "objects"
 class UploadOrUpdateClientObjectsWorker (
     context: Context,
     workerParams: WorkerParameters

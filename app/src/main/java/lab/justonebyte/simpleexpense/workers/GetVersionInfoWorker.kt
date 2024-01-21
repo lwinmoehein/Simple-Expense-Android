@@ -33,16 +33,17 @@ class GetVersionInfoWorker (
         val token = inputData.getString(TOKEN)?:""
 
 
-        val categoryVersions = categoryRepository.getUniqueIdsWithVersions()
-        val transactionVersions = transactionRepository.getUniqueIdsWithVersions()
+//        val categoryVersions = categoryRepository.getUniqueIdsWithVersions()
+//        val transactionVersions = transactionRepository.getUniqueIdsWithVersions()
+        val versions = Gson().fromJson(inputData.getString(OBJECTS_STRING), Array<UniqueIdWithVersion>::class.java).toList()
 
 
         val objectService = RetrofitHelper.getInstance(token).create(ObjectService::class.java)
 
         if(tableName=="categories"){
-            val result = objectService.getChangedCategories(ObjectPostData(versions=categoryVersions))
+            val result = objectService.getChangedCategories(ObjectPostData(versions=versions))
 
-            result?.body()?.let { it ->
+            result.body()?.let { it ->
                 val combinedUpdateAndNewIds = it.data.new_client_object_ids+it.data.objects_to_update_server.map {id-> id.unique_id }
 
                 val gson = Gson()
@@ -54,9 +55,9 @@ class GetVersionInfoWorker (
                 return Result.success(inputData)
             }
         }else{
-            val result = objectService.getChangedTransactions(ObjectPostData(versions= transactionVersions))
+            val result = objectService.getChangedTransactions(ObjectPostData(versions= versions))
 
-            result?.body()?.let { it ->
+            result.body()?.let { it ->
                 val combinedUpdateAndNewIds = it.data.new_client_object_ids+it.data.objects_to_update_server.map {id-> id.unique_id }
 
                 val gson = Gson()

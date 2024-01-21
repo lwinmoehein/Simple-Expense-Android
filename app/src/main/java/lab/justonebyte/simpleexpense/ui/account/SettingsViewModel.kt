@@ -110,16 +110,21 @@ class SettingsViewModel @Inject constructor(
         _viewModelUiState.update {
             it.copy(isLoggingIn = true)
         }
-        Log.i("access token:fetch",googleId)
+
         val authService = RetrofitHelper.getInstance("").create(AuthService::class.java)
+
         viewModelScope.launch {
             try{
                 val result = authService.getAccessToken(googleId)
                 result.body()?.let {
                     Log.i("access token:", it.data.token)
                     settingRepository.updateToken(it.data.token)
-                    runVersionSync(application,"categories",it.data.token)
-                    runVersionSync(application,"transactions",it.data.token)
+                    launch {
+                        runVersionSync(application,"categories",it.data.token)
+                    }
+                    launch {
+                        runVersionSync(application,"transactions",it.data.token)
+                    }
                     _viewModelUiState.update {uiState->
                         uiState.copy(
                             isLoggingIn = false,

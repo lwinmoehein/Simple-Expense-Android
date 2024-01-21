@@ -139,8 +139,12 @@ class HomeViewModel @Inject constructor(
         settingsRepository.accessToken.collect{
             if(it.isNotEmpty()){
                 token.value = it
-                runVersionSync(application,"categories",token.value)
-                runVersionSync(application,"transactions",token.value)
+                viewModelScope.launch {
+                    runVersionSync(application,"categories",token.value)
+                }
+                viewModelScope.launch {
+                    runVersionSync(application,"transactions",token.value)
+                }
             }
         }
     }
