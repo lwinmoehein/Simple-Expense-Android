@@ -8,6 +8,7 @@ data class ServerCategory(
     val deleted_at:String?,
     val created_at:String,
     val updated_at:String,
-    val photo_url:String?
+    val photo_url:String?,
+    val is_default:Int?,
 )
 
