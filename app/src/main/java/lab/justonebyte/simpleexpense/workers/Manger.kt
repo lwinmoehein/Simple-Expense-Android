@@ -29,26 +29,31 @@ suspend fun runVersionSync(applicationContext:Context,tableName:String,token:Str
     val categoryRepository = CategoryRepositoryImpl(categoryDao)
     val transactionRepository = TransactionRepositoryImpl(transactionDao)
 
+    val transactionUniqueVersions = transactionRepository.getUniqueIdsWithVersions()
+    val categoryUniqueVersions = categoryRepository.getUniqueIdsWithVersions()
+
     val objects: List<List<UniqueIdWithVersion>> = if(tableName=="categories"){
-        categoryRepository.getUniqueIdsWithVersions().chunked(300)
+         categoryUniqueVersions.chunked(300)
     }else{
-        transactionRepository.getUniqueIdsWithVersions().chunked(300)
+         transactionUniqueVersions.chunked(300)
     }
 
-    objects.forEach { chunkedObjects ->
-        scope.launch {
-            syncBatchVersions(applicationContext,chunkedObjects,token,tableName)
-        }
-    }
     if(objects.isEmpty()){
         scope.launch {
             syncBatchVersions(applicationContext, listOf(),token,tableName)
+        }
+    }else{
+        objects.forEach { chunkedObjects ->
+            scope.launch {
+                syncBatchVersions(applicationContext,chunkedObjects,token,tableName)
+            }
         }
     }
 }
 fun syncBatchVersions(applicationContext:Context,objects:List<UniqueIdWithVersion>,token:String,tableName:String){
 
     val objectsAsGsonString = Gson().toJson(objects)
+    Log.i("sync:json",tableName+":"+objectsAsGsonString)
 
     Log.i("sync:batch:",tableName)
     try {
