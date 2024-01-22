@@ -48,7 +48,7 @@ fun TransactionsCard(
             BalanceType.TOTAL-> getFormattedYear(it.created_at)
             else-> getReadableFormattedDay(it.created_at)
         }
-    }.map { it.key to it.value.sortedByDescending{ value-> value.created_at } }
+    }.map { it.key to it.value.sortedByDescending{ value-> value.updated_at } }
 
 
    Row(
