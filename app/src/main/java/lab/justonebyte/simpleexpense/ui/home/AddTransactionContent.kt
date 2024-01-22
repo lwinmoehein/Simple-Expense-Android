@@ -35,10 +35,8 @@ import lab.justonebyte.simpleexpense.model.TransactionCategory
 import lab.justonebyte.simpleexpense.model.TransactionType
 import lab.justonebyte.simpleexpense.ui.components.AppAlertDialog
 import lab.justonebyte.simpleexpense.ui.components.NumberKeyboard
-import lab.justonebyte.simpleexpense.ui.components.getLocale
 import lab.justonebyte.simpleexpense.utils.getCurrentDayFromTimestamp
 import lab.justonebyte.simpleexpense.utils.getCurrentYear
-import java.util.Locale
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -199,7 +197,7 @@ fun AddTransactionContent(
                         modifier = Modifier.weight(1f)
                     ) {
                         Text(
-                            text = getCurrentDayFromTimestamp(tempRecordDate.value, getLocale()?: Locale.ENGLISH),
+                            text = getCurrentDayFromTimestamp(tempRecordDate.value),
                             fontWeight = FontWeight.Bold,
                             color = MaterialTheme.colorScheme.primary
                         )

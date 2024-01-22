@@ -1,6 +1,5 @@
 package lab.justonebyte.simpleexpense.ui
 
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -12,8 +11,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import lab.justonebyte.simpleexpense.data.SettingPrefRepository
-import lab.justonebyte.simpleexpense.utils.LocaleHelper
-import lab.justonebyte.simpleexpense.utils.isOnboardingDoneFlagExist
 import javax.inject.Inject
 
 
@@ -58,12 +55,6 @@ class MainActivity : ComponentActivity() {
         }
 
     }
-
-    override fun attachBaseContext(base: Context) {
-        LocaleHelper().setLocale(base, LocaleHelper().getLanguage(base))
-        super.attachBaseContext(LocaleHelper().onAttach(base))
-    }
-
 }
 
 

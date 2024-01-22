@@ -6,7 +6,6 @@ import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.spring
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -23,15 +22,11 @@ import androidx.compose.material.icons.outlined.KeyboardArrowRight
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -48,14 +43,9 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
-import compose.icons.FeatherIcons
-import compose.icons.feathericons.ChevronDown
 import kotlinx.coroutines.launch
 import lab.justonebyte.simpleexpense.R
-import lab.justonebyte.simpleexpense.model.AppLocale
 import lab.justonebyte.simpleexpense.model.OnBoardingItem
-import lab.justonebyte.simpleexpense.ui.components.AppAlertDialog
-import lab.justonebyte.simpleexpense.utils.changeLocale
 
 @OptIn(ExperimentalPagerApi::class)
 @Composable
@@ -84,12 +74,7 @@ fun OnBoardingScreen(
        Column(
            modifier = Modifier.fillMaxSize(),
        ) {
-           TopLocaleSection(currentLocale = onBoardUiState.currentLocale,onChangeLocale = { locale->
-               scope.launch {
-                   onBoardViewModel.changeLocale(locale)
-                   changeLocale(context,locale.value)
-               }
-           })
+
            HorizontalPager(
                count = items.size,
                state = pageState,

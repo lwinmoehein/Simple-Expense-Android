@@ -32,8 +32,7 @@ fun HomeContent(
                 onTransactionClick = {
                     onTransactionClick(it)
                 },
-                transactionGroupType = homeUiState.currentBalanceType,
-                currentLocale = Locale.forLanguageTag(homeUiState.defaultLanguage.value)
+                transactionGroupType = homeUiState.currentBalanceType
             )
         }
 }

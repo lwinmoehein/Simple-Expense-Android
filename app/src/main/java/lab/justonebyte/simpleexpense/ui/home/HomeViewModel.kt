@@ -16,7 +16,6 @@ import kotlinx.coroutines.launch
 import lab.justonebyte.simpleexpense.data.CategoryRepository
 import lab.justonebyte.simpleexpense.data.SettingPrefRepository
 import lab.justonebyte.simpleexpense.data.TransactionRepository
-import lab.justonebyte.simpleexpense.model.AppLocale
 import lab.justonebyte.simpleexpense.model.BalanceType
 import lab.justonebyte.simpleexpense.model.Currency
 import lab.justonebyte.simpleexpense.model.ShowCase
@@ -46,8 +45,7 @@ data class HomeUiState(
     val currentSnackBar : SnackBarType? = null,
     val selectedDay:String = getCurrentDay(),
     val selectedMonth:String = getCurrentMonth(),
-    val selectedYear:String = getCurrentYear(),
-    val defaultLanguage: AppLocale = AppLocale.English,
+    val selectedYear:String = getCurrentYear()
     )
 val DEBUGE_BALANCE_BUG="debug_balance"
 
@@ -74,9 +72,6 @@ class HomeViewModel @Inject constructor(
         viewModelScope.launch {
             launch {
                 updateIsOnboardingShowed()
-            }
-            launch {
-                collectLanguage()
             }
             launch {
                 collectAndUpdateIsAppOnboardingShowed()
@@ -125,15 +120,6 @@ class HomeViewModel @Inject constructor(
                 }
                 Log.i("isIntroduced:",isIntroduced.toString())
             }
-    }
-    private suspend fun collectLanguage(){
-        settingsRepository.selectedLocale.collect{
-            _viewModelUiState.update { uiState->
-                uiState.copy(
-                    defaultLanguage = AppLocale.getFromValue(it)
-                )
-            }
-        }
     }
     private suspend fun collectToken() {
         settingsRepository.accessToken.collect{

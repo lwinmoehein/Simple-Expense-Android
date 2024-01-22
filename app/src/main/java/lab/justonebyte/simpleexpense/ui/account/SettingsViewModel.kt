@@ -29,10 +29,8 @@ import lab.justonebyte.simpleexpense.data.CategoryRepository
 import lab.justonebyte.simpleexpense.data.SettingPrefRepository
 import lab.justonebyte.simpleexpense.data.TransactionRepository
 import lab.justonebyte.simpleexpense.model.AppList
-import lab.justonebyte.simpleexpense.model.AppLocale
 import lab.justonebyte.simpleexpense.model.BalanceType
 import lab.justonebyte.simpleexpense.model.Currency
-import lab.justonebyte.simpleexpense.model.Transaction
 import lab.justonebyte.simpleexpense.ui.components.SnackBarType
 import lab.justonebyte.simpleexpense.utils.RetrofitHelper
 import lab.justonebyte.simpleexpense.utils.getDecodedPath
@@ -42,8 +40,7 @@ import javax.inject.Inject
 data class SettingUiState(
     val selectedCurrency: Currency = Currency.Kyat,
     val defaultBalanceType: BalanceType = BalanceType.MONTHLY,
-    val defaultLanguage:AppLocale = AppLocale.English,
-    val currentSnackBar : SnackBarType? = null,
+     val currentSnackBar : SnackBarType? = null,
     val companionApps: AppList? = null,
     val downloadFolder:String? = null,
     val readableDownloadFolder:String? = null,
@@ -77,8 +74,6 @@ class SettingsViewModel @Inject constructor(
         viewModelScope.launch {
             launch { collectSelectedCurrency() }
             launch { collectDefaultBalanceType() }
-            launch { collectLanguage() }
-//            launch { getCompanionApps() }
             launch { getTransactions() }
             launch { collectToken() }
             launch { collectDownloadFolder() }
@@ -89,23 +84,6 @@ class SettingsViewModel @Inject constructor(
         }
     }
 
-
-    private suspend fun getCompanionApps(){
-//        val companionAppService = RetrofitHelper.getInstance().create(AuthService::class.java)
-//        // launching a new coroutine
-//        GlobalScope.launch {
-//          try{
-//              val result = companionAppService.getAccessToken()
-//              result.body()?.let {
-//                  Log.i("access token:", it.data.token)
-//                  settingRepository.updateToken(it.data.token)
-//              }
-//          }catch (e:Exception){
-//
-//          }
-////            _viewModelUiState.update { it.copy(companionApps = result.body()) }
-//        }
-    }
     suspend fun fetchAccessTokenByGoogleId(googleId:String){
         _viewModelUiState.update {
             it.copy(isLoggingIn = true)
@@ -181,15 +159,6 @@ class SettingsViewModel @Inject constructor(
             }
         }
     }
-    private suspend fun collectLanguage(){
-        settingRepository.selectedLocale.collect{
-            _viewModelUiState.update { uiState->
-                uiState.copy(
-                    defaultLanguage = AppLocale.getFromValue(it)
-                )
-            }
-        }
-    }
     private suspend fun collectDefaultBalanceType(){
         settingRepository.defaultBalanceType.collect{
             _viewModelUiState.update { uiState->
@@ -206,17 +175,11 @@ class SettingsViewModel @Inject constructor(
     }
 
 
-    fun updateCurrency(currency: Currency){
+    fun updateCurrency(currency: Currency) {
         viewModelScope.launch {
             settingRepository.updateSelectedCurrency(currency.value)
         }
     }
-    fun updateLocale(appLocale: AppLocale){
-        viewModelScope.launch {
-            settingRepository.updateLocale(appLocale.value)
-        }
-    }
-
     suspend fun logOut(){
         viewModelScope.launch {
             _viewModelUiState.update { uiState->

@@ -19,7 +19,6 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import lab.justonebyte.simpleexpense.api.AuthService
 import lab.justonebyte.simpleexpense.data.SettingPrefRepository
-import lab.justonebyte.simpleexpense.model.AppLocale
 import lab.justonebyte.simpleexpense.ui.components.SnackBarType
 import lab.justonebyte.simpleexpense.utils.RetrofitHelper
 import lab.justonebyte.simpleexpense.utils.createIsOnboardDoneFlagFile
@@ -30,8 +29,7 @@ import javax.inject.Inject
 data class OnBoardUiState(
     val currentSnackBar : SnackBarType? = null,
     val isLoggingIn:Boolean = false,
-    val firebaseUser: FirebaseUser? = null,
-    val currentLocale: AppLocale = AppLocale.English
+    val firebaseUser: FirebaseUser? = null
 )
 
 @HiltViewModel
@@ -46,28 +44,6 @@ class OnBoardViewModel @Inject constructor(
         get() = _viewModelUiState
 
     private val token = mutableStateOf("")
-
-    init {
-        viewModelScope.launch {
-            collectLocale()
-        }
-    }
-
-    private suspend fun collectLocale(){
-        settingsRepository.selectedLocale.collect{
-            _viewModelUiState.update { uiState->
-                uiState.copy(
-                    currentLocale = AppLocale.getFromValue(it)
-                )
-            }
-        }
-    }
-
-    private suspend fun collectToken() {
-        settingsRepository.accessToken.collect{
-            token.value = it
-        }
-    }
 
     fun showSnackBar(type:SnackBarType){
         _viewModelUiState.update {
@@ -87,11 +63,6 @@ class OnBoardViewModel @Inject constructor(
         }
     }
 
-    fun changeLocale (locale: AppLocale){
-        viewModelScope.launch {
-            settingsRepository.updateLocale(locale.value)
-        }
-    }
 
     suspend fun fetchAccessTokenByGoogleId(googleId:String){
         _viewModelUiState.update {

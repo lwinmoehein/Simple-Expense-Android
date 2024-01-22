@@ -62,7 +62,6 @@ import kotlinx.coroutines.launch
 import lab.justonebyte.simpleexpense.R
 import lab.justonebyte.simpleexpense.ui.components.SectionTitle
 import lab.justonebyte.simpleexpense.ui.components.SimpleExpenseSnackBar
-import lab.justonebyte.simpleexpense.ui.components.getLocale
 import lab.justonebyte.simpleexpense.utils.getCurrentDay
 import lab.justonebyte.simpleexpense.utils.getCurrentYear
 import lab.justonebyte.simpleexpense.utils.getFormattedDay
@@ -412,7 +411,7 @@ fun ChooseDateRange(
 
                 TextButton(onClick = { isFromDatePickerShown.value = true }) {
                     Text(
-                        text = getFormattedDay(tempFromDate.value, getLocale()),
+                        text = getFormattedDay(tempFromDate.value),
                         fontWeight = FontWeight.Bold
                     )
                 }
@@ -427,7 +426,7 @@ fun ChooseDateRange(
                 Text(text = stringResource(id = R.string.to), modifier = Modifier.width(50.dp))
                 TextButton(onClick = { isToDatePickerShown.value = true  }) {
                     Text(
-                        text = getFormattedDay(tempToDate.value, getLocale()),
+                        text = getFormattedDay(tempToDate.value),
                         fontWeight = FontWeight.Bold
                     )
                 }

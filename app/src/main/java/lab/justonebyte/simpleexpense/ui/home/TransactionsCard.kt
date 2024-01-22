@@ -30,7 +30,6 @@ import lab.justonebyte.simpleexpense.utils.getFormattedYear
 import lab.justonebyte.simpleexpense.utils.getReadableFormattedDay
 import lab.justonebyte.simpleexpense.utils.getReadableFormattedMonth
 import lab.justonebyte.simpleexpense.R
-import lab.justonebyte.simpleexpense.ui.components.getLocale
 import java.util.Locale
 
 
@@ -41,14 +40,13 @@ fun TransactionsCard(
     transactions:List<Transaction> = emptyList(),
     currency: Currency,
     onTransactionClick:(transaction:Transaction)->Unit,
-    transactionGroupType:BalanceType,
-    currentLocale: Locale
+    transactionGroupType:BalanceType
 ){
     val groupedTransactions = transactions.sortedByDescending { it.created_at }.groupBy {
         when(transactionGroupType){
-            BalanceType.YEARLY-> getReadableFormattedMonth(it.created_at, locale = currentLocale)
-            BalanceType.TOTAL-> getFormattedYear(it.created_at,currentLocale)
-            else-> getReadableFormattedDay(it.created_at,currentLocale)
+            BalanceType.YEARLY-> getReadableFormattedMonth(it.created_at)
+            BalanceType.TOTAL-> getFormattedYear(it.created_at)
+            else-> getReadableFormattedDay(it.created_at)
         }
     }.map { it.key to it.value.sortedByDescending{ value-> value.created_at } }
 

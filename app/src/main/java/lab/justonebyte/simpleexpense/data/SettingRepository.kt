@@ -1,30 +1,29 @@
 package lab.justonebyte.simpleexpense.data
 
-import kotlinx.coroutines.flow.Flow
-
 import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.*
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.booleanPreferencesKey
+import androidx.datastore.preferences.core.edit
+import androidx.datastore.preferences.core.intPreferencesKey
+import androidx.datastore.preferences.core.stringPreferencesKey
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import lab.justonebyte.simpleexpense.data.SettingPreferencesRepositoryImpl.PreferencesKeys.ACCESS_TOKEN
 import lab.justonebyte.simpleexpense.data.SettingPreferencesRepositoryImpl.PreferencesKeys.DEFAULT_BALANCE_TYPE
 import lab.justonebyte.simpleexpense.data.SettingPreferencesRepositoryImpl.PreferencesKeys.DOWNLOAD_FOLDER
 import lab.justonebyte.simpleexpense.data.SettingPreferencesRepositoryImpl.PreferencesKeys.IS_FIRST_TIME
 import lab.justonebyte.simpleexpense.data.SettingPreferencesRepositoryImpl.PreferencesKeys.IS_ONBOARDING_SHOWED
-import lab.justonebyte.simpleexpense.data.SettingPreferencesRepositoryImpl.PreferencesKeys.LOCALE
 import lab.justonebyte.simpleexpense.data.SettingPreferencesRepositoryImpl.PreferencesKeys.SELECTED_CURRENCY
 import lab.justonebyte.simpleexpense.data.SettingPreferencesRepositoryImpl.PreferencesKeys.THEME
-import lab.justonebyte.simpleexpense.model.AppLocale
 import lab.justonebyte.simpleexpense.model.BalanceType
 import lab.justonebyte.simpleexpense.model.Currency
 import lab.justonebyte.simpleexpense.model.Theme
 import javax.inject.Inject
 
 
-
 interface SettingPrefRepository {
 
     val selectedTheme: Flow<Int>
-    val selectedLocale: Flow<String>
     val defaultBalanceType: Flow<Int>
     val selectedCurrency: Flow<Int>
     val isAppIntroduced:Flow<Boolean>
@@ -33,7 +32,6 @@ interface SettingPrefRepository {
     val downloadFolder:Flow<String>
 
     suspend fun updateTheme(theme: Int)
-    suspend fun updateLocale(locale:String)
     suspend fun updateBalanceType(type:Int)
     suspend fun updateIsAppIntroduced(introduced:Boolean)
 
@@ -54,7 +52,6 @@ class SettingPreferencesRepositoryImpl @Inject constructor
         val THEME = intPreferencesKey("theme")
         val IS_FIRST_TIME = booleanPreferencesKey("is_first_time")
         val IS_ONBOARDING_SHOWED = booleanPreferencesKey("is_onboarding_showed")
-        val LOCALE = stringPreferencesKey("locale")
         val DEFAULT_BALANCE_TYPE = intPreferencesKey("balance_type")
         val SELECTED_CURRENCY = intPreferencesKey("currency")
         val ACCESS_TOKEN = stringPreferencesKey("token")
@@ -62,7 +59,6 @@ class SettingPreferencesRepositoryImpl @Inject constructor
     }
 
     override val selectedTheme: Flow<Int> = dataStore.data.map { it[THEME] ?: Theme.SYSTEM.id }
-    override val selectedLocale: Flow<String> = dataStore.data.map { it[LOCALE] ?: AppLocale.English.value }
     override val isAppIntroduced: Flow<Boolean> = dataStore.data.map { it[IS_FIRST_TIME]?:false }
     override val isAppOnboardingShowed: Flow<Boolean> = dataStore.data.map { it[IS_ONBOARDING_SHOWED]?:false }
     override val defaultBalanceType: Flow<Int> = dataStore.data.map { it[DEFAULT_BALANCE_TYPE]?:BalanceType.MONTHLY.value }
@@ -72,12 +68,6 @@ class SettingPreferencesRepositoryImpl @Inject constructor
     override suspend fun updateTheme(theme: Int) {
         dataStore.edit { preferences ->
             preferences[THEME] = theme
-        }
-    }
-
-    override suspend fun updateLocale(locale:String) {
-        dataStore.edit { preferences ->
-            preferences[LOCALE] = locale
         }
     }
 
