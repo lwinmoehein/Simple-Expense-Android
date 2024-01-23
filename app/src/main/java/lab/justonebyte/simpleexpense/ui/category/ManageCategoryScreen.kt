@@ -243,7 +243,8 @@ fun CategoryItem(
                 Icon(
                     imageVector = getIconFromName(name = category.icon_name),
                     contentDescription = "",
-                    modifier = Modifier.width(24.dp).height(24.dp)
+                    modifier = Modifier.width(18.dp).height(18.dp),
+                    tint = MaterialTheme.colorScheme.primary
                 )
                 Spacer(modifier = Modifier.width(5.dp))
                 Text(text = category.name)

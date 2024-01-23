@@ -33,9 +33,9 @@ fun getIconFromName(name:String):ImageVector{
         "health"->FeatherIcons.Activity
         "bonus"->FeatherIcons.Award
         "donation"->FeatherIcons.DollarSign
-        "allowance"->ImageVector.vectorResource(
-            id = R.drawable.allowance
-        )
+//        "allowance"->ImageVector.vectorResource(
+//            id = R.drawable.ic_launcher_transparent
+//        )
         else -> FeatherIcons.MoreVertical
     }
 }
