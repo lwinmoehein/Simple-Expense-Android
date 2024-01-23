@@ -146,23 +146,6 @@ fun LoginScreen(
                 }
 
                 Spacer(modifier = Modifier.height(10.dp))
-
-                // Skip button
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp)
-                ) {
-                    OutlinedButton(
-                        onClick = {
-                            onOnboardDone()
-                        },
-                        modifier = Modifier.fillMaxWidth(), // Occupy full row width
-                        enabled = true
-                    ) {
-                        Text(stringResource(id = R.string.skip), color = MaterialTheme.colorScheme.onPrimary)
-                    }
-                }
             }
         }
     }

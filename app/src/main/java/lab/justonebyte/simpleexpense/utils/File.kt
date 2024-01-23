@@ -21,3 +21,11 @@ fun isOnboardingDoneFlagExist(context: Context, fileName: String = defaultFileNa
     val file = File(context.filesDir, fileName)
     return file.exists()
 }
+fun deleteIsOnboardDoneFlagFile(context: Context, fileName: String = defaultFileName): Boolean {
+    val file = File(context.filesDir, fileName)
+    if (file.exists()) {
+        return file.delete()
+    } else {
+        return false
+    }
+}

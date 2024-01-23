@@ -1,6 +1,7 @@
 package lab.justonebyte.simpleexpense.ui.account
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
@@ -69,10 +70,12 @@ import compose.icons.fontawesomeicons.brands.Google
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import lab.justonebyte.simpleexpense.R
+import lab.justonebyte.simpleexpense.ui.MainActivity
 import lab.justonebyte.simpleexpense.ui.MainDestinations
 import lab.justonebyte.simpleexpense.ui.components.AppAlertDialog
 import lab.justonebyte.simpleexpense.ui.components.ProgressDialog
 import lab.justonebyte.simpleexpense.ui.components.SimpleExpenseSnackBar
+import lab.justonebyte.simpleexpense.utils.deleteIsOnboardDoneFlagFile
 
 
 @SuppressLint("UnrememberedMutableState", "UnusedMaterial3ScaffoldPaddingParameter")
@@ -309,6 +312,10 @@ fun AccountScreen(
                                 user = null
                                 coroutineScope.launch {
                                     settingsViewModel.logOut()
+                                    deleteIsOnboardDoneFlagFile(context)
+                                    val i = Intent(context as Activity, MainActivity::class.java)
+                                    context.finish()
+                                    context.startActivity(i)
                                 }
                             }) {
                             Icon(
