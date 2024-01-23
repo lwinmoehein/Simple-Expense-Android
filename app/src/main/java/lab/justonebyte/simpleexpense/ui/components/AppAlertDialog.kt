@@ -52,19 +52,15 @@ fun AppAlertDialog(
                 if(onNegativeBtnClicked!=null && negativeBtnText!=null){
                     TextButton(
                         onClick = {
-                            if (onNegativeBtnClicked != null) {
-                                onNegativeBtnClicked()
-                            }
+                            onNegativeBtnClicked()
                         }
                     ) {
-                        if (negativeBtnText != null) {
-                            Text(negativeBtnText)
-                        }
+                        Text(negativeBtnText)
                     }
                 }
 
             },
             properties = properties,
-            shape = MaterialTheme.shapes.large
+            shape = if(properties.usePlatformDefaultWidth) MaterialTheme.shapes.large else MaterialTheme.shapes.small
         )
 }

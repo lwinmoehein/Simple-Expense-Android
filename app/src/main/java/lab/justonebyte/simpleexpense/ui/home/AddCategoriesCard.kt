@@ -22,6 +22,7 @@ import lab.justonebyte.simpleexpense.R
 import lab.justonebyte.simpleexpense.model.TransactionCategory
 import lab.justonebyte.simpleexpense.model.TransactionType
 import lab.justonebyte.simpleexpense.ui.category.AddNameInputDialog
+import lab.justonebyte.simpleexpense.ui.components.getIconFromName
 
 
 @Composable
@@ -59,7 +60,9 @@ fun AddCategoriesCard(
             Modifier.padding(5.dp)
         ){
             Row(
-                modifier = Modifier.fillMaxWidth().absolutePadding(left = 12.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .absolutePadding(left = 12.dp),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
@@ -80,7 +83,9 @@ fun AddCategoriesCard(
             }
             LazyVerticalGrid(
                 horizontalArrangement = Arrangement.Center,
-                modifier = Modifier.heightIn(max=300.dp).padding(10.dp),
+                modifier = Modifier
+                    .heightIn(max = 300.dp)
+                    .padding(10.dp),
                 userScrollEnabled = true,
                 columns = GridCells.Fixed(2),
                 // content padding
@@ -101,12 +106,24 @@ fun AddCategoriesCard(
                             )
                         ) {
 
+                            Row(
+                                modifier = Modifier.fillMaxWidth().padding(vertical = 3.dp, horizontal = 4.dp),
+                                horizontalArrangement = Arrangement.Start,
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Icon(
+                                    modifier = Modifier.width(20.dp).height(20.dp),
+                                    imageVector = getIconFromName(name = filteredCategories[index].icon_name) , contentDescription ="" ,
+                                    tint = if(isSelected != true)  MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onPrimary
+                                )
+                                Spacer(modifier = Modifier.width(1.dp))
                                 Text(
                                     text = filteredCategories[index].name,
                                     textAlign = TextAlign.Center,
-                                    modifier = Modifier.padding(10.dp),
+                                    style = MaterialTheme.typography.labelSmall,
+                                    color =  if(isSelected != true)  MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onPrimary
                                 )
-
+                            }
                         }
                     }
                 }

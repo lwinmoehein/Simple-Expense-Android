@@ -33,7 +33,6 @@ import lab.justonebyte.simpleexpense.model.Currency
 import lab.justonebyte.simpleexpense.model.Transaction
 import lab.justonebyte.simpleexpense.model.TransactionCategory
 import lab.justonebyte.simpleexpense.model.TransactionType
-import lab.justonebyte.simpleexpense.ui.components.AppAlertDialog
 import lab.justonebyte.simpleexpense.ui.components.NumberKeyboard
 import lab.justonebyte.simpleexpense.utils.getCurrentDayFromTimestamp
 import lab.justonebyte.simpleexpense.utils.getCurrentYear
@@ -56,22 +55,21 @@ fun AddTransactionContent(
     val tomorrowInMillis = currentTimeInMillis + oneDayInMillis
 
     val localFocusManage = LocalFocusManager.current
-    val currentType = remember(currentTransaction) { mutableStateOf(currentTransaction?.type?.value ?: currentType) }
+    val currentTransactionType = remember(currentTransaction) { mutableStateOf(currentTransaction?.type?.value ?: currentType) }
     val currentAmount = remember(currentTransaction) { mutableStateOf(currentTransaction?.amount?.toString() ?: "") }
     val note = remember(currentTransaction) { mutableStateOf(currentTransaction?.note ?: "") }
-    val currentCategory = remember(currentTransaction) { mutableStateOf(currentTransaction?.category) }
+    val currentCategory = remember(currentTransaction) { mutableStateOf(currentTransaction?.category?:categories.filter { it.transaction_type.value==currentTransactionType.value }.first()) }
     val isEditMode = currentTransaction != null
-    val isAddTransactionConfirmDialogOpen = remember { mutableStateOf(false) }
-
     val isRecordDatePickerShown = remember { mutableStateOf(false) }
     val tempRecordDate =  remember { mutableStateOf(System.currentTimeMillis()) }
     val isNumberKeyboardShown = remember { mutableStateOf(false) }
     val state = rememberDatePickerState(initialSelectedDateMillis = tomorrowInMillis, yearRange = 2020..getCurrentYear().toInt())
 
+
     fun clearTransactionForm() {
         currentAmount.value = ""
-        currentType.value = 1
-        currentCategory.value = null
+        currentTransactionType.value = 1
+        currentCategory.value = categories.first()
         tempRecordDate.value = System.currentTimeMillis()
         localFocusManage.clearFocus()
     }
@@ -108,42 +106,6 @@ fun AddTransactionContent(
         }
     }
 
-    if (isAddTransactionConfirmDialogOpen.value) {
-        AppAlertDialog(
-            title = stringResource(R.string.r_u_sure),
-            positiveBtnText = stringResource(id = R.string.confirm),
-            negativeBtnText = stringResource(id = R.string.cancel),
-            content = {
-                      Text(stringResource(id = if(isEditMode) R.string.r_u_sure_tran_edit else R.string.r_u_sure_tran_add))
-            },
-            onPositiveBtnClicked = {
-                isAddTransactionConfirmDialogOpen.value = false
-                val category = currentCategory.value
-                val isValidCategorySelected =if(category==null) false else !categories.filter { it.transaction_type.value == currentType.value && it.unique_id== category.unique_id  }.isEmpty()
-                val amount =
-                    if (currentAmount.value.isEmpty()) 0 else currentAmount.value.toInt()
-                if (!isValidCategorySelected || amount <= 0) {
-                    showIncorrectDataSnack()
-                } else {
-                    currentCategory.value?.let {
-                        onConfirmTransactionForm(
-                                currentType.value,
-                                amount,
-                                it,
-                                tempRecordDate.value,
-                                note.value
-                            )
-                        onCloseDialog()
-                        clearTransactionForm()
-                    }
-                }
-            },
-            onNegativeBtnClicked = {
-                isAddTransactionConfirmDialogOpen.value =false
-            }
-        )
-    }
-
     Column(
         Modifier
             .fillMaxSize()
@@ -174,7 +136,7 @@ fun AddTransactionContent(
                 onAddCategory = {
                     onAddCategory(
                         it,
-                        if (currentType.value == TransactionType.Income.value) TransactionType.Income else TransactionType.Expense
+                        if (currentTransactionType.value == TransactionType.Income.value) TransactionType.Income else TransactionType.Expense
                     )
                 },
                 categories = categories,
@@ -182,7 +144,7 @@ fun AddTransactionContent(
                 onCategoryChosen = {
                     currentCategory.value = it
                 },
-                currentTransactionType = if (currentType.value == TransactionType.Income.value) TransactionType.Income else TransactionType.Expense
+                currentTransactionType = if (currentTransactionType.value == TransactionType.Income.value) TransactionType.Income else TransactionType.Expense
             )
             if(!isEditMode){
                 Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.SpaceBetween) {
@@ -233,7 +195,27 @@ fun AddTransactionContent(
                     Text(text = stringResource(id = R.string.cancel))
                 }
                 Button(
-                    onClick = { isAddTransactionConfirmDialogOpen.value = true }
+                    onClick = {
+                        val category = currentCategory.value
+                        val isValidCategorySelected =if(category==null) false else !categories.filter { it.transaction_type.value == currentTransactionType.value && it.unique_id== category.unique_id  }.isEmpty()
+                        val amount =
+                            if (currentAmount.value.isEmpty()) 0 else currentAmount.value.toInt()
+                        if (!isValidCategorySelected || amount <= 0) {
+                            showIncorrectDataSnack()
+                        } else {
+                            currentCategory.value?.let {
+                                onConfirmTransactionForm(
+                                    currentTransactionType.value,
+                                    amount,
+                                    it,
+                                    tempRecordDate.value,
+                                    note.value
+                                )
+                                onCloseDialog()
+                                clearTransactionForm()
+                            }
+                        }
+                    }
                 ) {
                     Text(text = if(isEditMode) stringResource(id = R.string.confirm_edit) else stringResource(id = R.string.confirm))
                 }

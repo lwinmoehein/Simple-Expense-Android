@@ -109,20 +109,7 @@ fun HomeScreen(
             clearStates()
         }
     )
-    ChooseTransactionTypeDialog(
-        isOpen = isChooseAddTransactionTypeOpen.value && !isAddOrEditTransactionDialogOpen.value,
-        onAddExpense = {
-            currentType.value = 2
-            isAddOrEditTransactionDialogOpen.value = true
-        },
-        onAddIncome =  {
-            currentType.value = 1
-            isAddOrEditTransactionDialogOpen.value = true
-        },
-        onDismiss = {
-            isChooseAddTransactionTypeOpen.value = false
-        }
-    )
+
     ChooseTransactionActionDialog(
         isOpen = (currentTransaction.value!=null) && (isSelectedTransactionEditMode.value != true && !isDeleteTransactionDialogOpen.value),
         onEdit = {  isSelectedTransactionEditMode.value = true  },
@@ -203,7 +190,7 @@ fun HomeScreen(
                 FloatingActionButton(
                     onClick = {
                         clearStates()
-                        isChooseAddTransactionTypeOpen.value = true
+                        isAddOrEditTransactionDialogOpen.value = true
                     },
                     shape = MaterialTheme.shapes.extraLarge,
                     modifier =  Modifier.introShowCaseTarget(
