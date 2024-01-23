@@ -99,8 +99,10 @@ fun ManageCategoryScreen(){
     val isChooseCategoryActionDialogOpen = remember { mutableStateOf(false) }
     val isConfirmDeleteCategoryDialogShown = remember { mutableStateOf(false) }
 
-    val categories =  categoryUiState.categories.filter { it.transaction_type==if(currentCategoryTabIndex.value==0) TransactionType.Expense else TransactionType.Income }
-
+    val categories =  categoryUiState.categories.filter { it.transaction_type==if(currentCategoryTabIndex.value==0) TransactionType.Expense else TransactionType.Income }.sortedBy { it.name }
+    
+    
+    val nonOtherCategories = categories.filter { it.name!="Other" } + categories.filter { it.name=="Other" }
 
     fun clearDialogs(){
         isReusableInputDialogShown.value = false
@@ -208,7 +210,7 @@ fun ManageCategoryScreen(){
                  )
              }
              LazyColumn(Modifier.padding(10.dp)){
-                 items(categories){
+                 items(nonOtherCategories){
                         CategoryItem(
                             category = it,
                             onClick = {

@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
 import compose.icons.FeatherIcons
+import compose.icons.FontAwesomeIcons
 import compose.icons.feathericons.Activity
 import compose.icons.feathericons.Award
 import compose.icons.feathericons.Briefcase
@@ -17,6 +18,8 @@ import compose.icons.feathericons.MoreVertical
 import compose.icons.feathericons.ShoppingCart
 import compose.icons.feathericons.Smile
 import compose.icons.feathericons.Truck
+import compose.icons.fontawesomeicons.Regular
+import compose.icons.fontawesomeicons.regular.MoneyBillAlt
 import lab.justonebyte.simpleexpense.R
 
 @Composable
@@ -33,9 +36,7 @@ fun getIconFromName(name:String):ImageVector{
         "health"->FeatherIcons.Activity
         "bonus"->FeatherIcons.Award
         "donation"->FeatherIcons.DollarSign
-//        "allowance"->ImageVector.vectorResource(
-//            id = R.drawable.ic_launcher_transparent
-//        )
+        "allowance"->FontAwesomeIcons.Regular.MoneyBillAlt
         else -> FeatherIcons.MoreVertical
     }
 }
