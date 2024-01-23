@@ -24,6 +24,7 @@ data class TransactionWithCategory(
    val type: Int,
    val category_id:String,
    val category_name:String,
+   val category_icon_name:String,
    val category_created_at:Long,
    val category_updated_at:Long,
    val created_at:Long,

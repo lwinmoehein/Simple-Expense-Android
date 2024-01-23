@@ -7,6 +7,7 @@ import java.util.UUID
 data class TransactionCategory(
     val unique_id:String,
     val name:String,
+    val icon_name:String,
     val transaction_type:TransactionType,
     val created_at:Long,
     val updated_at:Long
@@ -17,6 +18,7 @@ data class TransactionCategory(
             return TransactionCategory(
                 unique_id = categoryEntity.unique_id,
                 name = categoryEntity.name,
+                icon_name = categoryEntity.icon_name,
                 transaction_type = mapTransactionType(categoryEntity.transaction_type),
                 created_at = categoryEntity.created_at,
                 updated_at = categoryEntity.updated_at
@@ -27,6 +29,7 @@ data class TransactionCategory(
                 return CategoryEntity(
                     unique_id =  UUID.randomUUID().toString()+"_"+System.currentTimeMillis(),
                     name = transactionCategory.name,
+                    icon_name = transactionCategory.icon_name,
                     created_at = transactionCategory.created_at,
                     updated_at = transactionCategory.updated_at,
                     transaction_type = transactionCategory.transaction_type.value
@@ -36,6 +39,7 @@ data class TransactionCategory(
             return CategoryEntity(
                 unique_id =  transactionCategory.unique_id,
                 name = transactionCategory.name,
+                icon_name = transactionCategory.icon_name,
                 created_at = getTimestampFromDateTimeString(transactionCategory.created_at),
                 updated_at = getTimestampFromDateTimeString(transactionCategory.updated_at),
                 deleted_at = transactionCategory.deleted_at?.let { getTimestampFromDateTimeString(it) },

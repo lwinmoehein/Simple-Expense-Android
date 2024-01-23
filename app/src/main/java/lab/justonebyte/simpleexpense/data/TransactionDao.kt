@@ -10,7 +10,7 @@ import lab.justonebyte.simpleexpense.utils.getCurrentYear
 const val transactionWithCategorySelectQuery = "SELECT transaction_table.unique_id as unique_id, transaction_table.amount as amount,transaction_table.created_at as created_at," +"transaction_table.updated_at as updated_at,"+
         "transaction_table.type as type,transaction_table.category_id as category_id," +
         "transaction_table.note as note,"+
-        "category_table.name as category_name,category_table.created_at as category_created_at" +",category_table.updated_at as category_updated_at"+
+        "category_table.name as category_name,category_table.icon_name as category_icon_name,category_table.created_at as category_created_at" +",category_table.updated_at as category_updated_at"+
         " FROM transaction_table,category_table "
 @Dao
 interface TransactionDao {

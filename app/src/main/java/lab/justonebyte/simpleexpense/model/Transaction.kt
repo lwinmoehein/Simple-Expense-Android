@@ -27,6 +27,7 @@ data class Transaction(
                 type = if(transactionEntity.type==1) TransactionType.Income else TransactionType.Expense,
                 category = TransactionCategory(
                     name = transactionEntity.category_name,
+                    icon_name = transactionEntity.category_icon_name,
                     transaction_type = TransactionCategory.Mapper.mapTransactionType(transactionEntity.type),
                     created_at = transactionEntity.category_created_at,
                     updated_at = transactionEntity.category_updated_at,

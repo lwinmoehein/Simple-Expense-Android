@@ -164,6 +164,7 @@ fun HomeScreen(
                                             unique_id = UUID.randomUUID().toString()+"_"+System.currentTimeMillis(),
                                             transaction_type = type,
                                             name = name,
+                                            icon_name = "other",
                                             created_at = System.currentTimeMillis(),
                                             updated_at = System.currentTimeMillis()
                                         )

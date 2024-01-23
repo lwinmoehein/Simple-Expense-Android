@@ -25,6 +25,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -42,6 +43,7 @@ import lab.justonebyte.simpleexpense.R
 import lab.justonebyte.simpleexpense.model.TransactionCategory
 import lab.justonebyte.simpleexpense.model.TransactionType
 import lab.justonebyte.simpleexpense.ui.components.AppAlertDialog
+import lab.justonebyte.simpleexpense.ui.components.getIconFromName
 import java.util.UUID
 
 sealed class CategoryTab(val index:Int,val title:Int,val icon:ImageVector){
@@ -154,6 +156,7 @@ fun ManageCategoryScreen(){
                 val category = TransactionCategory(
                     unique_id = UUID.randomUUID().toString(),
                     name = it,
+                    icon_name = "other",
                     transaction_type = if(currentCategoryTabIndex.value==1) TransactionType.Income else TransactionType.Expense,
                     created_at =  System.currentTimeMillis(),
                     updated_at =  System.currentTimeMillis()
@@ -230,12 +233,21 @@ fun CategoryItem(
         Card(
             modifier = modifier.clickable { onClick() }
         ) {
-            Column(
+            Row(
                 Modifier
                     .fillMaxWidth()
-                    .padding(8.dp), verticalArrangement = Arrangement.Center) {
+                    .padding(8.dp),
+                horizontalArrangement = Arrangement.Start,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Icon(
+                    imageVector = getIconFromName(name = category.icon_name),
+                    contentDescription = "",
+                    modifier = Modifier.width(24.dp).height(24.dp)
+                )
+                Spacer(modifier = Modifier.width(5.dp))
                 Text(text = category.name)
             }
         }
-          Divider(Modifier.height(3.dp), color = Color.Transparent)
+    Divider(Modifier.height(3.dp), color = Color.Transparent)
 }
