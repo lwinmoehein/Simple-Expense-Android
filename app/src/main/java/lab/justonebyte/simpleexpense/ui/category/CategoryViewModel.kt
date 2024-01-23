@@ -70,6 +70,7 @@ class CategoryViewModel @Inject constructor(
     fun updateCategory(transactinCategory:TransactionCategory,name:String){
         val category = TransactionCategory(
             name = name,
+            icon_name = transactinCategory.icon_name,
             unique_id = transactinCategory.unique_id,
             transaction_type = transactinCategory.transaction_type,
             created_at = transactinCategory.created_at,
