@@ -225,7 +225,7 @@ fun HomeScreen(
             Row(
                 horizontalArrangement = Arrangement.Center,
                 modifier = Modifier
-                    .absolutePadding(bottom = 20.dp)
+                    .absolutePadding(bottom = 10.dp)
                     .fillMaxWidth()
             ) {
                     ChooseTransactionTypeTab(

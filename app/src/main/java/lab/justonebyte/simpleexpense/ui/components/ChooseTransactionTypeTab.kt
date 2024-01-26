@@ -42,35 +42,23 @@ fun ChooseTransactionTypeTab(
     var currentHomeTabIndex: Int by remember { mutableStateOf(0) }
     val homeTabs = listOf<OptionItem>(BalanceType.MONTHLY,BalanceType.YEARLY,BalanceType.TOTAL)
 
-    Row(
-        horizontalArrangement = Arrangement.spacedBy(15.dp),
-        modifier = Modifier.width(250.dp)
-    ) {
-        homeTabs.forEachIndexed { index, balanceType ->
-            Row(
-                modifier = Modifier
-                    .clip(RoundedCornerShape(15.dp))
-                    .background(if (currentHomeTabIndex == index) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.secondary)
-                    .padding(5.dp)
-                    .weight(1f)
-                    .clickable {
-                        currentHomeTabIndex = index
-                        when (currentHomeTabIndex) {
-                            0 -> currentBalanceType.value = BalanceType.MONTHLY
-                            1 -> currentBalanceType.value = BalanceType.YEARLY
-                            else -> currentBalanceType.value = BalanceType.TOTAL
-                        }
-                        onTypeChanged(currentBalanceType.value)
-                    },
-                horizontalArrangement = Arrangement.Center
-            ) {
-                Text(
-                    text = stringResource(id = balanceType.name),
-                    color = if (currentHomeTabIndex == index) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSecondary,
-                    style = MaterialTheme.typography.titleSmall,
-                    fontWeight = if (currentHomeTabIndex == index) FontWeight.ExtraBold else FontWeight.Medium
-                )
-            }
+
+    TabRow(selectedTabIndex = currentHomeTabIndex) {
+        homeTabs.forEachIndexed { index, tab ->
+            Tab(
+                selected = currentHomeTabIndex == index,
+                onClick = {
+                    currentHomeTabIndex = index
+                    currentHomeTabIndex = index
+                    when (currentHomeTabIndex) {
+                        0 -> currentBalanceType.value = BalanceType.MONTHLY
+                        1 -> currentBalanceType.value = BalanceType.YEARLY
+                        else -> currentBalanceType.value = BalanceType.TOTAL
+                    }
+                    onTypeChanged(currentBalanceType.value)
+                },
+                text = { Text(text = stringResource(id = tab.name), maxLines = 2, overflow = TextOverflow.Ellipsis) }
+            )
         }
     }
 

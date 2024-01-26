@@ -130,7 +130,6 @@ fun AddTransactionContent(
             .fillMaxSize()
     ) {
 
-        Row {
             TabRow(selectedTabIndex = transactionTypeTabState) {
                 transactionTypeTabs.forEachIndexed { index, tab ->
                     Tab(
@@ -142,9 +141,7 @@ fun AddTransactionContent(
                                   },
                         text = { Text(text = stringResource(id = tab.name), maxLines = 2, overflow = TextOverflow.Ellipsis) }
                     )
-                }
-            }
-        }
+                } }
         Spacer(modifier = Modifier.height(20.dp))
 
         Column {

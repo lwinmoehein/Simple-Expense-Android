@@ -15,6 +15,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import compose.icons.FeatherIcons
@@ -38,50 +39,23 @@ sealed class BalanceTypeOption(override val name:Int, override  val value:Any) :
 
 @Composable
 fun TransactionTypeTab(
-    modifier: Modifier = Modifier,
-    selectedTransactionType: TransactionType,
     onTransactionTypeSelected:(transactionType:TransactionType)->Unit
 ){
-        Row(
-            horizontalArrangement = Arrangement.Center,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 100.dp)
-        ){
-            Row(
-               modifier = Modifier
-                   .weight(1f)
-                   .clip(MaterialTheme.shapes.extraLarge)
-                   .background(if (selectedTransactionType == TransactionType.Expense) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.secondary)
-                   .padding(horizontal = 10.dp, vertical = 5.dp)
-                   .clickable {
-                       onTransactionTypeSelected(TransactionType.Expense)
-                   },
-                horizontalArrangement = Arrangement.Center
-            ) {
-                Text(
-                    text = stringResource(id = R.string.expense),
-                    color = if (selectedTransactionType == TransactionType.Expense) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSecondary
-                )
-            }
-            Spacer(modifier = Modifier.width(5.dp))
-            Row(
-               modifier = Modifier
-                   .weight(1f)
-                   .clip(MaterialTheme.shapes.extraLarge)
-                   .background(if (selectedTransactionType == TransactionType.Income) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.secondary)
-                   .padding(horizontal = 10.dp, vertical = 5.dp)
-                   .clickable {
-                       onTransactionTypeSelected(TransactionType.Income)
-                   },
-                horizontalArrangement = Arrangement.Center
-            ) {
-                Text(
-                    text = stringResource(id = R.string.income),
-                    color = if (selectedTransactionType == TransactionType.Income) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSecondary
-                )
-            }
+    var transactionTypeTabState by remember { mutableStateOf(0) }
+    val transactionTypeTabs = listOf(TransactionTypeTab.EXPENSE,TransactionTypeTab.INCOME)
+
+    TabRow(selectedTabIndex = transactionTypeTabState) {
+        transactionTypeTabs.forEachIndexed { index, tab ->
+            Tab(
+                selected = transactionTypeTabState == index,
+                onClick = {
+                    transactionTypeTabState = index
+                    onTransactionTypeSelected(tab.transactionType)
+                },
+                text = { Text(text = stringResource(id = tab.name), maxLines = 2, overflow = TextOverflow.Ellipsis) }
+            )
         }
+    }
 }
 
 @SuppressLint("UnrememberedMutableState")
@@ -99,11 +73,12 @@ fun StatsScreen() {
     val selectedBalanceType = remember { mutableStateOf<BalanceType>(BalanceType.MONTHLY) }
     val selectedTransactionType = remember { mutableStateOf(TransactionType.Expense) }
 
+
+
     Scaffold {
         Column(modifier = Modifier
             .padding(it)) {
             TransactionTypeTab(
-                selectedTransactionType = selectedTransactionType.value,
                 onTransactionTypeSelected = {
                     selectedTransactionType.value = it
                 }
@@ -115,9 +90,6 @@ fun StatsScreen() {
                     .fillMaxSize()
                     .padding(10.dp)
             ) {
-                Spacer(modifier = Modifier.height(30.dp))
-                Divider(color = MaterialTheme.colorScheme.secondary)
-                Spacer(modifier = Modifier.height(20.dp))
                 Row(
                     horizontalArrangement = Arrangement.SpaceBetween,
                     modifier = Modifier
