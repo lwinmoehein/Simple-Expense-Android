@@ -107,7 +107,7 @@ fun AddCategoriesCard(
                         ) {
 
                             Row(
-                                modifier = Modifier.fillMaxWidth().padding(vertical = 3.dp, horizontal = 4.dp),
+                                modifier = Modifier.fillMaxWidth().padding(vertical = 5.dp, horizontal = 5.dp),
                                 horizontalArrangement = Arrangement.Start,
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
@@ -116,11 +116,11 @@ fun AddCategoriesCard(
                                     imageVector = getIconFromName(name = filteredCategories[index].icon_name) , contentDescription ="" ,
                                     tint = if(isSelected != true)  MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onPrimary
                                 )
-                                Spacer(modifier = Modifier.width(1.dp))
+                                Spacer(modifier = Modifier.width(3.dp))
                                 Text(
                                     text = filteredCategories[index].name,
                                     textAlign = TextAlign.Center,
-                                    style = MaterialTheme.typography.labelSmall,
+                                    style = MaterialTheme.typography.labelMedium,
                                     color =  if(isSelected != true)  MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onPrimary
                                 )
                             }
