@@ -49,7 +49,7 @@ import lab.justonebyte.simpleexpense.utils.getCurrentYear
 
 sealed class TransactionTypeTab(override val value:Int, override val name:Int, val transactionType:TransactionType): OptionItem {
     object EXPENSE : TransactionTypeTab(1, R.string.expense,TransactionType.Expense)
-    object INCOME : TransactionTypeTab(2, R.string.expense,TransactionType.Income)
+    object INCOME : TransactionTypeTab(2, R.string.income,TransactionType.Income)
 }
 
 
@@ -74,7 +74,7 @@ fun AddTransactionContent(
     val currentTransactionType: MutableState<TransactionType> = remember(currentTransaction) { mutableStateOf(
         currentTransaction?.type ?: TransactionType.Expense)
     }
-    val currentCategory = remember(currentTransaction) { mutableStateOf(currentTransaction?.category?:categories.filter { it.transaction_type==currentTransactionType.value }.first()) }
+    val currentCategory = remember(currentTransactionType) { mutableStateOf(currentTransaction?.category?: categories.first { it.transaction_type == currentTransactionType.value }) }
     val isEditMode = currentTransaction != null
     val isRecordDatePickerShown = remember { mutableStateOf(false) }
     val tempRecordDate =  remember { mutableStateOf(System.currentTimeMillis()) }
@@ -130,8 +130,6 @@ fun AddTransactionContent(
             .fillMaxSize()
     ) {
 
-        Spacer(modifier = Modifier.height(20.dp))
-
         Row {
             TabRow(selectedTabIndex = transactionTypeTabState) {
                 transactionTypeTabs.forEachIndexed { index, tab ->
@@ -140,6 +138,7 @@ fun AddTransactionContent(
                         onClick = {
                             transactionTypeTabState = index
                             currentTransactionType.value = tab.transactionType
+                            currentCategory.value = currentTransaction?.category?: categories.first { it.transaction_type == currentTransactionType.value }
                                   },
                         text = { Text(text = stringResource(id = tab.name), maxLines = 2, overflow = TextOverflow.Ellipsis) }
                     )

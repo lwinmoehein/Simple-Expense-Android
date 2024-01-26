@@ -122,7 +122,7 @@ fun HomeScreen(
 
     if (isAddOrEditTransactionDialogOpen.value || isSelectedTransactionEditMode.value == true) {
         AppAlertDialog(
-            title =  stringResource(id = R.string.add),
+            title = null,
             positiveBtnText =null,
             negativeBtnText = null,
             content = {
