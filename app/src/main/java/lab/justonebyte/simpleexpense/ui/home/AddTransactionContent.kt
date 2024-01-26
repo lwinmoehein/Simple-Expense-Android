@@ -19,6 +19,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -42,7 +43,6 @@ import lab.justonebyte.simpleexpense.utils.getCurrentYear
 @Composable
 fun AddTransactionContent(
     currentCurrency: Currency,
-    currentType: Int,
     onCloseDialog:()->Unit,
     categories:List<TransactionCategory>,
     showIncorrectDataSnack:()->Unit,
@@ -51,14 +51,16 @@ fun AddTransactionContent(
     currentTransaction:Transaction?
 ) {
     val currentTimeInMillis = System.currentTimeMillis()
-    val oneDayInMillis = 24 * 60 * 60 * 1000 // 86400000 milliseconds in a day
+    val oneDayInMillis = 24 * 60 * 60 * 1000
     val tomorrowInMillis = currentTimeInMillis + oneDayInMillis
 
     val localFocusManage = LocalFocusManager.current
-    val currentTransactionType = remember(currentTransaction) { mutableStateOf(currentTransaction?.type?.value ?: currentType) }
     val currentAmount = remember(currentTransaction) { mutableStateOf(currentTransaction?.amount?.toString() ?: "") }
     val note = remember(currentTransaction) { mutableStateOf(currentTransaction?.note ?: "") }
-    val currentCategory = remember(currentTransaction) { mutableStateOf(currentTransaction?.category?:categories.filter { it.transaction_type.value==currentTransactionType.value }.first()) }
+    val currentTransactionType: MutableState<TransactionType> = remember(currentTransaction) { mutableStateOf(
+        currentTransaction?.type ?: TransactionType.Expense)
+    }
+    val currentCategory = remember(currentTransaction) { mutableStateOf(currentTransaction?.category?:categories.filter { it.transaction_type==currentTransactionType.value }.first()) }
     val isEditMode = currentTransaction != null
     val isRecordDatePickerShown = remember { mutableStateOf(false) }
     val tempRecordDate =  remember { mutableStateOf(System.currentTimeMillis()) }
@@ -68,7 +70,7 @@ fun AddTransactionContent(
 
     fun clearTransactionForm() {
         currentAmount.value = ""
-        currentTransactionType.value = 1
+        currentTransactionType.value = TransactionType.Expense
         currentCategory.value = categories.first()
         tempRecordDate.value = System.currentTimeMillis()
         localFocusManage.clearFocus()
@@ -78,7 +80,7 @@ fun AddTransactionContent(
     if(isRecordDatePickerShown.value){
             DatePickerDialog(
                 onDismissRequest = {
-
+                    isRecordDatePickerShown.value = false
                 },
                 confirmButton = {
                     TextButton(
@@ -113,6 +115,19 @@ fun AddTransactionContent(
 
         Spacer(modifier = Modifier.height(20.dp))
 
+        Row {
+            Button(onClick = {
+                currentTransactionType.value =  TransactionType.Expense
+            }) {
+                Text("Expense")
+            }
+            Button(onClick = {
+                currentTransactionType.value =  TransactionType.Expense
+            }) {
+                Text("Income")
+            }
+        }
+
         Column {
                 NumberKeyboard(
                     currency = currentCurrency,
@@ -133,10 +148,10 @@ fun AddTransactionContent(
 
         if(!isNumberKeyboardShown.value){
             AddCategoriesCard(
-                onAddCategory = {
+                onAddCategory = { categoryName->
                     onAddCategory(
-                        it,
-                        if (currentTransactionType.value == TransactionType.Income.value) TransactionType.Income else TransactionType.Expense
+                        categoryName,
+                        currentTransactionType.value
                     )
                 },
                 categories = categories,
@@ -144,7 +159,7 @@ fun AddTransactionContent(
                 onCategoryChosen = {
                     currentCategory.value = it
                 },
-                currentTransactionType = if (currentTransactionType.value == TransactionType.Income.value) TransactionType.Income else TransactionType.Expense
+                currentTransactionType = currentTransactionType.value
             )
             if(!isEditMode){
                 Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.SpaceBetween) {
@@ -197,7 +212,7 @@ fun AddTransactionContent(
                 Button(
                     onClick = {
                         val category = currentCategory.value
-                        val isValidCategorySelected =if(category==null) false else !categories.filter { it.transaction_type.value == currentTransactionType.value && it.unique_id== category.unique_id  }.isEmpty()
+                        val isValidCategorySelected =if(category==null) false else !categories.filter { it.transaction_type == currentTransactionType.value && it.unique_id== category.unique_id  }.isEmpty()
                         val amount =
                             if (currentAmount.value.isEmpty()) 0 else currentAmount.value.toInt()
                         if (!isValidCategorySelected || amount <= 0) {
@@ -205,7 +220,7 @@ fun AddTransactionContent(
                         } else {
                             currentCategory.value?.let {
                                 onConfirmTransactionForm(
-                                    currentTransactionType.value,
+                                    currentTransactionType.value.value,
                                     amount,
                                     it,
                                     tempRecordDate.value,
