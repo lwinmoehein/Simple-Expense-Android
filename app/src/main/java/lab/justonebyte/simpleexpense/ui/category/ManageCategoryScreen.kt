@@ -19,12 +19,15 @@ import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Tab
+import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -32,6 +35,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.accompanist.pager.ExperimentalPagerApi
@@ -43,6 +47,7 @@ import lab.justonebyte.simpleexpense.R
 import lab.justonebyte.simpleexpense.model.TransactionCategory
 import lab.justonebyte.simpleexpense.model.TransactionType
 import lab.justonebyte.simpleexpense.ui.components.AppAlertDialog
+import lab.justonebyte.simpleexpense.ui.components.TransactionTypeTab
 import lab.justonebyte.simpleexpense.ui.components.getIconFromName
 import java.util.UUID
 
@@ -52,38 +57,25 @@ sealed class CategoryTab(val index:Int,val title:Int,val icon:ImageVector){
 }
 
 
+
 @ExperimentalPagerApi
 @Composable
 fun CategoryTabs(
-    onTabChanged: (CategoryTab) -> Unit,
-    currentCategoryTabIndex: Int
+    onTabChanged: (TransactionType) -> Unit
 ) {
+    var transactionTypeTabState by remember { mutableStateOf(0) }
+    val transactionTypeTabs = listOf(TransactionTypeTab.EXPENSE, TransactionTypeTab.INCOME)
 
-    val categoryTabs = listOf(CategoryTab.Expense,CategoryTab.Income)
-
-    Row(
-        horizontalArrangement = Arrangement.spacedBy(15.dp),
-        modifier = Modifier.width(250.dp)
-    ) {
-        categoryTabs.forEachIndexed { index, categoryTab ->
-            Row(
-                modifier = Modifier
-                    .clip(RoundedCornerShape(15.dp))
-                    .background(if (currentCategoryTabIndex == index) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.secondary)
-                    .padding(5.dp)
-                    .weight(1f)
-                    .clickable {
-                        onTabChanged(categoryTabs[index])
-                    },
-                horizontalArrangement = Arrangement.Center
-            ) {
-                Text(
-                    text = stringResource(id = categoryTab.title),
-                    color = if (currentCategoryTabIndex == index) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSecondary,
-                    style = MaterialTheme.typography.titleSmall,
-                    fontWeight = if (currentCategoryTabIndex == index) FontWeight.ExtraBold else FontWeight.Medium
-                )
-            }
+    TabRow(selectedTabIndex = transactionTypeTabState) {
+        transactionTypeTabs.forEachIndexed { index, tab ->
+            Tab(
+                selected = transactionTypeTabState == index,
+                onClick = {
+                    transactionTypeTabState = index
+                    onTabChanged(tab.transactionType)
+                },
+                text = { Text(text = stringResource(id = tab.name), maxLines = 2, overflow = TextOverflow.Ellipsis) }
+            )
         }
     }
 }
@@ -93,13 +85,13 @@ fun CategoryTabs(
 fun ManageCategoryScreen(){
     val categoryViewModel = hiltViewModel<CategoryViewModel>()
     val categoryUiState by categoryViewModel.viewModelUiState.collectAsState()
-    val currentCategoryTabIndex = remember { mutableStateOf(0) }
     val currentEditingCategory = remember { mutableStateOf<TransactionCategory?>(null) }
     val isReusableInputDialogShown = remember { mutableStateOf(false) }
     val isChooseCategoryActionDialogOpen = remember { mutableStateOf(false) }
     val isConfirmDeleteCategoryDialogShown = remember { mutableStateOf(false) }
+    val currentTransactionType = remember { mutableStateOf(TransactionType.Expense) }
 
-    val categories =  categoryUiState.categories.filter { it.transaction_type==if(currentCategoryTabIndex.value==0) TransactionType.Expense else TransactionType.Income }.sortedBy { it.name }
+    val categories =  categoryUiState.categories.filter { it.transaction_type==currentTransactionType.value }.sortedBy { it.name }
     
     
     val nonOtherCategories = categories.filter { it.name!="Other" } + categories.filter { it.name=="Other" }
@@ -144,7 +136,7 @@ fun ManageCategoryScreen(){
 
     AddNameInputDialog(
         initialValue = currentEditingCategory.value?.name?:"",
-        title = if(currentCategoryTabIndex.value==1) stringResource(id = R.string.enter_in_category) else stringResource(R.string.enter_ex_category),
+        title = if(currentTransactionType.value==TransactionType.Income) stringResource(id = R.string.enter_in_category) else stringResource(R.string.enter_ex_category),
         isShown =  isReusableInputDialogShown.value,
         onDialogDismiss = {
             clearDialogs()
@@ -159,7 +151,7 @@ fun ManageCategoryScreen(){
                     unique_id = UUID.randomUUID().toString(),
                     name = it,
                     icon_name = "other",
-                    transaction_type = if(currentCategoryTabIndex.value==1) TransactionType.Income else TransactionType.Expense,
+                    transaction_type = currentTransactionType.value,
                     created_at =  System.currentTimeMillis(),
                     updated_at =  System.currentTimeMillis()
                 )
@@ -174,7 +166,7 @@ fun ManageCategoryScreen(){
 
     Scaffold(
         floatingActionButton = {
-            if(currentCategoryTabIndex.value==0){
+
                 FloatingActionButton(
                     onClick = {
                         currentEditingCategory.value = null
@@ -184,17 +176,6 @@ fun ManageCategoryScreen(){
                 ) {
                     Icon(imageVector = FeatherIcons.Plus, "Localized description")
                 }
-            }else{
-                FloatingActionButton(
-                    onClick = {
-                        currentEditingCategory.value = null
-                        isReusableInputDialogShown.value = true
-                    },
-                    shape = MaterialTheme.shapes.extraLarge
-                ) {
-                    Icon(imageVector = FeatherIcons.Plus, "Localized description")
-                }
-            }
         }
     ) {
          Column(Modifier.padding(it)) {
@@ -204,9 +185,8 @@ fun ManageCategoryScreen(){
              ){
                  CategoryTabs(
                      onTabChanged = {
-                         currentCategoryTabIndex.value = it.index
-                     },
-                     currentCategoryTabIndex = currentCategoryTabIndex.value
+                         currentTransactionType.value = it
+                     }
                  )
              }
              LazyColumn(Modifier.padding(10.dp)){

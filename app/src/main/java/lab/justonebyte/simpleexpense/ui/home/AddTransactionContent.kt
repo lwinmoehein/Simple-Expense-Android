@@ -44,14 +44,9 @@ import lab.justonebyte.simpleexpense.model.TransactionCategory
 import lab.justonebyte.simpleexpense.model.TransactionType
 import lab.justonebyte.simpleexpense.ui.components.NumberKeyboard
 import lab.justonebyte.simpleexpense.ui.components.OptionItem
+import lab.justonebyte.simpleexpense.ui.components.TransactionTypeTab
 import lab.justonebyte.simpleexpense.utils.getCurrentDayFromTimestamp
 import lab.justonebyte.simpleexpense.utils.getCurrentYear
-
-sealed class TransactionTypeTab(override val value:Int, override val name:Int, val transactionType:TransactionType): OptionItem {
-    object EXPENSE : TransactionTypeTab(1, R.string.expense,TransactionType.Expense)
-    object INCOME : TransactionTypeTab(2, R.string.income,TransactionType.Income)
-}
-
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -82,7 +77,7 @@ fun AddTransactionContent(
     val state = rememberDatePickerState(initialSelectedDateMillis = tomorrowInMillis, yearRange = 2020..getCurrentYear().toInt())
 
     var transactionTypeTabState by remember { mutableStateOf(0) }
-    val transactionTypeTabs = listOf(TransactionTypeTab.EXPENSE,TransactionTypeTab.INCOME)
+    val transactionTypeTabs = listOf(TransactionTypeTab.EXPENSE, TransactionTypeTab.INCOME)
 
 
     fun clearTransactionForm() {

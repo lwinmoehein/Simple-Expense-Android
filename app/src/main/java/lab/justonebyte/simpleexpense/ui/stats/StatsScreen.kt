@@ -1,34 +1,23 @@
 package lab.justonebyte.simpleexpense.ui.stats
 
 import android.annotation.SuppressLint
-import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import compose.icons.FeatherIcons
-import compose.icons.feathericons.ArrowDown
-import compose.icons.feathericons.ArrowUp
 import lab.justonebyte.simpleexpense.R
 import lab.justonebyte.simpleexpense.model.BalanceType
 import lab.justonebyte.simpleexpense.model.TransactionType
 import lab.justonebyte.simpleexpense.ui.components.AppOption
 import lab.justonebyte.simpleexpense.ui.components.OptionItem
 import lab.justonebyte.simpleexpense.ui.components.TransactionTypePicker
+import lab.justonebyte.simpleexpense.ui.components.TransactionTypeTab
 import lab.justonebyte.simpleexpense.ui.detail.CustomPieChartWithData
-import lab.justonebyte.simpleexpense.ui.detail.colors
 import lab.justonebyte.simpleexpense.ui.home.*
 
 sealed class BalanceTypeOption(override val name:Int, override  val value:Any) : OptionItem {
@@ -38,7 +27,7 @@ sealed class BalanceTypeOption(override val name:Int, override  val value:Any) :
 }
 
 @Composable
-fun TransactionTypeTab(
+fun TransactionTypeTabRow(
     onTransactionTypeSelected:(transactionType:TransactionType)->Unit
 ){
     var transactionTypeTabState by remember { mutableStateOf(0) }
@@ -78,7 +67,7 @@ fun StatsScreen() {
     Scaffold {
         Column(modifier = Modifier
             .padding(it)) {
-            TransactionTypeTab(
+            TransactionTypeTabRow(
                 onTransactionTypeSelected = {
                     selectedTransactionType.value = it
                 }
