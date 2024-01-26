@@ -8,35 +8,49 @@ import androidx.compose.foundation.layout.absolutePadding
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
+import androidx.compose.material3.Card
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Tab
+import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import lab.justonebyte.simpleexpense.R
+import lab.justonebyte.simpleexpense.model.BalanceType
 import lab.justonebyte.simpleexpense.model.Currency
 import lab.justonebyte.simpleexpense.model.Transaction
 import lab.justonebyte.simpleexpense.model.TransactionCategory
 import lab.justonebyte.simpleexpense.model.TransactionType
 import lab.justonebyte.simpleexpense.ui.components.NumberKeyboard
+import lab.justonebyte.simpleexpense.ui.components.OptionItem
 import lab.justonebyte.simpleexpense.utils.getCurrentDayFromTimestamp
 import lab.justonebyte.simpleexpense.utils.getCurrentYear
+
+sealed class TransactionTypeTab(override val value:Int, override val name:Int, val transactionType:TransactionType): OptionItem {
+    object EXPENSE : TransactionTypeTab(1, R.string.expense,TransactionType.Expense)
+    object INCOME : TransactionTypeTab(2, R.string.expense,TransactionType.Income)
+}
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -67,6 +81,9 @@ fun AddTransactionContent(
     val isNumberKeyboardShown = remember { mutableStateOf(false) }
     val state = rememberDatePickerState(initialSelectedDateMillis = tomorrowInMillis, yearRange = 2020..getCurrentYear().toInt())
 
+    var transactionTypeTabState by remember { mutableStateOf(0) }
+    val transactionTypeTabs = listOf(TransactionTypeTab.EXPENSE,TransactionTypeTab.INCOME)
+
 
     fun clearTransactionForm() {
         currentAmount.value = ""
@@ -89,7 +106,7 @@ fun AddTransactionContent(
                            isRecordDatePickerShown.value = false
                         }
                     ) {
-                        Text(stringResource(id = R.string.confirm))
+                        Text(text=stringResource(id = R.string.confirm))
                     }
                 },
                 dismissButton = {
@@ -116,17 +133,20 @@ fun AddTransactionContent(
         Spacer(modifier = Modifier.height(20.dp))
 
         Row {
-            Button(onClick = {
-                currentTransactionType.value =  TransactionType.Expense
-            }) {
-                Text("Expense")
-            }
-            Button(onClick = {
-                currentTransactionType.value =  TransactionType.Income
-            }) {
-                Text("Income")
+            TabRow(selectedTabIndex = transactionTypeTabState) {
+                transactionTypeTabs.forEachIndexed { index, tab ->
+                    Tab(
+                        selected = transactionTypeTabState == index,
+                        onClick = {
+                            transactionTypeTabState = index
+                            currentTransactionType.value = tab.transactionType
+                                  },
+                        text = { Text(text = stringResource(id = tab.name), maxLines = 2, overflow = TextOverflow.Ellipsis) }
+                    )
+                }
             }
         }
+        Spacer(modifier = Modifier.height(20.dp))
 
         Column {
                 NumberKeyboard(
@@ -162,22 +182,28 @@ fun AddTransactionContent(
                 currentTransactionType = currentTransactionType.value
             )
             if(!isEditMode){
-                Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.SpaceBetween) {
-                    Text(
-                        text =  stringResource(id = R.string.enter_date),
-                        modifier = Modifier.weight(1f)
-                    )
-                    TextButton(
-                        onClick = {
-                            isRecordDatePickerShown.value = true
-                        },
-                        modifier = Modifier.weight(1f)
+                Card(
+                    modifier = Modifier.padding(bottom=20.dp)
+                ) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        modifier = Modifier.padding(vertical = 8.dp, horizontal = 15.dp).fillMaxWidth()
                     ) {
                         Text(
-                            text = getCurrentDayFromTimestamp(tempRecordDate.value),
-                            fontWeight = FontWeight.Bold,
-                            color = MaterialTheme.colorScheme.primary
-                        )
+                            text =  stringResource(id = R.string.enter_date),
+                            )
+                        TextButton(
+                            onClick = {
+                                isRecordDatePickerShown.value = true
+                            },
+                         ) {
+                            Text(
+                                text = getCurrentDayFromTimestamp(tempRecordDate.value),
+                                fontWeight = FontWeight.Bold,
+                                color = MaterialTheme.colorScheme.primary
+                            )
+                        }
                     }
                 }
             }
