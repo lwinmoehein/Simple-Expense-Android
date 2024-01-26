@@ -1,6 +1,5 @@
 package lab.justonebyte.simpleexpense.ui.home
 
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -34,7 +33,7 @@ import androidx.compose.ui.unit.dp
 import lab.justonebyte.simpleexpense.R
 import lab.justonebyte.simpleexpense.model.TransactionCategory
 import lab.justonebyte.simpleexpense.model.TransactionType
-import lab.justonebyte.simpleexpense.ui.category.AddNameInputDialog
+import lab.justonebyte.simpleexpense.ui.category.AddCategoryInputDialog
 import lab.justonebyte.simpleexpense.ui.components.getIconFromName
 
 
@@ -45,22 +44,23 @@ fun AddCategoriesCard(
     onCategoryChosen:(categor:TransactionCategory)->Unit,
     modifier: Modifier = Modifier,
     currentTransactionType:TransactionType = TransactionType.Income,
-    onAddCategory:(name:String)->Unit
+    onAddCategory:(name:String,transactionType:TransactionType)->Unit
 ){
     val filteredCategories = categories.filter { it.transaction_type==currentTransactionType }
     val isAddCategoryDialogOpen = remember { mutableStateOf(false)}
 
-    AddNameInputDialog(
+    AddCategoryInputDialog(
         title = if(currentTransactionType==TransactionType.Income) stringResource(id = R.string.enter_in_category) else stringResource(R.string.enter_ex_category),
         isShown = isAddCategoryDialogOpen.value,
         onDialogDismiss = {
             isAddCategoryDialogOpen.value = false
         },
-        onConfirmClick = {
-            if(it.isEmpty()) {
+        initialTransactionType = currentTransactionType,
+        onConfirmClick = { categoryName,transactionType->
+            if(categoryName.isEmpty()) {
 
             }else{
-                onAddCategory(it)
+                onAddCategory(categoryName,transactionType)
             }
             isAddCategoryDialogOpen.value = false
         }

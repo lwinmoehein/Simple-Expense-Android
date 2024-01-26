@@ -159,10 +159,10 @@ fun AddTransactionContent(
 
         if(!isNumberKeyboardShown.value){
             AddCategoriesCard(
-                onAddCategory = { categoryName->
+                onAddCategory = { categoryName,transactionType->
                     onAddCategory(
                         categoryName,
-                        currentTransactionType.value
+                        transactionType
                     )
                 },
                 categories = categories,
