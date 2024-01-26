@@ -1,4 +1,5 @@
 package lab.justonebyte.simpleexpense.ui.category
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -8,10 +9,19 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.ButtonDefaults
+import androidx.compose.material.IconButton
+import androidx.compose.material.OutlinedButton
+import androidx.compose.material.TextButton
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -49,13 +59,13 @@ import lab.justonebyte.simpleexpense.model.TransactionType
 import lab.justonebyte.simpleexpense.ui.components.AppAlertDialog
 import lab.justonebyte.simpleexpense.ui.components.TransactionTypeTab
 import lab.justonebyte.simpleexpense.ui.components.getIconFromName
+import lab.justonebyte.simpleexpense.ui.detail.colors
 import java.util.UUID
 
 sealed class CategoryTab(val index:Int,val title:Int,val icon:ImageVector){
     object Expense:CategoryTab(0,R.string.expense,FeatherIcons.ArrowUp)
     object  Income:CategoryTab(1,R.string.income,FeatherIcons.ArrowDown)
 }
-
 
 
 @ExperimentalPagerApi
@@ -165,18 +175,6 @@ fun ManageCategoryScreen(){
     )
 
     Scaffold(
-        floatingActionButton = {
-
-                FloatingActionButton(
-                    onClick = {
-                        currentEditingCategory.value = null
-                        isReusableInputDialogShown.value = true
-                    },
-                    shape = MaterialTheme.shapes.extraLarge
-                ) {
-                    Icon(imageVector = FeatherIcons.Plus, "Localized description")
-                }
-        }
     ) {
          Column(Modifier.padding(it)) {
              Row(
@@ -189,15 +187,39 @@ fun ManageCategoryScreen(){
                      }
                  )
              }
-             LazyColumn(Modifier.padding(10.dp)){
-                 items(nonOtherCategories){
-                        CategoryItem(
-                            category = it,
-                            onClick = {
-                                    isChooseCategoryActionDialogOpen.value = true
-                                    currentEditingCategory.value = it
-                            }
-                        )
+             Spacer(modifier = Modifier.height(10.dp))
+
+             OutlinedButton(
+                 border = BorderStroke(0.2.dp,MaterialTheme.colorScheme.primary),
+                 colors = ButtonDefaults.buttonColors(
+                     backgroundColor = Color.Transparent,
+                     contentColor = MaterialTheme.colorScheme.primary
+                 ),
+                 modifier = Modifier
+                     .padding(horizontal = 10.dp)
+                     .fillMaxWidth(),
+                 onClick = {
+                 currentEditingCategory.value = null
+                 isReusableInputDialogShown.value = true },
+                 shape = MaterialTheme.shapes.large
+                 ) {
+                 Text(text = stringResource(id = R.string.add_new))
+                 Spacer(modifier = Modifier.width(5.dp))
+                 Icon(imageVector = FeatherIcons.Plus, contentDescription = "")
+             }
+             Spacer(modifier = Modifier.height(10.dp))
+             LazyVerticalGrid(
+                 columns = GridCells.Fixed(2),
+                 modifier = Modifier.padding(5.dp)
+             ) {
+                 items(nonOtherCategories.size) { index ->
+                     CategoryItem(
+                         category = nonOtherCategories[index],
+                         onClick = {
+                             isChooseCategoryActionDialogOpen.value = true
+                             currentEditingCategory.value =  nonOtherCategories[index]
+                         }
+                     )
                  }
              }
          }
@@ -213,7 +235,9 @@ fun CategoryItem(
     onClick:()->Unit
 ){
         Card(
-            modifier = modifier.clickable { onClick() }
+            modifier = modifier
+                .clickable { onClick() }
+                .padding(5.dp)
         ) {
             Row(
                 Modifier
@@ -225,7 +249,9 @@ fun CategoryItem(
                 Icon(
                     imageVector = getIconFromName(name = category.icon_name),
                     contentDescription = "",
-                    modifier = Modifier.width(18.dp).height(18.dp),
+                    modifier = Modifier
+                        .width(18.dp)
+                        .height(18.dp),
                     tint = MaterialTheme.colorScheme.primary
                 )
                 Spacer(modifier = Modifier.width(5.dp))

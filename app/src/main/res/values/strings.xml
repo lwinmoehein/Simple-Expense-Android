@@ -165,5 +165,6 @@
     <string name="please_sign_in_with_google">Please sign in with google to backup your data to cloud.</string>
     <string name="login_with_google">Login with Google</string>
     <string name="skip">SKIP</string>
+    <string name="add_new">Add New Category</string>
 
 </resources>

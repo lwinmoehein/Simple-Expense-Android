@@ -1,5 +1,6 @@
 package lab.justonebyte.simpleexpense.ui.home
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -27,6 +28,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import lab.justonebyte.simpleexpense.R
@@ -81,13 +83,13 @@ fun AddCategoriesCard(
                     text = stringResource(id = R.string.enter_category),
                     style = MaterialTheme.typography.labelLarge
                 )
-                TextButton(onClick = {
-                    isAddCategoryDialogOpen.value = true
-                }
+                TextButton(
+                     onClick = { isAddCategoryDialogOpen.value = true },
                 ) {
                     Text(
                         text = stringResource(id = R.string.add),
-                        textAlign = TextAlign.Center
+                        textAlign = TextAlign.Center,
+                        fontWeight = FontWeight.Bold
                     )
                     Icon(imageVector = Icons.Default.Add, contentDescription = "add category")
                 }
