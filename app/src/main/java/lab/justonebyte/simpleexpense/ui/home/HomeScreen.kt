@@ -120,59 +120,57 @@ fun HomeScreen(
 
 
 
-//    if (isAddOrEditTransactionDialogOpen.value || isSelectedTransactionEditMode.value == true) {
-//        AppAlertDialog(
-//            title = if(isSelectedTransactionEditMode.value == true) if(currentType.value==TransactionType.Expense) stringResource(id = R.string.edit_expense_title) else stringResource(id = R.string.edit_income_title)  else (if(currentType.value==TransactionType.Expense) stringResource(
-//                id = R.string.add_expense_title
-//            ) else stringResource(id = R.string.add_income_title)),
-//            positiveBtnText =null,
-//            negativeBtnText = null,
-//            content = {
-//
-//                Column {
-//                            AddTransactionContent(
-//                                currentCurrency = homeUiState.currentCurrency,
-//                                currentTransaction = currentTransaction.value,
-//                                categories =  homeUiState.categories,
-//                                onConfirmTransactionForm = { type, amount, category,date,note->
-//                                    onAddOrEditTransaction(type,amount,category,date,note)
-//                                },
-//                                onCloseDialog = {
-//                                    clearStates()
-//                                },
-//                                showIncorrectDataSnack = {
-//                                    homeViewModel.showSnackBar(SnackBarType.INCORRECT_DATA)
-//                                },
-//                                onAddCategory = { name,type->
-//                                    homeViewModel.addCategory(
-//                                        TransactionCategory(
-//                                            unique_id = UUID.randomUUID().toString()+"_"+System.currentTimeMillis(),
-//                                            transaction_type = type,
-//                                            name = name,
-//                                            icon_name = "other",
-//                                            created_at = System.currentTimeMillis(),
-//                                            updated_at = System.currentTimeMillis()
-//                                        )
-//                                    )
-//                                }
-//                            )
-//                        }
-//            },
-//            onPositiveBtnClicked = {
-//                currentTransaction.value?.let { homeViewModel.deleteTransaction(it) }
-//
-//                clearStates()
-//            },
-//            onNegativeBtnClicked = {
-//                clearStates()
-//            },
-//            properties = DialogProperties(
-//                usePlatformDefaultWidth =!isAddOrEditTransactionDialogOpen.value &&
-//                        ((isSelectedTransactionEditMode.value != true && !isDeleteTransactionDialogOpen.value) && currentTransaction.value!=null)
-//
-//            )
-//        )
-//    }
+    if (isAddOrEditTransactionDialogOpen.value || isSelectedTransactionEditMode.value == true) {
+        AppAlertDialog(
+            title =  stringResource(id = R.string.add),
+            positiveBtnText =null,
+            negativeBtnText = null,
+            content = {
+
+                Column {
+                            AddTransactionContent(
+                                currentCurrency = homeUiState.currentCurrency,
+                                currentTransaction = currentTransaction.value,
+                                categories =  homeUiState.categories,
+                                onConfirmTransactionForm = { type, amount, category,date,note->
+                                    onAddOrEditTransaction(type,amount,category,date,note)
+                                },
+                                onCloseDialog = {
+                                    clearStates()
+                                },
+                                showIncorrectDataSnack = {
+                                    homeViewModel.showSnackBar(SnackBarType.INCORRECT_DATA)
+                                },
+                                onAddCategory = { name,type->
+                                    homeViewModel.addCategory(
+                                        TransactionCategory(
+                                            unique_id = UUID.randomUUID().toString()+"_"+System.currentTimeMillis(),
+                                            transaction_type = type,
+                                            name = name,
+                                            icon_name = "other",
+                                            created_at = System.currentTimeMillis(),
+                                            updated_at = System.currentTimeMillis()
+                                        )
+                                    )
+                                }
+                            )
+                        }
+            },
+            onPositiveBtnClicked = {
+                currentTransaction.value?.let { homeViewModel.deleteTransaction(it) }
+
+                clearStates()
+            },
+            onNegativeBtnClicked = {
+                clearStates()
+            },
+            properties = DialogProperties(
+                usePlatformDefaultWidth =!isAddOrEditTransactionDialogOpen.value &&
+                        ((isSelectedTransactionEditMode.value != true && !isDeleteTransactionDialogOpen.value) && currentTransaction.value!=null)
+
+            )
+        )
+    }
 
 
 

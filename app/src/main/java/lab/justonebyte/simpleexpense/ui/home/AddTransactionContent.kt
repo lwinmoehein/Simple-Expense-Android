@@ -122,7 +122,7 @@ fun AddTransactionContent(
                 Text("Expense")
             }
             Button(onClick = {
-                currentTransactionType.value =  TransactionType.Expense
+                currentTransactionType.value =  TransactionType.Income
             }) {
                 Text("Income")
             }
