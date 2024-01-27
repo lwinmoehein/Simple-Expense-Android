@@ -29,7 +29,6 @@ import compose.icons.FeatherIcons
 import compose.icons.feathericons.ArrowDown
 import compose.icons.feathericons.ArrowUp
 import compose.icons.feathericons.DollarSign
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import lab.justonebyte.simpleexpense.R
 import lab.justonebyte.simpleexpense.model.Currency

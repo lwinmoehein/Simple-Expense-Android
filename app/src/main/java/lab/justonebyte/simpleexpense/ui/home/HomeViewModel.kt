@@ -47,7 +47,6 @@ data class HomeUiState(
     val selectedMonth:String = getCurrentMonth(),
     val selectedYear:String = getCurrentYear()
     )
-val DEBUGE_BALANCE_BUG="debug_balance"
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
@@ -141,11 +140,6 @@ class HomeViewModel @Inject constructor(
         }
             transactionRepository.getTotalTransactions().collect{ transactions->
                 if(viewModelUiState.value.currentBalanceType==BalanceType.TOTAL) {
-                    Log.i(
-                        DEBUGE_BALANCE_BUG,
-                        ":total:before:" + _viewModelUiState.value.transactions.size
-                    )
-                    Log.i(DEBUGE_BALANCE_BUG, ":total:" + transactions.size)
                     bindBalanceData(transactions)
                 }
         }
@@ -184,17 +178,12 @@ class HomeViewModel @Inject constructor(
      suspend fun collectDailyBalance(){
              transactionRepository.getDailyTransactions(viewModelUiState.value.selectedDay).collect{ transactions->
                 if(viewModelUiState.value.currentBalanceType==BalanceType.DAILY) {
-                    Log.i(
-                        DEBUGE_BALANCE_BUG,
-                        ":daily:before:" + _viewModelUiState.value.transactions.size
-                    )
-                    Log.i(DEBUGE_BALANCE_BUG, ":daily:" + transactions.size)
                     bindBalanceData(transactions)
                 }
         }
     }
 
-    suspend fun updateCurrentMonth(monthValue:String=  viewModelUiState.value.selectedMonth){
+    suspend fun updateCurrentMonth(monthValue:String =  viewModelUiState.value.selectedMonth){
         _viewModelUiState.update {
             it.copy(selectedMonth = monthValue, currentBalanceType = BalanceType.MONTHLY)
         }
@@ -206,11 +195,6 @@ class HomeViewModel @Inject constructor(
      suspend fun collectMonthlyBalance(){
             transactionRepository.getMonthlyTransactions(viewModelUiState.value.selectedMonth).collect{ transactions->
                 if(viewModelUiState.value.currentBalanceType==BalanceType.MONTHLY) {
-                    Log.i(
-                        DEBUGE_BALANCE_BUG,
-                        ":monthly:before:" + _viewModelUiState.value.transactions.size
-                    )
-                    Log.i(DEBUGE_BALANCE_BUG, ":monthly:" + transactions.size)
                     bindBalanceData(transactions)
                 }
         }
@@ -228,8 +212,6 @@ class HomeViewModel @Inject constructor(
      suspend fun collectYearlyBalance(){
             transactionRepository.getYearlyTransactions(viewModelUiState.value.selectedYear).collect{ transactions->
                 if(viewModelUiState.value.currentBalanceType==BalanceType.YEARLY){
-                    Log.i(DEBUGE_BALANCE_BUG,":yearly:before:"+_viewModelUiState.value.transactions.size)
-                    Log.i(DEBUGE_BALANCE_BUG,":yearly:"+transactions.size)
                     bindBalanceData(transactions)
                 }
         }
@@ -260,11 +242,7 @@ class HomeViewModel @Inject constructor(
             it.copy(currentSnackBar = type)
         }
     }
-    fun clearSnackBar(){
-        _viewModelUiState.update {
-            it.copy(currentSnackBar = null)
-        }
-    }
+
     fun addTransaction(
         transactionCategory: TransactionCategory,
         amount:Int,
@@ -326,9 +304,9 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    fun addCategory(transactinCategory:TransactionCategory){
+    fun addCategory(transactionCategory:TransactionCategory){
         viewModelScope.launch {
-            categoryRepository.insert(transactionCategory = transactinCategory)
+            categoryRepository.insert(transactionCategory = transactionCategory)
             if(token.value.isNotEmpty()) runVersionSync(application,"categories",token.value)
         }
     }
