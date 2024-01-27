@@ -153,7 +153,7 @@ fun AccountScreen(
                            Icon(
                                imageVector = FeatherIcons.Settings,
                                contentDescription ="",
-                               modifier = Modifier.absolutePadding(right = 10.dp),
+                               modifier = Modifier.absolutePadding(right = 10.dp).width(18.dp).height(18.dp),
                                tint = MaterialTheme.colorScheme.primary
                            )
                            Text(text = stringResource(id = R.string.settings))
@@ -181,7 +181,7 @@ fun AccountScreen(
                             Icon(
                                 imageVector = FeatherIcons.File,
                                 contentDescription ="",
-                                modifier = Modifier.absolutePadding(right = 10.dp),
+                                modifier = Modifier.absolutePadding(right = 10.dp).width(18.dp).height(18.dp),
                                 tint = MaterialTheme.colorScheme.primary
                             )
                             Text(text = stringResource(id = R.string.export))
@@ -205,7 +205,7 @@ fun AccountScreen(
                         Icon(
                             imageVector = FeatherIcons.Info,
                             contentDescription ="",
-                            modifier = Modifier.absolutePadding(right = 10.dp),
+                            modifier = Modifier.absolutePadding(right = 10.dp).width(18.dp).height(18.dp),
                             tint = MaterialTheme.colorScheme.primary
                         )
                         Text(text = stringResource(id = R.string.acknowledgements))
@@ -229,7 +229,7 @@ fun AccountScreen(
                         Icon(
                             imageVector = FeatherIcons.EyeOff,
                             contentDescription ="",
-                            modifier = Modifier.absolutePadding(right = 10.dp),
+                            modifier = Modifier.absolutePadding(right = 10.dp).width(18.dp).height(18.dp),
                             tint = MaterialTheme.colorScheme.primary
                         )
                         Text(text = stringResource(id = R.string.privacy_policy))
@@ -253,7 +253,7 @@ fun AccountScreen(
                         Icon(
                             imageVector = FeatherIcons.FileText,
                             contentDescription ="",
-                            modifier = Modifier.absolutePadding(right = 10.dp),
+                            modifier = Modifier.absolutePadding(right = 10.dp).width(18.dp).height(18.dp),
                             tint = MaterialTheme.colorScheme.primary
                         )
                         Text(text = stringResource(id = R.string.terms_and_conditions))
@@ -291,7 +291,7 @@ fun AccountScreen(
                         Icon(
                             imageVector = FeatherIcons.Star,
                             contentDescription ="",
-                            modifier = Modifier.absolutePadding(right = 10.dp),
+                            modifier = Modifier.absolutePadding(right = 10.dp).width(18.dp).height(18.dp),
                             tint = MaterialTheme.colorScheme.primary
                         )
                         Text(text = stringResource(id = R.string.rate_app))
