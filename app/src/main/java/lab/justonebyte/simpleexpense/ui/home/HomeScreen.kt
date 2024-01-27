@@ -15,7 +15,6 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -37,11 +36,9 @@ import lab.justonebyte.simpleexpense.R
 import lab.justonebyte.simpleexpense.model.ShowCase
 import lab.justonebyte.simpleexpense.model.Transaction
 import lab.justonebyte.simpleexpense.model.TransactionCategory
-import lab.justonebyte.simpleexpense.model.TransactionType
 import lab.justonebyte.simpleexpense.ui.components.AppAlertDialog
 import lab.justonebyte.simpleexpense.ui.components.ChooseTransactionTypeTab
 import lab.justonebyte.simpleexpense.ui.components.SnackBarType
-import lab.justonebyte.simpleexpense.ui.components.SimpleExpenseSnackBar
 import java.util.UUID
 
 
@@ -53,20 +50,19 @@ fun HomeScreen(
     val homeUiState by homeViewModel.viewModelUiState.collectAsState()
     val snackbarHostState = remember { SnackbarHostState() }
     val coroutineScope = rememberCoroutineScope()
+
     val currentTransaction = remember {
         mutableStateOf<Transaction?>(null)
     }
 
 
     val isChooseAddTransactionTypeOpen =  remember { mutableStateOf(false)}
-    val isAddOrEditTransactionDialogOpen = remember { mutableStateOf(false)}
-    val isSelectedTransactionEditMode = remember { mutableStateOf<Boolean?>(null) }
+    val isAddTransactionDialogOpen = remember { mutableStateOf(false)}
     val isDeleteTransactionDialogOpen = remember { mutableStateOf(false) }
 
     fun clearStates(){
-        isAddOrEditTransactionDialogOpen.value = false
+        isAddTransactionDialogOpen.value = false
         isChooseAddTransactionTypeOpen.value = false
-        isSelectedTransactionEditMode.value = null
         isDeleteTransactionDialogOpen.value = false
         currentTransaction.value = null
      }
@@ -108,19 +104,30 @@ fun HomeScreen(
             clearStates()
         }
     )
+    if(currentTransaction.value!=null){
+        AppAlertDialog(
+            title = "Transaction Detail",
+            isCloseButtonShown = true,
+            positiveBtnText =null,
+            negativeBtnText = null,
+            content = {
+                TransactionDetail(transaction = currentTransaction.value!!)
+            },
+            onPositiveBtnClicked = {
+                currentTransaction.value?.let { homeViewModel.deleteTransaction(it) }
 
-    ChooseTransactionActionDialog(
-        isOpen = (currentTransaction.value!=null) && (isSelectedTransactionEditMode.value != true && !isDeleteTransactionDialogOpen.value),
-        onEdit = {  isSelectedTransactionEditMode.value = true  },
-        onDelete = { isDeleteTransactionDialogOpen.value = true },
-        onDismiss = {
-            currentTransaction.value = null
-        }
-    )
+                clearStates()
+            },
+            onNegativeBtnClicked = {
+                clearStates()
+            },
+            properties = DialogProperties(
+                usePlatformDefaultWidth = false
+            )
+        )
+    }
 
-
-
-    if (isAddOrEditTransactionDialogOpen.value || isSelectedTransactionEditMode.value == true) {
+    if (isAddTransactionDialogOpen.value) {
         AppAlertDialog(
             title = null,
             positiveBtnText =null,
@@ -165,9 +172,7 @@ fun HomeScreen(
                 clearStates()
             },
             properties = DialogProperties(
-                usePlatformDefaultWidth =!isAddOrEditTransactionDialogOpen.value &&
-                        ((isSelectedTransactionEditMode.value != true && !isDeleteTransactionDialogOpen.value) && currentTransaction.value!=null)
-
+                usePlatformDefaultWidth = false
             )
         )
     }
@@ -186,7 +191,7 @@ fun HomeScreen(
                 FloatingActionButton(
                     onClick = {
                         clearStates()
-                        isAddOrEditTransactionDialogOpen.value = true
+                        isAddTransactionDialogOpen.value = true
                     },
                     shape = MaterialTheme.shapes.extraLarge,
                     modifier =  Modifier.introShowCaseTarget(
