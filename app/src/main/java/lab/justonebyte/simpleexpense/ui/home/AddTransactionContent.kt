@@ -1,5 +1,6 @@
 package lab.justonebyte.simpleexpense.ui.home
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -179,22 +180,18 @@ fun AddTransactionContent(
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.SpaceBetween,
-                        modifier = Modifier.padding(vertical = 8.dp, horizontal = 15.dp).fillMaxWidth()
+                        modifier = Modifier.padding(vertical = 10.dp, horizontal = 10.dp).fillMaxWidth()
                     ) {
                         Text(
                             text =  stringResource(id = R.string.enter_date),
                             )
-                        TextButton(
-                            onClick = {
-                                isRecordDatePickerShown.value = true
-                            },
-                         ) {
+
                             Text(
+                                modifier = Modifier.clickable {  isRecordDatePickerShown.value = true },
                                 text = getCurrentDayFromTimestamp(tempRecordDate.value),
                                 fontWeight = FontWeight.Bold,
                                 color = MaterialTheme.colorScheme.primary
                             )
-                        }
                     }
                 }
             }

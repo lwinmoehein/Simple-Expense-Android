@@ -1,5 +1,6 @@
 package lab.justonebyte.simpleexpense.ui.home
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -13,6 +14,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.material.ButtonDefaults
+import androidx.compose.material.OutlinedButton
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Card
@@ -26,10 +29,13 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import compose.icons.FeatherIcons
+import compose.icons.feathericons.Plus
 import lab.justonebyte.simpleexpense.R
 import lab.justonebyte.simpleexpense.model.TransactionCategory
 import lab.justonebyte.simpleexpense.model.TransactionType
@@ -74,31 +80,34 @@ fun AddCategoriesCard(
         ){
             Row(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .absolutePadding(left = 12.dp),
+                    .fillMaxWidth().absolutePadding(left=4.dp,bottom=8.dp),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
                     text = stringResource(id = R.string.enter_category),
-                    style = MaterialTheme.typography.labelLarge
+                    style = MaterialTheme.typography.labelLarge,
+                    fontWeight = FontWeight.Bold
                 )
-                TextButton(
-                     onClick = { isAddCategoryDialogOpen.value = true },
+                Row(
+                     modifier = Modifier.clickable{ isAddCategoryDialogOpen.value = true },
+                     verticalAlignment = Alignment.CenterVertically,
+                     horizontalArrangement = Arrangement.Center
                 ) {
                     Text(
                         text = stringResource(id = R.string.add),
                         textAlign = TextAlign.Center,
-                        fontWeight = FontWeight.Bold
+                        fontWeight = FontWeight.ExtraBold
                     )
-                    Icon(imageVector = Icons.Default.Add, contentDescription = "add category")
+                    Icon(imageVector = Icons.Default.Add, contentDescription = "add category",tint=MaterialTheme.colorScheme.primary)
                 }
             }
+
             LazyVerticalGrid(
                 horizontalArrangement = Arrangement.Center,
                 modifier = Modifier
                     .heightIn(max = 300.dp)
-                    .padding(10.dp),
+                   ,
                 userScrollEnabled = true,
                 columns = GridCells.Fixed(2),
                 // content padding

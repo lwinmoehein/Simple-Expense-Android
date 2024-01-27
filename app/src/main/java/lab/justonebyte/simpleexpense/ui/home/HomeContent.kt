@@ -1,7 +1,9 @@
 package lab.justonebyte.simpleexpense.ui.home
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.absolutePadding
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -25,7 +27,8 @@ fun HomeContent(
                 homeViewModel = homeViewModel,
                 homeUiState = homeUiState
             )
-            SectionTitle(title = stringResource(id = R.string.history),modifier = Modifier.absolutePadding(top = 30.dp, bottom = 20.dp))
+            Spacer(modifier = Modifier.height(20.dp))
+//            SectionTitle(title = stringResource(id = R.string.history),modifier = Modifier.absolutePadding(top = 30.dp, bottom = 20.dp))
             TransactionsCard(
                 transactions = homeUiState.transactions,
                 currency = homeUiState.currentCurrency,
