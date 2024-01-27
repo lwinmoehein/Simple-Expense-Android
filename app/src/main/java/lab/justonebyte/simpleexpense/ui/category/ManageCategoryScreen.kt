@@ -140,20 +140,22 @@ fun ManageCategoryScreen(){
         },
         initialTransactionType = currentTransactionType.value,
         onConfirmClick = { categoryName,transactionType->
-
-            isReusableInputDialogShown.value = false
-
-             val category = TransactionCategory(
-                unique_id = UUID.randomUUID().toString(),
-                name = categoryName,
-                icon_name = "other",
-                transaction_type = transactionType,
-                created_at =  System.currentTimeMillis(),
-                updated_at =  System.currentTimeMillis()
-            )
-            categoryViewModel.addCategory(category)
-            clearDialogs()
+            if(currentEditingCategory.value!=null){
+                categoryViewModel.updateCategory(currentEditingCategory.value!!,categoryName)
+            }else {
+                val category = TransactionCategory(
+                    unique_id = UUID.randomUUID().toString(),
+                    name = categoryName,
+                    icon_name = "other",
+                    transaction_type = transactionType,
+                    created_at = System.currentTimeMillis(),
+                    updated_at = System.currentTimeMillis()
+                )
+                categoryViewModel.addCategory(category)
+            }
             currentEditingCategory.value = null
+            isReusableInputDialogShown.value = false
+            clearDialogs()
         }
     )
 
