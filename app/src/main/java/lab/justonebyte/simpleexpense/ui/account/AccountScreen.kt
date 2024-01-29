@@ -136,7 +136,7 @@ fun AccountScreen(
                             }
                         }
                     )
-                    Spacer(modifier = Modifier.height(20.dp))
+                    Spacer(modifier = Modifier.height(10.dp))
                     Row(
                         horizontalArrangement = Arrangement.SpaceBetween,
                         modifier = Modifier
@@ -159,7 +159,7 @@ fun AccountScreen(
                            Text(text = stringResource(id = R.string.settings))
                        }
                     }
-                    Spacer(modifier = Modifier.height(20.dp))
+                    Spacer(modifier = Modifier.height(10.dp))
 
                     Row(
                         horizontalArrangement = Arrangement.SpaceBetween,
@@ -187,7 +187,7 @@ fun AccountScreen(
                             Text(text = stringResource(id = R.string.export))
                         }
                     }
-                    Spacer(modifier = Modifier.height(20.dp))
+                    Spacer(modifier = Modifier.height(10.dp))
 
                 Row(
                     horizontalArrangement = Arrangement.SpaceBetween,
@@ -211,7 +211,7 @@ fun AccountScreen(
                         Text(text = stringResource(id = R.string.acknowledgements))
                     }
                 }
-                Spacer(modifier = Modifier.height(20.dp))
+                Spacer(modifier = Modifier.height(10.dp))
 
                 Row(
                     horizontalArrangement = Arrangement.SpaceBetween,
@@ -235,7 +235,7 @@ fun AccountScreen(
                         Text(text = stringResource(id = R.string.privacy_policy))
                     }
                 }
-                Spacer(modifier = Modifier.height(20.dp))
+                Spacer(modifier = Modifier.height(10.dp))
 
                 Row(
                     horizontalArrangement = Arrangement.SpaceBetween,
@@ -259,7 +259,7 @@ fun AccountScreen(
                         Text(text = stringResource(id = R.string.terms_and_conditions))
                     }
                 }
-                Spacer(modifier = Modifier.height(20.dp))
+                Spacer(modifier = Modifier.height(10.dp))
 
                 Row(
                     horizontalArrangement = Arrangement.SpaceBetween,
@@ -295,6 +295,30 @@ fun AccountScreen(
                             tint = MaterialTheme.colorScheme.primary
                         )
                         Text(text = stringResource(id = R.string.rate_app))
+                    }
+                }
+                Spacer(modifier = Modifier.height(10.dp))
+
+                Row(
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clickable {
+                            navController.navigate(MainDestinations.ABOUT_APP)
+                        },
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Row (
+                        modifier = Modifier.absolutePadding(top = 5.dp, bottom = 5.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                    ){
+                        Icon(
+                            imageVector = FeatherIcons.FileText,
+                            contentDescription ="",
+                            modifier = Modifier.absolutePadding(right = 10.dp).width(18.dp).height(18.dp),
+                            tint = MaterialTheme.colorScheme.primary
+                        )
+                        Text(text = stringResource(id = R.string.about_app))
                     }
                 }
                 Spacer(modifier = Modifier.height(50.dp))

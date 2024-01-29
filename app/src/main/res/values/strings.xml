@@ -168,5 +168,6 @@
     <string name="add_new">Add New Category</string>
     <string name="category_name">Category Name</string>
     <string name="add_tran">Add Transaction</string>
+    <string name="about_app">About Application</string>
 
 </resources>
