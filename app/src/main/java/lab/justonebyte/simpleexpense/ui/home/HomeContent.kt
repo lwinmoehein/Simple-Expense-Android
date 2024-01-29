@@ -29,6 +29,7 @@ fun HomeContent(
             )
             Spacer(modifier = Modifier.height(20.dp))
             TransactionsCard(
+                isLoading = homeUiState.isTransactionsLoading,
                 transactions = homeUiState.transactions,
                 currency = homeUiState.currentCurrency,
                 onTransactionClick = {

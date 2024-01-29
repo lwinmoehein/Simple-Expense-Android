@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -33,6 +34,7 @@ import lab.justonebyte.simpleexpense.model.Currency
 import lab.justonebyte.simpleexpense.model.Transaction
 import lab.justonebyte.simpleexpense.model.TransactionType
 import lab.justonebyte.simpleexpense.ui.components.FormattedCurrency
+import lab.justonebyte.simpleexpense.ui.components.IndeterminateCircularIndicator
 import lab.justonebyte.simpleexpense.ui.components.getIconFromName
 import lab.justonebyte.simpleexpense.utils.getFormattedYear
 import lab.justonebyte.simpleexpense.utils.getReadableFormattedDay
@@ -42,6 +44,7 @@ import lab.justonebyte.simpleexpense.utils.getReadableFormattedMonth
 @Composable
 fun TransactionsCard(
     modifier:Modifier = Modifier,
+    isLoading:Boolean,
     transactions:List<Transaction> = emptyList(),
     currency: Currency,
     onTransactionClick:(transaction:Transaction)->Unit,
@@ -57,39 +60,55 @@ fun TransactionsCard(
 
 
    Row(
-        modifier = modifier
-            .fillMaxWidth()
-            .fillMaxHeight()
+        modifier = modifier.fillMaxSize(),
+        horizontalArrangement = Arrangement.Center,
+       verticalAlignment = Alignment.CenterVertically
    ) {
-       if(groupedTransactions.isEmpty()){
+       if(groupedTransactions.isEmpty() && !isLoading){
            NoData()
        }
-       LazyColumn(
-           modifier = Modifier
-               .fillMaxSize()
-       ) {
-           groupedTransactions.forEachIndexed { groupIndex, pair ->
-               item {
-                   if (groupIndex!=0) {
-                       Divider()
+       if(isLoading && groupedTransactions.isEmpty()){
+          Row (
+              modifier = modifier.fillMaxSize(),
+              horizontalArrangement = Arrangement.Center,
+              verticalAlignment = Alignment.CenterVertically
+          ){
+              CircularProgressIndicator(
+                  modifier = Modifier.width(30.dp).height(30.dp),
+                  color = MaterialTheme.colorScheme.primary,
+                  trackColor = MaterialTheme.colorScheme.surfaceVariant,
+                  strokeWidth = 3.dp
+              )
+          }
+       }
+       if(!isLoading && groupedTransactions.isNotEmpty()){
+           LazyColumn(
+               modifier = Modifier
+                   .fillMaxSize()
+           ) {
+               groupedTransactions.forEachIndexed { groupIndex, pair ->
+                   item {
+                       if (groupIndex!=0) {
+                           Divider()
+                       }
                    }
-               }
-               item {
-                   Text(
-                       text = pair.first,
-                       style = MaterialTheme.typography.titleMedium,
-                       color= MaterialTheme.colorScheme.primary,
-                       modifier = Modifier
-                           .fillMaxWidth()
-                           .absolutePadding(left = 5.dp, bottom = 5.dp, top = 15.dp),
-                       fontWeight = FontWeight.Bold
-                   )
-               }
-               itemsIndexed(pair.second) { _, transaction ->
-                   TransactionItem(transaction,currency = currency, onTransactionClick = {onTransactionClick(it)})
-               }
-               item{
-                   Spacer(modifier = Modifier.height(15.dp))
+                   item {
+                       Text(
+                           text = pair.first,
+                           style = MaterialTheme.typography.titleMedium,
+                           color= MaterialTheme.colorScheme.primary,
+                           modifier = Modifier
+                               .fillMaxWidth()
+                               .absolutePadding(left = 5.dp, bottom = 5.dp, top = 15.dp),
+                           fontWeight = FontWeight.Bold
+                       )
+                   }
+                   itemsIndexed(pair.second) { _, transaction ->
+                       TransactionItem(transaction,currency = currency, onTransactionClick = {onTransactionClick(it)})
+                   }
+                   item{
+                       Spacer(modifier = Modifier.height(15.dp))
+                   }
                }
            }
        }

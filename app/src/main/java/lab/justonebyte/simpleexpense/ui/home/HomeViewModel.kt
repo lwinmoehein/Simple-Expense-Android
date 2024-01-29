@@ -45,8 +45,9 @@ data class HomeUiState(
     val currentSnackBar : SnackBarType? = null,
     val selectedDay:String = getCurrentDay(),
     val selectedMonth:String = getCurrentMonth(),
-    val selectedYear:String = getCurrentYear()
-    )
+    val selectedYear:String = getCurrentYear(),
+    val isTransactionsLoading:Boolean = false
+)
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
@@ -152,8 +153,12 @@ class HomeViewModel @Inject constructor(
         }
     }
      suspend fun bindTransactionsFromBalanceType(balanceType: BalanceType=viewModelUiState.value.currentBalanceType){
+
          _viewModelUiState.update { homeUiState ->
-             homeUiState.copy(currentBalanceType = balanceType)
+             homeUiState.copy(
+                 currentBalanceType = balanceType,
+                 isTransactionsLoading = true
+             )
          }
 
          transactionCollectJobs?.cancel()
@@ -165,6 +170,7 @@ class HomeViewModel @Inject constructor(
                  BalanceType.YEARLY->collectYearlyBalance()
                  else->collectTotalBalance()
              }
+
          }
      }
      suspend fun updateCurrentDay(dateValue:String = viewModelUiState.value.selectedDay){
@@ -227,7 +233,8 @@ class HomeViewModel @Inject constructor(
                 currentBalance = sum,
                 incomeBalance = income,
                 expenseBalance = expense,
-                transactions = transactions
+                transactions = transactions,
+                isTransactionsLoading = false
             )
         }
     }
