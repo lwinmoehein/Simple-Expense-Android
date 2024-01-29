@@ -2,6 +2,7 @@ package lab.justonebyte.simpleexpense.ui.onboarding
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -21,6 +22,7 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -108,15 +110,10 @@ fun LoginScreen(
                     horizontalAlignment =  Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.Center
                 ) {
-                    Row(
-                        horizontalArrangement = Arrangement.Center,
-                        verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier
-                            .height(110.dp)
-                            .width(110.dp)
-                            .padding(10.dp)
-                            .clip(RoundedCornerShape(100))
-                            .background(Color.White)
+                    Surface(
+                       shape = MaterialTheme.shapes.large,
+                        color = Color.White,
+                        shadowElevation = 10.dp
                     ) {
                         Image(
                             painter = painterResource(id = R.drawable.ic_launcher), contentDescription = "",
@@ -125,12 +122,14 @@ fun LoginScreen(
                                 .width(80.dp)
                         )
                     }
+                    Spacer(modifier = Modifier.height(10.dp))
+
                     Text(
-                        text = stringResource(id = R.string.app_name), style = MaterialTheme.typography.headlineMedium,
+                        text = stringResource(id = R.string.app_name), style = MaterialTheme.typography.headlineSmall,
                         color = Color.Black
                     )
                 }
-                Spacer(modifier = Modifier.height(100.dp))
+                Spacer(modifier = Modifier.height(80.dp))
                 
                 Text(modifier = Modifier.padding(horizontal = 16.dp),text = stringResource(id = R.string.please_sign_in_with_google),style=MaterialTheme.typography.labelLarge,color = MaterialTheme.colorScheme.onPrimary)
                 // Google sign-in button

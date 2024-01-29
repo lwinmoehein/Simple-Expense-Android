@@ -50,8 +50,7 @@ fun AcknowledgeScreen(
                 SectionTitle(title = stringResource(id = R.string.acknowledgements), style = MaterialTheme.typography.titleLarge)
                 Spacer(modifier = Modifier.height(20.dp))
                 Column {
-                    Text(text = "* Abstract background image by Freepik")
-                    Text(text = "* Onboarding screen illustrations by Freepik")
+                    Text(text = "* Illustrations images by udraw.co")
                     Text(text = "* Dagger dependency injection by square")
                     Text(text = "* Compose charts by bytebeats")
                     Text("* number-picker by charge-map")
