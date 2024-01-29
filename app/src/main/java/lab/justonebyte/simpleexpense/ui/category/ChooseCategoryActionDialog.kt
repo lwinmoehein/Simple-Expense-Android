@@ -21,7 +21,7 @@ fun ChooseCategoryActionDialog(
 ){
     if (isOpen) {
         AppAlertDialog(
-            title = "What type of transaction?",
+            title = "Please choose action to perform?",
             positiveBtnText =null,
             negativeBtnText = null,
             content = {
