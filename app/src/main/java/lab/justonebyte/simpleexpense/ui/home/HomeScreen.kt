@@ -37,6 +37,7 @@ import lab.justonebyte.simpleexpense.model.ShowCase
 import lab.justonebyte.simpleexpense.model.Transaction
 import lab.justonebyte.simpleexpense.model.TransactionCategory
 import lab.justonebyte.simpleexpense.ui.components.AppAlertDialog
+import lab.justonebyte.simpleexpense.ui.components.AppDialog
 import lab.justonebyte.simpleexpense.ui.components.ChooseTransactionTypeTab
 import lab.justonebyte.simpleexpense.ui.components.SnackBarType
 import java.util.UUID
@@ -105,12 +106,9 @@ fun HomeScreen(
         }
     )
     if (isAddTransactionDialogOpen.value || currentTransaction.value!=null) {
-        AppAlertDialog(
-            title = null,
-            positiveBtnText =null,
-            negativeBtnText = null,
+        AppDialog(
+            properties = DialogProperties(decorFitsSystemWindows = true, usePlatformDefaultWidth = false),
             content = {
-
                 Column {
                             AddTransactionContent(
                                 currentCurrency = homeUiState.currentCurrency,
@@ -139,18 +137,7 @@ fun HomeScreen(
                                 }
                             )
                         }
-            },
-            onPositiveBtnClicked = {
-                currentTransaction.value?.let { homeViewModel.deleteTransaction(it) }
-
-                clearStates()
-            },
-            onNegativeBtnClicked = {
-                clearStates()
-            },
-            properties = DialogProperties(
-                usePlatformDefaultWidth = false
-            )
+            }
         )
     }
 

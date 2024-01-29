@@ -10,13 +10,19 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
+import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
@@ -31,12 +37,18 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import compose.icons.FeatherIcons
+import compose.icons.feathericons.Check
+import compose.icons.feathericons.Delete
+import compose.icons.feathericons.Trash
+import compose.icons.feathericons.X
 import lab.justonebyte.simpleexpense.R
 import lab.justonebyte.simpleexpense.model.BalanceType
 import lab.justonebyte.simpleexpense.model.Currency
@@ -123,127 +135,167 @@ fun AddTransactionContent(
             .fillMaxSize()
     ) {
 
-            TabRow(selectedTabIndex = transactionTypeTabState) {
-                transactionTypeTabs.forEachIndexed { index, tab ->
-                    Tab(
-                        selected = transactionTypeTabState == index,
-                        onClick = {
-                            transactionTypeTabState = index
-                            currentTransactionType.value = tab.transactionType
-                            currentCategory.value = currentTransaction?.category?: categories.first { it.transaction_type == currentTransactionType.value }
-                                  },
-                        text = { Text(text = stringResource(id = tab.name), maxLines = 2, overflow = TextOverflow.Ellipsis) }
-                    )
-                } }
-        Spacer(modifier = Modifier.height(20.dp))
-
-        Column {
-                NumberKeyboard(
-                    currency = currentCurrency,
-                    initialNumber = currentAmount.value,
-                    isKeyboardShown=isNumberKeyboardShown.value,
-                    onNumberConfirm = {
-                        isNumberKeyboardShown.value = false
-                        if(it<0){
-                            currentAmount.value = ""
-                        }else{
-                            currentAmount.value = it.toString()
-                        } },
-                    onKeyboardToggled = {
-                        isNumberKeyboardShown.value = it
-                    }
-                )
-        }
-
-        if(!isNumberKeyboardShown.value){
-            AddCategoriesCard(
-                onAddCategory = { categoryName,transactionType->
-                    onAddCategory(
-                        categoryName,
-                        transactionType
-                    )
-                },
-                categories = categories,
-                currentCategory = currentCategory.value,
-                onCategoryChosen = {
-                    currentCategory.value = it
-                },
-                currentTransactionType = currentTransactionType.value
-            )
-            if(!isEditMode){
-                Card(
-                    modifier = Modifier.padding(bottom=20.dp)
+        Scaffold(
+            topBar = {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 10.dp, horizontal = 8.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
                     Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        modifier = Modifier.padding(vertical = 10.dp, horizontal = 10.dp).fillMaxWidth()
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Text(
-                            text =  stringResource(id = R.string.enter_date),
-                            )
-
-                            Text(
-                                modifier = Modifier.clickable {  isRecordDatePickerShown.value = true },
-                                text = getCurrentDayFromTimestamp(tempRecordDate.value),
-                                fontWeight = FontWeight.Bold,
-                                color = MaterialTheme.colorScheme.primary
-                            )
+                        IconButton(
+                            onClick = { onCloseDialog() },
+                            modifier = Modifier.size(35.dp),
+                        ) {
+                            Icon(modifier = Modifier
+                                .width(22.dp)
+                                .height(22.dp),imageVector = FeatherIcons.X, contentDescription ="" )
+                        }
+                        Spacer(modifier = Modifier.width(10.dp))
+                        Text(text = if(currentTransaction!=null) stringResource(id = R.string.edit_tran) else stringResource(
+                            id = R.string.add_tran
+                        ), style = MaterialTheme.typography.titleMedium)
+                    }
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        if(currentTransaction!=null){
+                            IconButton(
+                                modifier = Modifier.size(35.dp),
+                                onClick = { /*TODO*/ }
+                            ) {
+                                Icon(
+                                    modifier = Modifier
+                                        .width(22.dp)
+                                        .height(22.dp),
+                                    imageVector = FeatherIcons.Trash, contentDescription ="",
+                                    tint = Color.Red
+                                )
+                            }
+                        }
+                        IconButton(
+                            modifier = Modifier.size(35.dp),
+                            onClick = {
+                                val category = currentCategory.value
+                                val isValidCategorySelected = !categories.none { it.transaction_type == currentTransactionType.value && it.unique_id == category.unique_id }
+                                val amount =
+                                    if (currentAmount.value.isEmpty()) 0 else currentAmount.value.toInt()
+                                if (!isValidCategorySelected || amount <= 0) {
+                                    showIncorrectDataSnack()
+                                } else {
+                                    currentCategory.value.let {
+                                        onConfirmTransactionForm(
+                                            currentTransactionType.value.value,
+                                            amount,
+                                            it,
+                                            tempRecordDate.value,
+                                            note.value
+                                        )
+                                        onCloseDialog()
+                                        clearTransactionForm()
+                                    }
+                                }
+                            }) {
+                            Icon(modifier = Modifier
+                                .width(22.dp)
+                                .height(22.dp),imageVector = FeatherIcons.Check, contentDescription ="" )
+                        }
                     }
                 }
             }
-            Row(
-                verticalAlignment = Alignment.Top,
-                horizontalArrangement = Arrangement.Center
-            ) {
-                TextField(
-                    modifier = Modifier.fillMaxWidth(),
-                    shape = MaterialTheme.shapes.small,
-                    singleLine = false,
-                    value = note.value,
-                    label = { Text(stringResource(id = R.string.enter_note)) },
-                    onValueChange = { note.value = it },
-                    keyboardOptions = KeyboardOptions(
-                        keyboardType = KeyboardType.Text
+        ) {
+            Column(modifier = Modifier
+                .padding(it)
+                .padding(horizontal = 10.dp)) {
+                TabRow(selectedTabIndex = transactionTypeTabState) {
+                    transactionTypeTabs.forEachIndexed { index, tab ->
+                        Tab(
+                            selected = transactionTypeTabState == index,
+                            onClick = {
+                                transactionTypeTabState = index
+                                currentTransactionType.value = tab.transactionType
+                                currentCategory.value = currentTransaction?.category?: categories.first { it.transaction_type == currentTransactionType.value }
+                            },
+                            text = { Text(text = stringResource(id = tab.name), maxLines = 2, overflow = TextOverflow.Ellipsis) }
+                        )
+                    } }
+                Spacer(modifier = Modifier.height(20.dp))
+                Column {
+                    NumberKeyboard(
+                        currency = currentCurrency,
+                        initialNumber = currentAmount.value,
+                        isKeyboardShown=isNumberKeyboardShown.value,
+                        onNumberConfirm = {
+                            isNumberKeyboardShown.value = false
+                            if(it<0){
+                                currentAmount.value = ""
+                            }else{
+                                currentAmount.value = it.toString()
+                            } },
+                        onKeyboardToggled = {
+                            isNumberKeyboardShown.value = it
+                        }
                     )
-                )
-            }
-            Row(
-                horizontalArrangement = Arrangement.End,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .absolutePadding(top = 50.dp)
-            ) {
-                TextButton(
-                    modifier = Modifier.absolutePadding(left = 10.dp, right = 10.dp),
-                    onClick = { onCloseDialog() }
-                ) {
-                    Text(text = stringResource(id = R.string.cancel))
                 }
-                Button(
-                    onClick = {
-                        val category = currentCategory.value
-                        val isValidCategorySelected =if(category==null) false else !categories.filter { it.transaction_type == currentTransactionType.value && it.unique_id== category.unique_id  }.isEmpty()
-                        val amount =
-                            if (currentAmount.value.isEmpty()) 0 else currentAmount.value.toInt()
-                        if (!isValidCategorySelected || amount <= 0) {
-                            showIncorrectDataSnack()
-                        } else {
-                            currentCategory.value.let {
-                                onConfirmTransactionForm(
-                                    currentTransactionType.value.value,
-                                    amount,
-                                    it,
-                                    tempRecordDate.value,
-                                    note.value
+
+                if(!isNumberKeyboardShown.value){
+                    AddCategoriesCard(
+                        onAddCategory = { categoryName,transactionType->
+                            onAddCategory(
+                                categoryName,
+                                transactionType
+                            )
+                        },
+                        categories = categories,
+                        currentCategory = currentCategory.value,
+                        onCategoryChosen = {
+                            currentCategory.value = it
+                        },
+                        currentTransactionType = currentTransactionType.value
+                    )
+                    if(!isEditMode){
+                        Card(
+                            modifier = Modifier.padding(bottom=20.dp)
+                        ) {
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.SpaceBetween,
+                                modifier = Modifier
+                                    .padding(vertical = 10.dp, horizontal = 10.dp)
+                                    .fillMaxWidth()
+                            ) {
+                                Text(
+                                    text =  stringResource(id = R.string.enter_date),
                                 )
-                                onCloseDialog()
-                                clearTransactionForm()
+
+                                Text(
+                                    modifier = Modifier.clickable {  isRecordDatePickerShown.value = true },
+                                    text = getCurrentDayFromTimestamp(tempRecordDate.value),
+                                    fontWeight = FontWeight.Bold,
+                                    color = MaterialTheme.colorScheme.primary
+                                )
                             }
                         }
                     }
-                ) {
-                    Text(text = if(isEditMode) stringResource(id = R.string.confirm_edit) else stringResource(id = R.string.confirm))
+                    Row(
+                        verticalAlignment = Alignment.Top,
+                        horizontalArrangement = Arrangement.Center
+                    ) {
+                        TextField(
+                            modifier = Modifier.fillMaxWidth(),
+                            shape = MaterialTheme.shapes.small,
+                            singleLine = false,
+                            value = note.value,
+                            label = { Text(stringResource(id = R.string.enter_note)) },
+                            onValueChange = { note.value = it },
+                            keyboardOptions = KeyboardOptions(
+                                keyboardType = KeyboardType.Text
+                            )
+                        )
+                    }
+
                 }
             }
         }
