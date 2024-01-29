@@ -44,7 +44,6 @@ import lab.justonebyte.simpleexpense.model.Transaction
 import lab.justonebyte.simpleexpense.model.TransactionCategory
 import lab.justonebyte.simpleexpense.model.TransactionType
 import lab.justonebyte.simpleexpense.ui.components.NumberKeyboard
-import lab.justonebyte.simpleexpense.ui.components.OptionItem
 import lab.justonebyte.simpleexpense.ui.components.TransactionTypeTab
 import lab.justonebyte.simpleexpense.utils.getCurrentDayFromTimestamp
 import lab.justonebyte.simpleexpense.utils.getCurrentYear
@@ -64,7 +63,6 @@ fun AddTransactionContent(
     val oneDayInMillis = 24 * 60 * 60 * 1000
     val tomorrowInMillis = currentTimeInMillis + oneDayInMillis
 
-    val localFocusManage = LocalFocusManager.current
     val currentAmount = remember(currentTransaction) { mutableStateOf(currentTransaction?.amount?.toString() ?: "") }
     val note = remember(currentTransaction) { mutableStateOf(currentTransaction?.note ?: "") }
     val currentTransactionType: MutableState<TransactionType> = remember(currentTransaction) { mutableStateOf(
@@ -73,7 +71,7 @@ fun AddTransactionContent(
     val currentCategory = remember(currentTransactionType) { mutableStateOf(currentTransaction?.category?: categories.first { it.transaction_type == currentTransactionType.value }) }
     val isEditMode = currentTransaction != null
     val isRecordDatePickerShown = remember { mutableStateOf(false) }
-    val tempRecordDate =  remember { mutableStateOf(System.currentTimeMillis()) }
+    val tempRecordDate =  remember { mutableStateOf(currentTransaction?.created_at ?: System.currentTimeMillis()) }
     val isNumberKeyboardShown = remember { mutableStateOf(false) }
     val state = rememberDatePickerState(initialSelectedDateMillis = tomorrowInMillis, yearRange = 2020..getCurrentYear().toInt())
 
@@ -86,7 +84,6 @@ fun AddTransactionContent(
         currentTransactionType.value = TransactionType.Expense
         currentCategory.value = categories.first()
         tempRecordDate.value = System.currentTimeMillis()
-        localFocusManage.clearFocus()
     }
 
 
@@ -232,7 +229,7 @@ fun AddTransactionContent(
                         if (!isValidCategorySelected || amount <= 0) {
                             showIncorrectDataSnack()
                         } else {
-                            currentCategory.value?.let {
+                            currentCategory.value.let {
                                 onConfirmTransactionForm(
                                     currentTransactionType.value.value,
                                     amount,

@@ -28,7 +28,6 @@ fun HomeContent(
                 homeUiState = homeUiState
             )
             Spacer(modifier = Modifier.height(20.dp))
-//            SectionTitle(title = stringResource(id = R.string.history),modifier = Modifier.absolutePadding(top = 30.dp, bottom = 20.dp))
             TransactionsCard(
                 transactions = homeUiState.transactions,
                 currency = homeUiState.currentCurrency,

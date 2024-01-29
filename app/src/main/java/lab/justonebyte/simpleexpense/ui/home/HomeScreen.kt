@@ -104,30 +104,7 @@ fun HomeScreen(
             clearStates()
         }
     )
-    if(currentTransaction.value!=null){
-        AppAlertDialog(
-            title = "Transaction Detail",
-            isCloseButtonShown = true,
-            positiveBtnText =null,
-            negativeBtnText = null,
-            content = {
-                TransactionDetail(transaction = currentTransaction.value!!)
-            },
-            onPositiveBtnClicked = {
-                currentTransaction.value?.let { homeViewModel.deleteTransaction(it) }
-
-                clearStates()
-            },
-            onNegativeBtnClicked = {
-                clearStates()
-            },
-            properties = DialogProperties(
-                usePlatformDefaultWidth = false
-            )
-        )
-    }
-
-    if (isAddTransactionDialogOpen.value) {
+    if (isAddTransactionDialogOpen.value || currentTransaction.value!=null) {
         AppAlertDialog(
             title = null,
             positiveBtnText =null,
