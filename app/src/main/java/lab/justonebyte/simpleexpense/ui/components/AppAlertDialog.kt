@@ -25,9 +25,12 @@ import compose.icons.feathericons.X
 fun AppDialog(
     properties: DialogProperties =  DialogProperties(usePlatformDefaultWidth = true, decorFitsSystemWindows = true),
     content:@Composable () -> Unit,
+    onDismiss:()->Unit
 ){
 Dialog(
-    onDismissRequest = { /*TODO*/ },
+    onDismissRequest = {
+           onDismiss()
+    },
     properties = properties
 ) {
     Row (

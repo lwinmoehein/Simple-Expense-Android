@@ -107,6 +107,10 @@ fun HomeScreen(
     )
     if (isAddTransactionDialogOpen.value || currentTransaction.value!=null) {
         AppDialog(
+            onDismiss = {
+                isAddTransactionDialogOpen.value = false
+                currentTransaction.value = null
+            },
             properties = DialogProperties(decorFitsSystemWindows = true, usePlatformDefaultWidth = false),
             content = {
                 Column {
