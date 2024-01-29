@@ -66,7 +66,9 @@ import compose.icons.feathericons.LogOut
 import compose.icons.feathericons.Settings
 import compose.icons.feathericons.Star
 import compose.icons.fontawesomeicons.Brands
+import compose.icons.fontawesomeicons.Regular
 import compose.icons.fontawesomeicons.brands.Google
+import compose.icons.fontawesomeicons.regular.Handshake
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import lab.justonebyte.simpleexpense.R
@@ -203,7 +205,7 @@ fun AccountScreen(
                         verticalAlignment = Alignment.CenterVertically,
                     ){
                         Icon(
-                            imageVector = FeatherIcons.Info,
+                            imageVector = FontAwesomeIcons.Regular.Handshake,
                             contentDescription ="",
                             modifier = Modifier.absolutePadding(right = 10.dp).width(18.dp).height(18.dp),
                             tint = MaterialTheme.colorScheme.primary
@@ -274,7 +276,7 @@ fun AccountScreen(
                         verticalAlignment = Alignment.CenterVertically,
                     ){
                         Icon(
-                            imageVector = FeatherIcons.FileText,
+                            imageVector = FeatherIcons.Info,
                             contentDescription ="",
                             modifier = Modifier.absolutePadding(right = 10.dp).width(18.dp).height(18.dp),
                             tint = MaterialTheme.colorScheme.primary
