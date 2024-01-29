@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
@@ -111,10 +112,36 @@ fun LoginScreen(
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Image(painter = painterResource(id = R.drawable.ic_launcher), contentDescription = "")
-                Spacer(modifier = Modifier.height(50.dp))
+                Column(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalAlignment =  Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center
+                ) {
+                    Row(
+                        horizontalArrangement = Arrangement.Center,
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier
+                            .height(110.dp)
+                            .width(110.dp)
+                            .padding(10.dp)
+                            .clip(RoundedCornerShape(100))
+                            .background(Color.White)
+                    ) {
+                        Image(
+                            painter = painterResource(id = R.drawable.ic_launcher), contentDescription = "",
+                            modifier = Modifier
+                                .height(80.dp)
+                                .width(80.dp)
+                        )
+                    }
+                    Text(
+                        text = stringResource(id = R.string.app_name), style = MaterialTheme.typography.headlineMedium,
+                        color = Color.Black
+                    )
+                }
+                Spacer(modifier = Modifier.height(100.dp))
                 
-                Text(modifier = Modifier.padding(horizontal = 16.dp),text = stringResource(id = R.string.please_sign_in_with_google),style=MaterialTheme.typography.labelMedium,color = MaterialTheme.colorScheme.onPrimary)
+                Text(modifier = Modifier.padding(horizontal = 16.dp),text = stringResource(id = R.string.please_sign_in_with_google),style=MaterialTheme.typography.labelLarge,color = MaterialTheme.colorScheme.onPrimary)
                 // Google sign-in button
                 Spacer(modifier = Modifier.height(10.dp))
                 Row(

@@ -3,12 +3,16 @@ package lab.justonebyte.simpleexpense.ui.account
 import android.content.Context
 import android.os.Build
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Text
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -18,6 +22,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -62,10 +68,24 @@ fun AboutAppScreen(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 // Animated logo with fade-in effect
-                Image(
-                    painter = painterResource(id = R.drawable.ic_launcher),
-                    contentDescription = "App logo"
-                )
+
+                Row(
+                    horizontalArrangement = Arrangement.Center,
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier
+                        .height(110.dp)
+                        .width(110.dp)
+                        .padding(10.dp)
+                        .clip(RoundedCornerShape(100))
+                        .background(Color.White)
+                ) {
+                    Image(
+                        painter = painterResource(id = R.drawable.ic_launcher), contentDescription = "",
+                        modifier = Modifier
+                            .height(80.dp)
+                            .width(80.dp)
+                    )
+                }
 
                 Column(
                     modifier = Modifier.fillMaxWidth(),
@@ -88,8 +108,8 @@ fun AboutAppScreen(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
-                    Text(text = "Developed by: Lwin Moe Hein", fontSize = 10.sp,color = MaterialTheme.colorScheme.onSurface)
-                    Text(text = "Tested by: Ei Zin Kyaw", fontSize = 10.sp,color = MaterialTheme.colorScheme.onSurface)
+                    Text(text = "Developed by: Lwin Moe Hein", fontSize = 13.sp,color = MaterialTheme.colorScheme.onSurface)
+                    Text(text = "Tested by: Ei Zin Kyaw", fontSize = 13.sp,color = MaterialTheme.colorScheme.onSurface)
                 }
             }
         }

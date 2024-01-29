@@ -186,16 +186,12 @@ fun OnBoardingItem(item: OnBoardingItem) {
                     .height(if (item.image == R.drawable.exports) 300.dp else 300.dp)
             )
 
-            Spacer(modifier = Modifier.height(5.dp))
-
             Text(
                 text = stringResource(id = item.title),
                 style = MaterialTheme.typography.headlineLarge,
                 // fontSize = 24.sp,
                 fontWeight = FontWeight.Bold,
                 textAlign = TextAlign.Center,
-                letterSpacing = 1.sp,
-                color = Color.Black
             )
             Spacer(modifier = Modifier.height(8.dp))
 
@@ -205,7 +201,6 @@ fun OnBoardingItem(item: OnBoardingItem) {
                 fontWeight = FontWeight.Light,
                 textAlign = TextAlign.Center,
                 modifier = Modifier.padding(10.dp),
-                letterSpacing = 1.sp,
                 color = Color.Black
             )
         }
