@@ -48,9 +48,10 @@ fun AcknowledgeScreen(
             Divider()
             Column(Modifier.padding(15.dp)) {
                 SectionTitle(title = stringResource(id = R.string.acknowledgements), style = MaterialTheme.typography.titleLarge)
-                Text(modifier = Modifier.absolutePadding(top = 10.dp),text="We would like to express our gratitude to the following individuals and organizations whose contributions have played a significant role in the development of Simple Expense:\n" +
-                        "\n")
+                Spacer(modifier = Modifier.height(20.dp))
                 Column {
+                    Text(text = "* Abstract background image by Freepik")
+                    Text(text = "* Onboarding screen illustrations by Freepik")
                     Text(text = "* Dagger dependency injection by square")
                     Text(text = "* Compose charts by bytebeats")
                     Text("* number-picker by charge-map")
