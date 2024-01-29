@@ -243,8 +243,8 @@ fun CategoryItem(
                         imageVector = getIconFromName(name = category.icon_name),
                         contentDescription = "",
                         modifier = Modifier
-                            .width(18.dp)
-                            .height(18.dp),
+                            .width(15.dp)
+                            .height(15.dp),
                         tint = MaterialTheme.colorScheme.onPrimary
                     )
                 }
