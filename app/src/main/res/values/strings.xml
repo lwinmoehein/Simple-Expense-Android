@@ -169,5 +169,6 @@
     <string name="category_name">Category Name</string>
     <string name="add_tran">Add Transaction</string>
     <string name="about_app">About Application</string>
+    <string name="app_info">Simple Expense application empowers you to take control of your finances. Effortlessly record expenses and income, categorize them for organized analysis, and gain valuable insights through beautiful graphs. Manage categories, export data for further scrutiny, and even set budgets for informed spending. With this robust tool, you can visualize your financial journey, identify areas for improvement, and ultimately achieve financial freedom.</string>
 
 </resources>

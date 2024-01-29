@@ -20,6 +20,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -51,7 +52,10 @@ fun AboutAppScreen(
             }
         }
     ) {
-        Column(Modifier.padding(it)) {
+        Column(
+            Modifier
+                .padding(it)
+                .padding(15.dp)) {
             Column(
                 modifier = Modifier.fillMaxSize(),
                 verticalArrangement = Arrangement.spacedBy(16.dp),
@@ -68,7 +72,7 @@ fun AboutAppScreen(
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Text(
-                        text = "Your App Name",
+                        text = stringResource(id = R.string.app_name),
                         fontSize = 36.sp,
                         color = MaterialTheme.colorScheme.primary
                     )
@@ -76,13 +80,17 @@ fun AboutAppScreen(
                 }
 
                 Text(
-                    text = "Placeholder for app description",
-                    fontSize = 18.sp,
+                    text = stringResource(id = R.string.app_info),
+                    fontSize = 14.sp,
                     color = MaterialTheme.colorScheme.onBackground
                 )
-                Text(text = "Developed by: Lwin Moe Hein", fontSize = 10.sp,color = MaterialTheme.colorScheme.onSurface)
-                Text(text = "Tested by: Ei Zin Kyaw", fontSize = 10.sp,color = MaterialTheme.colorScheme.onSurface)
-
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Text(text = "Developed by: Lwin Moe Hein", fontSize = 10.sp,color = MaterialTheme.colorScheme.onSurface)
+                    Text(text = "Tested by: Ei Zin Kyaw", fontSize = 10.sp,color = MaterialTheme.colorScheme.onSurface)
+                }
             }
         }
     }
