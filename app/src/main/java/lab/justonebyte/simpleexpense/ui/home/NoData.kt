@@ -38,11 +38,12 @@ fun NoData(modifier: Modifier=Modifier,text:String= stringResource(id = R.string
             verticalArrangement = Arrangement.Center
         ){
             Image(
-                modifier = Modifier.width(180.dp).height(180.dp),
-                painter = painterResource(id = R.drawable.no_results),
+                modifier = Modifier.width(180.dp),
+                painter = painterResource(id = R.drawable.cat),
                 contentDescription =""
             )
-            Text(text = text, color = MaterialTheme.colorScheme.secondary,style=MaterialTheme.typography.labelLarge, fontWeight = FontWeight.Bold)
+            Spacer(modifier = Modifier.height(10.dp))
+            Text(text = text, color = MaterialTheme.colorScheme.secondary,style=MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
         }
     }
 }

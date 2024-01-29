@@ -61,16 +61,7 @@ fun OnBoardingScreen(
     val onBoardUiState by onBoardViewModel.viewModelUiState.collectAsState()
 
 
-    Box(modifier = Modifier.fillMaxSize()) {
-        Image(
-            painter = painterResource(id = R.drawable.onboard_bg),
-            contentDescription = null, // You can provide a description here
-            modifier = Modifier
-                .fillMaxSize()
-                .background(MaterialTheme.colorScheme.primary)
-                .clip(MaterialTheme.shapes.medium),
-            contentScale = ContentScale.Crop
-        )
+    Box(modifier = Modifier.fillMaxSize().background(Color.White)) {
        Column(
            modifier = Modifier.fillMaxSize(),
        ) {
@@ -165,7 +156,7 @@ fun Indicator(isSelected: Boolean) {
             .width(width.value)
             .clip(CircleShape)
             .background(
-                color = if (isSelected) Color.White else MaterialTheme.colorScheme.secondary
+                color = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.secondary
             )
     ) {
 
@@ -182,8 +173,8 @@ fun OnBoardingItem(item: OnBoardingItem) {
                 painter = painterResource(id = item.image),
                 contentDescription = "Image1",
                 modifier = Modifier
-                    .width(if (item.image == R.drawable.exports) 300.dp else 300.dp)
-                    .height(if (item.image == R.drawable.exports) 300.dp else 300.dp)
+                    .width(300.dp)
+                    .height(300.dp)
             )
 
             Text(

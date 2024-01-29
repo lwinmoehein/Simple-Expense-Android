@@ -95,16 +95,7 @@ fun LoginScreen(
         )
         Box(modifier = Modifier
             .padding(it)
-            .fillMaxSize()) {
-            Image(
-                painter = painterResource(id = R.drawable.onboard_bg),
-                contentDescription = null, // You can provide a description here
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(MaterialTheme.colorScheme.primary)
-                    .clip(MaterialTheme.shapes.medium),
-                contentScale = ContentScale.Crop
-            )
+            .fillMaxSize().background(Color.White)) {
             Column(
                 modifier = Modifier
                     .fillMaxSize()
@@ -161,12 +152,12 @@ fun LoginScreen(
                         modifier = Modifier.fillMaxWidth(),
                         enabled = true,
                         colors = ButtonDefaults.buttonColors(
-                            containerColor = Color.White,
-                            contentColor = MaterialTheme.colorScheme.primary
+                            containerColor = MaterialTheme.colorScheme.primary,
+                            contentColor = MaterialTheme.colorScheme.onPrimary
                         )
-                    ) { Text(text = stringResource(id = R.string.login_with_google), color = MaterialTheme.colorScheme.primary)
+                    ) { Text(text = stringResource(id = R.string.login_with_google), color = MaterialTheme.colorScheme.onPrimary)
                         Spacer(modifier = Modifier.width(5.dp))
-                        Icon(tint = MaterialTheme.colorScheme.primary,imageVector = FontAwesomeIcons.Brands.Google,modifier = Modifier
+                        Icon(tint = MaterialTheme.colorScheme.onPrimary,imageVector = FontAwesomeIcons.Brands.Google,modifier = Modifier
                             .width(20.dp)
                             .height(20.dp), contentDescription ="" )
                     }
