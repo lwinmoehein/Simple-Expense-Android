@@ -55,6 +55,7 @@ import lab.justonebyte.simpleexpense.model.Currency
 import lab.justonebyte.simpleexpense.model.Transaction
 import lab.justonebyte.simpleexpense.model.TransactionCategory
 import lab.justonebyte.simpleexpense.model.TransactionType
+import lab.justonebyte.simpleexpense.ui.components.AppAlertDialog
 import lab.justonebyte.simpleexpense.ui.components.NumberKeyboard
 import lab.justonebyte.simpleexpense.ui.components.TransactionTypeTab
 import lab.justonebyte.simpleexpense.utils.getCurrentDayFromTimestamp
@@ -69,7 +70,8 @@ fun AddTransactionContent(
     showIncorrectDataSnack:()->Unit,
     onConfirmTransactionForm:(type:Int,amount:Int,category: TransactionCategory,date:Long,note:String?)->Unit,
     onAddCategory:(categoryName:String,transactionType:TransactionType)->Unit,
-    currentTransaction:Transaction?
+    currentTransaction:Transaction?,
+    onDeleteTransaction:(transaction:Transaction)->Unit
 ) {
     val currentTimeInMillis = System.currentTimeMillis()
     val oneDayInMillis = 24 * 60 * 60 * 1000
@@ -89,6 +91,7 @@ fun AddTransactionContent(
 
     var transactionTypeTabState by remember { mutableStateOf(0) }
     val transactionTypeTabs = listOf(TransactionTypeTab.EXPENSE, TransactionTypeTab.INCOME)
+    val isDeleteConfirmDialogOpen = remember { mutableStateOf(false) }
 
 
     fun clearTransactionForm() {
@@ -96,8 +99,28 @@ fun AddTransactionContent(
         currentTransactionType.value = TransactionType.Expense
         currentCategory.value = categories.first()
         tempRecordDate.value = System.currentTimeMillis()
+        isDeleteConfirmDialogOpen.value = false
     }
 
+    if(isDeleteConfirmDialogOpen.value){
+        AppAlertDialog(
+            title = stringResource(id = R.string.r_u_sure ),
+            positiveBtnText = stringResource(id = R.string.confirm),
+            negativeBtnText = stringResource(id = R.string.cancel),
+            onNegativeBtnClicked = {
+                isDeleteConfirmDialogOpen.value = false
+            },
+            onPositiveBtnClicked = {
+                if(currentTransaction!=null){
+                    onDeleteTransaction(currentTransaction)
+                }
+                clearTransactionForm()
+                onCloseDialog()
+            }
+        ) {
+            Text(text = stringResource(id = R.string.r_u_sure_tran_delete))
+        }
+    }
 
     if(isRecordDatePickerShown.value){
             DatePickerDialog(
@@ -164,7 +187,9 @@ fun AddTransactionContent(
                         if(currentTransaction!=null){
                             IconButton(
                                 modifier = Modifier.size(35.dp),
-                                onClick = { /*TODO*/ }
+                                onClick = {
+                                    isDeleteConfirmDialogOpen.value = true
+                                }
                             ) {
                                 Icon(
                                     modifier = Modifier

@@ -134,6 +134,9 @@ fun HomeScreen(
                                             updated_at = System.currentTimeMillis()
                                         )
                                     )
+                                },
+                                onDeleteTransaction = { transaction ->
+                                    homeViewModel.deleteTransaction(transaction)
                                 }
                             )
                         }
