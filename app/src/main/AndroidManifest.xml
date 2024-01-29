@@ -8,20 +8,20 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
-        android:name="lab.justonebyte.simpleexpense.SuBuuApplication"
+        android:name="lab.justonebyte.simpleexpense.SimpleExpenseApplication"
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@drawable/ic_launcher"
         android:supportsRtl="true"
-        android:theme="@style/Theme.MoneySuBuu"
+        android:theme="@style/Theme.SimpleExpense"
         android:usesCleartextTraffic="true"
         >
 
         <activity
             android:name="lab.justonebyte.simpleexpense.ui.MainActivity"
             android:exported="true"
-            android:theme="@style/Theme.MoneySuBuu">
+            android:theme="@style/Theme.SimpleExpense">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

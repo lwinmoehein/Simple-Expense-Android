@@ -2,8 +2,8 @@ import android.os.Build
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
-import lab.justonebyte.simpleexpense.ui.theme.SuBuuShapes
-import lab.justonebyte.simpleexpense.ui.theme.suBuuTypography
+import lab.justonebyte.simpleexpense.ui.theme.SimpleExpenseShapes
+import lab.justonebyte.simpleexpense.ui.theme.SimpleExpenseTypography
 
 
 private val LightColors = lightColorScheme(
@@ -91,8 +91,8 @@ fun AppTheme(
     MaterialTheme(
         colorScheme = colors,
         content = content,
-        typography = suBuuTypography,
-        shapes = SuBuuShapes
+        typography = SimpleExpenseTypography,
+        shapes = SimpleExpenseShapes
     )
 }
 

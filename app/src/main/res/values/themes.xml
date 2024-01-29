@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="Theme.MoneySuBuu" parent="android:Theme.Material.Light.NoActionBar.TranslucentDecor">
+    <style name="Theme.SimpleExpense" parent="android:Theme.Material.Light.NoActionBar.TranslucentDecor">
         <item name="android:statusBarColor">@android:color/transparent</item>
     </style>
 
-    <style name="Theme.MoneySuBuu.NoActionBar">
+    <style name="Theme.SimpleExpense.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
 
-    <style name="Theme.MoneySuBuu.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+    <style name="Theme.SimpleExpense.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
-    <style name="Theme.MoneySuBuu.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+    <style name="Theme.SimpleExpense.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 </resources>
