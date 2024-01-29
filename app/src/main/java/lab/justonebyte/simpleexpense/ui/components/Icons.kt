@@ -14,10 +14,12 @@ import compose.icons.feathericons.DollarSign
 import compose.icons.feathericons.Home
 import compose.icons.feathericons.Map
 import compose.icons.feathericons.Menu
+import compose.icons.feathericons.MoreHorizontal
 import compose.icons.feathericons.MoreVertical
 import compose.icons.feathericons.ShoppingCart
 import compose.icons.feathericons.Smile
 import compose.icons.feathericons.Truck
+import compose.icons.feathericons.Type
 import compose.icons.fontawesomeicons.Regular
 import compose.icons.fontawesomeicons.regular.MoneyBillAlt
 import lab.justonebyte.simpleexpense.R
@@ -37,6 +39,6 @@ fun getIconFromName(name:String):ImageVector{
         "bonus"->FeatherIcons.Award
         "donation"->FeatherIcons.DollarSign
         "allowance"->FontAwesomeIcons.Regular.MoneyBillAlt
-        else -> FeatherIcons.MoreVertical
+        else -> FeatherIcons.MoreHorizontal
     }
 }

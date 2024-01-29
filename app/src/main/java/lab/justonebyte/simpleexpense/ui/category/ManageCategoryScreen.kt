@@ -1,5 +1,6 @@
 package lab.justonebyte.simpleexpense.ui.category
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -11,6 +12,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.OutlinedButton
 import androidx.compose.material3.Card
@@ -29,6 +31,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
@@ -222,23 +225,29 @@ fun CategoryItem(
         Card(
             modifier = modifier
                 .clickable { onClick() }
-                .padding(5.dp)
+                .padding(3.dp)
         ) {
             Row(
                 Modifier
                     .fillMaxWidth()
-                    .padding(8.dp),
+                    .padding(5.dp),
                 horizontalArrangement = Arrangement.Start,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Icon(
-                    imageVector = getIconFromName(name = category.icon_name),
-                    contentDescription = "",
-                    modifier = Modifier
-                        .width(18.dp)
-                        .height(18.dp),
-                    tint = MaterialTheme.colorScheme.primary
-                )
+                Row (
+                    horizontalArrangement = Arrangement.Center,
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.width(25.dp).height(25.dp).clip(RoundedCornerShape(100)).background(MaterialTheme.colorScheme.primary)
+                ){
+                    Icon(
+                        imageVector = getIconFromName(name = category.icon_name),
+                        contentDescription = "",
+                        modifier = Modifier
+                            .width(18.dp)
+                            .height(18.dp),
+                        tint = MaterialTheme.colorScheme.onPrimary
+                    )
+                }
                 Spacer(modifier = Modifier.width(5.dp))
                 Text(text = category.name)
             }
