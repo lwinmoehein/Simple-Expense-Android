@@ -260,6 +260,29 @@ fun AccountScreen(
                     }
                 }
                 Spacer(modifier = Modifier.height(10.dp))
+                Row(
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clickable {
+                            navController.navigate(MainDestinations.ABOUT_APP)
+                        },
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Row (
+                        modifier = Modifier.absolutePadding(top = 5.dp, bottom = 5.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                    ){
+                        Icon(
+                            imageVector = FeatherIcons.FileText,
+                            contentDescription ="",
+                            modifier = Modifier.absolutePadding(right = 10.dp).width(18.dp).height(18.dp),
+                            tint = MaterialTheme.colorScheme.primary
+                        )
+                        Text(text = stringResource(id = R.string.about_app))
+                    }
+                }
+                Spacer(modifier = Modifier.height(10.dp))
 
                 Row(
                     horizontalArrangement = Arrangement.SpaceBetween,
@@ -297,31 +320,8 @@ fun AccountScreen(
                         Text(text = stringResource(id = R.string.rate_app))
                     }
                 }
-                Spacer(modifier = Modifier.height(10.dp))
-
-                Row(
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clickable {
-                            navController.navigate(MainDestinations.ABOUT_APP)
-                        },
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Row (
-                        modifier = Modifier.absolutePadding(top = 5.dp, bottom = 5.dp),
-                        verticalAlignment = Alignment.CenterVertically,
-                    ){
-                        Icon(
-                            imageVector = FeatherIcons.FileText,
-                            contentDescription ="",
-                            modifier = Modifier.absolutePadding(right = 10.dp).width(18.dp).height(18.dp),
-                            tint = MaterialTheme.colorScheme.primary
-                        )
-                        Text(text = stringResource(id = R.string.about_app))
-                    }
-                }
                 Spacer(modifier = Modifier.height(50.dp))
+
 
                 user?.let {
                         OutlinedButton(
