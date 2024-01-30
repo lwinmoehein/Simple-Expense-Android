@@ -21,7 +21,10 @@ import lab.justonebyte.simpleexpense.R
      CONNECTION_ERROR,
      LOGIN_SUCCESS,
      LOGIN_ERROR,
-     LOGOUT_SUCCESS
+     LOGOUT_SUCCESS,
+     ADD_TRANSACTION_SUCCESS,
+     UPDATE_TRANSACTION_SUCCESS,
+     DELETE_TRANSACTION_SUCCESS
 }
 @Composable
 fun SimpleExpenseSnackBar(
@@ -45,8 +48,9 @@ fun SimpleExpenseSnackBar(
             SnackBarType.LOGIN_SUCCESS-> stringResource(id = R.string.login_success)
             SnackBarType.LOGIN_ERROR-> stringResource(id = R.string.login_error)
             SnackBarType.LOGOUT_SUCCESS-> stringResource(id = R.string.logout_success)
-
-
+            SnackBarType.ADD_TRANSACTION_SUCCESS -> stringResource(id = R.string.add_tran_success)
+            SnackBarType.UPDATE_TRANSACTION_SUCCESS -> stringResource(id = R.string.update_tran_success)
+            SnackBarType.DELETE_TRANSACTION_SUCCESS -> stringResource(id = R.string.delete_tran_success)
             else -> stringResource(id = R.string.incorrect_data)
         }
 

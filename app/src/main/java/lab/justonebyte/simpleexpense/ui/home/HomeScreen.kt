@@ -39,6 +39,7 @@ import lab.justonebyte.simpleexpense.model.TransactionCategory
 import lab.justonebyte.simpleexpense.ui.components.AppAlertDialog
 import lab.justonebyte.simpleexpense.ui.components.AppDialog
 import lab.justonebyte.simpleexpense.ui.components.ChooseTransactionTypeTab
+import lab.justonebyte.simpleexpense.ui.components.SimpleExpenseSnackBar
 import lab.justonebyte.simpleexpense.ui.components.SnackBarType
 import java.util.UUID
 
@@ -149,7 +150,6 @@ fun HomeScreen(
     }
 
 
-
     Scaffold(
         floatingActionButton = {
             IntroShowcase(
@@ -198,6 +198,11 @@ fun HomeScreen(
         snackbarHost = { SnackbarHost(snackbarHostState) },
         ) {
         Column(Modifier.padding(it)) {
+            SimpleExpenseSnackBar(
+                snackBarType = homeUiState.currentSnackBar,
+                onDismissSnackBar = { homeViewModel.clearSnackBar() },
+                snackbarHostState = snackbarHostState
+            )
             Row(
                 horizontalArrangement = Arrangement.Center,
                 modifier = Modifier

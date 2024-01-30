@@ -6,7 +6,6 @@ import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
-import android.util.Log
 import androidx.activity.compose.ManagedActivityResultLauncher
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.ActivityResult
@@ -370,8 +369,6 @@ fun rememberFirebaseAuthLauncher(
         val task = GoogleSignIn.getSignedInAccountFromIntent(result.data)
         try {
             val account = task.getResult(ApiException::class.java)!!
-            account.idToken?.let { Log.i("gcredential:", it) }
-
             val credential = GoogleAuthProvider.getCredential(account.idToken!!, null)
 
             scope.launch {
@@ -400,7 +397,7 @@ fun AuthenticatedUser(
         }
     )
 
-        Card(Modifier.fillMaxWidth()) {
+    Card(Modifier.fillMaxWidth()) {
             Column(Modifier.absolutePadding(left = 10.dp, right = 10.dp, top = 10.dp, bottom = 10.dp)) {
                 user?.let {
                     Row(
@@ -447,7 +444,7 @@ fun AuthenticatedUser(
                                     .height(20.dp)
                             )
                             Spacer(modifier = Modifier.width(10.dp))
-                            Column() {
+                            Column {
                                 Text(
                                     text = stringResource(id = R.string.data_can_be_lost),
                                     style = MaterialTheme.typography.labelMedium

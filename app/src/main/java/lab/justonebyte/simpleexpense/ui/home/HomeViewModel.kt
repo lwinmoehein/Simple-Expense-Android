@@ -249,6 +249,11 @@ class HomeViewModel @Inject constructor(
             it.copy(currentSnackBar = type)
         }
     }
+    fun clearSnackBar(){
+        _viewModelUiState.update {
+            it.copy(currentSnackBar = null)
+        }
+    }
 
     fun addTransaction(
         transactionCategory: TransactionCategory,
@@ -270,6 +275,8 @@ class HomeViewModel @Inject constructor(
                     note = note
                 )
             )
+            _viewModelUiState.update { it.copy(currentSnackBar = SnackBarType.ADD_TRANSACTION_SUCCESS) }
+
             if(token.value.isNotEmpty()) runVersionSync(application,"transactions",token.value)
         }
         viewModelScope.launch {
@@ -296,6 +303,7 @@ class HomeViewModel @Inject constructor(
                     note = note
                 )
             )
+            _viewModelUiState.update { it.copy(currentSnackBar = SnackBarType.UPDATE_TRANSACTION_SUCCESS) }
             bindTransactionsFromBalanceType(_viewModelUiState.value.currentBalanceType)
             if(token.value.isNotEmpty()) runVersionSync(application,"transactions",token.value)
         }
@@ -305,6 +313,8 @@ class HomeViewModel @Inject constructor(
 
         viewModelScope.launch {
             transactionRepository.delete(transaction)
+            _viewModelUiState.update { it.copy(currentSnackBar = SnackBarType.DELETE_TRANSACTION_SUCCESS) }
+
             bindTransactionsFromBalanceType(_viewModelUiState.value.currentBalanceType)
 
             if(token.value.isNotEmpty()) runVersionSync(application,"transactions",token.value)

@@ -172,5 +172,8 @@
     <string name="app_info">Simple Expense application empowers you to take control of your finances. Effortlessly record expenses and income, categorize them for organized analysis, and gain valuable insights through beautiful graphs. Manage categories, export data for further scrutiny, and even set budgets for informed spending. With this robust tool, you can visualize your financial journey, identify areas for improvement, and ultimately achieve financial freedom.</string>
     <string name="onboarding_graphs">Charts</string>
     <string name="onboarding_charts_desc">Simply view your data as pie charts.</string>
+    <string name="add_tran_success">New Record Added.</string>
+    <string name="update_tran_success">Record Updated.</string>
+    <string name="delete_tran_success">Record Deleted.</string>
 
 </resources>

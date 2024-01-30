@@ -61,8 +61,6 @@ fun SettingsScreen(
                     }
                 )
                 Spacer(modifier = Modifier.height(20.dp))
-
-                SectionTitle(title = stringResource(id = R.string.sys_setting))
             }
         }
     }
