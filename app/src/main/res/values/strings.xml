@@ -138,8 +138,8 @@
     <string name="privacy_policy">Privacy Policy</string>
     <string name="terms_and_conditions">Terms And Conditions</string>
 
-    <string name="showcase_add_Record">Add A New Record</string>
-    <string name="showcase_add_Record_description">Click here to add expense and income records.</string>
+    <string name="showcase_add_transaction">Add A New Record</string>
+    <string name="showcase_add_transaction_description">Click here to add expense and income records.</string>
 
     <string name="showcase_balance_card">Balance Card</string>
     <string name="showcase_balance_card_description">You can see your wallet balance per month,year and total.</string>
@@ -167,7 +167,7 @@
     <string name="skip">SKIP</string>
     <string name="add_new">Add New Category</string>
     <string name="category_name">Category Name</string>
-    <string name="add_tran">Add Record</string>
+    <string name="add_tran">Add Transaction</string>
     <string name="about_app">About Application</string>
     <string name="app_info">Simple Expense application empowers you to take control of your finances. Effortlessly record expenses and income, categorize them for organized analysis, and gain valuable insights through beautiful graphs. Manage categories, export data for further scrutiny, and even set budgets for informed spending. With this robust tool, you can visualize your financial journey, identify areas for improvement, and ultimately achieve financial freedom.</string>
     <string name="onboarding_graphs">Charts</string>
