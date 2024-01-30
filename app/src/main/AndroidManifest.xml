@@ -17,7 +17,9 @@
         android:theme="@style/Theme.SimpleExpense"
         android:usesCleartextTraffic="true"
         >
-
+        <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="ca-app-pub-5629179599083547~4963856914"/>
         <activity
             android:name="lab.justonebyte.simpleexpense.ui.MainActivity"
             android:exported="true"

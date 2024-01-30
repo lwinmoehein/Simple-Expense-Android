@@ -135,4 +135,7 @@ dependencies {
     //showcase
     implementation 'com.canopas.intro-showcase-view:introshowcaseview:2.0.1'
 
+    //ads
+    implementation 'com.google.android.gms:play-services-ads:22.6.0'
+
 }
