@@ -20,6 +20,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
@@ -51,6 +53,7 @@ import lab.justonebyte.simpleexpense.model.TransactionCategory
 import lab.justonebyte.simpleexpense.model.TransactionType
 import lab.justonebyte.simpleexpense.ui.components.AppAlertDialog
 import lab.justonebyte.simpleexpense.ui.components.NumberKeyboard
+import lab.justonebyte.simpleexpense.ui.components.SimpleExpenseSnackBar
 import lab.justonebyte.simpleexpense.ui.components.TransactionTypeTab
 import lab.justonebyte.simpleexpense.utils.getCurrentDayFromTimestamp
 import lab.justonebyte.simpleexpense.utils.getCurrentYear
@@ -58,9 +61,9 @@ import lab.justonebyte.simpleexpense.utils.getCurrentYear
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddTransactionContent(
-    currentCurrency: Currency,
+    homeUiState:HomeUiState,
+    homeViewModel:HomeViewModel,
     onCloseDialog:()->Unit,
-    categories:List<TransactionCategory>,
     showIncorrectDataSnack:()->Unit,
     onConfirmTransactionForm:(type:Int,amount:Int,category: TransactionCategory,date:Long,note:String?)->Unit,
     onAddCategory:(categoryName:String,transactionType:TransactionType)->Unit,
@@ -76,6 +79,8 @@ fun AddTransactionContent(
     val currentTransactionType: MutableState<TransactionType> = remember(currentTransaction) { mutableStateOf(
         currentTransaction?.type ?: TransactionType.Expense)
     }
+    val categories = homeUiState.categories
+    val currentCurrency = homeUiState.currentCurrency
     val currentCategory = remember(currentTransactionType) { mutableStateOf(currentTransaction?.category?: categories.first { it.transaction_type == currentTransactionType.value }) }
     val isEditMode = currentTransaction != null
     val isRecordDatePickerShown = remember { mutableStateOf(false) }
@@ -86,6 +91,8 @@ fun AddTransactionContent(
     var transactionTypeTabState by remember { mutableStateOf(0) }
     val transactionTypeTabs = listOf(TransactionTypeTab.EXPENSE, TransactionTypeTab.INCOME)
     val isDeleteConfirmDialogOpen = remember { mutableStateOf(false) }
+    val snackBarHostState = remember { SnackbarHostState() }
+
 
 
     fun clearTransactionForm() {
@@ -197,11 +204,9 @@ fun AddTransactionContent(
                         IconButton(
                             modifier = Modifier.size(35.dp),
                             onClick = {
-                                val category = currentCategory.value
-                                val isValidCategorySelected = !categories.none { it.transaction_type == currentTransactionType.value && it.unique_id == category.unique_id }
                                 val amount =
                                     if (currentAmount.value.isEmpty()) 0 else currentAmount.value.toInt()
-                                if (!isValidCategorySelected || amount <= 0) {
+                                if (amount <= 0) {
                                     showIncorrectDataSnack()
                                 } else {
                                     currentCategory.value.let {
@@ -223,11 +228,19 @@ fun AddTransactionContent(
                         }
                     }
                 }
-            }
+            },
+            snackbarHost = { SnackbarHost(snackBarHostState) },
         ) {
             Column(modifier = Modifier
                 .padding(it)
                 .padding(horizontal = 10.dp)) {
+                SimpleExpenseSnackBar(
+                    snackBarType = homeUiState.currentSnackBar,
+                    onDismissSnackBar = { homeViewModel.clearSnackBar() },
+                    snackbarHostState = snackBarHostState
+                )
+
+
                 TabRow(selectedTabIndex = transactionTypeTabState) {
                     transactionTypeTabs.forEachIndexed { index, tab ->
                         Tab(

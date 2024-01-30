@@ -175,5 +175,6 @@
     <string name="add_tran_success">New Record Added.</string>
     <string name="update_tran_success">Record Updated.</string>
     <string name="delete_tran_success">Record Deleted.</string>
+    <string name="incorrect_amount">Amount must be greater than 0.</string>
 
 </resources>

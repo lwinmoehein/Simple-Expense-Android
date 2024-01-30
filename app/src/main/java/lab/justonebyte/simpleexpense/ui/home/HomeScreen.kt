@@ -116,9 +116,9 @@ fun HomeScreen(
             content = {
                 Column {
                             AddTransactionContent(
-                                currentCurrency = homeUiState.currentCurrency,
+                                homeUiState = homeUiState,
+                                homeViewModel = homeViewModel,
                                 currentTransaction = currentTransaction.value,
-                                categories =  homeUiState.categories,
                                 onConfirmTransactionForm = { type, amount, category,date,note->
                                     onAddOrEditTransaction(type,amount,category,date,note)
                                 },
@@ -126,7 +126,7 @@ fun HomeScreen(
                                     clearStates()
                                 },
                                 showIncorrectDataSnack = {
-                                    homeViewModel.showSnackBar(SnackBarType.INCORRECT_DATA)
+                                    homeViewModel.showSnackBar(SnackBarType.INCORRECT_AMOUNT)
                                 },
                                 onAddCategory = { name,type->
                                     homeViewModel.addCategory(
