@@ -7,6 +7,12 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.documentfile.provider.DocumentFile
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.android.gms.ads.AdError
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.FullScreenContentCallback
+import com.google.android.gms.ads.LoadAdError
+import com.google.android.gms.ads.rewarded.RewardedAd
+import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.firebase.auth.FirebaseAuth
@@ -49,6 +55,13 @@ data class SettingUiState(
     val firebaseUser: FirebaseUser? = FirebaseAuth.getInstance().currentUser
 )
 
+data class FileExportRequest(
+    val from:String,
+    val to:String,
+    val format:FileFormat,
+    val isAdShown:Boolean = false
+)
+
 
 
 @HiltViewModel
@@ -58,7 +71,16 @@ class SettingsViewModel @Inject constructor(
     private val categoryRepository: CategoryRepository,
     @ApplicationContext private val application: Context
 ): ViewModel() {
+    val TAG = "Ad"
 
+    private var _rewardedAd: MutableStateFlow<RewardedAd?> = MutableStateFlow(null)
+    private var _isAdLoading:MutableStateFlow<Boolean> = MutableStateFlow(false)
+    private var _cacheFileExportRequest:MutableStateFlow<FileExportRequest?> = MutableStateFlow(null)
+    val rewardedAd:StateFlow<RewardedAd?>
+        get() = _rewardedAd
+
+    val isAdLoading:StateFlow<Boolean>
+        get() = _isAdLoading
 
     private val _viewModelUiState = MutableStateFlow(
         SettingUiState()
@@ -67,7 +89,6 @@ class SettingsViewModel @Inject constructor(
         get() = _viewModelUiState
 
     private var token = mutableStateOf("")
-
 
 
     init {
@@ -204,7 +225,24 @@ class SettingsViewModel @Inject constructor(
             it.copy(currentSnackBar = null)
         }
     }
-    fun exportDate(from:String, to:String, format:FileFormat){
+
+    fun cacheExportDates(from:String, to:String, format:FileFormat){
+        _cacheFileExportRequest.value = FileExportRequest(from,to,format)
+    }
+
+    fun exportFileFromCacheRequest(){
+        val cachedExportRequest = _cacheFileExportRequest.value
+        if(cachedExportRequest!=null) exportDataAsFile(cachedExportRequest.from,cachedExportRequest.to,cachedExportRequest.format)
+        _cacheFileExportRequest.value = null
+    }
+
+    fun cacheExportRequestAndShowAd(from:String, to:String, format:FileFormat){
+        cacheExportDates(from,to,format)
+        showAd()
+    }
+
+
+    fun exportDataAsFile(from:String, to:String, format:FileFormat){
             when(format.nameId){
                 R.string.excel_format-> generateExcelFile(from,to)
                 else->generatePDFFile(from,to)
@@ -348,6 +386,56 @@ class SettingsViewModel @Inject constructor(
 
     private suspend fun updateDownloadFolder(folderUri:String){
         settingRepository.updateDownloadFolder(folderUri)
+    }
+
+    fun showAd(){
+        _isAdLoading.value = true
+
+        var adRequest = AdRequest.Builder().build()
+        RewardedAd.load(application,"ca-app-pub-3940256099942544/5224354917", adRequest, object : RewardedAdLoadCallback() {
+            override fun onAdFailedToLoad(adError: LoadAdError) {
+                adError.toString().let { Log.d(TAG, it) }
+                _rewardedAd.value = null
+                _isAdLoading.value = false
+            }
+
+            override fun onAdLoaded(ad: RewardedAd) {
+                Log.d(TAG, "Ad was loaded.")
+                _rewardedAd.value = ad
+                ad.fullScreenContentCallback = object: FullScreenContentCallback() {
+                    override fun onAdClicked() {
+                        // Called when a click is recorded for an ad.
+                        Log.d(TAG, "Ad was clicked.")
+                    }
+
+                    override fun onAdDismissedFullScreenContent() {
+                        // Called when ad is dismissed.
+                        // Set the ad reference to null so you don't show the ad a second time.
+                        Log.d(TAG, "Ad dismissed fullscreen content.")
+                        _rewardedAd.value = null
+                        if(_cacheFileExportRequest.value?.isAdShown == true){
+                            exportFileFromCacheRequest()
+                        }
+                    }
+
+
+                    override fun onAdImpression() {
+                        // Called when an impression is recorded for an ad.
+                        Log.d(TAG, "Ad recorded an impression.")
+                         _cacheFileExportRequest.update { it?.copy(isAdShown = true) }
+                    }
+
+                    override fun onAdShowedFullScreenContent() {
+                        // Called when ad is shown.
+                        Log.d(TAG, "Ad showed fullscreen content.")
+                    }
+                }
+
+            }
+        })
+    }
+    fun changeIsAdLoadingToFalse(){
+        _isAdLoading.value = false
     }
 
 }

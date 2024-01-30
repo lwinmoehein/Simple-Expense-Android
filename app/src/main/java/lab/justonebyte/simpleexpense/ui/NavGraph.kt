@@ -19,6 +19,7 @@ import lab.justonebyte.simpleexpense.ui.account.AcknowledgeScreen
 import lab.justonebyte.simpleexpense.ui.account.ExportScreen
 import lab.justonebyte.simpleexpense.ui.account.PrivacyPolicyScreen
 import lab.justonebyte.simpleexpense.ui.account.SettingsScreen
+import lab.justonebyte.simpleexpense.ui.account.SettingsViewModel
 import lab.justonebyte.simpleexpense.ui.account.TermsAndServicesScreen
 import lab.justonebyte.simpleexpense.ui.category.ManageCategoryScreen
 import lab.justonebyte.simpleexpense.ui.home.HomeScreen
@@ -48,7 +49,8 @@ fun NavGraph(
     navController: NavHostController = rememberNavController(),
     startDestination: String = MainDestinations.HOME_ROUTE,
     chooseDownloadFolderLauncher: ActivityResultLauncher<Intent>,
-    homeViewModel: HomeViewModel
+    homeViewModel: HomeViewModel,
+    settingsViewModel: SettingsViewModel
 ) {
 
     NavHost(
@@ -67,12 +69,13 @@ fun NavGraph(
         composable(MainDestinations.CATEGORY_ROUTE) {
             ManageCategoryScreen()
         }
-        addNestedGraph(navController,chooseDownloadFolderLauncher)
+        addNestedGraph(navController,chooseDownloadFolderLauncher,settingsViewModel)
     }
 }
 fun NavGraphBuilder.addNestedGraph(
     navController: NavController,
-    chooseDownloadFolderLauncher: ActivityResultLauncher<Intent>
+    chooseDownloadFolderLauncher: ActivityResultLauncher<Intent>,
+    settingsViewModel: SettingsViewModel
 ) {
     navigation(startDestination = MainDestinations.ME_ROUTE, route = MainDestinations.ACCOUNT_ROUTE) {
         composable(MainDestinations.ME_ROUTE) {
@@ -88,7 +91,8 @@ fun NavGraphBuilder.addNestedGraph(
         composable(MainDestinations.EXPORT) {
             ExportScreen(
                 navController = navController,
-                chooseDownloadFolderLauncher=chooseDownloadFolderLauncher
+                chooseDownloadFolderLauncher=chooseDownloadFolderLauncher,
+                settingsViewModel = settingsViewModel
             )
         }
         composable(MainDestinations.ACKNOWLEDGEMENT) {

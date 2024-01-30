@@ -49,7 +49,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import compose.icons.FeatherIcons
 import compose.icons.FontAwesomeIcons
@@ -193,21 +192,21 @@ fun chooseDownloadFolderIntent():Intent{
 }
 
 
-@OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun ExportScreen(
     navController: NavController,
-    chooseDownloadFolderLauncher: ActivityResultLauncher<Intent>
+    chooseDownloadFolderLauncher: ActivityResultLauncher<Intent>,
+    settingsViewModel:SettingsViewModel
 ) {
 
-    val settingsViewModel = hiltViewModel<SettingsViewModel>()
     val uiState by settingsViewModel.viewModelUiState.collectAsState()
     var chosenFormat by remember { mutableStateOf<FileFormat?>(formats[0]) }
     val toDate = remember { mutableStateOf(getCurrentDay()) }
     val fromDate = remember { mutableStateOf(getCurrentDay()) }
     val snackbarHostState = remember { SnackbarHostState() }
     val coroutineScope = rememberCoroutineScope()
+    val isAdLoading by settingsViewModel.isAdLoading.collectAsState()
 
 
 
@@ -269,9 +268,9 @@ fun ExportScreen(
                    Button(
                        modifier = Modifier.fillMaxWidth(),
                        onClick = {
-                           if(!uiState.isExportingFile){
+                           if(!uiState.isExportingFile && !isAdLoading){
                                chosenFormat?.let {
-                                   settingsViewModel.exportDate(fromDate.value,toDate.value, it)
+                                   settingsViewModel.cacheExportRequestAndShowAd(fromDate.value,toDate.value, it)
                                }
                            }
                        }
@@ -281,7 +280,7 @@ fun ExportScreen(
                            modifier =  Modifier.fillMaxWidth()// Center content within the box
                            // Expand the box to fill available space
                        ) {
-                           if (uiState.isExportingFile) {
+                           if (uiState.isExportingFile || isAdLoading) {
                                CircularProgressIndicator(
                                    modifier = Modifier
                                        .width(15.dp)

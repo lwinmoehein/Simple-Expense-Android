@@ -40,6 +40,7 @@ import compose.icons.feathericons.User
 import kotlinx.coroutines.launch
 import lab.justonebyte.simpleexpense.R
 import lab.justonebyte.simpleexpense.model.ShowCase
+import lab.justonebyte.simpleexpense.ui.account.SettingsViewModel
 import lab.justonebyte.simpleexpense.ui.home.HomeViewModel
 import lab.justonebyte.simpleexpense.ui.onboarding.LoginScreen
 import lab.justonebyte.simpleexpense.ui.onboarding.OnBoardingScreen
@@ -57,7 +58,8 @@ val appContentPadding = 20.dp
 @Composable
 fun SimpleExpenseApp(
     chooseDownloadFolderLauncher: ActivityResultLauncher<Intent>,
-    context:Context = LocalContext.current
+    context:Context = LocalContext.current,
+    settingsViewModel: SettingsViewModel
 ) {
 
     var selectedItem by remember { mutableStateOf(0) }
@@ -82,7 +84,9 @@ fun SimpleExpenseApp(
         ProvideWindowInsets {
                 if(!isAppOnboardingShowed.value){
                     if(!isLoginShown.value)
-                        OnBoardingScreen(onStartClick = { isLoginShown.value = true })
+                        OnBoardingScreen(onStartClick = {
+                            isLoginShown.value = true
+                        })
                     else
                         LoginScreen {
                             isAppOnboardingShowed.value = true
@@ -210,7 +214,8 @@ fun SimpleExpenseApp(
                                 navController = navController,
                                 chooseDownloadFolderLauncher = chooseDownloadFolderLauncher,
                                 homeViewModel = homeViewModel,
-                                startDestination =  MainDestinations.HOME_ROUTE
+                                startDestination =  MainDestinations.HOME_ROUTE,
+                                settingsViewModel = settingsViewModel
                             )
                     }
                 }
