@@ -17,7 +17,6 @@ import lab.justonebyte.simpleexpense.data.CategoryRepository
 import lab.justonebyte.simpleexpense.data.SettingPrefRepository
 import lab.justonebyte.simpleexpense.data.TransactionRepository
 import lab.justonebyte.simpleexpense.model.BalanceType
-import lab.justonebyte.simpleexpense.model.Currency
 import lab.justonebyte.simpleexpense.model.ShowCase
 import lab.justonebyte.simpleexpense.model.Transaction
 import lab.justonebyte.simpleexpense.model.TransactionCategory
@@ -27,6 +26,7 @@ import lab.justonebyte.simpleexpense.utils.getCurrentDay
 import lab.justonebyte.simpleexpense.utils.getCurrentMonth
 import lab.justonebyte.simpleexpense.utils.getCurrentYear
 import lab.justonebyte.simpleexpense.workers.runVersionSync
+import java.util.Currency
 import java.util.UUID
 import javax.inject.Inject
 
@@ -39,7 +39,7 @@ data class HomeUiState(
     val expenseBalance:Long,
     val totalBalance:Long,
     val currentBalanceType:BalanceType = BalanceType.MONTHLY,
-    val currentCurrency: Currency = Currency.Kyat,
+    val currentCurrency: Currency = Currency.getInstance("USD"),
     val categories:List<TransactionCategory>  = emptyList(),
     val transactions:List<Transaction> = emptyList(),
     val currentSnackBar : SnackBarType? = null,
@@ -148,7 +148,7 @@ class HomeViewModel @Inject constructor(
     private suspend fun collectCurrencyFromSetting(){
         settingsRepository.selectedCurrency.collect{
             _viewModelUiState.update { homeUiState ->
-                homeUiState.copy(currentCurrency = Currency.getFromValue(it))
+                homeUiState.copy(currentCurrency = Currency.getInstance(it))
             }
         }
     }

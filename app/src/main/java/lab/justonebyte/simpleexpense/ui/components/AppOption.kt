@@ -11,6 +11,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import java.util.Currency
 
 interface OptionItem {
     val name: Int
@@ -57,6 +58,57 @@ fun AppOption(
                            expanded = false
                            onItemSelected(selectedItem.value)
                        })
+
+            }
+        }
+    }
+}
+
+
+@SuppressLint("UnrememberedMutableState")
+@Composable
+fun CurrencyOption(
+    modifier: Modifier = Modifier,
+    label:String,
+    onCurrencySelected:(item:Currency)->Unit,
+    currencies:List<Currency>,
+    selectedCurrency:Currency
+) {
+    var expanded by remember { mutableStateOf(false) }
+    var selectedItem = mutableStateOf(selectedCurrency)
+
+    Row(modifier = modifier) {
+        Row(
+            modifier = modifier.clickable { expanded = true }
+                .absolutePadding(left = 5.dp, right = 5.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = selectedCurrency.displayName+" "+selectedCurrency.currencyCode,
+                style = MaterialTheme.typography.labelLarge
+            )
+            Icon(Icons.Default.ArrowDropDown, contentDescription = "Localized description")
+        }
+        DropdownMenu(
+            modifier = Modifier.padding(0.dp),
+            expanded = expanded,
+            onDismissRequest = { expanded = false },
+        ) {
+            currencies.forEach { selectedOption ->
+                DropdownMenuItem(
+                    modifier = Modifier.padding(0.dp),
+                    text = {
+                        Text(
+                            text = selectedCurrency.displayName+" "+selectedCurrency.currencyCode,
+                            modifier = Modifier.padding(0.dp),
+                            style = MaterialTheme.typography.labelLarge
+                        )
+                    },
+                    onClick = {
+                        selectedItem.value = selectedOption
+                        expanded = false
+                        onCurrencySelected(selectedItem.value)
+                    })
 
             }
         }

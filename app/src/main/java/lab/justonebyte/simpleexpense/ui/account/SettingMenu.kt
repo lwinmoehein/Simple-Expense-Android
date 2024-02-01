@@ -12,6 +12,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import lab.justonebyte.simpleexpense.ui.components.AppOption
 import lab.justonebyte.simpleexpense.ui.components.OptionItem
+import java.util.Currency
 
 @SuppressLint("UnrememberedMutableState")
 @Composable

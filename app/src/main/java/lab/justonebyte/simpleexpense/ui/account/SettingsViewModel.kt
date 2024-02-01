@@ -36,17 +36,17 @@ import lab.justonebyte.simpleexpense.data.SettingPrefRepository
 import lab.justonebyte.simpleexpense.data.TransactionRepository
 import lab.justonebyte.simpleexpense.model.AppList
 import lab.justonebyte.simpleexpense.model.BalanceType
-import lab.justonebyte.simpleexpense.model.Currency
 import lab.justonebyte.simpleexpense.ui.components.SnackBarType
 import lab.justonebyte.simpleexpense.utils.RetrofitHelper
 import lab.justonebyte.simpleexpense.utils.getDecodedPath
 import lab.justonebyte.simpleexpense.workers.runVersionSync
+import java.util.Currency
 import javax.inject.Inject
 
 data class SettingUiState(
-    val selectedCurrency: Currency = Currency.Kyat,
+    val selectedCurrency: Currency = Currency.getInstance("USD"),
     val defaultBalanceType: BalanceType = BalanceType.MONTHLY,
-     val currentSnackBar : SnackBarType? = null,
+    val currentSnackBar : SnackBarType? = null,
     val companionApps: AppList? = null,
     val downloadFolder:String? = null,
     val readableDownloadFolder:String? = null,
@@ -152,7 +152,7 @@ class SettingsViewModel @Inject constructor(
         settingRepository.selectedCurrency.collect{
             _viewModelUiState.update { uiState->
                 uiState.copy(
-                    selectedCurrency = Currency.getFromValue(it)
+                    selectedCurrency = Currency.getInstance(it)
                 )
             }
         }
@@ -198,7 +198,7 @@ class SettingsViewModel @Inject constructor(
 
     fun updateCurrency(currency: Currency) {
         viewModelScope.launch {
-            settingRepository.updateSelectedCurrency(currency.value)
+            settingRepository.updateSelectedCurrency(currency.currencyCode)
         }
     }
     suspend fun logOut(){

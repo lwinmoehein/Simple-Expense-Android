@@ -47,7 +47,6 @@ import compose.icons.feathericons.Check
 import compose.icons.feathericons.Trash
 import compose.icons.feathericons.X
 import lab.justonebyte.simpleexpense.R
-import lab.justonebyte.simpleexpense.model.Currency
 import lab.justonebyte.simpleexpense.model.Transaction
 import lab.justonebyte.simpleexpense.model.TransactionCategory
 import lab.justonebyte.simpleexpense.model.TransactionType

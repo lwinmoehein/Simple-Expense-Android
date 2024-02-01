@@ -26,16 +26,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import com.github.mikephil.charting.charts.PieChart
 import com.github.mikephil.charting.components.Legend
-import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
-import com.github.mikephil.charting.formatter.IValueFormatter
-import com.github.mikephil.charting.formatter.PercentFormatter
 import com.github.mikephil.charting.formatter.ValueFormatter
-import com.github.mikephil.charting.utils.ViewPortHandler
 import lab.justonebyte.simpleexpense.R
-import lab.justonebyte.simpleexpense.model.Currency
 import lab.justonebyte.simpleexpense.model.Transaction
 import lab.justonebyte.simpleexpense.model.TransactionType
 import lab.justonebyte.simpleexpense.ui.components.FormattedCurrency
@@ -61,6 +56,7 @@ import lab.justonebyte.simpleexpense.ui.theme.bar7
 import lab.justonebyte.simpleexpense.ui.theme.bar8
 import lab.justonebyte.simpleexpense.ui.theme.bar9
 import java.text.DecimalFormat
+import java.util.Currency
 
 class MyValueFormatter : ValueFormatter() {
     private val format = DecimalFormat("###,##0.0")
@@ -142,7 +138,7 @@ fun CustomPieChartWithData(
                     FormattedCurrency(
                         amount = totalAmount.toLong(),
                         color =if(transactionType==TransactionType.Income) MaterialTheme.colorScheme.primary  else Color.Red,
-                        currencyCode = if(currency==Currency.Kyat) stringResource(id = R.string.kyat) else stringResource(R.string.dollar)
+                        currencyCode = currency.currencyCode
                     )
                 }
             }

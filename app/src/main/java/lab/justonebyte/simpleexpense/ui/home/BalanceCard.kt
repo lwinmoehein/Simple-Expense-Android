@@ -31,10 +31,10 @@ import compose.icons.feathericons.ArrowUp
 import compose.icons.feathericons.DollarSign
 import kotlinx.coroutines.launch
 import lab.justonebyte.simpleexpense.R
-import lab.justonebyte.simpleexpense.model.Currency
 import lab.justonebyte.simpleexpense.model.ShowCase
 import lab.justonebyte.simpleexpense.ui.components.FormattedCurrency
 import lab.justonebyte.simpleexpense.ui.components.TransactionTypePicker
+import java.util.Currency
 
 @Composable
 fun BalanceCard(
@@ -171,9 +171,7 @@ private fun BalanceItem(
             contentDescription = text,
             modifier = Modifier.align(Alignment.CenterHorizontally)
         )
-        Text(text = if(currency==Currency.Kyat) stringResource(id = R.string.kyat) else stringResource(
-            id = R.string.dollar
-        ))
+        Text(text = currency.currencyCode)
 
         FormattedCurrency(
             amount = amount,

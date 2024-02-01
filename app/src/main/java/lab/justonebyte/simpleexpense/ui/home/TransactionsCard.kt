@@ -30,7 +30,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import lab.justonebyte.simpleexpense.R
 import lab.justonebyte.simpleexpense.model.BalanceType
-import lab.justonebyte.simpleexpense.model.Currency
 import lab.justonebyte.simpleexpense.model.Transaction
 import lab.justonebyte.simpleexpense.model.TransactionType
 import lab.justonebyte.simpleexpense.ui.components.FormattedCurrency
@@ -39,6 +38,7 @@ import lab.justonebyte.simpleexpense.ui.components.getIconFromName
 import lab.justonebyte.simpleexpense.utils.getFormattedYear
 import lab.justonebyte.simpleexpense.utils.getReadableFormattedDay
 import lab.justonebyte.simpleexpense.utils.getReadableFormattedMonth
+import java.util.Currency
 
 
 @Composable
@@ -160,7 +160,7 @@ fun TransactionItem(transaction:Transaction,modifier: Modifier=Modifier,currency
                 FormattedCurrency(
                     color=if(transaction.type==TransactionType.Income) MaterialTheme.colorScheme.primary else Color.Red,
                     amount = transaction.amount.toLong(),
-                    currencyCode = if(currency==Currency.Kyat) stringResource(id = R.string.kyat) else stringResource(R.string.dollar)
+                    currencyCode = currency.currencyCode
                 )
             }
         }

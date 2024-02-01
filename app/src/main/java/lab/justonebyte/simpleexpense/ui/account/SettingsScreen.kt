@@ -15,9 +15,9 @@ import compose.icons.FeatherIcons
 import compose.icons.feathericons.ArrowLeft
 import kotlinx.coroutines.launch
 import lab.justonebyte.simpleexpense.R
-import lab.justonebyte.simpleexpense.model.Currency
-import lab.justonebyte.simpleexpense.ui.components.OptionItem
+import lab.justonebyte.simpleexpense.ui.components.CurrencyOption
 import lab.justonebyte.simpleexpense.ui.components.SectionTitle
+import java.util.Currency
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
@@ -26,7 +26,7 @@ fun SettingsScreen(
 ){
     val settingsViewModel = hiltViewModel<SettingsViewModel>()
     val settingsUiState by settingsViewModel.viewModelUiState.collectAsState()
-    val settingCurrencies = listOf<OptionItem>(Currency.Kyat,Currency.Dollar)
+    val settingCurrencies = Currency.getAvailableCurrencies()
     val coroutineScope = rememberCoroutineScope()
 
     Scaffold(
@@ -51,14 +51,14 @@ fun SettingsScreen(
             Column(Modifier.padding(15.dp)) {
                 SectionTitle(title = stringResource(id = R.string.feat_setting))
 
-                SettingMenu(
+                CurrencyOption(
                     modifier = Modifier.fillMaxWidth(),
-                    settingItemLabel = R.string.select_currency,
-                    selectedOption = settingsUiState.selectedCurrency,
-                    menuItems = settingCurrencies,
-                    onMenuItemChosen = {
-                        settingsViewModel.updateCurrency(it as Currency)
-                    }
+                    selectedCurrency = settingsUiState.selectedCurrency,
+                    currencies = settingCurrencies.toList(),
+                    onCurrencySelected = {
+                        settingsViewModel.updateCurrency(it)
+                    },
+                    label = "Currency"
                 )
                 Spacer(modifier = Modifier.height(20.dp))
             }

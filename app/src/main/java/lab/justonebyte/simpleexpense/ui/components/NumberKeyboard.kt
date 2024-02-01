@@ -34,7 +34,7 @@ import compose.icons.FeatherIcons
 import compose.icons.feathericons.Check
 import compose.icons.feathericons.Delete
 import lab.justonebyte.simpleexpense.R
-import lab.justonebyte.simpleexpense.model.Currency
+import java.util.Currency
 
 @Composable
 fun NumberKeyboard(
@@ -101,7 +101,7 @@ fun NumberKeyboard(
                     ) {
                         Text(
                             modifier = Modifier.absolutePadding(right = 15.dp),
-                            text = stringResource(id =if(currency.name==Currency.Kyat.name) R.string.kyat else R.string.dollar),
+                            text = currency.currencyCode,
                             color = MaterialTheme.colorScheme.onSurface,
                             style = MaterialTheme.typography.titleLarge
                         )

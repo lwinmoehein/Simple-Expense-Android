@@ -11,11 +11,15 @@ import kotlinx.coroutines.launch
 import lab.justonebyte.simpleexpense.data.CategoryRepository
 import lab.justonebyte.simpleexpense.data.SettingPrefRepository
 import lab.justonebyte.simpleexpense.data.TransactionRepository
-import lab.justonebyte.simpleexpense.model.*
+import lab.justonebyte.simpleexpense.model.BalanceType
+import lab.justonebyte.simpleexpense.model.Transaction
+import lab.justonebyte.simpleexpense.model.TransactionCategory
+import lab.justonebyte.simpleexpense.model.TransactionType
 import lab.justonebyte.simpleexpense.ui.components.SnackBarType
 import lab.justonebyte.simpleexpense.utils.getCurrentDay
 import lab.justonebyte.simpleexpense.utils.getCurrentMonth
 import lab.justonebyte.simpleexpense.utils.getCurrentYear
+import java.util.Currency
 import javax.inject.Inject
 
 
@@ -23,7 +27,7 @@ data class StatsUiState(
     val categories:List<TransactionCategory>  = emptyList(),
     val transactions:List<Transaction> = emptyList(),
     val currentBalanceType: BalanceType = BalanceType.MONTHLY,
-    val currentCurrency: Currency = Currency.Kyat,
+    val currentCurrency: Currency = Currency.getInstance("USD"),
     val currentSnackBar : SnackBarType? = null,
     val selectedDay:String = getCurrentDay(),
     val selectedMonth:String = getCurrentMonth(),
@@ -76,7 +80,7 @@ class StatsViewModel @Inject constructor(
     private suspend fun collectCurrencyFromSetting(){
         settingsRepository.selectedCurrency.collect{
             _viewModelUiState.update { homeUiState ->
-                homeUiState.copy(currentCurrency = Currency.getFromValue(it))
+                homeUiState.copy(currentCurrency = Currency.getInstance(it))
             }
         }
     }

@@ -16,8 +16,8 @@ import lab.justonebyte.simpleexpense.data.SettingPreferencesRepositoryImpl.Prefe
 import lab.justonebyte.simpleexpense.data.SettingPreferencesRepositoryImpl.PreferencesKeys.SELECTED_CURRENCY
 import lab.justonebyte.simpleexpense.data.SettingPreferencesRepositoryImpl.PreferencesKeys.THEME
 import lab.justonebyte.simpleexpense.model.BalanceType
-import lab.justonebyte.simpleexpense.model.Currency
 import lab.justonebyte.simpleexpense.model.Theme
+import java.util.Currency
 import javax.inject.Inject
 
 
@@ -25,7 +25,7 @@ interface SettingPrefRepository {
 
     val selectedTheme: Flow<Int>
     val defaultBalanceType: Flow<Int>
-    val selectedCurrency: Flow<Int>
+    val selectedCurrency: Flow<String>
     val isAppIntroduced:Flow<Boolean>
     val isAppOnboardingShowed:Flow<Boolean>
     val accessToken:Flow<String>
@@ -37,7 +37,7 @@ interface SettingPrefRepository {
 
     suspend fun updateIsAppOnboardingShowed(isShowed:Boolean)
 
-    suspend fun updateSelectedCurrency(currency:Int)
+    suspend fun updateSelectedCurrency(currency:String)
     suspend fun updateToken(token: String)
     suspend fun updateDownloadFolder(folderUri: String)
 
@@ -53,7 +53,7 @@ class SettingPreferencesRepositoryImpl @Inject constructor
         val IS_FIRST_TIME = booleanPreferencesKey("is_first_time")
         val IS_ONBOARDING_SHOWED = booleanPreferencesKey("is_onboarding_showed")
         val DEFAULT_BALANCE_TYPE = intPreferencesKey("balance_type")
-        val SELECTED_CURRENCY = intPreferencesKey("currency")
+        val SELECTED_CURRENCY = stringPreferencesKey("currency")
         val ACCESS_TOKEN = stringPreferencesKey("token")
         val DOWNLOAD_FOLDER  = stringPreferencesKey("download_folder")
     }
@@ -62,7 +62,7 @@ class SettingPreferencesRepositoryImpl @Inject constructor
     override val isAppIntroduced: Flow<Boolean> = dataStore.data.map { it[IS_FIRST_TIME]?:false }
     override val isAppOnboardingShowed: Flow<Boolean> = dataStore.data.map { it[IS_ONBOARDING_SHOWED]?:false }
     override val defaultBalanceType: Flow<Int> = dataStore.data.map { it[DEFAULT_BALANCE_TYPE]?:BalanceType.MONTHLY.value }
-    override val selectedCurrency: Flow<Int> = dataStore.data.map { it[SELECTED_CURRENCY]?:Currency.Kyat.value }
+    override val selectedCurrency: Flow<String> = dataStore.data.map { it[SELECTED_CURRENCY]?: "USD" }
     override val accessToken: Flow<String> = dataStore.data.map { it[ACCESS_TOKEN]?:"" }
     override val downloadFolder: Flow<String> = dataStore.data.map { it[DOWNLOAD_FOLDER]?:"" }
     override suspend fun updateTheme(theme: Int) {
@@ -89,7 +89,7 @@ class SettingPreferencesRepositoryImpl @Inject constructor
         }
     }
 
-    override suspend fun updateSelectedCurrency(currency: Int) {
+    override suspend fun updateSelectedCurrency(currency: String) {
         dataStore.edit { preferences ->
             preferences[SELECTED_CURRENCY] = currency
         }
