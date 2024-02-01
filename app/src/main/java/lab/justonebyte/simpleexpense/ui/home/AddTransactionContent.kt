@@ -81,7 +81,7 @@ fun AddTransactionContent(
     }
     val categories = homeUiState.categories
     val currentCurrency = homeUiState.currentCurrency
-    val currentCategory = remember(currentTransactionType) { mutableStateOf(currentTransaction?.category?: categories.first { it.transaction_type == currentTransactionType.value }) }
+    val currentCategory = remember(currentTransactionType) { mutableStateOf<TransactionCategory?>(currentTransaction?.category?: categories.firstOrNull { it.transaction_type == currentTransactionType.value }) }
     val isEditMode = currentTransaction != null
     val isRecordDatePickerShown = remember { mutableStateOf(false) }
     val tempRecordDate =  remember { mutableStateOf(currentTransaction?.created_at ?: System.currentTimeMillis()) }
@@ -98,7 +98,7 @@ fun AddTransactionContent(
     fun clearTransactionForm() {
         currentAmount.value = ""
         currentTransactionType.value = TransactionType.Expense
-        currentCategory.value = categories.first()
+        currentCategory.value = categories.firstOrNull()
         tempRecordDate.value = System.currentTimeMillis()
         isDeleteConfirmDialogOpen.value = false
     }
@@ -209,7 +209,7 @@ fun AddTransactionContent(
                                 if (amount <= 0) {
                                     showIncorrectDataSnack()
                                 } else {
-                                    currentCategory.value.let {
+                                    currentCategory.value?.let {
                                         onConfirmTransactionForm(
                                             currentTransactionType.value.value,
                                             amount,
@@ -248,7 +248,7 @@ fun AddTransactionContent(
                             onClick = {
                                 transactionTypeTabState = index
                                 currentTransactionType.value = tab.transactionType
-                                currentCategory.value = currentTransaction?.category?: categories.first { it.transaction_type == currentTransactionType.value }
+                                currentCategory.value = currentTransaction?.category?: categories.firstOrNull { it.transaction_type == currentTransactionType.value }
                             },
                             text = { Text(text = stringResource(id = tab.name), maxLines = 2, overflow = TextOverflow.Ellipsis) }
                         )

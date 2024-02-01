@@ -29,7 +29,7 @@ fun NoData(modifier: Modifier=Modifier,text:String= stringResource(id = R.string
     Column(
         modifier = modifier
             .fillMaxWidth()
-            .defaultMinSize(minHeight = 300.dp),
+            .defaultMinSize(minHeight = 150.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ){

@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.absolutePadding
+import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
@@ -47,7 +48,7 @@ import lab.justonebyte.simpleexpense.ui.components.getIconFromName
 fun AddCategoriesCard(
     categories:List<TransactionCategory>,
     currentCategory:TransactionCategory?,
-    onCategoryChosen:(categor:TransactionCategory)->Unit,
+    onCategoryChosen:(category:TransactionCategory)->Unit,
     modifier: Modifier = Modifier,
     currentTransactionType:TransactionType = TransactionType.Income,
     onAddCategory:(name:String,transactionType:TransactionType)->Unit
@@ -73,14 +74,15 @@ fun AddCategoriesCard(
     )
 
     Card(
-        modifier = modifier.absolutePadding(top=20.dp, bottom = 20.dp),
+        modifier = modifier.absolutePadding(top=20.dp, bottom = 20.dp).defaultMinSize(minHeight = 150.dp),
     ) {
         Column(
             Modifier.padding(5.dp)
         ){
             Row(
                 modifier = Modifier
-                    .fillMaxWidth().absolutePadding(left=4.dp,bottom=8.dp),
+                    .fillMaxWidth()
+                    .absolutePadding(left = 4.dp, bottom = 8.dp),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
@@ -129,12 +131,16 @@ fun AddCategoriesCard(
                         ) {
 
                             Row(
-                                modifier = Modifier.fillMaxWidth().padding(vertical = 5.dp, horizontal = 5.dp),
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(vertical = 5.dp, horizontal = 5.dp),
                                 horizontalArrangement = Arrangement.Start,
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
                                 Icon(
-                                    modifier = Modifier.width(20.dp).height(20.dp),
+                                    modifier = Modifier
+                                        .width(20.dp)
+                                        .height(20.dp),
                                     imageVector = getIconFromName(name = filteredCategories[index].icon_name) , contentDescription ="" ,
                                     tint = if(isSelected != true)  MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onPrimary
                                 )
@@ -150,6 +156,18 @@ fun AddCategoriesCard(
                     }
                 }
             )
+
+            if(filteredCategories.isEmpty()){
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(20.dp),
+                    horizontalArrangement = Arrangement.Center,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    NoData()
+                }
+            }
         }
        
     }
