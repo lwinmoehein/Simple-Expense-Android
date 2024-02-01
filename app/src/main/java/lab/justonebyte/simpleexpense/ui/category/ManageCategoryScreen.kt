@@ -49,6 +49,7 @@ import lab.justonebyte.simpleexpense.model.TransactionType
 import lab.justonebyte.simpleexpense.ui.components.AppAlertDialog
 import lab.justonebyte.simpleexpense.ui.components.TransactionTypeTab
 import lab.justonebyte.simpleexpense.ui.components.getIconFromName
+import lab.justonebyte.simpleexpense.ui.home.NoData
 import java.util.UUID
 
 sealed class CategoryTab(val index:Int,val title:Int,val icon:ImageVector){
@@ -93,7 +94,7 @@ fun ManageCategoryScreen(){
     val categories =  categoryUiState.categories.filter { it.transaction_type==currentTransactionType.value }.sortedBy { it.name }
     
     
-    val nonOtherCategories = categories.filter { it.name!="Other" } + categories.filter { it.name=="Other" }
+    val finalCategoriesToShow = categories.filter { it.name!="Other" } + categories.filter { it.name=="Other" }
 
     fun clearDialogs(){
         isReusableInputDialogShown.value = false
@@ -162,9 +163,8 @@ fun ManageCategoryScreen(){
         }
     )
 
-    Scaffold(
-    ) {
-         Column(Modifier.padding(it)) {
+    Scaffold {
+        Column(Modifier.padding(it)) {
              Row(
                  modifier  = Modifier.fillMaxWidth(),
                  horizontalArrangement = Arrangement.Center
@@ -196,16 +196,19 @@ fun ManageCategoryScreen(){
                  Icon(imageVector = FeatherIcons.Plus, contentDescription = "")
              }
              Spacer(modifier = Modifier.height(10.dp))
+            if(finalCategoriesToShow.isEmpty()){
+                NoData(Modifier.height(300.dp))
+            }
              LazyVerticalGrid(
                  columns = GridCells.Fixed(2),
                  modifier = Modifier.padding(5.dp)
              ) {
-                 items(nonOtherCategories.size) { index ->
+                 items(finalCategoriesToShow.size) { index ->
                      CategoryItem(
-                         category = nonOtherCategories[index],
+                         category = finalCategoriesToShow[index],
                          onClick = {
                              isChooseCategoryActionDialogOpen.value = true
-                             currentEditingCategory.value =  nonOtherCategories[index]
+                             currentEditingCategory.value =  finalCategoriesToShow[index]
                          }
                      )
                  }
@@ -237,7 +240,11 @@ fun CategoryItem(
                 Row (
                     horizontalArrangement = Arrangement.Center,
                     verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.width(25.dp).height(25.dp).clip(RoundedCornerShape(100)).background(MaterialTheme.colorScheme.primary)
+                    modifier = Modifier
+                        .width(25.dp)
+                        .height(25.dp)
+                        .clip(RoundedCornerShape(100))
+                        .background(MaterialTheme.colorScheme.primary)
                 ){
                     Icon(
                         imageVector = getIconFromName(name = category.icon_name),
