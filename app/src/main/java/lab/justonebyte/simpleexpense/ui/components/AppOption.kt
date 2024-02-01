@@ -94,18 +94,18 @@ fun CurrencyOption(
             expanded = expanded,
             onDismissRequest = { expanded = false },
         ) {
-            currencies.forEach { selectedOption ->
+            currencies.forEach { currency ->
                 DropdownMenuItem(
                     modifier = Modifier.padding(0.dp),
                     text = {
                         Text(
-                            text = selectedCurrency.displayName+" "+selectedCurrency.currencyCode,
+                            text = currency.displayName+" "+currency.currencyCode,
                             modifier = Modifier.padding(0.dp),
                             style = MaterialTheme.typography.labelLarge
                         )
                     },
                     onClick = {
-                        selectedItem.value = selectedOption
+                        selectedItem.value = currency
                         expanded = false
                         onCurrencySelected(selectedItem.value)
                     })
