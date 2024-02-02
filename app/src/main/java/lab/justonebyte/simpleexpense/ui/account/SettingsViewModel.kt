@@ -31,6 +31,7 @@ import lab.justonebyte.simpleexpense.R
 import lab.justonebyte.simpleexpense.api.AuthService
 import lab.justonebyte.simpleexpense.api.BetweenPostData
 import lab.justonebyte.simpleexpense.api.ExportService
+import lab.justonebyte.simpleexpense.api.UpdateProfilePostData
 import lab.justonebyte.simpleexpense.data.CategoryRepository
 import lab.justonebyte.simpleexpense.data.SettingPrefRepository
 import lab.justonebyte.simpleexpense.data.TransactionRepository
@@ -199,6 +200,10 @@ class SettingsViewModel @Inject constructor(
     fun updateCurrency(currency: Currency) {
         viewModelScope.launch {
             settingRepository.updateSelectedCurrency(currency.currencyCode)
+            val profileService =
+                RetrofitHelper.getInstance(token.value).create(AuthService::class.java)
+            val response = profileService.updateProfile(UpdateProfilePostData(_viewModelUiState.value.selectedCurrency.currencyCode))
+
         }
     }
     suspend fun logOut(){
