@@ -217,6 +217,7 @@ class SettingsViewModel @Inject constructor(
             transactionRepository.deleteAll()
             categoryRepository.deleteAll()
             settingRepository.updateToken("")
+            settingRepository.updateSelectedCurrency("USD")
         }
     }
 
