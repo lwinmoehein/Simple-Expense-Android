@@ -101,7 +101,7 @@ fun NumberKeyboard(
                     ) {
                         Text(
                             modifier = Modifier.absolutePadding(right = 15.dp),
-                            text = currency.currencyCode,
+                            text = getValidCurrencyCode(currency),
                             color = MaterialTheme.colorScheme.onSurface,
                             style = MaterialTheme.typography.titleLarge
                         )
