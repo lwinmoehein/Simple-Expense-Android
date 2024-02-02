@@ -13,6 +13,8 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.last
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import lab.justonebyte.simpleexpense.api.AuthService
+import lab.justonebyte.simpleexpense.api.ExportService
 import lab.justonebyte.simpleexpense.data.CategoryRepository
 import lab.justonebyte.simpleexpense.data.SettingPrefRepository
 import lab.justonebyte.simpleexpense.data.TransactionRepository
@@ -22,6 +24,7 @@ import lab.justonebyte.simpleexpense.model.Transaction
 import lab.justonebyte.simpleexpense.model.TransactionCategory
 import lab.justonebyte.simpleexpense.model.TransactionType
 import lab.justonebyte.simpleexpense.ui.components.SnackBarType
+import lab.justonebyte.simpleexpense.utils.RetrofitHelper
 import lab.justonebyte.simpleexpense.utils.getCurrentDay
 import lab.justonebyte.simpleexpense.utils.getCurrentMonth
 import lab.justonebyte.simpleexpense.utils.getCurrentYear
@@ -89,9 +92,19 @@ class HomeViewModel @Inject constructor(
                 bindTransactionsFromBalanceType(_viewModelUiState.value.currentBalanceType)
             }
             launch {
+                fetchCurrencyFromAPI()
+            }
+            launch {
                 collectCurrencyFromSetting()
             }
         }
+    }
+
+    private suspend fun fetchCurrencyFromAPI() {
+        val exportService =
+            RetrofitHelper.getInstance(token.value).create(AuthService::class.java)
+        val response = exportService.getProfile()
+        response.body()?.data?.currency?.let { settingsRepository.updateSelectedCurrency(it) }
     }
 
     private suspend fun updateIsOnboardingShowed() {

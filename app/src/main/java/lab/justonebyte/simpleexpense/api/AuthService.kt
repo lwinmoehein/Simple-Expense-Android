@@ -18,6 +18,12 @@ data class Data(
     val currency: String
 )
 
+data class ProfileResponse(
+    val data:ProfileData
+)
+data class ProfileData(
+    val currency: String
+)
 
 data class UpdateProfilePostData(
     @SerializedName("currency") val currency: String = "USD",
@@ -30,4 +36,7 @@ interface AuthService {
 
     @POST("users/profile" )
     suspend fun updateProfile(@Body postData: UpdateProfilePostData) : Response<ResponseBody>
+
+    @GET("user" )
+    suspend fun getProfile() : Response<ProfileResponse>
 }
