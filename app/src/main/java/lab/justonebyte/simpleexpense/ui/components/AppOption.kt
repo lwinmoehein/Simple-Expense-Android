@@ -13,6 +13,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import java.util.Currency
 
@@ -35,7 +36,9 @@ fun AppOption(
 
     Row(modifier = modifier) {
         Row(
-            modifier =modifier.clickable { expanded = true }.absolutePadding(left = 5.dp, right = 5.dp),
+            modifier = modifier
+                .clickable { expanded = true }
+                .absolutePadding(left = 5.dp, right = 5.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(text=stringResource(id = selectedOption.name), style = MaterialTheme.typography.labelLarge)
@@ -79,17 +82,27 @@ fun CurrencyOption(
     var expanded by remember { mutableStateOf(false) }
     var selectedItem = mutableStateOf(selectedCurrency)
 
-    Row(modifier = modifier) {
+    Row(modifier = modifier, verticalAlignment = Alignment.Top) {
         Row(
-            modifier = modifier.clickable { expanded = true }
+            modifier = modifier
+                .clickable { expanded = true }
                 .absolutePadding(left = 5.dp, right = 5.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Text(
-                modifier = Modifier.fillMaxWidth().padding(vertical = 3.dp, horizontal = 2.dp),
-                text = selectedCurrency.displayName+" - "+getValidCurrencyCode(selectedCurrency),
-                style = MaterialTheme.typography.labelLarge
-            )
+            Column(
+                modifier = Modifier.fillMaxWidth().padding(vertical = 3.dp, horizontal = 2.dp)
+            ) {
+                Text(
+                    text = getValidCurrencyCode(selectedCurrency),
+                    style = MaterialTheme.typography.labelLarge,
+                    textAlign = TextAlign.Start
+                )
+                Text(
+                    text = selectedCurrency.displayName,
+                    style = MaterialTheme.typography.labelSmall,
+                    textAlign = TextAlign.Start,
+                )
+            }
             Icon(Icons.Default.ArrowDropDown, contentDescription = "Localized description")
         }
         DropdownMenu(

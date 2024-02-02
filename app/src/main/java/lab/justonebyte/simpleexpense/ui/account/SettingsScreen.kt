@@ -53,34 +53,37 @@ fun SettingsScreen(
             Column(Modifier.padding(15.dp)) {
                 SectionTitle(title = stringResource(id = R.string.feat_setting))
                 Spacer(modifier = Modifier.height(20.dp))
-                Row(
-                    verticalAlignment = Alignment.Top,
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(5.dp)) {
-                    Column(
-                        modifier = Modifier.weight(1f),
-                        verticalArrangement = Arrangement.Top
-                    ) {
-                        Text(
-                            text = stringResource(id = R.string.select_currency),
-                            textAlign = TextAlign.Start,
-                            style = MaterialTheme.typography.labelLarge
-                        )
-                    }
-                    Column(
-                        modifier = Modifier.weight(1f),
-                        verticalArrangement = Arrangement.Top
-                    ) {
-                        CurrencyOption(
-                            modifier = Modifier.fillMaxWidth(),
-                            selectedCurrency = settingsUiState.selectedCurrency,
-                            currencies = settingCurrencies.toList(),
-                            onCurrencySelected = {
-                                settingsViewModel.updateCurrency(it)
-                            }
-                        )
+                Card {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 5.dp, horizontal = 8.dp)) {
+                        Column(
+                            modifier = Modifier.weight(1f),
+                            verticalArrangement = Arrangement.Top
+                        ) {
+                            Text(
+                                text = stringResource(id = R.string.select_currency),
+                                textAlign = TextAlign.Start,
+                                style = MaterialTheme.typography.labelLarge
+                            )
+                        }
+                        Column(
+                            modifier = Modifier.weight(1f),
+                            verticalArrangement = Arrangement.Top,
+                            horizontalAlignment = Alignment.End
+                        ) {
+                            CurrencyOption(
+                                modifier = Modifier.fillMaxWidth(),
+                                selectedCurrency = settingsUiState.selectedCurrency,
+                                currencies = settingCurrencies.toList(),
+                                onCurrencySelected = {
+                                    settingsViewModel.updateCurrency(it)
+                                }
+                            )
+                        }
                     }
                 }
                 Spacer(modifier = Modifier.height(20.dp))
