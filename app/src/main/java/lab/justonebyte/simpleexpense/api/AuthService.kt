@@ -14,7 +14,8 @@ data class AuthResponse(
     val data:Data
 )
 data class Data(
-    val token:String
+    val token:String,
+    val currency: String
 )
 
 

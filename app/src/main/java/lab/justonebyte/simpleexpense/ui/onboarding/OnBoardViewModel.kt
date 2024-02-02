@@ -76,6 +76,7 @@ class OnBoardViewModel @Inject constructor(
                 result.body()?.let {
                     Log.i("access token:", it.data.token)
                     settingsRepository.updateToken(it.data.token)
+                    settingsRepository.updateSelectedCurrency(it.data.currency)
                     runVersionSync(application,"categories",it.data.token)
                     runVersionSync(application,"transactions",it.data.token)
                     _viewModelUiState.update {uiState->
