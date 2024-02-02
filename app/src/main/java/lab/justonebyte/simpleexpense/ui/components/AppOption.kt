@@ -1,14 +1,17 @@
 package lab.justonebyte.simpleexpense.ui.components
 
 import android.annotation.SuppressLint
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import java.util.Currency
@@ -69,7 +72,6 @@ fun AppOption(
 @Composable
 fun CurrencyOption(
     modifier: Modifier = Modifier,
-    label:String,
     onCurrencySelected:(item:Currency)->Unit,
     currencies:List<Currency>,
     selectedCurrency:Currency
@@ -84,7 +86,8 @@ fun CurrencyOption(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = selectedCurrency.displayName+" "+selectedCurrency.currencyCode,
+                modifier = Modifier.fillMaxWidth().padding(vertical = 3.dp, horizontal = 2.dp),
+                text = selectedCurrency.displayName+" - "+getValidCurrencyCode(selectedCurrency),
                 style = MaterialTheme.typography.labelLarge
             )
             Icon(Icons.Default.ArrowDropDown, contentDescription = "Localized description")
@@ -94,23 +97,39 @@ fun CurrencyOption(
             expanded = expanded,
             onDismissRequest = { expanded = false },
         ) {
-            currencies.forEach { currency ->
-                DropdownMenuItem(
-                    modifier = Modifier.padding(0.dp),
-                    text = {
-                        Text(
-                            text = currency.displayName+" "+currency.currencyCode,
-                            modifier = Modifier.padding(0.dp),
-                            style = MaterialTheme.typography.labelLarge
-                        )
-                    },
-                    onClick = {
-                        selectedItem.value = currency
-                        expanded = false
-                        onCurrencySelected(selectedItem.value)
-                    })
 
+            Box(modifier = Modifier.size(width = 300.dp, height = 500.dp)) {
+                LazyColumn {
+                    currencies.sortedBy { it.displayName }.forEach { currency ->
+                       item {
+                           DropdownMenuItem(
+                               modifier = Modifier.padding(0.dp),
+                               text = {
+                                   Text(
+                                       text = currency.displayName+" - "+getValidCurrencyCode(currency),
+                                       modifier = Modifier.padding(0.dp),
+                                       style = MaterialTheme.typography.labelLarge
+                                   )
+
+                               },
+                               onClick = {
+                                   selectedItem.value = currency
+                                   expanded = false
+                                   onCurrencySelected(selectedItem.value)
+                               }
+                           )
+
+                       }
+                    }
+                }
             }
         }
     }
+}
+
+fun getValidCurrencyCode(currency: Currency):String{
+    if(currency.currencyCode=="BUK"){
+        return "MMK"
+    }
+    return currency.currencyCode
 }

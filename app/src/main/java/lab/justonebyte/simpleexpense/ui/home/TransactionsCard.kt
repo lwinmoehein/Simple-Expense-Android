@@ -35,6 +35,7 @@ import lab.justonebyte.simpleexpense.model.TransactionType
 import lab.justonebyte.simpleexpense.ui.components.FormattedCurrency
 import lab.justonebyte.simpleexpense.ui.components.IndeterminateCircularIndicator
 import lab.justonebyte.simpleexpense.ui.components.getIconFromName
+import lab.justonebyte.simpleexpense.ui.components.getValidCurrencyCode
 import lab.justonebyte.simpleexpense.utils.getFormattedYear
 import lab.justonebyte.simpleexpense.utils.getReadableFormattedDay
 import lab.justonebyte.simpleexpense.utils.getReadableFormattedMonth
@@ -160,7 +161,7 @@ fun TransactionItem(transaction:Transaction,modifier: Modifier=Modifier,currency
                 FormattedCurrency(
                     color=if(transaction.type==TransactionType.Income) MaterialTheme.colorScheme.primary else Color.Red,
                     amount = transaction.amount.toLong(),
-                    currencyCode = currency.currencyCode
+                    currencyCode = getValidCurrencyCode(currency)
                 )
             }
         }

@@ -34,6 +34,7 @@ import lab.justonebyte.simpleexpense.R
 import lab.justonebyte.simpleexpense.model.ShowCase
 import lab.justonebyte.simpleexpense.ui.components.FormattedCurrency
 import lab.justonebyte.simpleexpense.ui.components.TransactionTypePicker
+import lab.justonebyte.simpleexpense.ui.components.getValidCurrencyCode
 import java.util.Currency
 
 @Composable
@@ -171,7 +172,7 @@ private fun BalanceItem(
             contentDescription = text,
             modifier = Modifier.align(Alignment.CenterHorizontally)
         )
-        Text(text = currency.currencyCode)
+        Text(text = getValidCurrencyCode(currency))
 
         FormattedCurrency(
             amount = amount,

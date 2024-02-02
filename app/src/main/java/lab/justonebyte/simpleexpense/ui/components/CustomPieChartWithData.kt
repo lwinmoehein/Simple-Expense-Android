@@ -34,6 +34,7 @@ import lab.justonebyte.simpleexpense.R
 import lab.justonebyte.simpleexpense.model.Transaction
 import lab.justonebyte.simpleexpense.model.TransactionType
 import lab.justonebyte.simpleexpense.ui.components.FormattedCurrency
+import lab.justonebyte.simpleexpense.ui.components.getValidCurrencyCode
 import lab.justonebyte.simpleexpense.ui.home.NoData
 import lab.justonebyte.simpleexpense.ui.theme.bar1
 import lab.justonebyte.simpleexpense.ui.theme.bar10
@@ -138,7 +139,7 @@ fun CustomPieChartWithData(
                     FormattedCurrency(
                         amount = totalAmount.toLong(),
                         color =if(transactionType==TransactionType.Income) MaterialTheme.colorScheme.primary  else Color.Red,
-                        currencyCode = currency.currencyCode
+                        currencyCode = getValidCurrencyCode(currency)
                     )
                 }
             }

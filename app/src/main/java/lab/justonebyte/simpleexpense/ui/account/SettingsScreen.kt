@@ -5,8 +5,10 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
@@ -50,16 +52,37 @@ fun SettingsScreen(
             Divider()
             Column(Modifier.padding(15.dp)) {
                 SectionTitle(title = stringResource(id = R.string.feat_setting))
-
-                CurrencyOption(
-                    modifier = Modifier.fillMaxWidth(),
-                    selectedCurrency = settingsUiState.selectedCurrency,
-                    currencies = settingCurrencies.toList(),
-                    onCurrencySelected = {
-                        settingsViewModel.updateCurrency(it)
-                    },
-                    label = "Currency"
-                )
+                Spacer(modifier = Modifier.height(20.dp))
+                Row(
+                    verticalAlignment = Alignment.Top,
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(5.dp)) {
+                    Column(
+                        modifier = Modifier.weight(1f),
+                        verticalArrangement = Arrangement.Top
+                    ) {
+                        Text(
+                            text = stringResource(id = R.string.select_currency),
+                            textAlign = TextAlign.Start,
+                            style = MaterialTheme.typography.labelLarge
+                        )
+                    }
+                    Column(
+                        modifier = Modifier.weight(1f),
+                        verticalArrangement = Arrangement.Top
+                    ) {
+                        CurrencyOption(
+                            modifier = Modifier.fillMaxWidth(),
+                            selectedCurrency = settingsUiState.selectedCurrency,
+                            currencies = settingCurrencies.toList(),
+                            onCurrencySelected = {
+                                settingsViewModel.updateCurrency(it)
+                            }
+                        )
+                    }
+                }
                 Spacer(modifier = Modifier.height(20.dp))
             }
         }
