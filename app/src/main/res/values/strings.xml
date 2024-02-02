@@ -9,7 +9,7 @@
     <string name="select_lang">Select Language</string>
 
     <string name="incorrect_data">Please insert data correctly.</string>
-    <string name="incorrect_category_data">Please insert category name correctly.</string>
+    <string name="incorrect_category_data">Category name is not valid.</string>
     <string name="add_category_success">New category added successfully.</string>
     <string name="update_category_success">Category name updated successfully.</string>
     <string name="remove_category_success">Category removed successfully.</string>

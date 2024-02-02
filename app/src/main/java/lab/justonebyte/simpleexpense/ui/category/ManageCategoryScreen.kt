@@ -20,6 +20,8 @@ import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
@@ -47,6 +49,8 @@ import lab.justonebyte.simpleexpense.R
 import lab.justonebyte.simpleexpense.model.TransactionCategory
 import lab.justonebyte.simpleexpense.model.TransactionType
 import lab.justonebyte.simpleexpense.ui.components.AppAlertDialog
+import lab.justonebyte.simpleexpense.ui.components.SimpleExpenseSnackBar
+import lab.justonebyte.simpleexpense.ui.components.SnackBarType
 import lab.justonebyte.simpleexpense.ui.components.TransactionTypeTab
 import lab.justonebyte.simpleexpense.ui.components.getIconFromName
 import lab.justonebyte.simpleexpense.ui.home.NoData
@@ -90,6 +94,7 @@ fun ManageCategoryScreen(){
     val isChooseCategoryActionDialogOpen = remember { mutableStateOf(false) }
     val isConfirmDeleteCategoryDialogShown = remember { mutableStateOf(false) }
     val currentTransactionType = remember { mutableStateOf(TransactionType.Expense) }
+    val snackbarHostState = remember { SnackbarHostState() }
 
     val categories =  categoryUiState.categories.filter { it.transaction_type==currentTransactionType.value }.sortedBy { it.name }
     
@@ -144,18 +149,22 @@ fun ManageCategoryScreen(){
         },
         initialTransactionType = currentTransactionType.value,
         onConfirmClick = { categoryName,transactionType->
-            if(currentEditingCategory.value!=null){
-                categoryViewModel.updateCategory(currentEditingCategory.value!!,categoryName)
+            if(categoryName.isEmpty()){
+                categoryViewModel.showSnackBar(SnackBarType.INCORRECT_CATEGORY_DATA)
             }else {
-                val category = TransactionCategory(
-                    unique_id = UUID.randomUUID().toString(),
-                    name = categoryName,
-                    icon_name = "other",
-                    transaction_type = transactionType,
-                    created_at = System.currentTimeMillis(),
-                    updated_at = System.currentTimeMillis()
-                )
-                categoryViewModel.addCategory(category)
+                if (currentEditingCategory.value != null) {
+                    categoryViewModel.updateCategory(currentEditingCategory.value!!, categoryName)
+                } else {
+                    val category = TransactionCategory(
+                        unique_id = UUID.randomUUID().toString(),
+                        name = categoryName,
+                        icon_name = "other",
+                        transaction_type = transactionType,
+                        created_at = System.currentTimeMillis(),
+                        updated_at = System.currentTimeMillis()
+                    )
+                    categoryViewModel.addCategory(category)
+                }
             }
             currentEditingCategory.value = null
             isReusableInputDialogShown.value = false
@@ -163,7 +172,14 @@ fun ManageCategoryScreen(){
         }
     )
 
-    Scaffold {
+    Scaffold (
+        snackbarHost = { SnackbarHost(snackbarHostState) },
+    ){
+        SimpleExpenseSnackBar(
+            snackBarType = categoryUiState.currentSnackBar,
+            onDismissSnackBar = { categoryViewModel.clearSnackBar() },
+            snackbarHostState = snackbarHostState
+        )
         Column(Modifier.padding(it)) {
              Row(
                  modifier  = Modifier.fillMaxWidth(),
@@ -187,8 +203,9 @@ fun ManageCategoryScreen(){
                      .padding(horizontal = 10.dp)
                      .fillMaxWidth(),
                  onClick = {
-                 currentEditingCategory.value = null
-                 isReusableInputDialogShown.value = true },
+                         currentEditingCategory.value = null
+                         isReusableInputDialogShown.value = true
+                           },
                  shape = MaterialTheme.shapes.large
                  ) {
                  Text(text = stringResource(id = R.string.add_new))
