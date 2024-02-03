@@ -101,10 +101,14 @@ class HomeViewModel @Inject constructor(
     }
 
     private suspend fun fetchCurrencyFromAPI() {
-        val exportService =
-            RetrofitHelper.getInstance(token.value).create(AuthService::class.java)
-        val response = exportService.getProfile()
-        response.body()?.data?.currency?.let { settingsRepository.updateSelectedCurrency(it) }
+        try{
+            val exportService =
+                RetrofitHelper.getInstance(token.value).create(AuthService::class.java)
+            val response = exportService.getProfile()
+            response.body()?.data?.currency?.let { settingsRepository.updateSelectedCurrency(it) }
+        }catch (e:Exception){
+            Log.e("api","cannot fetch currency")
+        }
     }
 
     private suspend fun updateIsOnboardingShowed() {
