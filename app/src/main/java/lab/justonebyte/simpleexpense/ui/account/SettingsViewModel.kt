@@ -269,8 +269,18 @@ class SettingsViewModel @Inject constructor(
     }
 
     fun cacheExportRequestAndShowAd(from:String, to:String, format:FileFormat){
-        cacheExportDates(from,to,format)
-        showAd()
+        val downloadFolderUriString = _viewModelUiState.value.downloadFolder
+        if(!downloadFolderUriString.isNullOrEmpty()) {
+            val uri = Uri.parse(_viewModelUiState.value.downloadFolder)
+            val file = DocumentFile.fromTreeUri(application, uri)
+
+            if (file != null && file.canRead() && file.canWrite()) {
+                cacheExportDates(from, to, format)
+                showAd()
+            }
+        }else{
+            showSnackBar(SnackBarType.SELECT_CORRECT_DOWNLOAD_FOLDER)
+        }
     }
 
 
@@ -312,7 +322,6 @@ class SettingsViewModel @Inject constructor(
             }
         }
     }
-
 
     private fun generateExcelFile(from: String, to:String ) {
         viewModelScope.launch {
@@ -423,16 +432,15 @@ class SettingsViewModel @Inject constructor(
     fun showAd(){
         _isAdLoading.value = true
 
-        var adRequest = AdRequest.Builder().build()
+        val adRequest = AdRequest.Builder().build()
         RewardedAd.load(application,"ca-app-pub-3940256099942544/5224354917", adRequest, object : RewardedAdLoadCallback() {
             override fun onAdFailedToLoad(adError: LoadAdError) {
-                adError.toString().let { Log.d(TAG, it) }
                 _rewardedAd.value = null
-                _isAdLoading.value = false
+                _rewardedAd.value = null
+                exportFileFromCacheRequest()
             }
 
             override fun onAdLoaded(ad: RewardedAd) {
-                Log.d(TAG, "Ad was loaded.")
                 _rewardedAd.value = ad
                 ad.fullScreenContentCallback = object: FullScreenContentCallback() {
                     override fun onAdClicked() {

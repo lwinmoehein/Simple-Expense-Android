@@ -25,7 +25,8 @@ import lab.justonebyte.simpleexpense.R
      ADD_TRANSACTION_SUCCESS,
      UPDATE_TRANSACTION_SUCCESS,
      DELETE_TRANSACTION_SUCCESS,
-     INCORRECT_AMOUNT
+     INCORRECT_AMOUNT,
+     CANNOT_EXPORT_FILES
 }
 @Composable
 fun SimpleExpenseSnackBar(
@@ -53,6 +54,7 @@ fun SimpleExpenseSnackBar(
             SnackBarType.UPDATE_TRANSACTION_SUCCESS -> stringResource(id = R.string.update_tran_success)
             SnackBarType.DELETE_TRANSACTION_SUCCESS -> stringResource(id = R.string.delete_tran_success)
             SnackBarType.INCORRECT_AMOUNT -> stringResource(id = R.string.incorrect_amount)
+
             else -> stringResource(id = R.string.incorrect_data)
         }
 
