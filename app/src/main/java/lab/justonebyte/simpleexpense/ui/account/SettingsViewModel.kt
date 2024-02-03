@@ -437,6 +437,7 @@ class SettingsViewModel @Inject constructor(
             override fun onAdFailedToLoad(adError: LoadAdError) {
                 _rewardedAd.value = null
                 _rewardedAd.value = null
+                _isAdLoading.value = false
                 exportFileFromCacheRequest()
             }
 
