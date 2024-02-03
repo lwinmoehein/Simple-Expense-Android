@@ -25,7 +25,7 @@ class UpdateCurrencyWorker (
                 RetrofitHelper.getInstance(token).create(AuthService::class.java)
             val response = profileService.updateProfile(UpdateProfilePostData(currencyCode))
 
-            if(response.code()==200){
+            if(response.code()==204){
                 Result.success()
             }else{
                 Result.retry()
