@@ -7,6 +7,13 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.documentfile.provider.DocumentFile
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.work.BackoffPolicy
+import androidx.work.Constraints
+import androidx.work.Data
+import androidx.work.ExistingWorkPolicy
+import androidx.work.NetworkType
+import androidx.work.OneTimeWorkRequest
+import androidx.work.WorkManager
 import com.google.android.gms.ads.AdError
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.FullScreenContentCallback
@@ -40,8 +47,15 @@ import lab.justonebyte.simpleexpense.model.BalanceType
 import lab.justonebyte.simpleexpense.ui.components.SnackBarType
 import lab.justonebyte.simpleexpense.utils.RetrofitHelper
 import lab.justonebyte.simpleexpense.utils.getDecodedPath
+import lab.justonebyte.simpleexpense.workers.CURRENCY_CODE
+import lab.justonebyte.simpleexpense.workers.GetVersionInfoWorker
+import lab.justonebyte.simpleexpense.workers.KEY_TABLE_NAME
+import lab.justonebyte.simpleexpense.workers.OBJECTS_STRING
+import lab.justonebyte.simpleexpense.workers.TOKEN
+import lab.justonebyte.simpleexpense.workers.UpdateCurrencyWorker
 import lab.justonebyte.simpleexpense.workers.runVersionSync
 import java.util.Currency
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 data class SettingUiState(
@@ -200,10 +214,22 @@ class SettingsViewModel @Inject constructor(
     fun updateCurrency(currency: Currency) {
         viewModelScope.launch {
             settingRepository.updateSelectedCurrency(currency.currencyCode)
-            val profileService =
-                RetrofitHelper.getInstance(token.value).create(AuthService::class.java)
-            val response = profileService.updateProfile(UpdateProfilePostData(_viewModelUiState.value.selectedCurrency.currencyCode))
 
+            val updateCurrencyWorker =   OneTimeWorkRequest.Builder(UpdateCurrencyWorker::class.java)
+                .setInputData(
+                    Data.Builder().putString(TOKEN,token.value).putString(
+                        CURRENCY_CODE,currency.currencyCode).build()
+                )
+                .setBackoffCriteria(
+                    BackoffPolicy.EXPONENTIAL,
+                    OneTimeWorkRequest.MIN_BACKOFF_MILLIS,TimeUnit.MILLISECONDS
+                )
+                .setConstraints(Constraints.Builder().setRequiredNetworkType(NetworkType.CONNECTED).build())
+                .build()
+
+            WorkManager.getInstance(application)
+                .beginUniqueWork("update_currency", ExistingWorkPolicy.REPLACE, updateCurrencyWorker)
+                .enqueue()
         }
     }
     suspend fun logOut(){
