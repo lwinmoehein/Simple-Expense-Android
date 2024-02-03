@@ -33,6 +33,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.supervisorScope
 import kotlinx.coroutines.withContext
 import lab.justonebyte.simpleexpense.R
 import lab.justonebyte.simpleexpense.api.AuthService
@@ -233,7 +234,7 @@ class SettingsViewModel @Inject constructor(
         }
     }
     suspend fun logOut(){
-        viewModelScope.launch {
+        supervisorScope {
             _viewModelUiState.update { uiState->
                 uiState.copy(
                     firebaseUser = null,
