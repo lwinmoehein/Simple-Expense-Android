@@ -245,6 +245,8 @@ class SettingsViewModel @Inject constructor(
             categoryRepository.deleteAll()
             settingRepository.updateToken("")
             settingRepository.updateSelectedCurrency("USD")
+            val workManager = WorkManager.getInstance(application)
+            workManager.cancelAllWork()
         }
     }
 
