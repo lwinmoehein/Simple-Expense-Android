@@ -40,17 +40,17 @@ suspend fun runVersionSync(applicationContext:Context,tableName:String,token:Str
 
     if(objects.isEmpty()){
         scope.launch {
-            syncBatchVersions(applicationContext, listOf(),token,tableName)
+            syncBatchVersions(0,applicationContext, listOf(),token,tableName)
         }
     }else{
-        objects.forEach { chunkedObjects ->
+        objects.forEachIndexed { index, chunkedObjects ->
             scope.launch {
-                syncBatchVersions(applicationContext,chunkedObjects,token,tableName)
+                syncBatchVersions(index,applicationContext,chunkedObjects,token,tableName)
             }
         }
     }
 }
-fun syncBatchVersions(applicationContext:Context,objects:List<UniqueIdWithVersion>,token:String,tableName:String){
+fun syncBatchVersions(index:Int,applicationContext:Context,objects:List<UniqueIdWithVersion>,token:String,tableName:String){
 
     val objectsAsGsonString = Gson().toJson(objects)
     Log.i("sync:json",tableName+":"+objectsAsGsonString)
@@ -76,7 +76,7 @@ fun syncBatchVersions(applicationContext:Context,objects:List<UniqueIdWithVersio
 
 
         WorkManager.getInstance(applicationContext)
-            .beginUniqueWork(tableName, ExistingWorkPolicy.APPEND, versionInfoWorker)
+            .beginUniqueWork(tableName+index.toString(), ExistingWorkPolicy.REPLACE, versionInfoWorker)
             .then(listOf(updateServerRequest,updateClientRequest))
             .enqueue()
     }catch (e:Exception){

@@ -17,6 +17,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.supervisorScope
 import lab.justonebyte.simpleexpense.api.AuthService
 import lab.justonebyte.simpleexpense.data.SettingPrefRepository
 import lab.justonebyte.simpleexpense.ui.components.SnackBarType
@@ -70,7 +71,7 @@ class OnBoardViewModel @Inject constructor(
         }
         Log.i("access token:fetch",googleId)
         val authService = RetrofitHelper.getInstance("").create(AuthService::class.java)
-        viewModelScope.launch {
+        supervisorScope  {
             try{
                 val result = authService.getAccessToken(googleId)
                 result.body()?.let {

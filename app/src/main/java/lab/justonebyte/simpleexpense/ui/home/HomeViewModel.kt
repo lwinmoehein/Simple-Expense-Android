@@ -140,15 +140,14 @@ class HomeViewModel @Inject constructor(
     }
     private suspend fun collectToken() {
         settingsRepository.accessToken.collect{
-            if(it.isNotEmpty()){
                 token.value = it
+
                 viewModelScope.launch {
-                    runVersionSync(application,"categories",token.value)
+                    runVersionSync(application,"categories",it)
                 }
                 viewModelScope.launch {
-                    runVersionSync(application,"transactions",token.value)
+                    runVersionSync(application,"transactions",it)
                 }
-            }
         }
     }
 
