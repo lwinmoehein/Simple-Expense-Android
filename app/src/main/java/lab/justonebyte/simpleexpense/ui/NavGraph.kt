@@ -2,6 +2,15 @@ package lab.justonebyte.simpleexpense.ui
 
 import android.content.Intent
 import androidx.activity.result.ActivityResultLauncher
+import androidx.compose.animation.AnimatedContentTransitionScope
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.ExitTransition
+import androidx.compose.animation.core.EaseIn
+import androidx.compose.animation.core.EaseOut
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
@@ -57,16 +66,26 @@ fun NavGraph(
         modifier = Modifier.padding(paddings) ,
         navController = navController,
         startDestination = startDestination,
+        enterTransition = { EnterTransition.None },
+        exitTransition = { ExitTransition.None }
     ) {
-        composable(MainDestinations.HOME_ROUTE) {
+        composable(
+            MainDestinations.HOME_ROUTE,
+            
+        ) {
             HomeScreen(
                 homeViewModel = homeViewModel
             )
         }
-        composable(MainDestinations.STATS_ROUTE) {
+        composable(
+            MainDestinations.STATS_ROUTE,
+            
+        ) {
             StatsScreen()
         }
-        composable(MainDestinations.CATEGORY_ROUTE) {
+        composable(
+            MainDestinations.CATEGORY_ROUTE,
+            ) {
             ManageCategoryScreen()
         }
         addNestedGraph(navController,chooseDownloadFolderLauncher,settingsViewModel)
@@ -78,7 +97,10 @@ fun NavGraphBuilder.addNestedGraph(
     settingsViewModel: SettingsViewModel
 ) {
     navigation(startDestination = MainDestinations.ME_ROUTE, route = MainDestinations.ACCOUNT_ROUTE) {
-        composable(MainDestinations.ME_ROUTE) {
+        composable(
+            MainDestinations.ME_ROUTE,
+            
+        ) {
             AccountScreen(
                 navController = navController
             )

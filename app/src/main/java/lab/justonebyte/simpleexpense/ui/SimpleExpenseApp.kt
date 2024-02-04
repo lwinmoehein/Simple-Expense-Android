@@ -168,12 +168,18 @@ fun SimpleExpenseApp(
                                                         onClick = {
                                                             selectedItem = index
                                                             when (selectedItem) {
-                                                                0 -> navController.navigate(MainDestinations.HOME_ROUTE)
-                                                                1 -> navController.navigate(MainDestinations.STATS_ROUTE)
-                                                                2 -> navController.navigate(MainDestinations.CATEGORY_ROUTE)
-                                                                else -> navController.navigate(
-                                                                    MainDestinations.ACCOUNT_ROUTE
-                                                                )
+                                                                0 -> navController.navigate(MainDestinations.HOME_ROUTE){
+                                                                    launchSingleTop = true
+                                                                }
+                                                                1 -> navController.navigate(MainDestinations.STATS_ROUTE) {
+                                                                    launchSingleTop = true
+                                                                }
+                                                                2 -> navController.navigate(MainDestinations.CATEGORY_ROUTE){
+                                                                    launchSingleTop = true
+                                                                }
+                                                                else -> navController.navigate(MainDestinations.ACCOUNT_ROUTE){
+                                                                    launchSingleTop = true
+                                                                }
                                                             }
                                                         }
                                                     )
