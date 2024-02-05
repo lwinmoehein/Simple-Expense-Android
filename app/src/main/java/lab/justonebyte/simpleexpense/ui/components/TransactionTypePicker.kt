@@ -50,8 +50,8 @@ fun TransactionTypePicker(
     val mDay by remember(selectedDay) { mutableStateOf(selectedDay.split('-')[2].toInt()) }
 
     //for month picker
-    val selectedMonthYear = remember { mutableStateOf(calendar.get(Calendar.YEAR)) }
-    val selectedMonthMonth = remember { mutableStateOf(calendar.get(Calendar.MONTH)+1) }
+    val selectedMonthYear = remember(selectedYear,selectedMonth,balanceType) { mutableStateOf(if(balanceType==BalanceType.MONTHLY) selectedMonth.split('-')[0].toInt() else selectedYear.toInt() ) }
+    val selectedMonthMonth = remember(selectedMonth,selectedYear,balanceType) { mutableStateOf(selectedMonth.split('-')[1].toInt()) }
 
     val isMonthPickerShown = remember { mutableStateOf(false) }
     val mDate = remember { mutableStateOf(selectedDay) }
@@ -76,13 +76,12 @@ fun TransactionTypePicker(
         Dialog(onDismissRequest = { isMonthPickerShown.value=false }) {
             MonthPicker(
                 selectedMonth = selectedMonthMonth.value,
-                selectedYear =selectedMonthYear.value ,
+                selectedYear = selectedMonthYear.value ,
                 onYearSelected ={
                     selectedMonthYear.value=it
                 } ,
                 onMonthSelected = {
                     selectedMonthMonth.value=it
-
                 },
                 onConfirmPicker = {
                     isMonthPickerShown.value =false
@@ -99,20 +98,24 @@ fun TransactionTypePicker(
 
    if(balanceType!=BalanceType.TOTAL){
        Row(
-           modifier = Modifier.height(33.dp).clickable {
-               when (balanceType) {
-                   BalanceType.DAILY -> mDatePickerDialog.show()
-                   BalanceType.MONTHLY -> isMonthPickerShown.value = true
-                   BalanceType.YEARLY -> isMonthPickerShown.value = true
-                   else -> {}
-               }
-           },
+           modifier = Modifier
+               .height(33.dp)
+               .clickable {
+                   when (balanceType) {
+                       BalanceType.DAILY -> mDatePickerDialog.show()
+                       BalanceType.MONTHLY -> isMonthPickerShown.value = true
+                       BalanceType.YEARLY -> isMonthPickerShown.value = true
+                       else -> {}
+                   }
+               },
            horizontalArrangement = Arrangement.Center,
            verticalAlignment = Alignment.CenterVertically
            ) {
            Icon(
                imageVector = FeatherIcons.Calendar,
-               modifier = Modifier.width(15.dp).absolutePadding(right = 3.dp),
+               modifier = Modifier
+                   .width(15.dp)
+                   .absolutePadding(right = 3.dp),
                contentDescription = "",
                tint = MaterialTheme.colorScheme.primary
            )
