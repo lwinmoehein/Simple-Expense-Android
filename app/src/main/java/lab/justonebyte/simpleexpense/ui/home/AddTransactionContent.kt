@@ -87,7 +87,8 @@ fun AddTransactionContent(
     val isNumberKeyboardShown = remember { mutableStateOf(false) }
     val state = rememberDatePickerState(initialSelectedDateMillis = tomorrowInMillis, yearRange = 2020..getCurrentYear().toInt())
 
-    var transactionTypeTabState by remember { mutableStateOf(0) }
+    var transactionTypeTabState by remember { mutableStateOf(if(currentTransaction!=null) (if(currentTransaction.type==TransactionType.Expense) 0 else 1) else 0) }
+
     val transactionTypeTabs = listOf(TransactionTypeTab.EXPENSE, TransactionTypeTab.INCOME)
     val isDeleteConfirmDialogOpen = remember { mutableStateOf(false) }
     val snackBarHostState = remember { SnackbarHostState() }
