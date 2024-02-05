@@ -41,15 +41,16 @@ fun NumberKeyboard(
     initialNumber:String = "",
     isKeyboardShown:Boolean = false,
     onNumberConfirm: (number:Int) -> Unit,
-    onKeyboardToggled:(isShown:Boolean)->Unit,
+    onNumberClick: (number:Int) -> Unit,
+    onKeyboardToggled:()->Unit,
     currency: Currency
 ) {
     var currentNumber by remember { mutableStateOf(initialNumber) }
-    val isNumbersShown = remember { mutableStateOf(isKeyboardShown) }
 
     fun appendNumber(number: Int){
         if(number==0 && currentNumber.isEmpty()) return
         currentNumber = currentNumber.plus(number.toString())
+        onNumberClick(currentNumber.toInt())
     }
 
     fun willCurrentNumberExceed(appendNumber:Int):Boolean{
@@ -68,7 +69,6 @@ fun NumberKeyboard(
         }else{
             onNumberConfirm(currentNumber.toInt())
         }
-        isNumbersShown.value = false
     }
     Column(
         modifier = Modifier
@@ -80,8 +80,7 @@ fun NumberKeyboard(
             modifier = Modifier
                 .fillMaxWidth()
                 .clickable {
-                    isNumbersShown.value = !isNumbersShown.value
-                    onKeyboardToggled(isNumbersShown.value)
+                    onKeyboardToggled()
                 },
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
@@ -120,7 +119,7 @@ fun NumberKeyboard(
             }
         }
 
-        if(isNumbersShown.value){
+        if(isKeyboardShown){
             Column(
                 verticalArrangement = Arrangement.spacedBy(5.dp)
             ) {

@@ -204,21 +204,25 @@ fun AddTransactionContent(
                         IconButton(
                             modifier = Modifier.size(35.dp),
                             onClick = {
-                                val amount =
-                                    if (currentAmount.value.isEmpty()) 0 else currentAmount.value.toInt()
-                                if (amount <= 0) {
-                                    showIncorrectDataSnack()
-                                } else {
-                                    currentCategory.value?.let {
-                                        onConfirmTransactionForm(
-                                            currentTransactionType.value.value,
-                                            amount,
-                                            it,
-                                            tempRecordDate.value,
-                                            note.value
-                                        )
-                                        onCloseDialog()
-                                        clearTransactionForm()
+                                if(isNumberKeyboardShown.value){
+                                    isNumberKeyboardShown.value = false
+                                }else{
+                                    val amount =
+                                        if (currentAmount.value.isEmpty()) 0 else currentAmount.value.toInt()
+                                    if (amount <= 0) {
+                                        showIncorrectDataSnack()
+                                    } else {
+                                        currentCategory.value?.let {
+                                            onConfirmTransactionForm(
+                                                currentTransactionType.value.value,
+                                                amount,
+                                                it,
+                                                tempRecordDate.value,
+                                                note.value
+                                            )
+                                            onCloseDialog()
+                                            clearTransactionForm()
+                                        }
                                     }
                                 }
                             }) {
@@ -266,8 +270,15 @@ fun AddTransactionContent(
                             }else{
                                 currentAmount.value = it.toString()
                             } },
+                        onNumberClick = {
+                            if(it<0){
+                                currentAmount.value = ""
+                            }else{
+                                currentAmount.value = it.toString()
+                            }
+                        },
                         onKeyboardToggled = {
-                            isNumberKeyboardShown.value = it
+                            isNumberKeyboardShown.value = !isNumberKeyboardShown.value
                         }
                     )
                 }
