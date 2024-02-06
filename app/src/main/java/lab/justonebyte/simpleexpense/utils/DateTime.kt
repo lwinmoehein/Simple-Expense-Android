@@ -99,7 +99,7 @@ fun getTimestampForMonthStart(yearMonthString: String): Long {
 fun getTimestampForMonthEnd(yearMonthString: String): Long {
     val (year, month) = yearMonthString.split("-").map { it.toInt() }
     val calendar = Calendar.getInstance()
-    calendar.set(year, month - 1, calendar.getActualMaximum(Calendar.DAY_OF_MONTH), 23, 59, 59)
+    calendar.set(year, month , calendar.getActualMaximum(Calendar.DAY_OF_MONTH), 0, 0, 0)
     calendar.set(Calendar.MILLISECOND, 999)
     return calendar.timeInMillis
 }
