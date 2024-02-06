@@ -64,7 +64,7 @@ fun AddCategoriesCard(
         },
         initialTransactionType = currentTransactionType,
         onConfirmClick = { categoryName,transactionType->
-            if(categoryName.isEmpty()) {
+            if(categoryName.isEmpty() || categoryName.isBlank()) {
 
             }else{
                 onAddCategory(categoryName,transactionType)

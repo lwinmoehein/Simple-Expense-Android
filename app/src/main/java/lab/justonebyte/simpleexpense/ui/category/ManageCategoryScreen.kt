@@ -149,7 +149,7 @@ fun ManageCategoryScreen(){
         },
         initialTransactionType = currentTransactionType.value,
         onConfirmClick = { categoryName,transactionType->
-            if(categoryName.isEmpty()){
+            if(categoryName.isEmpty() || categoryName.isBlank()){
                 categoryViewModel.showSnackBar(SnackBarType.INCORRECT_CATEGORY_DATA)
             }else {
                 if (currentEditingCategory.value != null) {
