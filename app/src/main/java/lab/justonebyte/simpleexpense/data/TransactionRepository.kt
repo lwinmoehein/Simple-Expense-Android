@@ -34,16 +34,16 @@ class TransactionRepositoryImpl @Inject constructor(val transactionDao: Transact
     }
 
     override fun getMonthlyTransactions(month:String): Flow<List<Transaction>> {
-        val startMonthTimeStamp = getTimestampForMonthStart(month)
-        val endMonthTimeStamp = getTimestampForMonthEnd(month)
+        val startMonthTimeStamp = getTimestampForMonthStart(month)-1
+        val endMonthTimeStamp = getTimestampForMonthEnd(month)+1
 
         val transactionEntities = transactionDao.getTransactionsByMonth(startMonthTimeStamp,endMonthTimeStamp)
         return transactionEntities.map { list -> list.map { Transaction.Mapper.mapToDomain(it) } }
     }
 
     override fun getYearlyTransactions(year:String): Flow<List<Transaction>> {
-        val startYearTimeStamp = getTimeStampForYearStart(year.toInt())
-        val endYearTimeStamp = getTimeStampForYearEnd(year.toInt())
+        val startYearTimeStamp = getTimeStampForYearStart(year.toInt())-1
+        val endYearTimeStamp = getTimeStampForYearEnd(year.toInt())+1
         val transactionEntities = transactionDao.getTransactionsByYear(startYearTimeStamp,endYearTimeStamp)
         return transactionEntities.map { list -> list.map { Transaction.Mapper.mapToDomain(it) } }
     }
