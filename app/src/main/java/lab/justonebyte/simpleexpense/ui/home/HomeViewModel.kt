@@ -25,6 +25,7 @@ import lab.justonebyte.simpleexpense.model.TransactionCategory
 import lab.justonebyte.simpleexpense.model.TransactionType
 import lab.justonebyte.simpleexpense.ui.components.SnackBarType
 import lab.justonebyte.simpleexpense.utils.RetrofitHelper
+import lab.justonebyte.simpleexpense.utils.convertTimestampIfNeeded
 import lab.justonebyte.simpleexpense.utils.getCurrentDay
 import lab.justonebyte.simpleexpense.utils.getCurrentMonth
 import lab.justonebyte.simpleexpense.utils.getCurrentYear
@@ -278,7 +279,7 @@ class HomeViewModel @Inject constructor(
         date:Long,
         note:String?
     ){
-
+        val createdAtTimeStamp = convertTimestampIfNeeded(date)
         viewModelScope.launch {
             transactionRepository.insert(
                 Transaction(
@@ -286,7 +287,7 @@ class HomeViewModel @Inject constructor(
                     amount = amount,
                     type = if(type==TransactionType.Income.value) TransactionType.Income else TransactionType.Expense,
                     category = transactionCategory,
-                    created_at = date,
+                    created_at = createdAtTimeStamp,
                     updated_at = System.currentTimeMillis(),
                     note = note
                 )

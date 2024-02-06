@@ -96,6 +96,28 @@ fun getTimestampForMonthStart(yearMonthString: String): Long {
     return calendar.timeInMillis
 }
 
+fun convertTimestampIfNeeded(timestampInMillis: Long): Long {
+    val cal = Calendar.getInstance()
+    cal.timeInMillis = timestampInMillis
+
+    // Check if hours, minutes, and seconds are all zero
+    if (cal.get(Calendar.HOUR_OF_DAY) == 0 &&
+        cal.get(Calendar.MINUTE) == 0 &&
+        cal.get(Calendar.SECOND) == 0) {
+
+        // Set the new time to 00:00:30
+        cal.set(Calendar.HOUR_OF_DAY, 0)
+        cal.set(Calendar.MINUTE, 0)
+        cal.set(Calendar.SECOND, 30)
+        cal.set(Calendar.MILLISECOND, 0)
+
+        return cal.timeInMillis
+    } else {
+        // Timestamp is not 00:00:00, return original timestamp
+        return timestampInMillis
+    }
+}
+
 fun getTimestampForMonthEnd(yearMonthString: String): Long {
     val (year, month) = yearMonthString.split("-").map { it.toInt() }
     val calendar = Calendar.getInstance()
