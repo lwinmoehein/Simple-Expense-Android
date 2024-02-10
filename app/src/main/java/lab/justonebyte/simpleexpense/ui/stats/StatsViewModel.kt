@@ -129,8 +129,8 @@ class StatsViewModel @Inject constructor(
     }
 
     private fun bindBalanceData(transactions: List<Transaction>) {
-        val income = transactions.filter { it.type== TransactionType.Income }.sumOf{ it.amount }
-        val expense = transactions.filter { it.type== TransactionType.Expense }.sumOf { it.amount }
+        val income = transactions.filter { it.type== TransactionType.Income }.sumOf{ it.amount.toLong() }
+        val expense = transactions.filter { it.type== TransactionType.Expense }.sumOf { it.amount.toLong() }
         val sum = income-expense
 
         _viewModelUiState.update {
