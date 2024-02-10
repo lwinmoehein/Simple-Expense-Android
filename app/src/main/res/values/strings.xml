@@ -176,5 +176,6 @@
     <string name="update_tran_success">Record Updated.</string>
     <string name="delete_tran_success">Record Deleted.</string>
     <string name="incorrect_amount">Amount must be greater than 0.</string>
+    <string name="r_u_sure_logout">Are you sure to logout?</string>
 
 </resources>

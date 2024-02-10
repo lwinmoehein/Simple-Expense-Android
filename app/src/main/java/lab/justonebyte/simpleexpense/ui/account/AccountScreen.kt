@@ -92,6 +92,7 @@ fun AccountScreen(
     val snackbarHostState = remember { SnackbarHostState() }
     val coroutineScope = rememberCoroutineScope()
     var isLoginNeededDialogShown by remember { mutableStateOf(false) }
+    val isLogoutConfirmDialogOpen = remember { mutableStateOf(false) }
 
     val isLoggingIn = settingsUiState.isLoggingIn
     var user = settingsUiState.firebaseUser
@@ -111,6 +112,33 @@ fun AccountScreen(
             }
         ){
             Text(text = stringResource(id = R.string.please_login_first))
+        }
+    }
+
+    if(isLogoutConfirmDialogOpen.value){
+        AppAlertDialog(
+            title = stringResource(id = R.string.r_u_sure ),
+            positiveBtnText = stringResource(id = R.string.confirm),
+            negativeBtnText = stringResource(id = R.string.cancel),
+            onNegativeBtnClicked = {
+                isLogoutConfirmDialogOpen.value = false
+            },
+            onPositiveBtnClicked = {
+                Firebase.auth.signOut()
+                GoogleSignIn
+                    .getClient(context, GoogleSignInOptions.DEFAULT_SIGN_IN)
+                    .signOut()
+                user = null
+                coroutineScope.launch {
+                    settingsViewModel.logOut()
+                    deleteIsOnboardDoneFlagFile(context)
+                    val i = Intent(context as Activity, MainActivity::class.java)
+                    context.finish()
+                    context.startActivity(i)
+                }
+            }
+        ) {
+            Text(text = stringResource(id = R.string.r_u_sure_logout))
         }
     }
 
@@ -352,18 +380,7 @@ fun AccountScreen(
                                 .fillMaxWidth()
                                 .padding(10.dp),
                             onClick = {
-                                Firebase.auth.signOut()
-                                GoogleSignIn
-                                    .getClient(context, GoogleSignInOptions.DEFAULT_SIGN_IN)
-                                    .signOut()
-                                user = null
-                                coroutineScope.launch {
-                                    settingsViewModel.logOut()
-                                    deleteIsOnboardDoneFlagFile(context)
-                                    val i = Intent(context as Activity, MainActivity::class.java)
-                                    context.finish()
-                                    context.startActivity(i)
-                                }
+                                isLogoutConfirmDialogOpen.value = true
                             }) {
                             Icon(
                                 imageVector = FeatherIcons.LogOut,
@@ -415,19 +432,9 @@ fun AuthenticatedUser(
     fetchAndUpdateAccessToken:(googleId:String)->Unit,
     user:FirebaseUser?
 ) {
-    val token = stringResource(R.string.web_client_id)
-
-    val launcher = rememberFirebaseAuthLauncher(
-        onAuthComplete = { result,idToken ->
-            result.user?.let { fetchAndUpdateAccessToken(idToken) }
-        },
-        onAuthError = {
-        }
-    )
-
-    Card(Modifier.fillMaxWidth()) {
-            Column(Modifier.absolutePadding(left = 10.dp, right = 10.dp, top = 10.dp, bottom = 10.dp)) {
                 user?.let {
+                    Card(Modifier.fillMaxWidth()) {
+                        Column(Modifier.absolutePadding(left = 10.dp, right = 10.dp, top = 10.dp, bottom = 10.dp)) {
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.Start,
@@ -453,62 +460,6 @@ fun AuthenticatedUser(
                                 }
                             }
                         }
-                    }
-                }
-                if (user == null) {
-                    Column(
-                        Modifier.fillMaxWidth()
-                    ) {
-                        Row(
-                            horizontalArrangement = Arrangement.Start,
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Icon(
-                                imageVector = FeatherIcons.Info,
-                                contentDescription = "",
-                                tint = MaterialTheme.colorScheme.primary,
-                                modifier = Modifier
-                                    .width(20.dp)
-                                    .height(20.dp)
-                            )
-                            Spacer(modifier = Modifier.width(10.dp))
-                            Column {
-                                Text(
-                                    text = stringResource(id = R.string.data_can_be_lost),
-                                    style = MaterialTheme.typography.labelMedium
-                                )
-                            }
-                        }
-                        Spacer(modifier = Modifier.height(10.dp))
-                        OutlinedButton(
-                            modifier = Modifier.padding(horizontal = 25.dp),
-                            onClick = {
-                                val gso =
-                                    GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                                        .requestIdToken(token)
-                                        .requestEmail()
-                                        .build()
-                                val googleSignInClient = GoogleSignIn.getClient(context, gso)
-                                launcher.launch(googleSignInClient.signInIntent)
-                            }) {
-                            Row(
-                                verticalAlignment = Alignment.CenterVertically,
-                                modifier = Modifier.padding(horizontal = 20.dp)
-                            ) {
-                                Text(
-                                    text = stringResource(id = R.string.login_with_google)
-                                )
-                                Spacer(modifier = Modifier.width(5.dp))
-                                Icon(
-                                    modifier= Modifier
-                                        .height(15.dp)
-                                        .width(15.dp),
-                                    imageVector = FontAwesomeIcons.Brands.Google,
-                                    contentDescription = "",
-                                    tint = MaterialTheme.colorScheme.primary
-                                )
-                            }
-                             }
                     }
                 }
 
