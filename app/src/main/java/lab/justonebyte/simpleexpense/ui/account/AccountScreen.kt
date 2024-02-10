@@ -64,9 +64,7 @@ import compose.icons.feathericons.Info
 import compose.icons.feathericons.LogOut
 import compose.icons.feathericons.Settings
 import compose.icons.feathericons.Star
-import compose.icons.fontawesomeicons.Brands
 import compose.icons.fontawesomeicons.Regular
-import compose.icons.fontawesomeicons.brands.Google
 import compose.icons.fontawesomeicons.regular.Handshake
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
