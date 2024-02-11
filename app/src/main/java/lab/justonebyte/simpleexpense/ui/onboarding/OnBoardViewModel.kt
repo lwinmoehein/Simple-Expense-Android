@@ -64,6 +64,12 @@ class OnBoardViewModel @Inject constructor(
         }
     }
 
+    fun changeLogginInToTrue(){
+        _viewModelUiState.update {
+            it.copy(isLoggingIn = true)
+        }
+    }
+
 
     suspend fun fetchAccessTokenByGoogleId(googleId:String){
         _viewModelUiState.update {

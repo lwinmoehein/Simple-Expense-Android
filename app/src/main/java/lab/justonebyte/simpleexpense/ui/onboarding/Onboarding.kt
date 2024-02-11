@@ -20,6 +20,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.KeyboardArrowRight
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -61,7 +62,9 @@ fun OnBoardingScreen(
     val onBoardUiState by onBoardViewModel.viewModelUiState.collectAsState()
 
 
-    Box(modifier = Modifier.fillMaxSize().background(Color.White)) {
+    Box(modifier = Modifier
+        .fillMaxSize()
+        .background(Color.White)) {
        Column(
            modifier = Modifier.fillMaxSize(),
        ) {
@@ -113,7 +116,7 @@ fun BottomSection(
             Button(
                 onClick = {
                     onButtonClick()
-                },
+                }
             ) {
                 Row(
                     Modifier.padding(horizontal = 30.dp),

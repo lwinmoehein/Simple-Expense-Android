@@ -27,6 +27,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
@@ -61,6 +62,7 @@ fun LoginScreen(
     val onBoardUiState by onBoardViewModel.viewModelUiState.collectAsState()
 
     val snackbarHostState = remember { SnackbarHostState() }
+    val isLoginInProgress = remember { mutableStateOf(false) }
 
 
     val context = LocalContext.current
@@ -79,8 +81,10 @@ fun LoginScreen(
                     onBoardViewModel.fetchAccessTokenByGoogleId(idToken)
                 }
             }
+            isLoginInProgress.value = false
         },
         onAuthError = {
+            isLoginInProgress.value = false
         }
     )
     if(onBoardUiState.isLoggingIn){
@@ -146,17 +150,23 @@ fun LoginScreen(
                                 .requestEmail()
                                 .build()
                             val googleSignInClient = GoogleSignIn.getClient(context, gso)
+                            isLoginInProgress.value = true
                             launcher.launch(googleSignInClient.signInIntent)
                         },
                         modifier = Modifier.fillMaxWidth(),
-                        enabled = true,
+                        enabled = !isLoginInProgress.value,
                         colors = ButtonDefaults.buttonColors(
                             containerColor = MaterialTheme.colorScheme.primary,
-                            contentColor = MaterialTheme.colorScheme.onPrimary
+                            contentColor = MaterialTheme.colorScheme.onPrimary,
+                            disabledContainerColor = MaterialTheme.colorScheme.secondary
                         )
-                    ) { Text(text = stringResource(id = R.string.login_with_google), color = MaterialTheme.colorScheme.onPrimary)
+                    ) {
+                        Text(
+                            text = stringResource(id = R.string.login_with_google),
+                            color = Color.White,
+                        )
                         Spacer(modifier = Modifier.width(5.dp))
-                        Icon(tint = MaterialTheme.colorScheme.onPrimary,imageVector = FontAwesomeIcons.Brands.Google,modifier = Modifier
+                        Icon(tint = Color.White,imageVector = FontAwesomeIcons.Brands.Google,modifier = Modifier
                             .width(20.dp)
                             .height(20.dp), contentDescription ="" )
                     }
