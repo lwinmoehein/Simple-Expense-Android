@@ -118,7 +118,7 @@
     <string name="not_logged_in">Not logged in : </string>
     <string name="logged_in">Logged in as : </string>
 
-    <string name="data_can_be_lost">Data will be lost when application is uninstalled.Please login to save your data to cloud.</string>
+    <string name="data_can_be_lost">Data will be lost when application is uninstalled.\nPlease login to save your data to cloud.</string>
     <string name="log_in">Login</string>
     <string name="please_login">Please log in</string>
     <string name="please_login_first">You must be logged in with a Google account to use this feature.</string>

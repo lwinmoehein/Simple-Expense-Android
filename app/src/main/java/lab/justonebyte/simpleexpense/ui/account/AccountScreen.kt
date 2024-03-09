@@ -83,7 +83,7 @@ import lab.justonebyte.simpleexpense.utils.deleteIsOnboardDoneFlagFile
 fun AccountScreen(
     navController: NavController,
     context: Context = LocalContext.current
-){
+) {
     val packageName = context.packageName
     val settingsViewModel = hiltViewModel<SettingsViewModel>()
     val settingsUiState by settingsViewModel.viewModelUiState.collectAsState()
@@ -96,11 +96,11 @@ fun AccountScreen(
     var user = settingsUiState.firebaseUser
 
 
-    if(isLoggingIn){
-        ProgressDialog(onDismissRequest = {}, text = stringResource(id = R.string.logging_in) )
+    if (isLoggingIn) {
+        ProgressDialog(onDismissRequest = {}, text = stringResource(id = R.string.logging_in))
     }
 
-    if(isLoginNeededDialogShown){
+    if (isLoginNeededDialogShown) {
         AppAlertDialog(
             title = stringResource(id = R.string.please_login),
             negativeBtnText = null,
@@ -108,14 +108,14 @@ fun AccountScreen(
             onPositiveBtnClicked = {
                 isLoginNeededDialogShown = false
             }
-        ){
+        ) {
             Text(text = stringResource(id = R.string.please_login_first))
         }
     }
 
-    if(isLogoutConfirmDialogOpen.value){
+    if (isLogoutConfirmDialogOpen.value) {
         AppAlertDialog(
-            title = stringResource(id = R.string.r_u_sure ),
+            title = stringResource(id = R.string.r_u_sure),
             positiveBtnText = stringResource(id = R.string.confirm),
             negativeBtnText = stringResource(id = R.string.cancel),
             onNegativeBtnClicked = {
@@ -142,86 +142,86 @@ fun AccountScreen(
 
     Scaffold(
         snackbarHost = { SnackbarHost(snackbarHostState) }
-        ) {
+    ) {
         SimpleExpenseSnackBar(
             snackBarType = settingsUiState.currentSnackBar,
             onDismissSnackBar = { settingsViewModel.clearSnackBar() },
             snackbarHostState = snackbarHostState
         )
-        Column (
+        Column(
             Modifier
                 .padding(it)
-        ){
+        ) {
             Column(
                 Modifier
                     .padding(10.dp)
-                   ) {
-                    AuthenticatedUser(
-                        user = user,
-                        fetchAndUpdateAccessToken = {
-                            coroutineScope.launch {
-                                settingsViewModel.fetchAccessTokenByGoogleId(it)
-                            }
+            ) {
+                AuthenticatedUser(
+                    user = user,
+                    fetchAndUpdateAccessToken = {
+                        coroutineScope.launch {
+                            settingsViewModel.fetchAccessTokenByGoogleId(it)
                         }
-                    )
-                    Spacer(modifier = Modifier.height(10.dp))
+                    }
+                )
+                Spacer(modifier = Modifier.height(10.dp))
+                Row(
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clickable {
+                            navController.navigate(MainDestinations.SETTINGS)
+                        },
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
                     Row(
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .clickable {
-                                navController.navigate(MainDestinations.SETTINGS)
-                            },
+                        modifier = Modifier.absolutePadding(top = 5.dp, bottom = 5.dp),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                       Row(
-                           modifier = Modifier.absolutePadding(top = 5.dp, bottom = 5.dp),
-                           verticalAlignment = Alignment.CenterVertically
-                        ){
-                           Icon(
-                               imageVector = FeatherIcons.Settings,
-                               contentDescription ="",
-                               modifier = Modifier
-                                   .absolutePadding(right = 10.dp)
-                                   .width(18.dp)
-                                   .height(18.dp),
-                               tint = MaterialTheme.colorScheme.primary
-                           )
-                           Text(text = stringResource(id = R.string.settings))
-                       }
+                        Icon(
+                            imageVector = FeatherIcons.Settings,
+                            contentDescription = "",
+                            modifier = Modifier
+                                .absolutePadding(right = 10.dp)
+                                .width(18.dp)
+                                .height(18.dp),
+                            tint = MaterialTheme.colorScheme.primary
+                        )
+                        Text(text = stringResource(id = R.string.settings))
                     }
-                    Spacer(modifier = Modifier.height(10.dp))
+                }
+                Spacer(modifier = Modifier.height(10.dp))
 
+                Row(
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clickable {
+                            if (user == null) {
+                                isLoginNeededDialogShown = true
+                            } else {
+                                navController.navigate(MainDestinations.EXPORT)
+                            }
+                        },
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
                     Row(
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .clickable {
-                                if (user == null) {
-                                    isLoginNeededDialogShown = true
-                                } else {
-                                    navController.navigate(MainDestinations.EXPORT)
-                                }
-                            },
-                        verticalAlignment = Alignment.CenterVertically
+                        modifier = Modifier.absolutePadding(top = 5.dp, bottom = 5.dp),
+                        verticalAlignment = Alignment.CenterVertically,
                     ) {
-                        Row (
-                            modifier = Modifier.absolutePadding(top = 5.dp, bottom = 5.dp),
-                            verticalAlignment = Alignment.CenterVertically,
-                        ){
-                            Icon(
-                                imageVector = FeatherIcons.File,
-                                contentDescription ="",
-                                modifier = Modifier
-                                    .absolutePadding(right = 10.dp)
-                                    .width(18.dp)
-                                    .height(18.dp),
-                                tint = MaterialTheme.colorScheme.primary
-                            )
-                            Text(text = stringResource(id = R.string.export))
-                        }
+                        Icon(
+                            imageVector = FeatherIcons.File,
+                            contentDescription = "",
+                            modifier = Modifier
+                                .absolutePadding(right = 10.dp)
+                                .width(18.dp)
+                                .height(18.dp),
+                            tint = MaterialTheme.colorScheme.primary
+                        )
+                        Text(text = stringResource(id = R.string.export))
                     }
-                    Spacer(modifier = Modifier.height(10.dp))
+                }
+                Spacer(modifier = Modifier.height(10.dp))
 
                 Row(
                     horizontalArrangement = Arrangement.SpaceBetween,
@@ -232,13 +232,13 @@ fun AccountScreen(
                         },
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Row (
+                    Row(
                         modifier = Modifier.absolutePadding(top = 5.dp, bottom = 5.dp),
                         verticalAlignment = Alignment.CenterVertically,
-                    ){
+                    ) {
                         Icon(
                             imageVector = FontAwesomeIcons.Regular.Handshake,
-                            contentDescription ="",
+                            contentDescription = "",
                             modifier = Modifier
                                 .absolutePadding(right = 10.dp)
                                 .width(18.dp)
@@ -259,13 +259,13 @@ fun AccountScreen(
                         },
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Row (
+                    Row(
                         modifier = Modifier.absolutePadding(top = 5.dp, bottom = 5.dp),
                         verticalAlignment = Alignment.CenterVertically,
-                    ){
+                    ) {
                         Icon(
                             imageVector = FeatherIcons.EyeOff,
-                            contentDescription ="",
+                            contentDescription = "",
                             modifier = Modifier
                                 .absolutePadding(right = 10.dp)
                                 .width(18.dp)
@@ -286,13 +286,13 @@ fun AccountScreen(
                         },
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Row (
+                    Row(
                         modifier = Modifier.absolutePadding(top = 5.dp, bottom = 5.dp),
                         verticalAlignment = Alignment.CenterVertically,
-                    ){
+                    ) {
                         Icon(
                             imageVector = FeatherIcons.FileText,
-                            contentDescription ="",
+                            contentDescription = "",
                             modifier = Modifier
                                 .absolutePadding(right = 10.dp)
                                 .width(18.dp)
@@ -312,13 +312,13 @@ fun AccountScreen(
                         },
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Row (
+                    Row(
                         modifier = Modifier.absolutePadding(top = 5.dp, bottom = 5.dp),
                         verticalAlignment = Alignment.CenterVertically,
-                    ){
+                    ) {
                         Icon(
                             imageVector = FeatherIcons.Info,
-                            contentDescription ="",
+                            contentDescription = "",
                             modifier = Modifier
                                 .absolutePadding(right = 10.dp)
                                 .width(18.dp)
@@ -353,13 +353,13 @@ fun AccountScreen(
                         },
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Row (
+                    Row(
                         modifier = Modifier.absolutePadding(top = 5.dp, bottom = 5.dp),
                         verticalAlignment = Alignment.CenterVertically,
-                    ){
+                    ) {
                         Icon(
                             imageVector = FeatherIcons.Star,
-                            contentDescription ="",
+                            contentDescription = "",
                             modifier = Modifier
                                 .absolutePadding(right = 10.dp)
                                 .width(18.dp)
@@ -371,96 +371,167 @@ fun AccountScreen(
                 }
                 Spacer(modifier = Modifier.height(30.dp))
 
-
-                user?.let {
-                        OutlinedButton(
-                            modifier= Modifier
-                                .fillMaxWidth()
-                                .padding(10.dp),
-                            onClick = {
-                                isLogoutConfirmDialogOpen.value = true
-                            }) {
-                            Icon(
-                                imageVector = FeatherIcons.LogOut,
-                                contentDescription = "",
-                                modifier = Modifier.absolutePadding(right = 10.dp),
-                                tint = Color.Red
-                            )
-                            Text(text = stringResource(id = R.string.log_out), color = Color.Red)
-                        }
-                    }
-
-                Spacer(modifier = Modifier.height(50.dp))
-
-                Row(modifier = Modifier.fillMaxWidth(),horizontalArrangement = Arrangement.Center) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.Center
+                ) {
                     BannerAdView()
                 }
-            }
 
-        }
-    }
-}
-
-
-@Composable
-fun rememberFirebaseAuthLauncher(
-    onAuthComplete: (AuthResult,idToken:String) -> Unit,
-    onAuthError: (ApiException) -> Unit
-): ManagedActivityResultLauncher<Intent, ActivityResult> {
-    val scope = rememberCoroutineScope()
-    return rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-        val task = GoogleSignIn.getSignedInAccountFromIntent(result.data)
-        try {
-            val account = task.getResult(ApiException::class.java)!!
-            val credential = GoogleAuthProvider.getCredential(account.idToken!!, null)
-
-            scope.launch {
-                val authResult = Firebase.auth.signInWithCredential(credential).await()
-                onAuthComplete(authResult, account.idToken!!)
-            }
-        } catch (e: ApiException) {
-            onAuthError(e)
-        }
-    }
-}
-
-@Composable
-fun AuthenticatedUser(
-    context: Context = LocalContext.current,
-    fetchAndUpdateAccessToken:(googleId:String)->Unit,
-    user:FirebaseUser?
-) {
                 user?.let {
-                    Card(Modifier.fillMaxWidth()) {
-                        Column(Modifier.absolutePadding(left = 10.dp, right = 10.dp, top = 10.dp, bottom = 10.dp)) {
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.Start,
+                    OutlinedButton(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(10.dp),
+                        onClick = {
+                            isLogoutConfirmDialogOpen.value = true
+                        }) {
+                        Icon(
+                            imageVector = FeatherIcons.LogOut,
+                            contentDescription = "",
+                            modifier = Modifier.absolutePadding(right = 10.dp),
+                            tint = Color.Red
+                        )
+                        Text(text = stringResource(id = R.string.log_out), color = Color.Red)
+                    }
+                }
+            }
+        }
+    }
+}
+
+
+        @Composable
+        fun rememberFirebaseAuthLauncher(
+            onAuthComplete: (AuthResult, idToken: String) -> Unit,
+            onAuthError: (ApiException) -> Unit
+        ): ManagedActivityResultLauncher<Intent, ActivityResult> {
+            val scope = rememberCoroutineScope()
+            return rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+                val task = GoogleSignIn.getSignedInAccountFromIntent(result.data)
+                try {
+                    val account = task.getResult(ApiException::class.java)!!
+                    val credential = GoogleAuthProvider.getCredential(account.idToken!!, null)
+
+                    scope.launch {
+                        val authResult = Firebase.auth.signInWithCredential(credential).await()
+                        onAuthComplete(authResult, account.idToken!!)
+                    }
+                } catch (e: ApiException) {
+                    onAuthError(e)
+                }
+            }
+        }
+
+        @Composable
+        fun AuthenticatedUser(
+            context: Context = LocalContext.current,
+            fetchAndUpdateAccessToken: (googleId: String) -> Unit,
+            user: FirebaseUser?
+        ) {
+            val token = stringResource(R.string.web_client_id)
+
+            val launcher = rememberFirebaseAuthLauncher(
+                onAuthComplete = { result, idToken ->
+                    result.user?.let { fetchAndUpdateAccessToken(idToken) }
+                },
+                onAuthError = {
+                }
+            )
+            user?.let {
+                Card(Modifier.fillMaxWidth()) {
+                    Column(
+                        Modifier.absolutePadding(
+                            left = 10.dp,
+                            right = 10.dp,
+                            top = 10.dp,
+                            bottom = 10.dp
+                        )
                     ) {
                         Row(
-                            horizontalArrangement = Arrangement.spacedBy(5.dp),
-                            verticalAlignment = Alignment.CenterVertically
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.Start,
                         ) {
-                            Image(
-                                painter = rememberAsyncImagePainter(user?.photoUrl),
-                                contentDescription = null,
-                                modifier = Modifier
-                                    .width(50.dp)
-                                    .height(50.dp)
-                                    .clip(RoundedCornerShape(100))
-                            )
-                            user.let { user ->
-                                Column(
-                                    verticalArrangement = Arrangement.Top
-                                ) {
-                                    user.displayName?.let { name -> Text(text = name, style = MaterialTheme.typography.titleLarge) }
-                                    user.email?.let { email -> Text(text = email, style = MaterialTheme.typography.labelMedium) }
+                            Row(
+                                horizontalArrangement = Arrangement.spacedBy(5.dp),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Image(
+                                    painter = rememberAsyncImagePainter(user?.photoUrl),
+                                    contentDescription = null,
+                                    modifier = Modifier
+                                        .width(50.dp)
+                                        .height(50.dp)
+                                        .clip(RoundedCornerShape(100))
+                                )
+                                user.let { user ->
+                                    Column(
+                                        verticalArrangement = Arrangement.Top
+                                    ) {
+                                        user.displayName?.let { name ->
+                                            Text(
+                                                text = name,
+                                                style = MaterialTheme.typography.titleLarge
+                                            )
+                                        }
+                                        user.email?.let { email ->
+                                            Text(
+                                                text = email,
+                                                style = MaterialTheme.typography.labelMedium
+                                            )
+                                        }
+                                    }
                                 }
                             }
                         }
                     }
+
+                }
+            }
+
+
+            if (user == null) {
+                Card(modifier = Modifier.fillMaxWidth().padding(horizontal = 0.dp, vertical = 3.dp)) {
+                    Column(
+                        Modifier.fillMaxWidth().padding(5.dp)
+                    ) {
+                        Row(
+                            horizontalArrangement = Arrangement.Start,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Icon(
+                                imageVector = FeatherIcons.Info,
+                                contentDescription = "",
+                                tint = MaterialTheme.colorScheme.primary
+                            )
+                            Spacer(modifier = Modifier.width(10.dp))
+                            Column() {
+                                Text(
+                                    text = stringResource(id = R.string.data_can_be_lost),
+                                    style = MaterialTheme.typography.labelLarge,
+                                    color = MaterialTheme.colorScheme.error
+                                )
+                            }
+                        }
+                        OutlinedButton(
+                            modifier = Modifier.padding(horizontal = 30.dp, vertical = 0.dp),
+                            onClick = {
+                                val gso =
+                                    GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                                        .requestIdToken(token)
+                                        .requestEmail()
+                                        .build()
+                                val googleSignInClient = GoogleSignIn.getClient(context, gso)
+                                launcher.launch(googleSignInClient.signInIntent)
+                            }) {
+                            Text(
+                                modifier = Modifier.padding(horizontal = 40.dp),
+                                text = stringResource(id = R.string.log_in)
+                            )
+                        }
+                    }
                 }
 
             }
         }
-}
+
