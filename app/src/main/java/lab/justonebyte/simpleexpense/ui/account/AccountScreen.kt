@@ -161,7 +161,7 @@ fun AccountScreen(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Row(
-                        modifier = Modifier.absolutePadding(top = 5.dp, bottom = 5.dp),
+                        modifier = Modifier.absolutePadding(top = 5.dp, bottom = 5.dp, right = 5.dp,left=5.dp),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Icon(
@@ -188,7 +188,7 @@ fun AccountScreen(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Row(
-                        modifier = Modifier.absolutePadding(top = 5.dp, bottom = 5.dp),
+                        modifier = Modifier.absolutePadding(top = 5.dp, bottom = 5.dp, right = 5.dp,left=5.dp),
                         verticalAlignment = Alignment.CenterVertically,
                     ) {
                         Icon(
@@ -215,7 +215,7 @@ fun AccountScreen(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Row(
-                        modifier = Modifier.absolutePadding(top = 5.dp, bottom = 5.dp),
+                        modifier = Modifier.absolutePadding(top = 5.dp, bottom = 5.dp, right = 5.dp,left=5.dp),
                         verticalAlignment = Alignment.CenterVertically,
                     ) {
                         Icon(
@@ -242,7 +242,7 @@ fun AccountScreen(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Row(
-                        modifier = Modifier.absolutePadding(top = 5.dp, bottom = 5.dp),
+                        modifier = Modifier.absolutePadding(top = 5.dp, bottom = 5.dp, right = 5.dp,left=5.dp),
                         verticalAlignment = Alignment.CenterVertically,
                     ) {
                         Icon(
@@ -269,7 +269,7 @@ fun AccountScreen(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Row(
-                        modifier = Modifier.absolutePadding(top = 5.dp, bottom = 5.dp),
+                        modifier = Modifier.absolutePadding(top = 5.dp, bottom = 5.dp, right = 5.dp,left=5.dp),
                         verticalAlignment = Alignment.CenterVertically,
                     ) {
                         Icon(
@@ -295,7 +295,7 @@ fun AccountScreen(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Row(
-                        modifier = Modifier.absolutePadding(top = 5.dp, bottom = 5.dp),
+                        modifier = Modifier.absolutePadding(top = 5.dp, bottom = 5.dp, right = 5.dp,left=5.dp),
                         verticalAlignment = Alignment.CenterVertically,
                     ) {
                         Icon(
@@ -336,7 +336,7 @@ fun AccountScreen(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Row(
-                        modifier = Modifier.absolutePadding(top = 5.dp, bottom = 5.dp),
+                        modifier = Modifier.absolutePadding(top = 5.dp, bottom = 5.dp, right = 5.dp,left=5.dp),
                         verticalAlignment = Alignment.CenterVertically,
                     ) {
                         Icon(
