@@ -292,7 +292,6 @@ class HomeViewModel @Inject constructor(
                     note = note
                 )
             )
-            _viewModelUiState.update { it.copy(currentSnackBar = SnackBarType.ADD_TRANSACTION_SUCCESS) }
 
             if(token.value.isNotEmpty()) runVersionSync(application,"transactions",token.value)
         }
@@ -320,7 +319,6 @@ class HomeViewModel @Inject constructor(
                     note = note
                 )
             )
-            _viewModelUiState.update { it.copy(currentSnackBar = SnackBarType.UPDATE_TRANSACTION_SUCCESS) }
             bindTransactionsFromBalanceType(_viewModelUiState.value.currentBalanceType)
             if(token.value.isNotEmpty()) runVersionSync(application,"transactions",token.value)
         }

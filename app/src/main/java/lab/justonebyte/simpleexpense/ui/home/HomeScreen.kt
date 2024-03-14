@@ -36,7 +36,6 @@ import lab.justonebyte.simpleexpense.R
 import lab.justonebyte.simpleexpense.model.ShowCase
 import lab.justonebyte.simpleexpense.model.Transaction
 import lab.justonebyte.simpleexpense.model.TransactionCategory
-import lab.justonebyte.simpleexpense.ui.components.AppAlertDialog
 import lab.justonebyte.simpleexpense.ui.components.AppDialog
 import lab.justonebyte.simpleexpense.ui.components.ChooseTransactionTypeTab
 import lab.justonebyte.simpleexpense.ui.components.SimpleExpenseSnackBar

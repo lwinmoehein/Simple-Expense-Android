@@ -91,7 +91,6 @@ fun AddTransactionContent(
 
     val transactionTypeTabs = listOf(TransactionTypeTab.EXPENSE, TransactionTypeTab.INCOME)
     val isDeleteConfirmDialogOpen = remember { mutableStateOf(false) }
-    val snackBarHostState = remember { SnackbarHostState() }
 
 
 
@@ -232,18 +231,11 @@ fun AddTransactionContent(
                         }
                     }
                 }
-            },
-            snackbarHost = { SnackbarHost(snackBarHostState) },
+            }
         ) {
             Column(modifier = Modifier
                 .padding(it)
                 .padding(horizontal = 10.dp)) {
-                SimpleExpenseSnackBar(
-                    snackBarType = homeUiState.currentSnackBar,
-                    onDismissSnackBar = { homeViewModel.clearSnackBar() },
-                    snackbarHostState = snackBarHostState
-                )
-
 
                 TabRow(selectedTabIndex = transactionTypeTabState) {
                     transactionTypeTabs.forEachIndexed { index, tab ->

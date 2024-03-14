@@ -1,7 +1,6 @@
 package lab.justonebyte.simpleexpense.ui.category
 
 import android.content.Context
-import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -67,13 +66,13 @@ class CategoryViewModel @Inject constructor(
             if(token.value.isNotEmpty()) runVersionSync(application,"categories",token.value)
         }
     }
-    fun updateCategory(transactinCategory:TransactionCategory,name:String){
+    fun updateCategory(transactionCategory:TransactionCategory, name:String){
         val category = TransactionCategory(
             name = name,
-            icon_name = transactinCategory.icon_name,
-            unique_id = transactinCategory.unique_id,
-            transaction_type = transactinCategory.transaction_type,
-            created_at = transactinCategory.created_at,
+            icon_name = transactionCategory.icon_name,
+            unique_id = transactionCategory.unique_id,
+            transaction_type = transactionCategory.transaction_type,
+            created_at = transactionCategory.created_at,
             updated_at = System.currentTimeMillis()
         )
         viewModelScope.launch {
