@@ -60,11 +60,11 @@ suspend fun populateCategories(dao: CategoryDao) {
         it.insert(CategoryEntity(name = "IT Devices",unique_id = "it_devices", transaction_type = TransactionType.Expense.value, created_at = System.currentTimeMillis(), icon_name = "it_devices", updated_at = System.currentTimeMillis()))
         it.insert(CategoryEntity(name = "Health",unique_id = "health", transaction_type = TransactionType.Expense.value, created_at = System.currentTimeMillis(), icon_name = "health", updated_at = System.currentTimeMillis()))
         it.insert(CategoryEntity(name = "Donation",unique_id = "donation", transaction_type = TransactionType.Expense.value, created_at = System.currentTimeMillis(), icon_name = "donation", updated_at = System.currentTimeMillis()))
-        it.insert(CategoryEntity(name = "Other",unique_id = "other", transaction_type = TransactionType.Expense.value, created_at = System.currentTimeMillis(), icon_name = "other", updated_at = System.currentTimeMillis()))
+        it.insert(CategoryEntity(name = "Other",unique_id = "expense_other", transaction_type = TransactionType.Expense.value, created_at = System.currentTimeMillis(), icon_name = "other", updated_at = System.currentTimeMillis()))
 
         it.insert(CategoryEntity(name = "Allowance", unique_id ="allowance", transaction_type = TransactionType.Income.value, created_at = System.currentTimeMillis(), icon_name = "allowance", updated_at = System.currentTimeMillis()))
         it.insert(CategoryEntity(name = "Salary",unique_id = "salary", transaction_type = TransactionType.Income.value, created_at = System.currentTimeMillis(), icon_name = "salary", updated_at = System.currentTimeMillis()))
         it.insert(CategoryEntity(name = "Bonus",unique_id = "bonus", transaction_type = TransactionType.Income.value, created_at =  System.currentTimeMillis(), icon_name = "bonus", updated_at = System.currentTimeMillis()))
-        it.insert(CategoryEntity(name = "Other",unique_id = "other", transaction_type = TransactionType.Income.value, created_at =  System.currentTimeMillis(), icon_name = "other", updated_at = System.currentTimeMillis()))
+        it.insert(CategoryEntity(name = "Other",unique_id = "income_other", transaction_type = TransactionType.Income.value, created_at =  System.currentTimeMillis(), icon_name = "other", updated_at = System.currentTimeMillis()))
     }
 }
