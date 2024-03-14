@@ -4,6 +4,8 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import lab.justonebyte.simpleexpense.model.ServerTransaction
 import lab.justonebyte.simpleexpense.model.Transaction
+import lab.justonebyte.simpleexpense.utils.getTimeStampForEndDate
+import lab.justonebyte.simpleexpense.utils.getTimeStampForStartDate
 import lab.justonebyte.simpleexpense.utils.getTimeStampForYearEnd
 import lab.justonebyte.simpleexpense.utils.getTimeStampForYearStart
 import lab.justonebyte.simpleexpense.utils.getTimestampForMonthEnd
@@ -14,10 +16,11 @@ interface TransactionRepository {
     fun getDailyTransactions(day:String): Flow<List<Transaction>>
     fun getMonthlyTransactions(month:String): Flow<List<Transaction>>
     fun getYearlyTransactions(year:String): Flow<List<Transaction>>
+    suspend fun getExportTransactions(startDate:String, endDate: String): List<Transaction>
+
     fun getTotalTransactions(): Flow<List<Transaction>>
     fun getServerTransactions(): List<ServerTransaction>
     suspend fun getUniqueIdsWithVersions():List<UniqueIdWithVersion>
-
 
     suspend fun insertAll(transactions: List<ServerTransaction>)
     suspend fun insert(transaction: Transaction)
@@ -46,6 +49,14 @@ class TransactionRepositoryImpl @Inject constructor(val transactionDao: Transact
         val endYearTimeStamp = getTimeStampForYearEnd(year.toInt())
         val transactionEntities = transactionDao.getTransactionsByYear(startYearTimeStamp,endYearTimeStamp)
         return transactionEntities.map { list -> list.map { Transaction.Mapper.mapToDomain(it) } }
+    }
+
+    override suspend fun getExportTransactions(startDate:String, endDate:String): List<Transaction> {
+        val startTimestamp = getTimeStampForStartDate(startDate)
+        val endTimestamp = getTimeStampForEndDate(endDate)
+
+        val transactionEntities = transactionDao.getExportTransactions(startTimestamp,endTimestamp)
+        return transactionEntities.map { Transaction.Mapper.mapToDomain(it) }
     }
 
     override fun getTotalTransactions(): Flow<List<Transaction>> {

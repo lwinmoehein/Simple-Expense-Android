@@ -69,11 +69,9 @@ import lab.justonebyte.simpleexpense.utils.getFormattedDay
 data class FileFormat(val imageVector: ImageVector,val nameId:Int)
 
 val excel = FileFormat(FontAwesomeIcons.Regular.FileExcel,R.string.excel_format)
-val pdf = FileFormat(FontAwesomeIcons.Regular.FilePdf,R.string.pdf_format)
 
 val formats = listOf(
-    excel,
-    pdf
+    excel
 )
 
 @Composable
@@ -112,30 +110,6 @@ fun ChooseFormat(
                     Text(
                         color = if(chosenFormat.nameId == excel.nameId) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSecondary,
                         text = stringResource(id = excel.nameId)
-                    )
-                }
-            }
-            Card(
-                colors = CardDefaults.cardColors(
-                    containerColor =if(chosenFormat.nameId == pdf.nameId) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.secondary,
-                ),
-            ) {
-                Row (
-                    modifier = Modifier
-                        .padding(horizontal = 10.dp, vertical = 5.dp)
-                        .clickable {
-                            chosenFormat = pdf
-                            onFormatChosen(pdf)
-                        },
-                    horizontalArrangement = Arrangement.spacedBy(3.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ){
-                    Icon(modifier= Modifier
-                        .width(20.dp)
-                        .height(20.dp),imageVector = pdf.imageVector, contentDescription = "")
-                    Text(
-                        color = if(chosenFormat.nameId == pdf.nameId) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSecondary,
-                        text = stringResource(id = pdf.nameId)
                     )
                 }
             }

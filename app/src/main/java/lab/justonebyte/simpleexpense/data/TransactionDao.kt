@@ -38,6 +38,14 @@ interface TransactionDao {
     fun getTransactionsByYear(startYearTimeStamp:Long,endYearTimestamp:Long): Flow<List<TransactionWithCategory>>
 
 
+    @Query(
+        transactionWithCategorySelectQuery+"where category_table.unique_id==transaction_table.category_id" +
+                " and transaction_table.deleted_at is null" +
+                " and transaction_table.created_at BETWEEN :startTimeStamp AND :endTimeStamp"
+    )
+    suspend fun getExportTransactions(startTimeStamp:Long,endTimeStamp:Long): List<TransactionWithCategory>
+
+
 
 
     @Query(transactionWithCategorySelectQuery+"where category_table.unique_id==transaction_table.category_id and transaction_table.deleted_at is  null" )

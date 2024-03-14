@@ -31,8 +31,10 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.supervisorScope
 import kotlinx.coroutines.withContext
 import lab.justonebyte.simpleexpense.R
@@ -45,8 +47,10 @@ import lab.justonebyte.simpleexpense.data.SettingPrefRepository
 import lab.justonebyte.simpleexpense.data.TransactionRepository
 import lab.justonebyte.simpleexpense.model.AppList
 import lab.justonebyte.simpleexpense.model.BalanceType
+import lab.justonebyte.simpleexpense.model.Transaction
 import lab.justonebyte.simpleexpense.ui.components.SnackBarType
 import lab.justonebyte.simpleexpense.utils.RetrofitHelper
+import lab.justonebyte.simpleexpense.utils.createWorkbook
 import lab.justonebyte.simpleexpense.utils.getDecodedPath
 import lab.justonebyte.simpleexpense.workers.CURRENCY_CODE
 import lab.justonebyte.simpleexpense.workers.GetVersionInfoWorker
@@ -68,7 +72,7 @@ data class SettingUiState(
     val readableDownloadFolder:String? = null,
     val isExportingFile:Boolean = false,
     val isLoggingIn:Boolean = false,
-    val firebaseUser: FirebaseUser? = FirebaseAuth.getInstance().currentUser
+    val firebaseUser: FirebaseUser? = FirebaseAuth.getInstance().currentUser,
 )
 
 data class FileExportRequest(
@@ -287,42 +291,7 @@ class SettingsViewModel @Inject constructor(
 
 
     fun exportDataAsFile(from:String, to:String, format:FileFormat){
-            when(format.nameId){
-                R.string.excel_format-> generateExcelFile(from,to)
-                else->generatePDFFile(from,to)
-            }
-    }
-
-    private fun generatePDFFile(from: String, to:String ) {
-        viewModelScope.launch {
-            withContext(Dispatchers.IO) {
-                _viewModelUiState.update {
-                    it.copy(isExportingFile = true)
-                }
-
-                val downloadFolderUriString = _viewModelUiState.value.downloadFolder
-                if(!downloadFolderUriString.isNullOrEmpty()) {
-                    val uri = Uri.parse(_viewModelUiState.value.downloadFolder)
-                    val file = DocumentFile.fromTreeUri(application, uri)
-
-                    if (file != null && file.canRead() && file.canWrite()) {
-                        downloadAndSaveFile(file, pdf,from,to)
-                    } else {
-                        showSnackBar(SnackBarType.SELECT_CORRECT_DOWNLOAD_FOLDER)
-                        _viewModelUiState.update {
-                            it.copy(isExportingFile = false)
-                        }
-
-                        Log.i("Folder:", "Have no access to download folder.")
-                    }
-                }else{
-                    showSnackBar(SnackBarType.SELECT_CORRECT_DOWNLOAD_FOLDER)
-                    _viewModelUiState.update {
-                        it.copy(isExportingFile = false)
-                    }
-                }
-            }
-        }
+          generateExcelFile(from,to)
     }
 
     private fun generateExcelFile(from: String, to:String ) {
@@ -338,7 +307,9 @@ class SettingsViewModel @Inject constructor(
                     val file = DocumentFile.fromTreeUri(application, uri)
 
                     if (file != null && file.canRead() && file.canWrite()) {
-                            downloadAndSaveFile(file, excel,from,to)
+                        Log.i("transactions:",from+":"+to)
+
+                        downloadAndSaveFile(file, excel,from,to)
                     } else {
                         showSnackBar(SnackBarType.SELECT_CORRECT_DOWNLOAD_FOLDER)
                         _viewModelUiState.update {
@@ -356,46 +327,27 @@ class SettingsViewModel @Inject constructor(
             }
         }
     }
-    private suspend fun downloadAndSaveFile(uriFile:DocumentFile,format:FileFormat,from:String,to:String){
+    private suspend fun downloadAndSaveFile(uriFile:DocumentFile, format:FileFormat, from:String, to:String){
 
         try {
-            val exportService =
-                RetrofitHelper.getInstance(token.value).create(ExportService::class.java)
-
-            val response = if (format === excel) exportService.generateExcelFile(
-                BetweenPostData(
-                    from,
-                    to
-                )
-            ) else exportService.generatePDFFile(BetweenPostData(from, to))
-
-            val responseBody = response.body()
-
-            val contentDispositionHeader = response.headers().get("Content-Disposition")
-            val fileName = contentDispositionHeader?.let {
-                // Extract filename from header value (example: "attachment; filename=example.pdf")
-                val filenameRegex = "filename=(.+)".toRegex()
-                filenameRegex.find(it)?.groupValues?.get(1)?.replace("\"", "")
-            }
-
 
             var file: DocumentFile? = null
 
             file = if (format === excel) {
                 uriFile.createFile(
                     "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-                    fileName ?: "simple_expense.xlsx"
+                     "simple_expense.xlsx"
                 )
             } else {
-                uriFile.createFile("application/pdf", fileName ?: "simple_expense.pdf")
+                uriFile.createFile("application/pdf","simple_expense.pdf")
             }
 
             if (file != null) {
                 val outputStream = application.contentResolver.openOutputStream(file.uri)
                 if (outputStream != null) {
-                    responseBody?.byteStream()?.use { inputStream ->
-                        inputStream.copyTo(outputStream)
-                    }
+                    val transactions = transactionRepository.getExportTransactions(from,to)
+                    val workbook = createWorkbook("$from-to-$to",transactions)
+                    workbook.write(outputStream)
                     outputStream.close()
                     showSnackBar(SnackBarType.FILE_EXPORT_SUCCESS)
                     _viewModelUiState.update {

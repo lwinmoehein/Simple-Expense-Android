@@ -88,6 +88,41 @@ fun getTimeStampForYearEnd(year: Int): Long {
     return calendar.timeInMillis
 }
 
+fun getTimeStampForStartDate(dateString: String): Long {
+    val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+    val date = dateFormat.parse(dateString)
+
+    val calendar = Calendar.getInstance()
+    if (date != null) {
+        calendar.time = date
+    }
+
+    // Set time to 00:00:00 for start of day
+    calendar.set(Calendar.HOUR_OF_DAY, 0)
+    calendar.set(Calendar.MINUTE, 0)
+    calendar.set(Calendar.SECOND, 0)
+    calendar.set(Calendar.MILLISECOND, 0)
+
+    return calendar.timeInMillis
+}
+fun getTimeStampForEndDate(dateString: String): Long {
+    val dateFormat = SimpleDateFormat("yyyy-dd-MM", Locale.getDefault())
+    val date = dateFormat.parse(dateString)
+
+    val calendar = Calendar.getInstance()
+    if (date != null) {
+        calendar.time = date
+    }
+
+    // Set time to 23:59:59.999 for end of day (almost midnight)
+    calendar.set(Calendar.HOUR_OF_DAY, 23)
+    calendar.set(Calendar.MINUTE, 59)
+    calendar.set(Calendar.SECOND, 59)
+    calendar.set(Calendar.MILLISECOND, 999)
+
+    return calendar.timeInMillis
+}
+
 fun getTimestampForMonthStart(yearMonthString: String): Long {
     val (year, month) = yearMonthString.split("-").map { it.toInt() }
     val calendar = Calendar.getInstance()
@@ -123,28 +158,6 @@ fun getTimestampForMonthEnd(yearMonthString: String): Long {
     val calendar = Calendar.getInstance()
     calendar.set(year, month , calendar.getActualMaximum(Calendar.DAY_OF_MONTH), 0, 0, 0)
     calendar.set(Calendar.MILLISECOND, 999)
-    return calendar.timeInMillis
-}
-
-fun getCurrentDayTimeMillisecond():Long{
-    val calendar = Calendar.getInstance()
-    calendar.set(Calendar.HOUR_OF_DAY, 0)
-    calendar.set(Calendar.MINUTE, 0)
-    calendar.set(Calendar.SECOND,
-
-        0)
-    calendar.set(Calendar.MILLISECOND, 0)
-    val dayStartTime = calendar.timeInMillis
-
-    val currentTimeMillis = System.currentTimeMillis()
-    return currentTimeMillis - dayStartTime
-}
-fun convertDateStringToTimestamp(dateString: String,locale: Locale? = Locale.ENGLISH): Long {
-    val dateFormat = SimpleDateFormat("yyyy-MM-dd",locale)
-    val date = dateFormat.parse(dateString) ?: return 0
-
-    val calendar = Calendar.getInstance()
-    calendar.time = date
     return calendar.timeInMillis
 }
 

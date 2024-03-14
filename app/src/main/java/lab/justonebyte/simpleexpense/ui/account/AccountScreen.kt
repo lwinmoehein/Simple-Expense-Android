@@ -89,7 +89,6 @@ fun AccountScreen(
     val settingsUiState by settingsViewModel.viewModelUiState.collectAsState()
     val snackbarHostState = remember { SnackbarHostState() }
     val coroutineScope = rememberCoroutineScope()
-    var isLoginNeededDialogShown by remember { mutableStateOf(false) }
     val isLogoutConfirmDialogOpen = remember { mutableStateOf(false) }
 
     val isLoggingIn = settingsUiState.isLoggingIn
@@ -98,19 +97,6 @@ fun AccountScreen(
 
     if (isLoggingIn) {
         ProgressDialog(onDismissRequest = {}, text = stringResource(id = R.string.logging_in))
-    }
-
-    if (isLoginNeededDialogShown) {
-        AppAlertDialog(
-            title = stringResource(id = R.string.please_login),
-            negativeBtnText = null,
-            positiveBtnText = stringResource(id = R.string.confirm),
-            onPositiveBtnClicked = {
-                isLoginNeededDialogShown = false
-            }
-        ) {
-            Text(text = stringResource(id = R.string.please_login_first))
-        }
     }
 
     if (isLogoutConfirmDialogOpen.value) {
@@ -197,11 +183,7 @@ fun AccountScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .clickable {
-                            if (user == null) {
-                                isLoginNeededDialogShown = true
-                            } else {
                                 navController.navigate(MainDestinations.EXPORT)
-                            }
                         },
                     verticalAlignment = Alignment.CenterVertically
                 ) {
@@ -493,7 +475,7 @@ fun AccountScreen(
             if (user == null) {
                 Card(modifier = Modifier.fillMaxWidth().padding(horizontal = 0.dp, vertical = 3.dp)) {
                     Column(
-                        Modifier.fillMaxWidth().padding(5.dp)
+                        Modifier.fillMaxWidth().padding(10.dp)
                     ) {
                         Row(
                             horizontalArrangement = Arrangement.Start,
