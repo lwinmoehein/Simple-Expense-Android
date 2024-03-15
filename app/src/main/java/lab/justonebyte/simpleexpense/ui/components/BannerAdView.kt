@@ -14,7 +14,7 @@ import lab.justonebyte.simpleexpense.R
 fun BannerAdView(
     isTest: Boolean = true
 ) {
-    val unitId = "ca-app-pub-3940256099942544/6300978111"
+    val unitId = "ca-app-pub-5629179599083547/8824972030"
 
     AndroidView(
         factory = { context ->

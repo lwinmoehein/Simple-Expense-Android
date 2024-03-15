@@ -42,9 +42,11 @@ import lab.justonebyte.simpleexpense.api.AuthService
 import lab.justonebyte.simpleexpense.api.BetweenPostData
 import lab.justonebyte.simpleexpense.api.ExportService
 import lab.justonebyte.simpleexpense.api.UpdateProfilePostData
+import lab.justonebyte.simpleexpense.data.CategoryDao
 import lab.justonebyte.simpleexpense.data.CategoryRepository
 import lab.justonebyte.simpleexpense.data.SettingPrefRepository
 import lab.justonebyte.simpleexpense.data.TransactionRepository
+import lab.justonebyte.simpleexpense.data.populateCategories
 import lab.justonebyte.simpleexpense.model.AppList
 import lab.justonebyte.simpleexpense.model.BalanceType
 import lab.justonebyte.simpleexpense.model.Transaction
@@ -89,6 +91,7 @@ class SettingsViewModel @Inject constructor(
     private val settingRepository: SettingPrefRepository,
     private val transactionRepository: TransactionRepository,
     private val categoryRepository: CategoryRepository,
+    private val categoryDao: CategoryDao,
     @ApplicationContext private val application: Context
 ): ViewModel() {
     val TAG = "Ad"
@@ -250,6 +253,7 @@ class SettingsViewModel @Inject constructor(
             categoryRepository.deleteAll()
             settingRepository.updateToken("")
             settingRepository.updateSelectedCurrency("USD")
+            populateCategories(categoryDao)
         }
     }
 
@@ -387,7 +391,7 @@ class SettingsViewModel @Inject constructor(
         _isAdLoading.value = true
 
         val adRequest = AdRequest.Builder().build()
-        RewardedAd.load(application,"ca-app-pub-3940256099942544/5224354917", adRequest, object : RewardedAdLoadCallback() {
+        RewardedAd.load(application,"ca-app-pub-5629179599083547/6091105284", adRequest, object : RewardedAdLoadCallback() {
             override fun onAdFailedToLoad(adError: LoadAdError) {
                 _rewardedAd.value = null
                 _rewardedAd.value = null
