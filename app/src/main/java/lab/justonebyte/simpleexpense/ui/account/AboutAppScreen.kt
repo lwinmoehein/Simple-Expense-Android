@@ -71,16 +71,10 @@ fun AboutAppScreen(
 
                 Row(
                     horizontalArrangement = Arrangement.Center,
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier
-                        .height(110.dp)
-                        .width(110.dp)
-                        .padding(10.dp)
-                        .clip(RoundedCornerShape(100))
-                        .background(Color.White)
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
                     Image(
-                        painter = painterResource(id = R.drawable.ic_launcher), contentDescription = "",
+                        painter = painterResource(id = R.mipmap.ic_launcher), contentDescription = "",
                         modifier = Modifier
                             .height(80.dp)
                             .width(80.dp)

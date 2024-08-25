@@ -116,11 +116,10 @@ fun LoginScreen(
                 ) {
                     Surface(
                        shape = MaterialTheme.shapes.large,
-                        color = Color.White,
-                        shadowElevation = 10.dp
+                       color = Color.Transparent
                     ) {
                         Image(
-                            painter = painterResource(id = R.drawable.ic_launcher), contentDescription = "",
+                            painter = painterResource(id = R.mipmap.ic_launcher), contentDescription = "",
                             modifier = Modifier
                                 .height(80.dp)
                                 .width(80.dp)
