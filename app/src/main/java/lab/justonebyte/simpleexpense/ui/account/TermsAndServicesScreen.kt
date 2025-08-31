@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -11,7 +12,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.google.accompanist.navigation.animation.*
 import compose.icons.FeatherIcons
 import compose.icons.feathericons.ArrowLeft
 import kotlinx.coroutines.launch
@@ -58,35 +58,57 @@ fun TermsAndServicesScreen(
 
     Scaffold(
         topBar = {
-                IconButton(
-                    onClick =  {
-                       coroutineScope.launch{
-                           navController.popBackStack()
-                       }
-                    }
-                ) {
-                    Icon(
-                        imageVector = FeatherIcons.ArrowLeft,
-                        contentDescription = "",
-                        tint = MaterialTheme.colorScheme.primary
-                    )
+            IconButton(
+                onClick =  {
+                   coroutineScope.launch{
+                       navController.popBackStack()
+                   }
                 }
+            ) {
+                Icon(
+                    imageVector = FeatherIcons.ArrowLeft,
+                    contentDescription = "",
+                    tint = MaterialTheme.colorScheme.primary
+                )
+            }
         }
     ) {
         Column(Modifier.padding(it)) {
             Divider()
-            LazyColumn(Modifier.padding(15.dp)) {
-                item {
-                    SectionTitle(title = termTitle1,style=MaterialTheme.typography.titleLarge)
-                    Text(text = termBody1)
-                }
-                item {
-                    SectionTitle(title = termTitle2,style=MaterialTheme.typography.titleLarge)
-                    Text(text = termBody2)
-                }
-                item {
-                    SectionTitle(title = termTitle3,style=MaterialTheme.typography.titleLarge)
-                    Text(text = termBody3)
+            Card(
+                modifier = Modifier
+                    .padding(15.dp)
+                    .fillMaxWidth(),
+                shape = RoundedCornerShape(16.dp),
+                colors = CardDefaults.cardColors(
+                    containerColor = MaterialTheme.colorScheme.surfaceVariant
+                )
+            ) {
+                LazyColumn(Modifier.padding(20.dp)) {
+                    item {
+                        SectionTitle(title = termTitle1, style = MaterialTheme.typography.titleLarge)
+                        Text(
+                            text = termBody1,
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
+                    item {
+                        SectionTitle(title = termTitle2, style = MaterialTheme.typography.titleLarge)
+                        Text(
+                            text = termBody2,
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
+                    item {
+                        SectionTitle(title = termTitle3, style = MaterialTheme.typography.titleLarge)
+                        Text(
+                            text = termBody3,
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
                 }
             }
         }

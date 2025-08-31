@@ -14,6 +14,7 @@ import androidx.work.ExistingWorkPolicy
 import androidx.work.NetworkType
 import androidx.work.OneTimeWorkRequest
 import androidx.work.WorkManager
+import androidx.work.WorkRequest
 import com.google.android.gms.ads.AdError
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.FullScreenContentCallback
@@ -61,6 +62,7 @@ import lab.justonebyte.simpleexpense.workers.OBJECTS_STRING
 import lab.justonebyte.simpleexpense.workers.TOKEN
 import lab.justonebyte.simpleexpense.workers.UpdateCurrencyWorker
 import lab.justonebyte.simpleexpense.workers.runVersionSync
+import java.time.Duration
 import java.util.Currency
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
@@ -224,14 +226,16 @@ class SettingsViewModel @Inject constructor(
         viewModelScope.launch {
             settingRepository.updateSelectedCurrency(currency.currencyCode)
 
-            val updateCurrencyWorker =   OneTimeWorkRequest.Builder(UpdateCurrencyWorker::class.java)
+            val updateCurrencyWorker = OneTimeWorkRequest.Builder(UpdateCurrencyWorker::class.java)
                 .setInputData(
-                    Data.Builder().putString(TOKEN,token.value).putString(
-                        CURRENCY_CODE,currency.currencyCode).build()
+                    Data.Builder().putString(TOKEN, token.value).putString(
+                        CURRENCY_CODE, currency.currencyCode
+                    ).build()
                 )
+                // FIX: Updated to the new API using a Duration object
                 .setBackoffCriteria(
                     BackoffPolicy.EXPONENTIAL,
-                    OneTimeWorkRequest.MIN_BACKOFF_MILLIS,TimeUnit.MILLISECONDS
+                    Duration.ofMillis(WorkRequest.MIN_BACKOFF_MILLIS)
                 )
                 .setConstraints(Constraints.Builder().setRequiredNetworkType(NetworkType.CONNECTED).build())
                 .build()

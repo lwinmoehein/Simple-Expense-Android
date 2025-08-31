@@ -1,12 +1,16 @@
 package lab.justonebyte.simpleexpense.ui.home
 
 import android.annotation.SuppressLint
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.absolutePadding
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Card
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -196,7 +200,11 @@ fun HomeScreen(
         },
         snackbarHost = { SnackbarHost(snackbarHostState) },
         ) {
-        Column(Modifier.padding(it)) {
+        Column(
+            Modifier
+                .padding(it)
+                .background(MaterialTheme.colorScheme.surfaceVariant)
+        ) {
             SimpleExpenseSnackBar(
                 snackBarType = homeUiState.currentSnackBar,
                 onDismissSnackBar = { homeViewModel.clearSnackBar() },
@@ -208,22 +216,40 @@ fun HomeScreen(
                     .absolutePadding(bottom = 10.dp)
                     .fillMaxWidth()
             ) {
-                    ChooseTransactionTypeTab(
-                        balanceType =  homeUiState.currentBalanceType,
-                        onTypeChanged = { type->
-                           coroutineScope.launch {
-                               homeViewModel.bindTransactionsFromBalanceType(type)
-                           }
-                        }
-                    )
-
+                ChooseTransactionTypeTab(
+                    balanceType =  homeUiState.currentBalanceType,
+                    onTypeChanged = { type->
+                       coroutineScope.launch {
+                           homeViewModel.bindTransactionsFromBalanceType(type)
+                       }
+                    }
+                )
             }
-            HomeContent(
-                homeUiState = homeUiState,
-                onTransactionClick = {
-                    currentTransaction.value = it
-                },
-                homeViewModel = homeViewModel
+            Card(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(10.dp),
+                shape = MaterialTheme.shapes.medium,
+                colors = androidx.compose.material3.CardDefaults.cardColors(
+                    containerColor = MaterialTheme.colorScheme.background
+                )
+            ) {
+                HomeContent(
+                    homeUiState = homeUiState,
+                    onTransactionClick = {
+                        currentTransaction.value = it
+                    },
+                    homeViewModel = homeViewModel
+                )
+            }
+            Spacer(modifier = Modifier.height(12.dp))
+            Text(
+                text = "Your transactions are private and secure.",
+                style = MaterialTheme.typography.labelLarge,
+                color = MaterialTheme.colorScheme.primary,
+                modifier = Modifier
+                    .align(androidx.compose.ui.Alignment.CenterHorizontally)
+                    .padding(bottom = 8.dp)
             )
         }
 

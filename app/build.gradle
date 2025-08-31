@@ -2,19 +2,22 @@ plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
     id 'kotlin-kapt'
-    id 'dagger.hilt.android.plugin'
+    // Use the modern plugin ID for Hilt
+    id 'com.google.dagger.hilt.android'
     id 'com.google.gms.google-services'
 }
 
 android {
-    compileSdk 34
+    compileSdk 36
+    namespace 'lab.justonebyte.simpleexpense'
+
 
     defaultConfig {
         applicationId "lab.justonebyte.simpleexpense"
-        minSdk 21
-        targetSdk 34
-        versionCode 2
-        versionName "1.0.0"
+        minSdk 26
+        targetSdk 36
+        versionCode 3
+        versionName "2.0.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -30,18 +33,21 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        // Updated to Java 17, the modern standard for Android
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
     }
     kotlinOptions {
-        jvmTarget = '1.8'
+        jvmTarget = '17'
     }
     buildFeatures {
         compose true
+        // viewBinding is still enabled, but consider removing if your app is fully Compose
         viewBinding true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.7"
+        // Correct version for Kotlin 1.9.22
+        kotlinCompilerExtensionVersion = "1.5.8"
     }
     packagingOptions {
         resources {
@@ -51,99 +57,87 @@ android {
 }
 
 dependencies {
-    implementation 'com.google.android.gms:play-services-auth:20.4.1'
-    implementation 'androidx.appcompat:appcompat:1.5.1'
-    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
-    implementation 'androidx.navigation:navigation-fragment-ktx:2.5.3'
-    implementation 'androidx.navigation:navigation-ui-ktx:2.5.3'
+    implementation 'androidx.compose.material3:material3:1.3.2'
 
-    //compose
-    def composeBom = platform('androidx.compose:compose-bom:2023.10.01')
+    // Use the latest Compose BOM for consistent versions
+    def composeBom = platform('androidx.compose:compose-bom:2024.08.00')
     implementation composeBom
     androidTestImplementation composeBom
+
+    // Core & AppCompat (Updated)
+    implementation 'androidx.core:core-ktx:1.17.0'
+    implementation 'androidx.appcompat:appcompat:1.7.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.2.1' // Keep if you use XML layouts
+    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.8.1'
+
+    // Navigation (Consolidated and Updated)
+    // For Fragment-based navigation (if you still have it)
+    implementation "androidx.navigation:navigation-fragment-ktx:$nav_version"
+    implementation "androidx.navigation:navigation-ui-ktx:$nav_version"
+    // For Compose-based navigation
+    implementation "androidx.navigation:navigation-compose:$nav_version"
+
+    // Compose (Cleaned up, versions managed by BOM)
     implementation "androidx.compose.ui:ui"
-    implementation "androidx.compose.material3:material3:$m3_version"
+    implementation "androidx.compose.material3:material3" // Version from BOM
     implementation "androidx.compose.ui:ui-tooling-preview"
-    implementation 'androidx.activity:activity-compose:1.3.1'
-    implementation "androidx.compose.ui:ui-util:1.1.1"
+    implementation 'androidx.activity:activity-compose:1.9.0' // Updated
     androidTestImplementation "androidx.compose.ui:ui-test-junit4"
     debugImplementation "androidx.compose.ui:ui-tooling"
-    implementation("androidx.hilt:hilt-navigation-compose:$hilt_nav_version")
-    implementation "androidx.navigation:navigation-compose:2.7.6"
+    debugImplementation "androidx.compose.ui:ui-test-manifest"
 
-    //androidx
-    implementation 'androidx.core:core-ktx:1.7.0'
-    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.3.1'
-    implementation 'androidx.activity:activity-compose:1.3.1'
-    implementation("androidx.datastore:datastore:$datastore_version")
-    implementation("androidx.datastore:datastore-preferences:$datastore_version")
-    implementation("androidx.work:work-runtime-ktx:$work_version")
-
-
-    //test
-    testImplementation 'junit:junit:4.13.2'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.3'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
-
-    //hilt
+    // Hilt (Cleaned up, using ext versions)
     implementation "com.google.dagger:hilt-android:$hilt_version"
     kapt "com.google.dagger:hilt-android-compiler:$hilt_version"
-    implementation("androidx.hilt:hilt-navigation-compose:$hilt_nav_version")
-    implementation "androidx.navigation:navigation-compose:2.5.1"
+    implementation "androidx.hilt:hilt-navigation-compose:1.2.0" // Updated
 
-    //app companist
-    implementation "com.google.accompanist:accompanist-systemuicontroller:$app_companist_version"
-    implementation "com.google.accompanist:accompanist-insets:$app_companist_version"
-    implementation "com.google.accompanist:accompanist-pager:$app_companist_version"
-    implementation "com.google.accompanist:accompanist-pager-indicators:$app_companist_version"
-    implementation "com.google.accompanist:accompanist-navigation-animation:0.19.0"
+    // AndroidX Libraries (Using ext versions)
+    implementation "androidx.datastore:datastore-preferences:$datastore_version"
+    implementation "androidx.work:work-runtime-ktx:$work_version"
 
-    // Room components
+    // Room (Using ext versions)
     implementation "androidx.room:room-ktx:$room_version"
     kapt "androidx.room:room-compiler:$room_version"
     androidTestImplementation "androidx.room:room-testing:$room_version"
 
-    //chart
-    implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
+    // Coroutines (Updated)
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.1"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.8.1"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.8.1"
 
-    //number picker
-    implementation "com.chargemap.compose:numberpicker:1.0.3"
-    implementation 'com.github.commandiron:WheelPickerCompose:1.1.11'
-
-
-    //networking
-    implementation ("com.squareup.retrofit2:retrofit:2.9.0")
-    implementation ("com.squareup.retrofit2:converter-gson:2.9.0")
-    implementation 'com.squareup.retrofit2:converter-scalars:2.9.0'
-    implementation 'com.squareup.okhttp3:okhttp:4.9.1'
-
-
-    implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.2")
-    implementation("io.coil-kt:coil-compose:2.0.0-rc01")
-    implementation('org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.6.3')
-
-    //firebase
-    implementation platform('com.google.firebase:firebase-bom:31.2.2')
+    // Firebase (Updated BOM and dependencies)
+    implementation platform('com.google.firebase:firebase-bom:33.1.0')
     implementation 'com.google.firebase:firebase-analytics-ktx'
     implementation 'com.google.firebase:firebase-auth-ktx'
     implementation 'com.google.firebase:firebase-firestore-ktx'
+    implementation 'com.google.android.gms:play-services-auth:21.2.0' // For Google Sign-in
 
-    //icons
-    implementation("br.com.devsrsouza.compose.icons:feather:1.1.0")
-    implementation("br.com.devsrsouza.compose.icons:font-awesome:1.1.0")
+    // Networking (OkHttp/Retrofit are stable, versions are fine)
+    implementation "com.squareup.retrofit2:retrofit:2.9.0"
+    implementation "com.squareup.retrofit2:converter-gson:2.9.0"
+    implementation 'com.squareup.retrofit2:converter-scalars:2.9.0'
+    implementation 'com.squareup.okhttp3:okhttp:4.12.0' // Minor update for security
 
-    //showcase
+    // Ads (Updated)
+    implementation 'com.google.android.gms:play-services-ads:23.1.0'
+
+    // Image Loading (Coil updated)
+    implementation "io.coil-kt:coil-compose:2.6.0"
+
+    // 3rd Party UI
+    implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
+    implementation "com.chargemap.compose:numberpicker:1.0.3"
+    implementation 'com.github.commandiron:WheelPickerCompose:1.1.11'
+    implementation "br.com.devsrsouza.compose.icons:feather:1.1.0"
+    implementation "br.com.devsrsouza.compose.icons:font-awesome:1.1.0"
     implementation 'com.canopas.intro-showcase-view:introshowcaseview:2.0.1'
 
-    //ads
-    implementation 'com.google.android.gms:play-services-ads:22.6.0'
+    // Excel (CRITICAL: Updated for security and functionality)
+    implementation 'org.apache.poi:poi-ooxml:5.2.5'
+    // The other dependencies are transitive and should be resolved by POI
 
-    //excel
-    implementation group: 'org.apache.poi', name: 'poi-ooxml', version: '3.17'
-    implementation group: 'org.apache.xmlbeans', name: 'xmlbeans', version: '3.1.0'
-    implementation 'javax.xml.stream:stax-api:1.0'
-    implementation 'com.fasterxml:aalto-xml:1.2.2'
-
-    
-
+    // Testing (Updated)
+    testImplementation 'junit:junit:4.13.2'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.5'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
 }

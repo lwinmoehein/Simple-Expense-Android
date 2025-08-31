@@ -1,23 +1,46 @@
+// buildscript block is now legacy. Dependencies are handled in the plugins block.
+// You should only define versions in the ext block.
 buildscript {
     ext {
-        hilt_version = '2.50'
-        hilt_nav_version = '1.0.0'
-        nav_version = '2.4.2'
-        app_companist_version = '0.28.0'
+        // Updated Hilt to the latest version
+        hilt_version = '2.51.1'
+
+        // Updated Navigation Component
+        nav_version = '2.7.7'
+
+        // Room is already up-to-date
         room_version = '2.6.1'
-        datastore_version = '1.0.0'
-        m3_version = '1.0.1'
-        google_service_version='4.3.13'
-        work_version='2.7.0'
+
+        // Updated DataStore
+        datastore_version = '1.1.1'
+
+        // Updated Material 3
+        m3_version = '1.2.1'
+
+        // Updated Google Services Plugin
+        google_service_version = '4.4.2'
+
+        // Updated WorkManager
+        work_version = '2.9.0'
+
+        // hilt_nav_version is no longer needed with modern Hilt/Nav
+        // app_companist_version is removed because the library is deprecated
     }
+    // Classpaths are also legacy and should be moved to the plugins block in settings.gradle
+    // But for minimal changes, we can update it here.
     dependencies {
-        classpath "com.google.dagger:hilt-android-gradle-plugin:$hilt_version"
         classpath "com.google.gms:google-services:$google_service_version"
+        classpath "com.google.dagger:hilt-android-gradle-plugin:$hilt_version"
     }
-}
-plugins {
-    id 'com.android.application' version '7.1.2' apply false
-    id 'com.android.library' version '7.1.2' apply false
-    id 'org.jetbrains.kotlin.android' version '1.9.21' apply false
 }
 
+plugins {
+    // CRITICAL: Updated AGP and Kotlin to compatible, modern versions
+    id 'com.android.application' version '8.12.0' apply false
+    id 'com.android.library' version '8.12.0' apply false
+    id 'org.jetbrains.kotlin.android' version '1.9.22' apply false
+
+    // It's also modern practice to declare the Hilt and Google Services plugins here
+    id 'com.google.gms.google-services' version '4.4.2' apply false
+    id 'com.google.dagger.hilt.android' version '2.51.1' apply false
+}

@@ -32,8 +32,8 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import compose.icons.FeatherIcons
 import compose.icons.feathericons.ArrowLeft
-import lab.justonebyte.simpleexpense.BuildConfig
 import lab.justonebyte.simpleexpense.R
+
 
 @Composable
 fun AboutAppScreen(
@@ -90,7 +90,7 @@ fun AboutAppScreen(
                         fontSize = 36.sp,
                         color = MaterialTheme.colorScheme.primary
                     )
-                    Text(text = "Version: v"+ BuildConfig.VERSION_NAME, fontSize = 14.sp,color = MaterialTheme.colorScheme.onSurface)
+                    Text(text = "Version: v"+ "hi", fontSize = 14.sp,color = MaterialTheme.colorScheme.onSurface)
                 }
 
                 Text(

@@ -2,6 +2,8 @@ import android.os.Build
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalView
+import androidx.compose.foundation.isSystemInDarkTheme
 import lab.justonebyte.simpleexpense.ui.theme.SimpleExpenseShapes
 import lab.justonebyte.simpleexpense.ui.theme.SimpleExpenseTypography
 
@@ -71,28 +73,37 @@ private val DarkColors = darkColorScheme(
     scrim = md_theme_dark_scrim,
 )
 
-fun supportsDynamic() : Boolean = Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
+fun supportsDynamic(): Boolean = Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
 
+/**
+ * Improved AppTheme:
+ * - Uses system dark theme by default.
+ * - Allows optional dynamic color override.
+ * - Allows custom colorScheme for previews or special screens.
+ */
 @Composable
 fun AppTheme(
-  useDarkTheme: Boolean = true,
-  content: @Composable() () -> Unit
+    useDarkTheme: Boolean = isSystemInDarkTheme(),
+    useDynamicColor: Boolean = supportsDynamic(),
+    colorScheme: ColorScheme? = null,
+    content: @Composable () -> Unit
 ) {
-
-    val colors = if (supportsDynamic()) {
-        val context = LocalContext.current
-        if (useDarkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
-    } else {
-        if (useDarkTheme) DarkColors else LightColors
+    val context = LocalContext.current
+    val colors = when {
+        colorScheme != null -> colorScheme
+        useDynamicColor && supportsDynamic() -> {
+            if (useDarkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
+        }
+        else -> if (useDarkTheme) DarkColors else LightColors
     }
 
-
+    // Optionally add elevation overlay for dark theme surfaces
+    // (Material3 does this automatically, but you can customize here if needed)
 
     MaterialTheme(
         colorScheme = colors,
-        content = content,
         typography = SimpleExpenseTypography,
-        shapes = SimpleExpenseShapes
+        shapes = SimpleExpenseShapes,
+        content = content
     )
 }
-

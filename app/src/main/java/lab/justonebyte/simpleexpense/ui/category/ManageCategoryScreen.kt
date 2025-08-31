@@ -40,7 +40,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.google.accompanist.pager.ExperimentalPagerApi
 import compose.icons.FeatherIcons
 import compose.icons.feathericons.ArrowDown
 import compose.icons.feathericons.ArrowUp
@@ -62,7 +61,6 @@ sealed class CategoryTab(val index:Int,val title:Int,val icon:ImageVector){
 }
 
 
-@ExperimentalPagerApi
 @Composable
 fun CategoryTabs(
     onTabChanged: (TransactionType) -> Unit
@@ -84,7 +82,6 @@ fun CategoryTabs(
     }
 }
 
-@OptIn(ExperimentalPagerApi::class)
 @Composable
 fun ManageCategoryScreen(){
     val categoryViewModel = hiltViewModel<CategoryViewModel>()

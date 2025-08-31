@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.spring
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -16,6 +17,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.KeyboardArrowRight
@@ -41,23 +44,24 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.google.accompanist.pager.ExperimentalPagerApi
-import com.google.accompanist.pager.HorizontalPager
-import com.google.accompanist.pager.rememberPagerState
 import kotlinx.coroutines.launch
 import lab.justonebyte.simpleexpense.R
 import lab.justonebyte.simpleexpense.model.OnBoardingItem
 
-@OptIn(ExperimentalPagerApi::class)
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun OnBoardingScreen(
-    onStartClick: ()->Unit,
-    context: Context = LocalContext.current
+    onStartClick: () -> Unit,
+    context: Context = LocalContext.current // Note: This context variable is unused
 ) {
     val items = OnBoardingItem.getData()
     val scope = rememberCoroutineScope()
-    val pageState = rememberPagerState()
 
+    // FIX 1: rememberPagerState() is a function and now takes the page count.
+    val pageState = rememberPagerState(pageCount = { items.size })
+
+    // This ViewModel and its state are declared but not used in the UI.
+    // You can remove them if they aren't needed for other logic.
     val onBoardViewModel = hiltViewModel<OnBoardViewModel>()
     val onBoardUiState by onBoardViewModel.viewModelUiState.collectAsState()
 
@@ -65,40 +69,41 @@ fun OnBoardingScreen(
     Box(modifier = Modifier
         .fillMaxSize()
         .background(Color.White)) {
-       Column(
-           modifier = Modifier.fillMaxSize(),
-       ) {
+        Column(
+            modifier = Modifier.fillMaxSize(),
+        ) {
 
-           HorizontalPager(
-               count = items.size,
-               state = pageState,
-               modifier = Modifier
-                   .weight(5f)
-                   .fillMaxWidth()
-           ) { page ->
-               Column(
-                   modifier = Modifier.fillMaxWidth(),
-                   verticalArrangement = Arrangement.Center,
-                   horizontalAlignment = Alignment.CenterHorizontally
-               ) {
-                   OnBoardingItem(item = items[page])
-               }
-           }
-           BottomSection(
-               modifier = Modifier.weight(1f),
-               size = items.size, index = pageState.currentPage,
-               onButtonClick = {
-                   scope.launch {
-                      onStartClick()
-                   }
-               }
-           )
-       }
-
+            HorizontalPager(
+                // FIX 2: The 'count' parameter is removed. It's now handled by the state.
+                state = pageState,
+                modifier = Modifier
+                    .weight(5f)
+                    .fillMaxWidth(),
+                // BEST PRACTICE: Add a unique key for each item for better performance.
+                key = { page -> items[page].title }
+            ) { page ->
+                Column(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    OnBoardingItem(item = items[page])
+                }
+            }
+            BottomSection(
+                modifier = Modifier.weight(1f),
+                size = items.size, index = pageState.currentPage,
+                onButtonClick = {
+                    // This is fine, but you can also just call onStartClick() directly
+                    // if it doesn't need to be in a separate coroutine.
+                    scope.launch {
+                        onStartClick()
+                    }
+                }
+            )
+        }
     }
 }
-
-
 @Composable
 fun BottomSection(
     modifier: Modifier,size: Int, index: Int, onButtonClick: () -> Unit = {}

@@ -30,8 +30,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.rememberNavController
 import com.canopas.lib.showcase.IntroShowcase
 import com.canopas.lib.showcase.component.ShowcaseStyle
-import com.google.accompanist.insets.ProvideWindowInsets
-import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import compose.icons.FeatherIcons
 import compose.icons.feathericons.Home
 import compose.icons.feathericons.List
@@ -63,25 +61,19 @@ fun SimpleExpenseApp(
 ) {
 
     var selectedItem by remember { mutableStateOf(0) }
-    val navItems = listOf(NavItem.HOME,NavItem.CHARTS,NavItem.CATEGORIES,NavItem.ACCOUNT)
+    val navItems = listOf(NavItem.HOME, NavItem.CHARTS, NavItem.CATEGORIES, NavItem.ACCOUNT)
     val homeViewModel = hiltViewModel<HomeViewModel>()
     val homeUiState by homeViewModel.viewModelUiState.collectAsState()
-
     val coroutineScope = rememberCoroutineScope()
 
-    val systemUiController = rememberSystemUiController()
-
-    systemUiController.setStatusBarColor(color =  MaterialTheme.colorScheme.surfaceTint)
-    systemUiController.setNavigationBarColor(color =  MaterialTheme.colorScheme.surfaceTint)
+    // REMOVED: The rememberSystemUiController() and the manual color setting calls are no longer needed.
+    // The AppTheme will handle system bar colors automatically.
 
     val navController = rememberNavController()
     val isLoginShown = remember { mutableStateOf(false) }
-
     val isAppOnboardingShowed = remember { mutableStateOf(isOnboardingDoneFlagExist(context)) }
 
-
     AppTheme() {
-        ProvideWindowInsets {
                 if(!isAppOnboardingShowed.value){
                     if(!isLoginShown.value)
                         OnBoardingScreen(onStartClick = {
@@ -224,7 +216,6 @@ fun SimpleExpenseApp(
                                 settingsViewModel = settingsViewModel
                             )
                     }
-                }
         }
     }
 }
