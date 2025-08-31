@@ -7,6 +7,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.TextUnit
@@ -21,13 +22,14 @@ fun FormattedCurrency(
     modifier: Modifier = Modifier,
     amount: Long,
     color:Color,
-    currencyCode: String = "USD"
+    currencyCode: String = "USD",
+    style: TextStyle
 ) {
 
     Text(
         color = color,
         text =currencyCode+(if(color==Color.Red) " -" else " ")+formatLongWithCommas(amount),
-        style = MaterialTheme.typography.titleSmall,
+        style = style,
         modifier = modifier.padding(horizontal = 2.dp)
     )
 }

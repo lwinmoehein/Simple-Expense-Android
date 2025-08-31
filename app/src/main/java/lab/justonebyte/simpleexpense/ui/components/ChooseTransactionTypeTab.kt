@@ -1,26 +1,18 @@
 package lab.justonebyte.simpleexpense.ui.components
 
 import android.annotation.SuppressLint
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
-import androidx.compose.runtime.*
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.unit.dp
-import lab.justonebyte.simpleexpense.model.BalanceType
-import lab.justonebyte.simpleexpense.ui.home.*
-import java.util.*
 import lab.justonebyte.simpleexpense.R
+import lab.justonebyte.simpleexpense.model.BalanceType
 
 sealed class BalanceTypeOption( override val name:Int,override val value:Any): OptionItem {
     object DAILY: BalanceTypeOption(R.string.daily, BalanceType.DAILY)

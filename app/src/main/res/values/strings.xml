@@ -129,7 +129,7 @@
     <string name="select_date_range">Export Date Range</string>
     <string name="from">From</string>
     <string name="to">To</string>
-    <string name="logging_in">Loggin in</string>
+    <string name="logging_in">Logging in</string>
     <string name="login_success">Successfully logged in.</string>
     <string name="login_error">Login failed, please try again.</string>
     <string name="logout_success">Successfully logged out.</string>

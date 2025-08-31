@@ -30,6 +30,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.google.firebase.BuildConfig
 import compose.icons.FeatherIcons
 import compose.icons.feathericons.ArrowLeft
 import lab.justonebyte.simpleexpense.R
@@ -90,7 +91,7 @@ fun AboutAppScreen(
                         fontSize = 36.sp,
                         color = MaterialTheme.colorScheme.primary
                     )
-                    Text(text = "Version: v"+ "hi", fontSize = 14.sp,color = MaterialTheme.colorScheme.onSurface)
+                    Text(text = "Version: v2.0.0", fontSize = 14.sp,color = MaterialTheme.colorScheme.onSurface)
                 }
 
                 Text(

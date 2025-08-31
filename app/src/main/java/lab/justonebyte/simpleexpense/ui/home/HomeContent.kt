@@ -11,6 +11,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import lab.justonebyte.simpleexpense.R
 import lab.justonebyte.simpleexpense.model.Transaction
+import lab.justonebyte.simpleexpense.ui.BalanceCard
 import lab.justonebyte.simpleexpense.ui.components.SectionTitle
 import java.util.Locale
 
@@ -22,7 +23,7 @@ fun HomeContent(
     homeViewModel: HomeViewModel
 ){
 
-        Column(Modifier.padding(10.dp)) {
+        Column() {
             BalanceCard(
                 homeViewModel = homeViewModel,
                 homeUiState = homeUiState

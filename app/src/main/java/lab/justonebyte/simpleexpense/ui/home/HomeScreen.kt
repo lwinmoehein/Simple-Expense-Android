@@ -118,7 +118,7 @@ fun HomeScreen(
             properties = DialogProperties(decorFitsSystemWindows = true, usePlatformDefaultWidth = false),
             content = {
                 Column {
-                            AddTransactionContent(
+                    AddTransactionContent (
                                 homeUiState = homeUiState,
                                 homeViewModel = homeViewModel,
                                 currentTransaction = currentTransaction.value,
@@ -227,11 +227,10 @@ fun HomeScreen(
             }
             Card(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(10.dp),
+                    .fillMaxWidth(),
                 shape = MaterialTheme.shapes.medium,
                 colors = androidx.compose.material3.CardDefaults.cardColors(
-                    containerColor = MaterialTheme.colorScheme.background
+                    containerColor = MaterialTheme.colorScheme.surface
                 )
             ) {
                 HomeContent(

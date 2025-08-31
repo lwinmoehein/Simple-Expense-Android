@@ -22,6 +22,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import com.github.mikephil.charting.charts.PieChart
@@ -139,7 +140,8 @@ fun CustomPieChartWithData(
                     FormattedCurrency(
                         amount = totalAmount.toLong(),
                         color =if(transactionType==TransactionType.Income) MaterialTheme.colorScheme.primary  else Color.Red,
-                        currencyCode = getValidCurrencyCode(currency)
+                        currencyCode = getValidCurrencyCode(currency),
+                        style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Bold)
                     )
                 }
             }

@@ -328,7 +328,6 @@ class HomeViewModel @Inject constructor(
 
         viewModelScope.launch {
             transactionRepository.delete(transaction)
-            _viewModelUiState.update { it.copy(currentSnackBar = SnackBarType.DELETE_TRANSACTION_SUCCESS) }
 
             bindTransactionsFromBalanceType(_viewModelUiState.value.currentBalanceType)
 
