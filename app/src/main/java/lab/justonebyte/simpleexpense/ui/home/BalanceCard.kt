@@ -52,7 +52,7 @@ fun BalanceCard(
     val coroutineScope = rememberCoroutineScope()
 
     Card(
-        modifier = modifier.fillMaxWidth()// Softer corners
+        modifier = modifier.padding(20.dp).fillMaxWidth()// Softer corners
     ) {
         Column(
             modifier = Modifier.padding(all = 16.dp),

@@ -213,8 +213,7 @@ fun HomeScreen(
             Row(
                 horizontalArrangement = Arrangement.Center,
                 modifier = Modifier
-                    .absolutePadding(bottom = 10.dp)
-                    .fillMaxWidth()
+                     .fillMaxWidth()
             ) {
                 ChooseTransactionTypeTab(
                     balanceType =  homeUiState.currentBalanceType,
