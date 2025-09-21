@@ -142,22 +142,32 @@ class SettingsViewModel @Inject constructor(
                 val result = authService.getAccessToken(
                     googleId)
                 result.body()?.let {
-                    Log.i("access token:", it.data.token)
-                    settingRepository.updateToken(it.data.token)
-                    launch {
-                        runVersionSync(application,"categories",it.data.token)
+                    if(it.data.token.isEmpty()){
+                        _viewModelUiState.update {uiState->
+                            uiState.copy(
+                                isLoggingIn = false,
+                                currentSnackBar = SnackBarType.LOGIN_ERROR
+                            )
+                        }
+                    }else{
+                        settingRepository.updateToken(it.data.token)
+                        launch {
+                            runVersionSync(application,"categories",it.data.token)
+                        }
+                        launch {
+                            runVersionSync(application,"transactions",it.data.token)
+                        }
+                        _viewModelUiState.update {uiState->
+                            uiState.copy(
+                                isLoggingIn = false,
+                                firebaseUser =  FirebaseAuth.getInstance().currentUser,
+                                currentSnackBar = SnackBarType.LOGIN_SUCCESS
+                            )
+                        }
                     }
-                    launch {
-                        runVersionSync(application,"transactions",it.data.token)
-                    }
-                    _viewModelUiState.update {uiState->
-                        uiState.copy(
-                            isLoggingIn = false,
-                            firebaseUser =  FirebaseAuth.getInstance().currentUser,
-                            currentSnackBar = SnackBarType.LOGIN_SUCCESS
-                        )
-                    }
+
                 }
+
             }catch (e:Exception){
                 Log.i("access token fail","cannot fetch access token.")
                 Firebase.auth.signOut()

@@ -33,6 +33,7 @@ import lab.justonebyte.simpleexpense.workers.runVersionSync
 import java.util.Currency
 import java.util.UUID
 import javax.inject.Inject
+import kotlin.math.log
 
 data class HomeUiState(
     val isAppAlreadyIntroduced:Boolean?=null,
@@ -217,6 +218,7 @@ class HomeViewModel @Inject constructor(
 
      suspend fun collectMonthlyBalance(){
             transactionRepository.getMonthlyTransactions(viewModelUiState.value.selectedMonth).collect{ transactions->
+                Log.i("month",transactions.size.toString())
                 if(viewModelUiState.value.currentBalanceType==BalanceType.MONTHLY) {
                     bindBalanceData(transactions)
                 }

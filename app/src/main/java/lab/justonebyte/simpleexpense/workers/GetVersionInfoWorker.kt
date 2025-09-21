@@ -5,8 +5,6 @@ import androidx.work.CoroutineWorker
 import androidx.work.Data
 import androidx.work.WorkerParameters
 import com.google.gson.Gson
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.SupervisorJob
 import lab.justonebyte.simpleexpense.api.ObjectPostData
 import lab.justonebyte.simpleexpense.api.ObjectService
 import lab.justonebyte.simpleexpense.data.*
@@ -18,23 +16,10 @@ class GetVersionInfoWorker (
     workerParams: WorkerParameters
 )  : CoroutineWorker(context, workerParams) {
 
-    private val scope =  CoroutineScope(SupervisorJob())
-
-
     override suspend fun doWork(): Result {
-        val categoryDao: CategoryDao =
-            AppDatabase.getDatabase(applicationContext,scope).categoryDao()
-        val categoryRepository = CategoryRepositoryImpl(categoryDao)
-        val transactionDao: TransactionDao =
-            AppDatabase.getDatabase(applicationContext,scope).transactionDao()
-        val transactionRepository = TransactionRepositoryImpl(transactionDao)
-
         val tableName = inputData.getString(KEY_TABLE_NAME)
         val token = inputData.getString(TOKEN)?:""
 
-
-//        val categoryVersions = categoryRepository.getUniqueIdsWithVersions()
-//        val transactionVersions = transactionRepository.getUniqueIdsWithVersions()
         val versions = Gson().fromJson(inputData.getString(OBJECTS_STRING), Array<UniqueIdWithVersion>::class.java).toList()
 
 

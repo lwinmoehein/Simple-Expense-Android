@@ -80,17 +80,38 @@ class OnBoardViewModel @Inject constructor(
         supervisorScope  {
             try{
                 val result = authService.getAccessToken(googleId)
-                result.body()?.let {
-                    Log.i("access token:", it.data.token)
-                    settingsRepository.updateToken(it.data.token)
-                    settingsRepository.updateSelectedCurrency(it.data.currency)
-                    runVersionSync(application,"categories",it.data.token)
-                    runVersionSync(application,"transactions",it.data.token)
+
+                if (result.isSuccessful && result.body() != null) {
+                   result.body()?.let {
+                      if(it.data.token.isEmpty()){
+                          _viewModelUiState.update {uiState->
+                              uiState.copy(
+                                  isLoggingIn = false,
+                                  firebaseUser = null,
+                                  currentSnackBar = SnackBarType.LOGIN_ERROR
+                              )
+                          }
+                      }else{
+                          settingsRepository.updateToken(it.data.token)
+                          settingsRepository.updateSelectedCurrency(it.data.currency)
+                          runVersionSync(application,"categories",it.data.token)
+                          runVersionSync(application,"transactions",it.data.token)
+                          _viewModelUiState.update {uiState->
+                              uiState.copy(
+                                  isLoggingIn = false,
+                                  firebaseUser =  FirebaseAuth.getInstance().currentUser,
+                                  currentSnackBar = SnackBarType.LOGIN_SUCCESS
+                              )
+                          }
+                      }
+
+                   }
+                }else{
                     _viewModelUiState.update {uiState->
                         uiState.copy(
                             isLoggingIn = false,
-                            firebaseUser =  FirebaseAuth.getInstance().currentUser,
-                            currentSnackBar = SnackBarType.LOGIN_SUCCESS
+                            firebaseUser =  null,
+                            currentSnackBar = SnackBarType.LOGIN_ERROR
                         )
                     }
                 }

@@ -1,0 +1,96 @@
+{
+  "project_info": {
+    "project_number": "533565625186",
+    "firebase_url": "https://x-money-tracker-default-rtdb.firebaseio.com",
+    "project_id": "x-money-tracker",
+    "storage_bucket": "x-money-tracker.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:533565625186:android:c5abc7f4cb1f1bf078123b",
+        "android_client_info": {
+          "package_name": "lab.justonebyte.simpleexpense"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "533565625186-8cftrb072ks6rpds6h1p0fdgtvjmenb3.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "lab.justonebyte.simpleexpense",
+            "certificate_hash": "6e1cd25135049329d787613ab19a108207693344"
+          }
+        },
+        {
+          "client_id": "533565625186-9d6ifpd6jh6lds0tc4qo7kidun7jc71v.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "lab.justonebyte.simpleexpense",
+            "certificate_hash": "0287e18d2849bc30aeea374bd665dba339a01a42"
+          }
+        },
+        {
+          "client_id": "533565625186-ilhbrni6ari0m4rmld9o5grhc6ie5dbs.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "lab.justonebyte.simpleexpense",
+            "certificate_hash": "b20a4d60c16d84d54735ae2fc391bbe7cd11d214"
+          }
+        },
+        {
+          "client_id": "533565625186-le0918v0nkpbf4eqinl53coo9t2ig928.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "lab.justonebyte.simpleexpense",
+            "certificate_hash": "87f756bc7ecea4b9f37cd46db839e997e67c03dd"
+          }
+        },
+        {
+          "client_id": "533565625186-pj735vckvsp6aujmp0vkv3b364s47an2.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "lab.justonebyte.simpleexpense",
+            "certificate_hash": "f5066ecdc4d2af5ed7b14f9907a8d8b5fcf844b4"
+          }
+        },
+        {
+          "client_id": "533565625186-t42ko9v4c5h4l00s410p84t47i502eim.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "lab.justonebyte.simpleexpense",
+            "certificate_hash": "3e9e262d57309221958dec24886ea1d95e9d8624"
+          }
+        },
+        {
+          "client_id": "533565625186-tu5291ol95dlt3jgg3k5sip7dqb3bir6.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "lab.justonebyte.simpleexpense",
+            "certificate_hash": "d61a06a02117bd8d84c176a6ea9da12a84d0c1b6"
+          }
+        },
+        {
+          "client_id": "533565625186-sujbsu657r2l7bdddboe99i1k31c54q1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCUyWsbEfiPOtKiCgteYiCkmB_u0LDbNyo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "533565625186-jgcnvi3gfuq8hahp9o5tif57h2nlu6e6.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

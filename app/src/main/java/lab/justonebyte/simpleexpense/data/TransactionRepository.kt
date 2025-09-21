@@ -1,5 +1,6 @@
 package lab.justonebyte.simpleexpense.data
 
+import android.util.Log
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import lab.justonebyte.simpleexpense.model.ServerTransaction
@@ -39,7 +40,8 @@ class TransactionRepositoryImpl @Inject constructor(val transactionDao: Transact
     override fun getMonthlyTransactions(month:String): Flow<List<Transaction>> {
         val startMonthTimeStamp = getTimestampForMonthStart(month)
         val endMonthTimeStamp = getTimestampForMonthEnd(month)
-
+        Log.i("start month",startMonthTimeStamp.toString())
+        Log.i("end month",startMonthTimeStamp.toString())
         val transactionEntities = transactionDao.getTransactionsByMonth(startMonthTimeStamp,endMonthTimeStamp)
         return transactionEntities.map { list -> list.map { Transaction.Mapper.mapToDomain(it) } }
     }

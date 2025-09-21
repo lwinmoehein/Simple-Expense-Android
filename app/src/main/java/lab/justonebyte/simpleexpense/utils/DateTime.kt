@@ -1,171 +1,238 @@
 package lab.justonebyte.simpleexpense.utils
 
-import android.annotation.SuppressLint
-import java.text.SimpleDateFormat
+import java.time.Instant
+import java.time.LocalDate
 import java.time.LocalDateTime
+import java.time.ZoneId
 import java.time.format.DateTimeFormatter
-import java.util.Calendar
-import java.util.Date
 import java.util.Locale
 
-@SuppressLint("SimpleDateFormat")
-fun getFormattedYear(timestamp:Long,locale: Locale? = Locale.ENGLISH):String{
-    val date = Date(timestamp)
-    val formatter = SimpleDateFormat("yyyy",locale)
-    return formatter.format(date)
+// Constants for common date patterns.
+private const val PATTERN_YEAR = "yyyy"
+private const val PATTERN_YEAR_MONTH = "yyyy-MM"
+private const val PATTERN_MONTH_READABLE = "MMMM"
+private const val PATTERN_YEAR_MONTH_DAY = "yyyy-MM-dd"
+private const val PATTERN_DAY_READABLE = "MMMM dd yyyy"
+private const val PATTERN_DATE_TIME = "yyyy-MM-dd HH:mm:ss"
+
+// The default time zone for all operations, which should match the system's.
+private val defaultZoneId: ZoneId = ZoneId.systemDefault()
+
+/**
+ * Gets the year from a timestamp in "yyyy" format.
+ *
+ * @param timestamp The timestamp in milliseconds.
+ * @param locale The locale for formatting.
+ * @return The formatted year string.
+ */
+fun getFormattedYear(timestamp: Long, locale: Locale? = Locale.ENGLISH): String {
+    return Instant.ofEpochMilli(timestamp)
+        .atZone(defaultZoneId)
+        .format(DateTimeFormatter.ofPattern(PATTERN_YEAR, locale))
 }
 
-@SuppressLint("SimpleDateFormat")
-fun getFormattedMonth(timestamp: Long,locale: Locale? = Locale.ENGLISH): String {
-    val date = Date(timestamp)
-    val formatter = SimpleDateFormat("yyyy-MM",locale)
-    return formatter.format(date)
+/**
+ * Gets the year and month from a timestamp in "yyyy-MM" format.
+ *
+ * @param timestamp The timestamp in milliseconds.
+ * @param locale The locale for formatting.
+ * @return The formatted month string.
+ */
+fun getFormattedMonth(timestamp: Long, locale: Locale? = Locale.ENGLISH): String {
+    return Instant.ofEpochMilli(timestamp)
+        .atZone(defaultZoneId)
+        .format(DateTimeFormatter.ofPattern(PATTERN_YEAR_MONTH, locale))
 }
 
-@SuppressLint("SimpleDateFormat")
-fun getReadableFormattedMonth(timestamp: Long,locale: Locale? = Locale.ENGLISH): String {
-    val date = Date(timestamp)
-    val formatter = SimpleDateFormat("MMMM",locale)
-    return formatter.format(date)
-}
-@SuppressLint("SimpleDateFormat")
-fun getFormattedDay(timestamp: Long,locale: Locale? = Locale.ENGLISH): String {
-    val date = Date(timestamp)
-    val formatter = SimpleDateFormat("yyyy-MM-dd",locale)
-    return formatter.format(date)
-}
-
-@SuppressLint("SimpleDateFormat")
-fun getReadableFormattedDay(timestamp: Long,locale: Locale? = Locale.ENGLISH): String {
-    val date = Date(timestamp)
-    val formatter = SimpleDateFormat("MMMM dd yyyy",locale)
-    return formatter.format(date)
+/**
+ * Gets the month from a timestamp in a readable format (e.g., "January").
+ *
+ * @param timestamp The timestamp in milliseconds.
+ * @param locale The locale for formatting.
+ * @return The readable month string.
+ */
+fun getReadableFormattedMonth(timestamp: Long, locale: Locale? = Locale.ENGLISH): String {
+    return Instant.ofEpochMilli(timestamp)
+        .atZone(defaultZoneId)
+        .format(DateTimeFormatter.ofPattern(PATTERN_MONTH_READABLE, locale))
 }
 
-@SuppressLint("SimpleDateFormat")
-fun getCurrentYear(locale: Locale? = Locale.ENGLISH):String{
-    val date = Date(System.currentTimeMillis())
-    val formatter = SimpleDateFormat("yyyy",locale)
-    return formatter.format(date)
+/**
+ * Gets the date from a timestamp in "yyyy-MM-dd" format.
+ *
+ * @param timestamp The timestamp in milliseconds.
+ * @param locale The locale for formatting.
+ * @return The formatted day string.
+ */
+fun getFormattedDay(timestamp: Long, locale: Locale? = Locale.ENGLISH): String {
+    return Instant.ofEpochMilli(timestamp)
+        .atZone(defaultZoneId)
+        .format(DateTimeFormatter.ofPattern(PATTERN_YEAR_MONTH_DAY, locale))
 }
 
-@SuppressLint("SimpleDateFormat")
+/**
+ * Gets the date from a timestamp in a readable format (e.g., "January 01 2025").
+ *
+ * @param timestamp The timestamp in milliseconds.
+ * @param locale The locale for formatting.
+ * @return The readable day string.
+ */
+fun getReadableFormattedDay(timestamp: Long, locale: Locale? = Locale.ENGLISH): String {
+    return Instant.ofEpochMilli(timestamp)
+        .atZone(defaultZoneId)
+        .format(DateTimeFormatter.ofPattern(PATTERN_DAY_READABLE, locale))
+}
+
+/**
+ * Gets the current year in "yyyy" format.
+ *
+ * @param locale The locale for formatting.
+ * @return The current year string.
+ */
+fun getCurrentYear(locale: Locale? = Locale.ENGLISH): String {
+    return LocalDate.now(defaultZoneId).year.toString()
+}
+
+/**
+ * Gets the current month in "yyyy-MM" format.
+ *
+ * @param locale The locale for formatting.
+ * @return The current month string.
+ */
 fun getCurrentMonth(locale: Locale? = Locale.ENGLISH): String {
-    val date = Date(System.currentTimeMillis())
-    val formatter = SimpleDateFormat("yyyy-MM",locale)
-    return formatter.format(date)
+    return LocalDate.now(defaultZoneId).format(DateTimeFormatter.ofPattern(PATTERN_YEAR_MONTH, locale))
 }
 
-
-@SuppressLint("SimpleDateFormat")
+/**
+ * Gets the current day in "yyyy-MM-dd" format.
+ *
+ * @param locale The locale for formatting.
+ * @return The current day string.
+ */
 fun getCurrentDay(locale: Locale? = Locale.ENGLISH): String {
-    val date = Date(System.currentTimeMillis())
-    val formatter = SimpleDateFormat("yyyy-MM-dd",locale)
-    return formatter.format(date)
+    return LocalDate.now(defaultZoneId).format(DateTimeFormatter.ofPattern(PATTERN_YEAR_MONTH_DAY, locale))
 }
+
+/**
+ * Gets the day from a timestamp in "yyyy-MM-dd" format. This function's name is kept for API compatibility.
+ *
+ * @param timestampMillis The timestamp in milliseconds.
+ * @param locale The locale for formatting.
+ * @return The formatted day string.
+ */
 fun getCurrentDayFromTimestamp(timestampMillis: Long, locale: Locale = Locale.ENGLISH): String {
-    val calendar = Calendar.getInstance(locale)
-    calendar.timeInMillis = timestampMillis
-    calendar.set(Calendar.HOUR_OF_DAY, 0)
-    calendar.set(Calendar.MINUTE, 0)
-    calendar.set(Calendar.SECOND, 0)
-    calendar.set(Calendar.MILLISECOND, 0)
-
-    val formatter = SimpleDateFormat("yyyy-MM-dd", locale)
-    return formatter.format(calendar.time)
+    return Instant.ofEpochMilli(timestampMillis)
+        .atZone(defaultZoneId)
+        .format(DateTimeFormatter.ofPattern(PATTERN_YEAR_MONTH_DAY, locale))
 }
 
+/**
+ * Gets the timestamp for the start of a given year (00:00:00).
+ *
+ * @param year The year.
+ * @return The timestamp in milliseconds.
+ */
 fun getTimeStampForYearStart(year: Int): Long {
-    val calendar = Calendar.getInstance()
-    calendar.set(year, Calendar.JANUARY, 1, 0, 0, 0)
-    calendar.set(Calendar.MILLISECOND, 0)
-    return calendar.timeInMillis
+    val startOfYear = LocalDate.of(year, 1, 1)
+    return startOfYear.atStartOfDay(defaultZoneId).toInstant().toEpochMilli()
 }
+
+/**
+ * Gets the timestamp for the end of a given year (23:59:59.999).
+ *
+ * @param year The year.
+ * @return The timestamp in milliseconds.
+ */
 fun getTimeStampForYearEnd(year: Int): Long {
-    val calendar = Calendar.getInstance()
-    calendar.set(year, Calendar.DECEMBER, 31, 23, 59, 59)
-    calendar.set(Calendar.MILLISECOND, 999)
-    return calendar.timeInMillis
+    val endOfYear = LocalDate.of(year, 12, 31)
+    return endOfYear.atTime(23, 59, 59, 999_000_000).atZone(defaultZoneId).toInstant().toEpochMilli()
 }
 
+/**
+ * Gets the timestamp for the start of a given day (00:00:00) from a date string.
+ *
+ * @param dateString The date string in "yyyy-MM-dd" format.
+ * @return The timestamp in milliseconds.
+ */
 fun getTimeStampForStartDate(dateString: String): Long {
-    val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-    val date = dateFormat.parse(dateString)
-
-    val calendar = Calendar.getInstance()
-    if (date != null) {
-        calendar.time = date
-    }
-
-    // Set time to 00:00:00 for start of day
-    calendar.set(Calendar.HOUR_OF_DAY, 0)
-    calendar.set(Calendar.MINUTE, 0)
-    calendar.set(Calendar.SECOND, 0)
-    calendar.set(Calendar.MILLISECOND, 0)
-
-    return calendar.timeInMillis
+    return LocalDate.parse(dateString, DateTimeFormatter.ofPattern(PATTERN_YEAR_MONTH_DAY))
+        .atStartOfDay(defaultZoneId)
+        .toInstant()
+        .toEpochMilli()
 }
+
+/**
+ * Gets the timestamp for the end of a given day (23:59:59.999) from a date string.
+ *
+ * @param dateString The date string in "yyyy-MM-dd" format.
+ * @return The timestamp in milliseconds.
+ */
 fun getTimeStampForEndDate(dateString: String): Long {
-    val dateFormat = SimpleDateFormat("yyyy-dd-MM", Locale.getDefault())
-    val date = dateFormat.parse(dateString)
-
-    val calendar = Calendar.getInstance()
-    if (date != null) {
-        calendar.time = date
-    }
-
-    // Set time to 23:59:59.999 for end of day (almost midnight)
-    calendar.set(Calendar.HOUR_OF_DAY, 23)
-    calendar.set(Calendar.MINUTE, 59)
-    calendar.set(Calendar.SECOND, 59)
-    calendar.set(Calendar.MILLISECOND, 999)
-
-    return calendar.timeInMillis
+    return LocalDate.parse(dateString, DateTimeFormatter.ofPattern(PATTERN_YEAR_MONTH_DAY))
+        .atTime(23, 59, 59, 999_000_000)
+        .atZone(defaultZoneId)
+        .toInstant()
+        .toEpochMilli()
 }
 
+/**
+ * Gets the timestamp for the start of a given month (00:00:00) from a "yyyy-MM" string.
+ *
+ * @param yearMonthString The year-month string.
+ * @return The timestamp in milliseconds.
+ */
 fun getTimestampForMonthStart(yearMonthString: String): Long {
     val (year, month) = yearMonthString.split("-").map { it.toInt() }
-    val calendar = Calendar.getInstance()
-    calendar.set(year, month - 1, 1, 0, 0, 0) // Month is 0-indexed in Calendar
-    calendar.set(Calendar.MILLISECOND, 0)
-    return calendar.timeInMillis
+    val startOfMonth = LocalDate.of(year, month, 1)
+    return startOfMonth.atStartOfDay(defaultZoneId).toInstant().toEpochMilli()
 }
 
-fun convertTimestampIfNeeded(timestampInMillis: Long): Long {
-    val cal = Calendar.getInstance()
-    cal.timeInMillis = timestampInMillis
+/**
+ * Gets the timestamp for the end of a given month (23:59:59.999) from a "yyyy-MM" string.
+ *
+ * @param yearMonthString The year-month string.
+ * @return The timestamp in milliseconds.
+ */
+fun getTimestampForMonthEnd(yearMonthString: String): Long {
+    val (year, month) = yearMonthString.split("-").map { it.toInt() }
+    val endOfMonth = LocalDate.of(year, month, 1).plusMonths(1).minusDays(1)
+    return endOfMonth.atTime(23, 59, 59, 999_000_000).atZone(defaultZoneId).toInstant().toEpochMilli()
+}
 
-    // Check if hours, minutes, and seconds are all zero
-    if (cal.get(Calendar.HOUR_OF_DAY) == 0 &&
-        cal.get(Calendar.MINUTE) == 0 &&
-        cal.get(Calendar.SECOND) == 0) {
-
-        // Set the new time to 00:00:30
-        cal.set(Calendar.HOUR_OF_DAY, 0)
-        cal.set(Calendar.MINUTE, 0)
-        cal.set(Calendar.SECOND, 30)
-        cal.set(Calendar.MILLISECOND, 0)
-
-        return cal.timeInMillis
-    } else {
-        // Timestamp is not 00:00:00, return original timestamp
-        return timestampInMillis
+/**
+ * Gets the timestamp from a date-time string in "yyyy-MM-dd HH:mm:ss" format.
+ *
+ * @param dateTimeString The date-time string.
+ * @param locale The locale for parsing.
+ * @return The timestamp in milliseconds, or 0 if parsing fails.
+ */
+fun getTimestampFromDateTimeString(dateTimeString: String, locale: Locale? = Locale.ENGLISH): Long {
+    return try {
+        val formatter = DateTimeFormatter.ofPattern(PATTERN_DATE_TIME, locale)
+        LocalDateTime.parse(dateTimeString, formatter)
+            .atZone(defaultZoneId)
+            .toInstant()
+            .toEpochMilli()
+    } catch (e: Exception) {
+        0
     }
 }
 
-fun getTimestampForMonthEnd(yearMonthString: String): Long {
-    val (year, month) = yearMonthString.split("-").map { it.toInt() }
-    val calendar = Calendar.getInstance()
-    calendar.set(year, month , calendar.getActualMaximum(Calendar.DAY_OF_MONTH), 0, 0, 0)
-    calendar.set(Calendar.MILLISECOND, 999)
-    return calendar.timeInMillis
-}
+/**
+ * This function has been kept for API compatibility but its internal logic is simplified and corrected.
+ * The original logic with Calendar was complex and had potential bugs. The new code simply sets the time to 00:00:30 if it's midnight.
+ *
+ * @param timestampInMillis The original timestamp.
+ * @return The modified timestamp if it was at midnight, otherwise the original timestamp.
+ */
+fun convertTimestampIfNeeded(timestampInMillis: Long): Long {
+    val localDateTime = Instant.ofEpochMilli(timestampInMillis).atZone(defaultZoneId).toLocalDateTime()
 
-fun getTimestampFromDateTimeString(dateTimeString: String,locale: Locale? = Locale.ENGLISH): Long {
-    val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", locale)
-    val date = dateFormat.parse(dateTimeString) ?: return 0
-
-    val calendar = Calendar.getInstance()
-    calendar.time = date
-    return calendar.timeInMillis
+    // Check if hours, minutes, and seconds are all zero.
+    if (localDateTime.hour == 0 && localDateTime.minute == 0 && localDateTime.second == 0) {
+        // Return a new timestamp with the time set to 00:00:30.
+        return localDateTime.withSecond(30).atZone(defaultZoneId).toInstant().toEpochMilli()
+    } else {
+        return timestampInMillis
+    }
 }
